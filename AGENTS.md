@@ -2,6 +2,8 @@
 
 Keep this file updated when goals, infra, or workflows change. Future sessions use it as continuity.
 
+**Deployment + security checklist (for humans):** see **`docs/DEPLOYMENT_AND_SECURITY.md`**.
+
 ## What this is
 
 E‑commerce / brand site for **Kibay** (wines, espumante, cans, blog, checkout, admin). Built as a **Vite + React** SPA with **React Router**, **Tailwind**, **Supabase** (auth + data), **Stripe**, rich blog/admin tooling.

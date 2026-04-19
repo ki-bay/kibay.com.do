@@ -6,12 +6,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { formatDopFromCents } from '@/lib/formatMoney';
-import { Package, Truck, CreditCard, Calendar, Mail, Loader2, MapPin } from 'lucide-react';
+import { Package, Truck, CreditCard, Calendar, Mail, Loader2, MapPin, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useOrderHistory } from '@/hooks/useOrderHistory';
 import InvoiceDownload from '@/components/InvoiceDownload';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { supabase } from '@/lib/customSupabaseClient';
+import { publicStorageObjectUrl } from '@/lib/supabaseStorage';
 
 const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
   const { getOrderItems } = useOrderHistory();
@@ -157,15 +158,23 @@ const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
                   <span className="font-medium text-sm">Delivery Info</span>
                 </div>
                 <div className="space-y-2 text-sm">
+                  {currentOrder.shipping_method && (
+                    <p className="text-white/70">
+                      Method: <span className="text-white">{currentOrder.shipping_method}</span>
+                    </p>
+                  )}
                   {currentOrder.tracking_number ? (
                     <>
-                      <p className="text-white/70">Tracking: <span className="text-white font-mono">{currentOrder.tracking_number}</span></p>
+                      <p className="text-white/70 mt-2">
+                        Tracking:{' '}
+                        <span className="text-white font-mono">{currentOrder.tracking_number}</span>
+                      </p>
                       {currentOrder.tracking_url && (
-                        <a 
-                          href={currentOrder.tracking_url} 
-                          target="_blank" 
+                        <a
+                          href={currentOrder.tracking_url}
+                          target="_blank"
                           rel="noreferrer"
-                          className="text-mango-400 hover:text-mango-300 underline text-xs"
+                          className="text-mango-400 hover:text-mango-300 underline text-xs inline-block mt-1"
                         >
                           Track Shipment
                         </a>
@@ -173,6 +182,17 @@ const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
                     </>
                   ) : (
                     <p className="text-white/40 italic">Tracking info will be available once shipped.</p>
+                  )}
+                  {currentOrder.invoice_pdf_path && (
+                    <a
+                      href={publicStorageObjectUrl('blog_media', currentOrder.invoice_pdf_path)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 mt-3 text-mango-400 hover:text-mango-300 text-sm font-medium"
+                    >
+                      <FileText className="w-4 h-4" />
+                      Download invoice (PDF)
+                    </a>
                   )}
                   {currentOrder.estimated_delivery_date && (
                     <div className="flex items-center gap-2 mt-2 pt-2 border-t border-white/5">

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { User, LogOut, Save, Loader2, Mail, Clock, Settings } from 'lucide-react';
+import { User, LogOut, Save, Loader2, Mail, Clock, Settings, Package, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { supabase } from '@/lib/customSupabaseClient';
 import { Button } from '@/components/ui/button';
@@ -25,6 +26,7 @@ const UserProfilePage = () => {
   const [preferences, setPreferences] = useState({
     newsletter_signup: false
   });
+  const [isAdminUser, setIsAdminUser] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -35,6 +37,7 @@ const UserProfilePage = () => {
   const fetchProfile = async () => {
     try {
       setIsLoading(true);
+      setIsAdminUser(false);
       // Fetch user profile
       const { data: userData, error: userError } = await supabase
         .from('users')
@@ -57,6 +60,8 @@ const UserProfilePage = () => {
           avatar_url: userData.avatar_url || '',
           email: userData.email || user.email
         });
+        const email = String(userData.email || user?.email || '').toLowerCase();
+        setIsAdminUser(userData.role === 'admin' || email === 'info@kibay.com.do');
       }
 
       if (prefData) {
@@ -203,6 +208,27 @@ const UserProfilePage = () => {
                   <Clock className="w-4 h-4" />
                   Order History
                 </button>
+                {isAdminUser && (
+                  <>
+                    <div className="pt-2 mt-2 border-t border-white/10 text-[10px] uppercase tracking-wider text-white/40 px-2">
+                      Admin
+                    </div>
+                    <Link
+                      to="/admin/orders"
+                      className="w-full text-left px-4 py-3 rounded-lg transition-all font-light flex items-center gap-3 text-white/60 hover:bg-white/5 hover:text-white"
+                    >
+                      <Package className="w-4 h-4" />
+                      Shop orders
+                    </Link>
+                    <Link
+                      to="/dashboard/blog"
+                      className="w-full text-left px-4 py-3 rounded-lg transition-all font-light flex items-center gap-3 text-white/60 hover:bg-white/5 hover:text-white"
+                    >
+                      <LayoutDashboard className="w-4 h-4" />
+                      Blog dashboard
+                    </Link>
+                  </>
+                )}
               </div>
 
               {/* Main Panel Content */}

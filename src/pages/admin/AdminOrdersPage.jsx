@@ -6,6 +6,7 @@ import { supabase } from '@/lib/customSupabaseClient';
 import { Button } from '@/components/ui/button';
 import { Loader2, RefreshCw } from 'lucide-react';
 import { formatDopFromCents } from '@/lib/formatMoney';
+import { publicStorageObjectUrl } from '@/lib/supabaseStorage';
 import { Input } from '@/components/ui/input';
 
 const AdminOrdersPage = () => {
@@ -129,7 +130,7 @@ const AdminOrdersPage = () => {
 										{o.invoice_pdf_path && (
 											<a
 												className="text-xs text-sky-400 underline mt-2 inline-block"
-												href={`${import.meta.env.VITE_SUPABASE_URL || import.meta.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/blog_media/${o.invoice_pdf_path}`}
+												href={publicStorageObjectUrl('blog_media', o.invoice_pdf_path)}
 												target="_blank"
 												rel="noreferrer"
 											>
