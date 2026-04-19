@@ -31,13 +31,14 @@ export const subscribeToNewsletter = async ({ firstName, email, source, tags = [
     // We try to get current session silently
     const { data: { session } } = await supabase.auth.getSession();
     if (session?.user) {
-      await supabase
-        .from('user_preferences')
-        .upsert({
+      await supabase.from('user_preferences').upsert(
+        {
           user_id: session.user.id,
           newsletter_signup: true,
-          preferences_json: { tags, source }
-        });
+          preferences_json: { tags, source },
+        },
+        { onConflict: 'user_id' },
+      );
     }
 
     return { success: true };

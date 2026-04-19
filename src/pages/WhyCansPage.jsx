@@ -5,6 +5,7 @@ import { Shield, Leaf, Clock } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import Card from '@/components/ui/card';
+import { mediaUrl } from '@/config/mediaCdn';
 
 const WhyCansPage = () => {
   return (
@@ -117,7 +118,7 @@ const WhyCansPage = () => {
             >
               <div className="flex items-center gap-3 mb-6">
                 <img 
-                  src="https://horizons-cdn.hostinger.com/786d721b-c0c7-4506-bee4-4ef9f4967a92/8557ed8a8cfde6155f713b177c6452a7.png" 
+                  src={mediaUrl('8557ed8a8cfde6155f713b177c6452a7.png')} 
                   alt="Freshness and Portions" 
                   className="w-10 h-10 object-contain" 
                 />

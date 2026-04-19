@@ -7,6 +7,7 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import Card from '@/components/ui/card';
+import { mediaUrl } from '@/config/mediaCdn';
 
 // Helper icon
 const WindIcon = (props) => (
@@ -50,7 +51,10 @@ const KibayEspumanteProductPage = () => {
       {/* Hero Section - Redesigned for Mobile-First Responsiveness */}
       <section className="relative min-h-screen lg:min-h-[85vh] flex items-center bg-slate-900 pt-24 pb-12 lg:pt-32 lg:pb-20 overflow-hidden">
         {/* Background Elements */}
-        <div className="absolute inset-0 bg-[url('https://horizons-cdn.hostinger.com/786d721b-c0c7-4506-bee4-4ef9f4967a92/09a4757f8d6894f3f809efc283dcd8d9.jpg')] bg-cover bg-center opacity-10"></div>
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-10"
+          style={{ backgroundImage: `url(${mediaUrl('09a4757f8d6894f3f809efc283dcd8d9.jpg')})` }}
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-900/95 to-slate-900 lg:bg-gradient-to-r lg:from-slate-900 lg:via-slate-900/90 lg:to-transparent"></div>
         
         {/* Decorative Glow */}
@@ -102,7 +106,7 @@ const KibayEspumanteProductPage = () => {
             >
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 sm:w-64 sm:h-64 lg:w-96 lg:h-96 bg-orange-500/20 rounded-full blur-3xl -z-10"></div>
               <img 
-                src="https://horizons-cdn.hostinger.com/786d721b-c0c7-4506-bee4-4ef9f4967a92/16146fe95251b7071c35445b71cd0274.jpg" 
+                src={mediaUrl('16146fe95251b7071c35445b71cd0274.jpg')} 
                 alt="Kibay Sparkling Can" 
                 className="w-auto h-[300px] sm:h-[400px] lg:h-[600px] object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-700 ease-in-out"
               />
@@ -311,7 +315,7 @@ const KibayEspumanteProductPage = () => {
           >
             <div className="aspect-square bg-slate-700/50 rounded-2xl overflow-hidden relative shadow-2xl">
                <img 
-                 src="https://horizons-cdn.hostinger.com/786d721b-c0c7-4506-bee4-4ef9f4967a92/ae00c5d9dc7e1830c9bb0456d1e83e2d.jpg" 
+                 src={mediaUrl('ae00c5d9dc7e1830c9bb0456d1e83e2d.jpg')} 
                  alt="Fresh mango and passion fruit close-up product photography showing key ingredients in Kibay Sparkling" 
                  className="w-full h-full object-cover opacity-90"
                />

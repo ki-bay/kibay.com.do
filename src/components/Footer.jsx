@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { mediaUrl } from '@/config/mediaCdn';
 import { Instagram, Facebook, Mail, MapPin, Phone } from 'lucide-react';
 import NewsletterSignup from './NewsletterSignup';
 
@@ -56,7 +57,7 @@ const Footer = () => {
           <div className="space-y-6">
             <Link to="/" className="flex items-center gap-2 group w-fit">
               <img 
-                src="https://horizons-cdn.hostinger.com/786d721b-c0c7-4506-bee4-4ef9f4967a92/528dc5649d4cfca8e6282f7759bb1460.png" 
+                src={mediaUrl('528dc5649d4cfca8e6282f7759bb1460.png')} 
                 alt="Ki-bay logo" 
                 className="w-8 h-8 group-hover:text-white transition-colors"
               />

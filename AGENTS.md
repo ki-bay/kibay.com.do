@@ -30,10 +30,13 @@ E‑commerce / brand site for **Kibay** (wines, espumante, cans, blog, checkout,
 ## Supabase CLI (`supabase/` folder)
 
 - **`npx supabase init`** has been run.
-- **Link** to the cloud project (migrations, types, etc.) requires an authenticated account on your machine:
+- **Schema:** `supabase/migrations/20260419120000_kibay_initial_schema.sql` creates tables, RLS, storage buckets (`blog_images`, `blog_media`), and an **`auth.users` → `public.users`** sync trigger. **If the database already has objects with the same names,** review or edit the migration before applying (intended for a new project or empty `public` schema).
+- Apply with:
   1. `npx supabase login`
   2. `npx supabase link --project-ref bsnxwajuqkatrmgoqcnu`
-- The publishable key is **not** sufficient for `link`; use the CLI login flow (or a personal access token as documented by Supabase).
+  3. `npx supabase db push` (or paste the SQL in Dashboard → SQL Editor on a fresh project).
+- **Edge Functions** (in `supabase/functions/`): deploy with `npx supabase functions deploy create-payment-intent` (and others as needed). Set **secrets** in Dashboard: `STRIPE_SECRET_KEY` for payment intent; `SUPABASE_SERVICE_ROLE_KEY` for `manage-api-keys`.
+- **Auth:** add your **Vercel** production and preview URLs under Authentication → URL configuration (Site URL + Redirect URLs).
 
 ## Deploy (Vercel)
 
@@ -60,5 +63,8 @@ New clones must add the backup remote once:
 
 ## Misc notes
 
-- **`npm install`** has been run in this project; `npm audit` reported vulnerabilities (optional follow-up).
+- **`npm install`** has been run; `npm audit fix` was run (some advisories remain without `--force` / major upgrades).
 - **`node_modules`**, **`dist`**, **`.env*`** are gitignored (see **`.gitignore`**).
+- **Marketing images:** `src/config/mediaCdn.js` + `VITE_MEDIA_CDN_BASE` (optional). **`public/favicon.png`** and **`public/og-default.jpg`** are used from `index.html` so OG/favicon work without the Horizons CDN.
+- **Stripe:** `VITE_STRIPE_PUBLISHABLE_KEY` in env; checkout calls Edge Function `create-payment-intent` (needs `STRIPE_SECRET_KEY` on the function).
+- **Horizons:** Vite only injects Horizons iframe helper scripts in **dev** (or if `VITE_HORIZONS_EMBED=1`).

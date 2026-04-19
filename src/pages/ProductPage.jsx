@@ -5,6 +5,7 @@ import { Wine, Thermometer, Award, Leaf } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import Card from '@/components/ui/card';
+import { mediaUrl } from '@/config/mediaCdn';
 const ProductPage = () => {
   return <>
       <Helmet>
@@ -17,7 +18,7 @@ const ProductPage = () => {
       {/* Product Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         <div className="absolute inset-0 z-0">
-          <img src="https://horizons-cdn.hostinger.com/786d721b-c0c7-4506-bee4-4ef9f4967a92/kibay-ph1tq.jpg" alt="Premium Kibay Espumante sparkling wine can design" className="w-full h-full object-cover" />
+          <img src={mediaUrl('kibay-ph1tq.jpg')} alt="Premium Kibay Espumante sparkling wine can design" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-slate-900/70 via-slate-900/50 to-slate-900"></div>
         </div>
         

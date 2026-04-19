@@ -12,8 +12,14 @@ import { useToast } from '@/components/ui/use-toast';
 import { Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import { supabase } from '@/lib/customSupabaseClient';
 
-// Note: Replace with your actual publishable key
-const stripePromise = loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+const stripePublishableKey =
+	import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY ||
+	import.meta.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ||
+	'';
+
+const stripePromise = stripePublishableKey
+	? loadStripe(stripePublishableKey)
+	: Promise.resolve(null);
 
 const CheckoutForm = ({ totalAmount, cartItems, shippingInfo, onSuccess, onFail }) => {
   const stripe = useStripe();
@@ -161,6 +167,10 @@ const CheckoutForm = ({ totalAmount, cartItems, shippingInfo, onSuccess, onFail 
   );
 };
 
+const hasStripePublishableKey = !!(
+  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || import.meta.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+);
+
 const CheckoutPage = () => {
   const { cartItems, getCartTotal, clearCart } = useCart();
   const { user } = useAuth();
@@ -192,6 +202,10 @@ const CheckoutPage = () => {
   // Create Payment Intent
   useEffect(() => {
     if (totalAmount <= 0) return;
+    if (!hasStripePublishableKey) {
+      setInitError('Missing VITE_STRIPE_PUBLISHABLE_KEY (Stripe publishable key) in environment.');
+      return;
+    }
 
     const createPaymentIntent = async () => {
       setLoading(true);
@@ -335,7 +349,12 @@ const CheckoutPage = () => {
               {/* Payment Section */}
               <div className="bg-slate-800 p-6 rounded-xl border border-white/10">
                 <h2 className="text-xl font-normal text-white mb-6">Payment Details</h2>
-                {initError ? (
+                {!hasStripePublishableKey ? (
+                  <div className="bg-amber-500/10 border border-amber-500/30 text-amber-200 p-4 rounded-lg text-sm font-light">
+                    Configure <code className="text-amber-100">VITE_STRIPE_PUBLISHABLE_KEY</code> in{' '}
+                    <code className="text-amber-100">.env.local</code> and Vercel env, then redeploy.
+                  </div>
+                ) : initError ? (
                   <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-lg flex items-center gap-2">
                     <AlertCircle className="w-5 h-5 flex-shrink-0" />
                     <div>

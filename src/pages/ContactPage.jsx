@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/customSupabaseClient';
 import { useToast } from '@/components/ui/use-toast';
 import SEOHead from '@/components/SEOHead';
+import { mediaUrl } from '@/config/mediaCdn';
 
 const ContactPage = () => {
   const { toast } = useToast();
@@ -275,7 +276,7 @@ const ContactPage = () => {
               <div className="relative h-[400px] w-full rounded-2xl overflow-hidden shadow-2xl border border-white/10 group">
                 <div className="absolute inset-0 bg-slate-800/20 z-10 pointer-events-none group-hover:bg-transparent transition-colors duration-500"></div>
                 <img 
-                  src="https://horizons-cdn.hostinger.com/786d721b-c0c7-4506-bee4-4ef9f4967a92/0658d94f57d843a069f9c7fa06b062bb.webp" 
+                  src={mediaUrl('0658d94f57d843a069f9c7fa06b062bb.webp')} 
                   alt="Ocoa Bay Vineyard Landscape" 
                   className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                 />

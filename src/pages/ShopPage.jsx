@@ -6,6 +6,7 @@ import Footer from '@/components/Footer';
 import ProductsList from '@/components/ProductsList';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import SEOHead from '@/components/SEOHead';
+import { mediaUrl } from '@/config/mediaCdn';
 
 const ShopPage = () => {
   return (
@@ -60,7 +61,7 @@ const ShopPage = () => {
             {/* Replaced icon container with direct image */}
             <div className="flex items-center justify-center mx-auto mb-8">
               <img 
-                src="https://horizons-cdn.hostinger.com/786d721b-c0c7-4506-bee4-4ef9f4967a92/8557ed8a8cfde6155f713b177c6452a7.png" 
+                src={mediaUrl('8557ed8a8cfde6155f713b177c6452a7.png')} 
                 alt="Mango and Passion Fruit" 
                 className="w-16 h-16 object-contain" 
               />

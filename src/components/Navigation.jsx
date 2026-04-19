@@ -8,6 +8,7 @@ import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { Button } from '@/components/ui/button';
 import ShoppingCartIcon from '@/components/ShoppingCartIcon';
 import ShoppingCart from '@/components/ShoppingCart';
+import { mediaUrl } from '@/config/mediaCdn';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -84,7 +85,11 @@ const Navigation = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center gap-2 group z-50">
-              <img src="https://horizons-cdn.hostinger.com/786d721b-c0c7-4506-bee4-4ef9f4967a92/e711380acfce17f0bc86832982651aea.png" alt="Ki-bay Logo" className="h-[45px] w-auto object-contain" />
+              <img
+                src={mediaUrl('e711380acfce17f0bc86832982651aea.png')}
+                alt="Ki-bay Logo"
+                className="h-[45px] w-auto object-contain"
+              />
               <span className={cn("text-2xl font-light tracking-tight transition-colors", textColorClass)}>Ki-BAY</span>
             </Link>
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { mediaUrl } from '@/config/mediaCdn';
 
 const styles = {
   container: {
@@ -50,7 +51,7 @@ const EmailTemplate = ({ children }) => {
       {/* Header with Kibay Logo */}
       <div style={styles.header}>
         <img 
-          src="https://horizons-cdn.hostinger.com/786d721b-c0c7-4506-bee4-4ef9f4967a92/e711380acfce17f0bc86832982651aea.png" 
+          src={mediaUrl('e711380acfce17f0bc86832982651aea.png')} 
           alt="Kibay" 
           style={styles.logo}
         />

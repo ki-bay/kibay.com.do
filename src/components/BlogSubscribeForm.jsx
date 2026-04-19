@@ -27,49 +27,19 @@ const BlogSubscribeForm = () => {
     setStatus('idle');
 
     try {
-      // Check if already exists first to handle duplicates gracefully
-      const { data: existing } = await supabase
-        .from('blog_subscribers')
-        .select('*')
-        .eq('email', email)
-        .single();
+      const normalized = email.trim().toLowerCase();
+      const { error } = await supabase.from('blog_subscribers').upsert(
+        { email: normalized, subscribed: true },
+        { onConflict: 'email' },
+      );
 
-      if (existing) {
-        if (!existing.subscribed) {
-          // Re-subscribe
-          await supabase
-            .from('blog_subscribers')
-            .update({ subscribed: true })
-            .eq('email', email);
-          
-          setStatus('success');
-          toast({
-            title: "Welcome back!",
-            description: "You've been successfully re-subscribed to our updates.",
-          });
-        } else {
-          // Already subscribed
-          setStatus('success'); // Treat as success for UX
-          toast({
-            title: "Already Subscribed",
-            description: "You're already on the list! Watch your inbox for updates.",
-          });
-        }
-      } else {
-        // New subscriber
-        const { error } = await supabase
-          .from('blog_subscribers')
-          .insert([{ email, subscribed: true }]);
+      if (error) throw error;
 
-        if (error) throw error;
-        
-        setStatus('success');
-        toast({
-          title: "Subscribed!",
-          description: "You've successfully joined the Kibay community updates.",
-        });
-      }
-      
+      setStatus('success');
+      toast({
+        title: "You're on the list!",
+        description: "Thanks — you'll hear from us with updates and offers.",
+      });
       setEmail('');
     } catch (error) {
       console.error('Subscription error:', error);

@@ -1,4 +1,5 @@
 import React from 'react';
+import { mediaUrl } from '@/config/mediaCdn';
 import { Helmet } from 'react-helmet';
 
 const SEOHead = ({ 
@@ -14,7 +15,7 @@ const SEOHead = ({
   const siteTitle = 'Kibay';
   const fullTitle = title ? title : 'Kibay – Espumante & Caribbean Wine Shop';
   const metaDescription = description || 'Kibay offers modern Caribbean wines and Kibay Espumante, crafted in the Dominican Republic from organic fruits.';
-  const metaImage = image || 'https://horizons-cdn.hostinger.com/786d721b-c0c7-4506-bee4-4ef9f4967a92/bc5a0b64ce661332da23e928299b7c41.jpg';
+  const metaImage = image || mediaUrl('bc5a0b64ce661332da23e928299b7c41.jpg');
   const metaUrl = url || window.location.href;
   const canonical = canonicalUrl || metaUrl;
 

@@ -185,8 +185,9 @@ const BlogPostForm = () => {
       // Prepare payload with the DEFINITIVE finalSlug
       const postData = {
         ...formData,
-        slug: finalSlug, 
+        slug: finalSlug,
         author_email: user?.email,
+        author_id: user?.id ?? null,
         updated_at: new Date().toISOString(),
       };
 

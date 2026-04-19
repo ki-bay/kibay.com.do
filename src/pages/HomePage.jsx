@@ -8,6 +8,7 @@ import Card from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { getProducts } from '@/api/EcommerceApi';
 import SEOHead from '@/components/SEOHead';
+import { mediaUrl } from '@/config/mediaCdn';
 
 const HomePage = () => {
   const { scrollY } = useScroll();
@@ -37,7 +38,7 @@ const HomePage = () => {
     return product?.image || product?.images?.[0]?.url || fallbackUrl;
   };
 
-  const sparklingImage = getProductImage('sparkling', 'https://horizons-cdn.hostinger.com/786d721b-c0c7-4506-bee4-4ef9f4967a92/bc5a0b64ce661332da23e928299b7c41.jpg');
+  const sparklingImage = getProductImage('sparkling', mediaUrl('bc5a0b64ce661332da23e928299b7c41.jpg'));
   const wineImage = getProductImage('wine', 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=2940&auto=format&fit=crop');
 
   // Animation variants
@@ -62,7 +63,10 @@ const HomePage = () => {
       {/* Hero Section */}
       <section className="relative min-h-screen lg:min-h-[90vh] flex items-center bg-slate-900 pt-24 pb-12 lg:pt-32 lg:pb-20 overflow-hidden font-lato">
         {/* Background Atmosphere */}
-        <div className="absolute inset-0 bg-[url('https://horizons-cdn.hostinger.com/786d721b-c0c7-4506-bee4-4ef9f4967a92/09a4757f8d6894f3f809efc283dcd8d9.jpg')] bg-cover bg-center opacity-5 blur-sm"></div>
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-5 blur-sm"
+          style={{ backgroundImage: `url(${mediaUrl('09a4757f8d6894f3f809efc283dcd8d9.jpg')})` }}
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/90 via-slate-900 to-slate-900 lg:bg-gradient-to-r lg:from-slate-900 lg:via-slate-900/95 lg:to-slate-900/50"></div>
 
         {/* Decorative Glows */}
@@ -130,7 +134,7 @@ const HomePage = () => {
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px] sm:w-[400px] sm:h-[400px] bg-gradient-to-tr from-orange-500/20 to-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
 
               <img
-                src="https://horizons-cdn.hostinger.com/786d721b-c0c7-4506-bee4-4ef9f4967a92/bc5a0b64ce661332da23e928299b7c41.jpg"
+                src={mediaUrl('bc5a0b64ce661332da23e928299b7c41.jpg')}
                 alt="Kibay Sparkling Can"
                 className="relative z-10 w-auto h-[350px] sm:h-[450px] lg:h-[650px] object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-700"
               />
@@ -209,7 +213,7 @@ const HomePage = () => {
                 <Card className="overflow-hidden h-full rounded-3xl border-none shadow-2xl bg-slate-900 relative">
                   <div className="relative h-[500px] overflow-hidden">
                     <img
-                      src="https://horizons-cdn.hostinger.com/786d721b-c0c7-4506-bee4-4ef9f4967a92/ai-generated-8983326-k1zSk.jpg"
+                      src={mediaUrl('ai-generated-8983326-k1zSk.jpg')}
                       alt="Fine dining experience with premium sparkling wine"
                       className="w-full h-full object-cover bg-center transform group-hover:scale-105 transition-transform duration-1000"
                     />
