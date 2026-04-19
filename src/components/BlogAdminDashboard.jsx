@@ -16,7 +16,8 @@ import {
   Instagram,
   Facebook,
   Video,
-  BarChart2
+  BarChart2,
+  Package
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -227,11 +228,18 @@ const BlogAdminDashboard = () => {
             <p className="text-white/60">Manage your blog posts, create new content, and track status.</p>
           </div>
           
-          <Link to="/admin/blog/create">
-            <Button className="bg-mango-500 hover:bg-mango-600 text-white gap-2">
-              <Plus className="w-4 h-4" /> Create New Post
-            </Button>
-          </Link>
+          <div className="flex flex-wrap gap-3">
+            <Link to="/admin/orders">
+              <Button variant="outline" className="border-white/20 text-white gap-2">
+                <Package className="w-4 h-4" /> Shop orders
+              </Button>
+            </Link>
+            <Link to="/admin/blog/create">
+              <Button className="bg-mango-500 hover:bg-mango-600 text-white gap-2">
+                <Plus className="w-4 h-4" /> Create New Post
+              </Button>
+            </Link>
+          </div>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">

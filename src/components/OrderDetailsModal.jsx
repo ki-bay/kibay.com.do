@@ -5,7 +5,7 @@ import {
   DialogHeader, 
   DialogTitle,
 } from "@/components/ui/dialog";
-import { formatCurrency } from '@/api/EcommerceApi';
+import { formatDopFromCents } from '@/lib/formatMoney';
 import { Package, Truck, CreditCard, Calendar, Mail, Loader2, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useOrderHistory } from '@/hooks/useOrderHistory';
@@ -52,13 +52,25 @@ const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
   if (!currentOrder) return null;
 
   const getStatusColor = (status) => {
-    switch(status) {
-      case 'Pending': return 'text-yellow-400';
-      case 'Processing': return 'text-blue-400';
-      case 'Shipped': return 'text-purple-400';
-      case 'Delivered': return 'text-green-400';
-      case 'Cancelled': return 'text-red-400';
-      default: return 'text-white/60';
+    switch (status) {
+      case 'Pending':
+      case 'awaiting_payment':
+        return 'text-yellow-400';
+      case 'Processing':
+      case 'processing':
+      case 'paid':
+        return 'text-blue-400';
+      case 'Shipped':
+      case 'shipped':
+        return 'text-purple-400';
+      case 'Delivered':
+      case 'delivered':
+        return 'text-green-400';
+      case 'Cancelled':
+      case 'cancelled':
+        return 'text-red-400';
+      default:
+        return 'text-white/60';
     }
   };
 
@@ -107,15 +119,15 @@ const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
                         </div>
                         <div>
                           <p className="font-medium text-white">{item.product_name}</p>
-                          <p className="text-sm text-white/40">Qty: {item.quantity} × {formatCurrency(item.price_per_item)}</p>
+                          <p className="text-sm text-white/40">Qty: {item.quantity} × {formatDopFromCents(item.price_per_item)}</p>
                         </div>
                       </div>
-                      <p className="font-medium text-mango-400">{formatCurrency(item.total_price)}</p>
+                      <p className="font-medium text-mango-400">{formatDopFromCents(item.total_price)}</p>
                     </div>
                   ))}
                   <div className="flex justify-between items-center pt-4 mt-2 border-t border-white/10">
                     <span className="font-bold text-white">Total</span>
-                    <span className="font-bold text-xl text-mango-400">{formatCurrency(currentOrder.total_amount)}</span>
+                    <span className="font-bold text-xl text-mango-400">{formatDopFromCents(currentOrder.total_amount)}</span>
                   </div>
                 </div>
               )}

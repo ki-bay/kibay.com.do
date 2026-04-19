@@ -2,20 +2,32 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Package, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { formatCurrency } from '@/api/EcommerceApi';
+import { formatDopFromCents } from '@/lib/formatMoney';
 import OrderDetailsModal from './OrderDetailsModal';
 
 const OrderCard = ({ order }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const getStatusStyle = (status) => {
-    switch(status) {
-      case 'Pending': return 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20';
-      case 'Processing': return 'bg-blue-500/10 text-blue-500 border-blue-500/20';
-      case 'Shipped': return 'bg-purple-500/10 text-purple-500 border-purple-500/20';
-      case 'Delivered': return 'bg-green-500/10 text-green-500 border-green-500/20';
-      case 'Cancelled': return 'bg-red-500/10 text-red-500 border-red-500/20';
-      default: return 'bg-white/5 text-white/50 border-white/10';
+    switch (status) {
+      case 'Pending':
+      case 'awaiting_payment':
+        return 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20';
+      case 'Processing':
+      case 'processing':
+      case 'paid':
+        return 'bg-blue-500/10 text-blue-500 border-blue-500/20';
+      case 'Shipped':
+      case 'shipped':
+        return 'bg-purple-500/10 text-purple-500 border-purple-500/20';
+      case 'Delivered':
+      case 'delivered':
+        return 'bg-green-500/10 text-green-500 border-green-500/20';
+      case 'Cancelled':
+      case 'cancelled':
+        return 'bg-red-500/10 text-red-500 border-red-500/20';
+      default:
+        return 'bg-white/5 text-white/50 border-white/10';
     }
   };
 
@@ -50,7 +62,7 @@ const OrderCard = ({ order }) => {
 
         <div className="flex items-center justify-between md:justify-end gap-6 pl-16 md:pl-0">
           <p className="text-lg font-bold text-mango-400">
-            {formatCurrency(order.total_amount)}
+            {formatDopFromCents(order.total_amount)}
           </p>
           
           <Button 

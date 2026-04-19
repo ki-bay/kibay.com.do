@@ -3,7 +3,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { Download, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { formatCurrency } from '@/api/EcommerceApi';
+import { formatDopFromCents } from '@/lib/formatMoney';
 
 const InvoiceDownload = ({ order, orderItems, className }) => {
   const [isGenerating, setIsGenerating] = useState(false);
@@ -53,8 +53,8 @@ const InvoiceDownload = ({ order, orderItems, className }) => {
       const tableRows = orderItems.map(item => [
         item.product_name,
         item.quantity,
-        formatCurrency(item.price_per_item),
-        formatCurrency(item.total_price)
+        formatDopFromCents(item.price_per_item),
+        formatDopFromCents(item.total_price)
       ]);
 
       doc.autoTable({
@@ -72,8 +72,8 @@ const InvoiceDownload = ({ order, orderItems, className }) => {
 
       // Totals
       const finalY = doc.lastAutoTable.finalY + 10;
-      doc.text("Subtotal:", 140, finalY);
-      doc.text(formatCurrency(order.total_amount), 190, finalY, { align: 'right' });
+      doc.text("Total:", 140, finalY);
+      doc.text(formatDopFromCents(order.total_amount), 190, finalY, { align: 'right' });
       
       // Footer
       doc.setFontSize(8);

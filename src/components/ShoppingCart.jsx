@@ -1,16 +1,18 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, X, Plus, Minus, Trash2, ArrowRight } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import { Button } from '@/components/ui/button';
-import { initializeCheckout } from '@/api/EcommerceApi';
 import { useToast } from '@/components/ui/use-toast';
+import { resolveProductMediaUrl } from '@/config/mediaCdn';
 
 const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
   const { toast } = useToast();
-  const { cartItems, removeFromCart, updateQuantity, getCartTotal, clearCart } = useCart();
+  const navigate = useNavigate();
+  const { cartItems, removeFromCart, updateQuantity, getCartTotal } = useCart();
 
-  const handleCheckout = useCallback(async () => {
+  const handleCheckout = useCallback(() => {
     if (cartItems.length === 0) {
       toast({
         title: 'Your cart is empty',
@@ -19,31 +21,9 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
       });
       return;
     }
-
-    try {
-      const items = cartItems.map(item => ({
-        variant_id: item.variant.id,
-        quantity: item.quantity,
-      }));
-
-      const successUrl = `${window.location.origin}/checkout-success?session_id={CHECKOUT_SESSION_ID}`;
-      const cancelUrl = window.location.href;
-
-      const { url } = await initializeCheckout({ items, successUrl, cancelUrl });
-
-      // Note: We don't clear cart here immediately if using Stripe hosted checkout, 
-      // but if we redirect, we rely on the success page to clear it.
-      // However, for this flow we are redirecting.
-      window.location.href = url;
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: 'Checkout Error',
-        description: 'There was a problem initializing checkout. Please try again.',
-        variant: 'destructive',
-      });
-    }
-  }, [cartItems, toast]);
+    setIsCartOpen(false);
+    navigate('/checkout');
+  }, [cartItems.length, navigate, setIsCartOpen, toast]);
 
   return (
     <AnimatePresence>
@@ -109,7 +89,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                     >
                       <div className="w-20 h-24 bg-stone-100 rounded-lg overflow-hidden flex-shrink-0">
                         <img 
-                          src={item.product.image} 
+                          src={resolveProductMediaUrl(item.product.image) || item.product.image} 
                           alt={item.product.title} 
                           className="w-full h-full object-cover" 
                         />
@@ -162,7 +142,9 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
               <div className="p-6 bg-white border-t border-stone-100 shadow-[0_-10px_40px_rgba(0,0,0,0.03)]">
                 <div className="flex justify-between items-center mb-6">
                   <span className="text-stone-500">Subtotal</span>
-                  <span className="text-2xl font-serif font-medium text-stone-900">{getCartTotal()}</span>
+                  <span className="text-2xl font-serif font-medium text-stone-900">
+                    RD${getCartTotal().toFixed(2)}
+                  </span>
                 </div>
                 <Button 
                   onClick={handleCheckout} 

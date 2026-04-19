@@ -1,13 +1,22 @@
-import React, { useState, forwardRef } from 'react';
+import React, { useState, forwardRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import FlyToCartAnimation from '@/components/FlyToCartAnimation';
+import { resolveProductMediaUrl } from '@/config/mediaCdn';
 
 const placeholderImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjVmNWY0Ii8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2E4YTJhMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K";
 
 const ProductImageGallery = forwardRef(({ images = [], title, ribbonText }, ref) => {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  const safeImages = images && images.length > 0 ? images : [{ url: placeholderImage }];
+  const safeImages = useMemo(() => {
+    if (images && images.length > 0) {
+      return images.map((img) => ({
+        ...img,
+        url: resolveProductMediaUrl(img.url) || img.url,
+      }));
+    }
+    return [{ url: placeholderImage }];
+  }, [images]);
   const currentImage = safeImages[activeImageIndex];
 
   return (

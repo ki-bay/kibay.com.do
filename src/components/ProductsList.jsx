@@ -6,6 +6,7 @@ import { ShoppingBag, Loader2 } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import { useToast } from '@/components/ui/use-toast';
 import { getProducts, getProductQuantities } from '@/api/EcommerceApi';
+import { resolveProductMediaUrl } from '@/config/mediaCdn';
 
 const placeholderImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjVmNWY0Ii8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2E4YTJhMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K";
 
@@ -62,7 +63,7 @@ const ProductCard = ({ product, index }) => {
       <Link to={`/product/${product.id}`} className="block h-full flex flex-col"> {/* Added flex flex-col */}
         <div className="relative w-full h-72 overflow-hidden rounded-2xl bg-slate-800 mb-6 shadow-2xl hover:shadow-orange-500/20 transition-all duration-300">
           <img
-            src={product.image || placeholderImage}
+            src={resolveProductMediaUrl(product.image) || placeholderImage}
             alt={displayTitle}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />

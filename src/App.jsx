@@ -53,6 +53,7 @@ import UnsubscribePage from './components/UnsubscribePage';
 import AdminSocialMediaDashboard from './pages/admin/AdminSocialMediaDashboard';
 import AdminSocialMediaSettings from './pages/admin/AdminSocialMediaSettings';
 import AdminLogsViewer from './pages/admin/AdminLogsViewer';
+import AdminOrdersPage from './pages/admin/AdminOrdersPage';
 
 // Utilities
 import SitemapRenderer from './pages/SitemapRenderer';
@@ -119,6 +120,7 @@ function App() {
             <Route path="/admin/social-media" element={<ProtectedAdminRoute><AdminSocialMediaDashboard /></ProtectedAdminRoute>} />
             <Route path="/admin/social-media/settings" element={<ProtectedAdminRoute><AdminSocialMediaSettings /></ProtectedAdminRoute>} />
             <Route path="/admin/social-media/logs" element={<ProtectedAdminRoute><AdminLogsViewer /></ProtectedAdminRoute>} />
+            <Route path="/admin/orders" element={<ProtectedAdminRoute><AdminOrdersPage /></ProtectedAdminRoute>} />
 
           </Routes>
         </Router>

@@ -34,9 +34,13 @@ const OrderFiltersBar = ({
             className="w-full pl-9 h-10 bg-slate-900/50 border border-white/10 rounded-md text-sm text-white focus:outline-none focus:ring-1 focus:ring-mango-500 appearance-none cursor-pointer"
           >
             <option value="All">All Status</option>
+            <option value="awaiting_payment">Awaiting payment</option>
+            <option value="paid">Paid</option>
             <option value="Pending">Pending</option>
             <option value="Processing">Processing</option>
+            <option value="processing">processing</option>
             <option value="Shipped">Shipped</option>
+            <option value="shipped">shipped</option>
             <option value="Delivered">Delivered</option>
             <option value="Cancelled">Cancelled</option>
           </select>

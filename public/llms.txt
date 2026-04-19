@@ -1,9 +1,17 @@
 ## Pages
+- [- Kibay Admin](/blogeditor): No description available
 - [Account - Kibay Espumante](/userprofile): No description available
+- [Blog - Kibay Espumante - Premium Sparkling Wine](/bloglist): Read the latest news, stories, and updates from Kibay Espumante.
+- [Blog Admin - Kibay Espumante](/blogadmin): No description available
+- [Blog Admin Login - Kibay](/bloglogin): No description available
 - [Checkout - Kibay Espumante](/checkout): No description available
+- [Create Account - Kibay Espumante](/register): No description available
+- [Enter Code - Kibay Espumante](/verifyotp): No description available
 - [KiBay Wine | Tropical Wine Crafted at Ocoa Bay](/kibaywineproduct): KiBay Wine: An authentic expression of Caribbean terroir. Tropical wine crafted at Ocoa Bay with innovative winemaking techniques.
+- [Login - Kibay Espumante](/login): No description available
 - [Mango - The King of Fruits | Kibay Sparkling](/mango): Discover the health benefits, vitamins, and rich history of Mango, the key ingredient in Kibay
 - [Order Confirmed - Kibay Espumante](/checkoutsuccess): No description available
+- [Orders — Admin](/adminorders): No description available
 - [Our Wine - Kibay Espumante | Organic Sparkling Wine](/product): Discover Kibay Espumante: premium organic sparkling wine made with mango and passion fruit. Learn about our fermentation process, tasting notes, and Dominican heritage.
 - [Passion Fruit (Chinola) | Kibay Sparkling](/passionfruit): Explore the exotic world of Passion Fruit (Chinola). Learn about its health benefits, nutrients, and why it
 - [Privacy Policy - Kibay Espumante](/privacypolicy): Learn how Kibay Espumante collects, uses, and protects your personal information.
