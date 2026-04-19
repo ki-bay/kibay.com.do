@@ -1,0 +1,77 @@
+/* 
+  Kibay Email Styling Guide
+  Note: Most email clients require inline styles. 
+  These classes are for reference and development preview.
+  Production emails should use the style objects defined in the components.
+*/
+
+:root {
+  --kibay-orange: #D4A574;
+  --kibay-dark: #1c1917;
+  --kibay-light: #f5f5f4;
+  --kibay-gray: #78716c;
+  --font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.email-container {
+  font-family: var(--font-family);
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #ffffff;
+}
+
+.email-header {
+  padding: 30px 20px;
+  text-align: center;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.email-body {
+  padding: 40px 20px;
+  color: #333333;
+  line-height: 1.6;
+}
+
+.email-footer {
+  background-color: #f9f9f9;
+  padding: 30px 20px;
+  text-align: center;
+  font-size: 12px;
+  color: #888888;
+  border-top: 1px solid #eaeaea;
+}
+
+.email-button {
+  background-color: var(--kibay-orange);
+  color: white;
+  padding: 12px 24px;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: bold;
+  display: inline-block;
+  margin: 20px 0;
+}
+
+.order-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.order-table th {
+  text-align: left;
+  border-bottom: 2px solid #eaeaea;
+  padding: 10px;
+  color: var(--kibay-dark);
+}
+
+.order-table td {
+  border-bottom: 1px solid #eaeaea;
+  padding: 10px;
+  color: #555555;
+}
+
+.total-row {
+  font-weight: bold;
+  color: var(--kibay-dark);
+}

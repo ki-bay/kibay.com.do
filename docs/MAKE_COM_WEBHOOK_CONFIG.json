@@ -1,0 +1,34 @@
+
+{
+  "title": "Make.com Webhook Configuration for Social Media Automation",
+  "description": "Configuration details for triggering the automated blog and social media generation workflow via Make.com.",
+  "endpoint": {
+    "url": "https://[YOUR_SUPABASE_PROJECT_REF].supabase.co/functions/v1/webhook-handler",
+    "method": "POST"
+  },
+  "authentication": {
+    "type": "Bearer Token",
+    "header": "Authorization",
+    "value": "Bearer [YOUR_SUPABASE_ANON_KEY_OR_SERVICE_ROLE_KEY]"
+  },
+  "payload_structure": {
+    "photo_url": "https://drive.google.com/uc?id=IMAGE_ID (or any public accessible image URL)",
+    "filename": "amazing-sunset-beach.jpg"
+  },
+  "example_payload": {
+    "photo_url": "https://example.com/images/summer_campaign_2026.png",
+    "filename": "summer_campaign_2026.png"
+  },
+  "setup_instructions": [
+    "1. In Make.com, add an 'HTTP - Make a request' module at the end of your Google Drive watch trigger.",
+    "2. Set URL to your Supabase Edge Function webhook-handler URL.",
+    "3. Set Method to POST.",
+    "4. Under Headers, add 'Authorization' with 'Bearer [YOUR_SUPABASE_KEY]'. Add 'Content-Type' with 'application/json'.",
+    "5. Set Body type to 'Raw', Content type to 'JSON'.",
+    "6. In the Request content box, map the Google Drive module variables: { \"photo_url\": \"{{1.webContentLink}}\", \"filename\": \"{{1.name}}\" }",
+    "7. Enable 'Parse response' to handle the JSON reply."
+  ],
+  "error_handling": {
+    "retry_logic": "Configure Make.com 'Break' or 'Incomplete Executions' settings to retry up to 3 times on 500-level HTTP errors. Ensure timeout is set to at least 45 seconds to allow APIs to process."
+  }
+}
