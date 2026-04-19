@@ -8,7 +8,10 @@ import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
 
 const WebhookDocumentationPage = () => {
-  const projectUrl = import.meta.env.VITE_SUPABASE_URL || 'https://[YOUR_PROJECT].supabase.co';
+  const projectUrl =
+    import.meta.env.VITE_SUPABASE_URL ||
+    import.meta.env.NEXT_PUBLIC_SUPABASE_URL ||
+    'https://bsnxwajuqkatrmgoqcnu.supabase.co';
 
   return (
     <>

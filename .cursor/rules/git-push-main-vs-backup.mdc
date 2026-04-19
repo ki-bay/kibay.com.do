@@ -1,0 +1,37 @@
+---
+description: Git push targets — origin (main) vs backup remote only, never both unless explicit
+alwaysApply: true
+---
+
+# Git push: `origin` (main repo) vs `backup` (mirror repo)
+
+This repo has two remotes:
+
+| Remote | Repository |
+|--------|------------|
+| `origin` | `git@github.com:ki-bay/kibay.com.do.git` |
+| `backup` | `git@github.com:ki-bay/kibay.com.do-backup.git` |
+
+The user wants **one target per request** unless they explicitly ask for both.
+
+## When the user asks to push to **backup** (“push to backup”, “backup only”, “sync backup”)
+
+- Push **only** to the `backup` remote. **Do not** push to `origin`.
+- Typical command (local branch `main` → backup repo’s `main`):  
+  `git push backup main`
+- If they use another local branch, push that branch name instead (e.g. `git push backup feature/foo:main` only if they ask).
+
+## When the user asks to push to **main** / default push (“push to main”, “push”, “deploy”, “ship it” — **without** saying backup)
+
+- Push **only** to `origin`:  
+  `git push origin main`  
+- **Do not** push to `backup` unless they also asked to update the backup.
+
+## Both targets
+
+Only push to **both** remotes if the user clearly asks (e.g. “push main and backup”, “push to both repos”).
+
+## Before pushing
+
+- Run `git remote -v` and `git branch` if the branch or remote is unclear.
+- Never `git push --force` unless the user explicitly requests it and understands the risk.

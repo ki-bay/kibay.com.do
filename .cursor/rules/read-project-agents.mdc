@@ -1,0 +1,14 @@
+---
+description: Long-term project memory — read and maintain AGENTS.md
+alwaysApply: true
+---
+
+# Project continuity (“super memory”)
+
+1. **Read** the project root file **`AGENTS.md`** before substantive work (architecture, deploy, git, Supabase/Vercel, or multi-step features). It holds stack, migration goals, env vars, Vercel notes, and **origin vs backup** git rules.
+
+2. **Update `AGENTS.md`** when you and the user agree on something that should persist for later chats: new URLs, env names, branching rules, third-party services, completed migration steps, or “gotchas” (e.g. Vite host flags).
+
+3. Do **not** duplicate long histories in chat only — put durable facts in **`AGENTS.md`**.
+
+4. Git push behavior is also summarized in **`git-push-main-vs-backup.mdc`**; keep both aligned if conventions change.

@@ -41,7 +41,7 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@stripe/react-stripe-js": "^2.4.0",
     "@stripe/stripe-js": "^2.2.0",
-    "@supabase/supabase-js": "2.30.0",
+    "@supabase/supabase-js": "^2.103.3",
     "@tiptap/extension-image": "^2.1.13",
     "@tiptap/extension-link": "^2.1.13",
     "@tiptap/extension-placeholder": "^2.1.13",
