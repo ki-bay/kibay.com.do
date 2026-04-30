@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, ChevronDown, LogOut, LayoutDashboard, Settings, Activity, Key, BookOpen } from 'lucide-react';
+import { Menu, X, User, ChevronDown, LogOut, LayoutDashboard, Settings, Activity, Key, BookOpen, Package, Receipt } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -148,6 +148,9 @@ const Navigation = () => {
                             className="absolute right-0 top-full pt-2 w-56 z-50"
                           >
                             <div className="bg-stone-900 border border-stone-800 rounded-lg shadow-xl overflow-hidden p-2 flex flex-col gap-1">
+                              <Link to="/admin/products" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-white hover:text-mango-400 hover:bg-white/5 rounded-md transition-colors"><Package className="w-3 h-3"/> Products</Link>
+                              <Link to="/admin/orders" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-white hover:text-mango-400 hover:bg-white/5 rounded-md transition-colors"><Receipt className="w-3 h-3"/> Orders</Link>
+                              <div className="border-t border-stone-800 my-1"></div>
                               <Link to="/dashboard/blog" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-white hover:text-mango-400 hover:bg-white/5 rounded-md transition-colors"><LayoutDashboard className="w-3 h-3"/> Blog Dashboard</Link>
                               <Link to="/admin/social-media" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-white hover:text-mango-400 hover:bg-white/5 rounded-md transition-colors"><Activity className="w-3 h-3"/> Social Dashboard</Link>
                               <Link to="/admin/api-keys" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-white hover:text-mango-400 hover:bg-white/5 rounded-md transition-colors"><Key className="w-3 h-3"/> API Keys</Link>
@@ -224,6 +227,8 @@ const Navigation = () => {
                       <AnimatePresence>
                         {expandedMobileMenus['admin'] && (
                            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="flex flex-col gap-4 pl-8 border-l-2 border-mango-400/20">
+                              <Link to="/admin/products" onClick={() => setIsOpen(false)} className="text-base text-white/80 hover:text-mango-400">Products</Link>
+                              <Link to="/admin/orders" onClick={() => setIsOpen(false)} className="text-base text-white/80 hover:text-mango-400">Orders</Link>
                               <Link to="/dashboard/blog" onClick={() => setIsOpen(false)} className="text-base text-white/80 hover:text-mango-400">Blog Dashboard</Link>
                               <Link to="/admin/social-media" onClick={() => setIsOpen(false)} className="text-base text-white/80 hover:text-mango-400">Social Dashboard</Link>
                               <Link to="/admin/api-keys" onClick={() => setIsOpen(false)} className="text-base text-white/80 hover:text-mango-400">API Keys</Link>

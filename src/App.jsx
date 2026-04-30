@@ -54,6 +54,8 @@ import AdminSocialMediaDashboard from './pages/admin/AdminSocialMediaDashboard';
 import AdminSocialMediaSettings from './pages/admin/AdminSocialMediaSettings';
 import AdminLogsViewer from './pages/admin/AdminLogsViewer';
 import AdminOrdersPage from './pages/admin/AdminOrdersPage';
+import AdminProductsPage from './pages/admin/AdminProductsPage';
+import AdminProductFormPage from './pages/admin/AdminProductFormPage';
 
 // Utilities
 import SitemapRenderer from './pages/SitemapRenderer';
@@ -121,6 +123,9 @@ function App() {
             <Route path="/admin/social-media/settings" element={<ProtectedAdminRoute><AdminSocialMediaSettings /></ProtectedAdminRoute>} />
             <Route path="/admin/social-media/logs" element={<ProtectedAdminRoute><AdminLogsViewer /></ProtectedAdminRoute>} />
             <Route path="/admin/orders" element={<ProtectedAdminRoute><AdminOrdersPage /></ProtectedAdminRoute>} />
+            <Route path="/admin/products" element={<ProtectedAdminRoute><AdminProductsPage /></ProtectedAdminRoute>} />
+            <Route path="/admin/products/new" element={<ProtectedAdminRoute><AdminProductFormPage /></ProtectedAdminRoute>} />
+            <Route path="/admin/products/:id/edit" element={<ProtectedAdminRoute><AdminProductFormPage /></ProtectedAdminRoute>} />
 
           </Routes>
         </Router>
