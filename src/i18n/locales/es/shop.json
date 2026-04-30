@@ -1,0 +1,25 @@
+{
+  "seo": {
+    "title": "Tienda Kibay — Vinos y Espumantes Caribeños",
+    "description": "Explora nuestra colección de Kibay Espumante y vinos caribeños. Orgánicos, modernos y elaborados en la República Dominicana."
+  },
+  "header": {
+    "title": "La <accent>Colección</accent>",
+    "subtitle": "Descubre el sabor vibrante de la República Dominicana. Elaborado de forma sostenible, fermentado naturalmente y entregado directamente a tu puerta."
+  },
+  "newsletterHeadline": "¿Aún no quieres pedir? Recibe notas de cata, ideas de cócteles y novedades por correo.",
+  "newsletterButton": "Envíame novedades",
+  "promise": {
+    "heading": "Hecho por la naturaleza, perfeccionado con pasión",
+    "body": "Cada sorbo de Kibay te conecta con los exuberantes viñedos de Ocoa Bay. Creemos en prácticas sostenibles, ingredientes orgánicos y la pura alegría de los sabores caribeños.",
+    "cta": "Lee nuestra historia completa"
+  },
+  "list": {
+    "loading": "Cargando productos…",
+    "empty": "Aún no hay productos disponibles.",
+    "addToCart": "Añadir al carrito",
+    "outOfStock": "Agotado",
+    "viewProduct": "Ver producto",
+    "from": "Desde"
+  }
+}

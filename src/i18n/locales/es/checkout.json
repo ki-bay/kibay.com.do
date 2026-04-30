@@ -1,0 +1,41 @@
+{
+  "title": "Finalizar compra",
+  "contact": "Contacto",
+  "email": "Correo electrónico",
+  "shippingAddress": "Dirección de envío",
+  "fullName": "Nombre completo",
+  "phone": "Teléfono",
+  "address": "Dirección",
+  "address2": "Apartamento, suite, etc. (opcional)",
+  "city": "Ciudad",
+  "state": "Provincia",
+  "zip": "Código postal",
+  "country": "País",
+  "shippingMethod": "Método de envío",
+  "standard": "Estándar",
+  "express": "Exprés",
+  "freeOver": "Gratis en pedidos sobre RD$5,000",
+  "taxId": "RNC / Identificación fiscal (opcional)",
+  "payment": "Pago",
+  "payNow": "Pagar ahora",
+  "processing": "Procesando…",
+  "orderSummary": "Resumen del pedido",
+  "subtotal": "Subtotal",
+  "shipping": "Envío",
+  "total": "Total",
+  "secure": "Pago seguro con Stripe.",
+  "errors": {
+    "required": "Este campo es obligatorio.",
+    "invalidEmail": "Correo electrónico inválido.",
+    "paymentFailed": "El pago no pudo procesarse. Inténtalo de nuevo.",
+    "outOfStock": "Algunos artículos están agotados."
+  },
+  "success": {
+    "title": "¡Gracias por tu pedido!",
+    "subtitle": "Te hemos enviado una confirmación por correo electrónico.",
+    "orderNumber": "Número de pedido",
+    "downloadInvoice": "Descargar factura",
+    "continueShopping": "Continuar comprando",
+    "viewOrder": "Ver pedido"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "loading": "Loading product…",
+  "notFound": "Product not found.",
+  "backToShop": "Back to shop",
+  "addToCart": "Add to Cart",
+  "outOfStock": "Out of Stock",
+  "inStock": "In Stock",
+  "lowStock": "Low stock",
+  "quantity": "Quantity",
+  "increase": "Increase",
+  "decrease": "Decrease",
+  "selectVariant": "Select a variant",
+  "addedToCart": "Added to Cart",
+  "couldNotAdd": "Could not add item",
+  "shipping": {
+    "title": "Shipping & returns",
+    "body": "Standard shipping across the Dominican Republic. Free shipping on orders over RD$5,000."
+  },
+  "details": "Product details",
+  "additionalInfo": "Additional information"
+}

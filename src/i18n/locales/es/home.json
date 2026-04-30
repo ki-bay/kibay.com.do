@@ -1,0 +1,85 @@
+{
+  "seo": {
+    "title": "Kibay — Espumante y Vino Caribeño | Inicio",
+    "description": "Descubre Kibay Espumante y vinos caribeños elaborados con frutas orgánicas de la República Dominicana."
+  },
+  "hero": {
+    "badge": "Nuevo Lanzamiento",
+    "title": "Kibay Espumante",
+    "tagline": "Vino espumante orgánico con mango y maracuyá.",
+    "description": "Fermentado naturalmente en la República Dominicana, expresa una visión fresca y moderna del vino caribeño.",
+    "origin": "De la misma bodega que el vino Kibay — por Ocoa Bay.",
+    "ctaShop": "Comprar Ahora",
+    "ctaAbout": "Nuestra Historia",
+    "scroll": "Desliza"
+  },
+  "origin": {
+    "heading": "Nuestro <accent>Origen</accent>",
+    "body": "Kibay Espumante se elabora en el sur de la República Dominicana con mango y maracuyá de origen orgánico. Producido por una bodega local con experiencia, refleja un enfoque moderno de la vinicultura caribeña — basado en la fermentación, el origen y la calidad.",
+    "mango": {
+      "eyebrow": "Nuestros Ingredientes",
+      "title": "MANGO",
+      "body": "A través de la fermentación, el mango aporta cuerpo natural, suavidad y profundidad tropical al vino — sin dulzor artificial.",
+      "cta": "Conoce más sobre el mango"
+    },
+    "passion": {
+      "eyebrow": "Nuestro Sabor",
+      "title": "MARACUYÁ",
+      "body": "El maracuyá fermentado aporta brillo y acidez natural, equilibrando el vino y realzando su acabado fresco y refrescante.",
+      "cta": "Conoce más sobre el maracuyá"
+    }
+  },
+  "wineFirst": {
+    "heading": "Vino Primero. Siempre.",
+    "body": "Kibay Espumante es un vino espumante elaborado por fermentación. No es una soda saborizada, ni un cóctel, ni una bebida endulzada artificialmente."
+  },
+  "difference": {
+    "heading": "La Diferencia Kibay",
+    "subheading": "Kibay es para quienes aprecian el vino real, los ingredientes naturales y una forma moderna de disfrutar el Caribe — un momento espumante a la vez. Descubre Kibay Espumante.",
+    "features": {
+      "organic": {
+        "title": "Fermentación Orgánica",
+        "body": "Fermentado naturalmente con mango y maracuyá orgánicos. Sin azúcares artificiales. Sin químicos."
+      },
+      "caribbean": {
+        "title": "Herencia Caribeña",
+        "body": "Producido con orgullo en la República Dominicana por la misma bodega detrás del vino Kibay."
+      },
+      "format": {
+        "title": "Formato Premium",
+        "body": "Presentado en latas de aluminio de 250 ml para preservar la frescura y ofrecer una forma moderna de disfrutar el espumante."
+      }
+    }
+  },
+  "moments": {
+    "heading": "Diseñado para Momentos Modernos",
+    "body": "Kibay Espumante se presenta en una elegante lata de aluminio de 250 ml — un formato moderno que preserva la frescura, protege la calidad y se adapta al estilo de vida actual. Perfectamente porcionado, fácil de enfriar y sin esfuerzo para disfrutar: espumante reinventado para playas, terrazas, reuniones y momentos relajados en casa."
+  },
+  "enjoy": {
+    "heading": "Cómo Disfrutar Kibay Espumante",
+    "body": "Servir bien frío. Disfruta Kibay Espumante solo o acompañado de platos ligeros, mariscos, ensaladas frescas, cocina tropical o quesos suaves. Su acidez natural y su carácter frutal lo hacen ideal para climas cálidos y ocasiones sociales — desde tardes informales hasta noches elegantes.",
+    "steps": {
+      "chill": "Enfría",
+      "pop": "Abre",
+      "enjoy": "Disfruta"
+    }
+  },
+  "tropics": {
+    "heading": "Inspirado por los Trópicos",
+    "body": "La identidad visual de Kibay refleja su origen tropical — tonos cálidos de naranja inspirados en el mango maduro, complementados con sutiles iconografías de maracuyá y rodajas de mango. Diseños limpios y texturas naturales mantienen la experiencia refinada, moderna e inconfundiblemente caribeña."
+  },
+  "products": {
+    "heading": "Nuestros <accent>Productos</accent>",
+    "subheading": "Explora los sabores únicos de la República Dominicana. Desde nuestro espumante característico hasta nuestro vino tranquilo original, Kibay lleva el terroir caribeño a tu copa. ¿Te interesa la distribución? Asóciate con nosotros para llevar Kibay a tu mercado.",
+    "sparkling": {
+      "title": "Kibay Espumante",
+      "body": "Vino espumante orgánico con mango y maracuyá, fermentado naturalmente. Fresco, moderno e inconfundiblemente caribeño."
+    },
+    "wine": {
+      "title": "Kibay Vino",
+      "body": "La expresión original de Kibay. Un vino tranquilo que captura la esencia de nuestro terroir tropical con equilibrio y carácter."
+    },
+    "buyNow": "Comprar",
+    "learnMore": "Conocer Más"
+  }
+}

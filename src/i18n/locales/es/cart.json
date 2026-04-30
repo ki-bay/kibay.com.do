@@ -1,0 +1,16 @@
+{
+  "title": "Tu carrito",
+  "empty": "Tu carrito está vacío.",
+  "continueShopping": "Continuar comprando",
+  "subtotal": "Subtotal",
+  "shipping": "Envío",
+  "shippingFree": "Gratis",
+  "shippingCalculated": "Calculado al pagar",
+  "total": "Total",
+  "remove": "Quitar",
+  "increase": "Aumentar",
+  "decrease": "Disminuir",
+  "quantity": "Cantidad",
+  "checkout": "Finalizar compra",
+  "secureCheckout": "Pago seguro con Stripe"
+}

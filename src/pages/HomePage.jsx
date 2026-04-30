@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, useScroll } from 'framer-motion';
 import { Leaf, Zap, ArrowRight, ShoppingBag, MapPin, GlassWater, Sun, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useTranslation, Trans } from 'react-i18next';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import Card from '@/components/ui/card';
@@ -12,6 +13,7 @@ import { mediaUrl } from '@/config/mediaCdn';
 
 const HomePage = () => {
   const { scrollY } = useScroll();
+  const { t } = useTranslation('home');
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -53,9 +55,9 @@ const HomePage = () => {
 
   return (
     <>
-      <SEOHead 
-        title="Kibay – Espumante & Caribbean Wine Shop | Home"
-        description="Discover Kibay Espumante and Caribbean wines crafted from organic fruits in the Dominican Republic."
+      <SEOHead
+        title={t('seo.title')}
+        description={t('seo.description')}
       />
 
       <Navigation />
@@ -87,37 +89,37 @@ const HomePage = () => {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
                 </span>
-                New Arrival
+                {t('hero.badge')}
               </motion.div>
 
               <motion.h1 variants={fadeIn} className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-light text-foreground leading-[1.1] tracking-tight">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600 font-normal">
-                  Kibay Sparkling
+                  {t('hero.title')}
                 </span>
               </motion.h1>
 
               <motion.div variants={fadeIn} className="space-y-4 max-w-lg">
                 <p className="text-lg sm:text-xl text-foreground/90 font-light">
-                  Organic sparkling wine with mango & passion fruit.
+                  {t('hero.tagline')}
                 </p>
                 <p className="text-base text-foreground/60 font-light leading-relaxed">
-                  Naturally fermented in the Dominican Republic, expressing a fresh and modern vision of Caribbean wine.
+                  {t('hero.description')}
                 </p>
                 <p className="text-sm text-foreground/50 font-light italic">
-                  From the same winery as Kibay wine — by Ocoa Bay.
+                  {t('hero.origin')}
                 </p>
               </motion.div>
 
               <motion.div variants={fadeIn} className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto pt-4">
                 <Link to="/shop" className="w-full sm:w-auto">
-                  <Button size="lg" className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-foreground font-normal rounded-full px-8 py-6 text-lg shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_30px_rgba(249,115,22,0.5)] transition-all hover:scale-105">
+                  <Button size="lg" className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white font-normal rounded-full px-8 py-6 text-lg shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_30px_rgba(249,115,22,0.5)] transition-all hover:scale-105">
                     <ShoppingBag className="mr-2 h-5 w-5" />
-                    Shop Now
+                    {t('hero.ctaShop')}
                   </Button>
                 </Link>
                 <Link to="/about" className="w-full sm:w-auto">
                   <Button variant="outline" size="lg" className="w-full sm:w-auto border-foreground/20 hover:bg-foreground/10 text-foreground hover:text-orange-400 font-normal rounded-full px-8 py-6 text-lg">
-                    Our Story
+                    {t('hero.ctaAbout')}
                   </Button>
                 </Link>
               </motion.div>
@@ -149,7 +151,7 @@ const HomePage = () => {
           transition={{ delay: 1, duration: 1 }}
           className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-foreground/30 hidden lg:flex"
         >
-          <span className="text-xs uppercase tracking-widest font-light">Scroll</span>
+          <span className="text-xs uppercase tracking-widest font-light">{t('hero.scroll')}</span>
           <div className="w-px h-12 bg-gradient-to-b from-white/30 to-transparent"></div>
         </motion.div>
       </section>
@@ -165,10 +167,13 @@ const HomePage = () => {
             className="text-center mb-16"
           >
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-foreground mb-6">
-              Our <span className="bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent font-normal">Origin</span>
+              <Trans
+                i18nKey="home:origin.heading"
+                components={{ accent: <span className="bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent font-normal" /> }}
+              />
             </h2>
             <p className="text-foreground/60 max-w-2xl mx-auto text-lg font-light">
-              Kibay Sparkling is crafted in the south of the Dominican Republic using organically sourced mango and passion fruit. Produced by an experienced local winery, it reflects a modern approach to Caribbean winemaking — grounded in fermentation, origin, and quality.
+              {t('origin.body')}
             </p>
           </motion.div>
 
@@ -190,11 +195,11 @@ const HomePage = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent opacity-90"></div>
                     <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 md:p-10 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 text-center">
-                      <span className="text-orange-400 font-medium tracking-wider text-sm uppercase mb-2 block">Our Ingredients</span>
-                      <h3 className="text-3xl font-normal text-foreground mb-4">MANGO</h3>
-                      <p className="text-foreground/80 leading-relaxed text-lg mb-6 font-light">Through fermentation, mango contributes natural body, softness, and tropical depth to the wine — without artificial sweetness.</p>
+                      <span className="text-orange-400 font-medium tracking-wider text-sm uppercase mb-2 block">{t('origin.mango.eyebrow')}</span>
+                      <h3 className="text-3xl font-normal text-foreground mb-4">{t('origin.mango.title')}</h3>
+                      <p className="text-foreground/80 leading-relaxed text-lg mb-6 font-light">{t('origin.mango.body')}</p>
                       <div className="flex items-center justify-center text-foreground font-medium group-hover:text-orange-400 transition-colors">
-                        Find Out More About Mango <ArrowRight className="ml-2 w-4 h-4" />
+                        {t('origin.mango.cta')} <ArrowRight className="ml-2 w-4 h-4" />
                       </div>
                     </div>
                   </div>
@@ -219,11 +224,11 @@ const HomePage = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent opacity-90"></div>
                     <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 md:p-10 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 text-center">
-                      <span className="text-orange-400 font-medium tracking-wider text-sm uppercase mb-2 block">Our Flavor</span>
-                      <h3 className="text-3xl font-normal text-foreground mb-4">PASSION FRUIT</h3>
-                      <p className="text-foreground/80 leading-relaxed text-lg mb-6 font-light">Fermented passion fruit brings brightness and natural acidity, balancing the wine and enhancing its crisp, refreshing finish.</p>
+                      <span className="text-orange-400 font-medium tracking-wider text-sm uppercase mb-2 block">{t('origin.passion.eyebrow')}</span>
+                      <h3 className="text-3xl font-normal text-foreground mb-4">{t('origin.passion.title')}</h3>
+                      <p className="text-foreground/80 leading-relaxed text-lg mb-6 font-light">{t('origin.passion.body')}</p>
                       <div className="flex items-center justify-center text-foreground font-medium group-hover:text-orange-400 transition-colors">
-                        Find Out More About Passion Fruit <ArrowRight className="ml-2 w-4 h-4" />
+                        {t('origin.passion.cta')} <ArrowRight className="ml-2 w-4 h-4" />
                       </div>
                     </div>
                   </div>
@@ -244,10 +249,10 @@ const HomePage = () => {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-foreground mb-6">
-              Wine First. Always.
+              {t('wineFirst.heading')}
             </h2>
             <p className="text-foreground/70 max-w-2xl mx-auto text-lg font-light">
-              Kibay Sparkling is a sparkling wine made through fermentation. It is not a flavored soda, cocktail, or artificially sweetened drink.
+              {t('wineFirst.body')}
             </p>
           </motion.div>
         </div>
@@ -265,10 +270,10 @@ const HomePage = () => {
             className="text-center mb-16"
           >
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-center mb-6 text-foreground">
-              The Kibay Difference
+              {t('difference.heading')}
             </h2>
             <p className="text-foreground/60 max-w-2xl mx-auto text-lg font-light">
-              Kibay is for those who appreciate real wine, natural ingredients, and a modern way to enjoy the Caribbean — one sparkling moment at a time. Discover Kibay Sparkling.
+              {t('difference.subheading')}
             </p>
           </motion.div>
 
@@ -283,9 +288,9 @@ const HomePage = () => {
                 <div className="w-16 h-16 bg-background rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-inner group-hover:bg-orange-500 transition-colors duration-300">
                   <Leaf className="w-8 h-8 text-orange-500 group-hover:text-foreground transition-colors" strokeWidth={2} />
                 </div>
-                <h3 className="text-xl font-normal mb-3 text-foreground">Organic Fermentation</h3>
+                <h3 className="text-xl font-normal mb-3 text-foreground">{t('difference.features.organic.title')}</h3>
                 <p className="text-foreground/70 leading-relaxed font-light">
-                  Naturally fermented with organic mango and passion fruit. No artificial sugars. No chemicals.
+                  {t('difference.features.organic.body')}
                 </p>
               </Card>
             </motion.div>
@@ -300,9 +305,9 @@ const HomePage = () => {
                 <div className="w-16 h-16 bg-background rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-inner group-hover:bg-orange-500 transition-colors duration-300">
                   <MapPin className="w-8 h-8 text-orange-500 group-hover:text-foreground transition-colors" strokeWidth={2} />
                 </div>
-                <h3 className="text-xl font-normal mb-3 text-foreground">Caribbean Heritage</h3>
+                <h3 className="text-xl font-normal mb-3 text-foreground">{t('difference.features.caribbean.title')}</h3>
                 <p className="text-foreground/70 leading-relaxed font-light">
-                  Proudly produced in the Dominican Republic by the same winery behind Kibay wine.
+                  {t('difference.features.caribbean.body')}
                 </p>
               </Card>
             </motion.div>
@@ -317,8 +322,8 @@ const HomePage = () => {
                 <div className="w-16 h-16 bg-background rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-inner group-hover:bg-orange-500 transition-colors duration-300">
                   <Zap className="w-8 h-8 text-orange-500 group-hover:text-foreground transition-colors" />
                 </div>
-                <h3 className="text-xl font-normal mb-3 text-foreground">Premium Format</h3>
-                <p className="text-foreground/70 leading-relaxed font-light">Presented in 250ml aluminum cans to preserve freshness and offer a modern way to enjoy sparkling wine.</p>
+                <h3 className="text-xl font-normal mb-3 text-foreground">{t('difference.features.format.title')}</h3>
+                <p className="text-foreground/70 leading-relaxed font-light">{t('difference.features.format.body')}</p>
               </Card>
             </motion.div>
           </div>
@@ -335,10 +340,10 @@ const HomePage = () => {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-foreground mb-6">
-              Designed for Modern Wine Moments
+              {t('moments.heading')}
             </h2>
             <p className="text-foreground/70 max-w-3xl mx-auto text-lg font-light leading-relaxed">
-              Kibay Sparkling is presented in a sleek 250ml aluminum can — a modern format that preserves freshness, protects quality, and fits today's lifestyle. Perfectly portioned, easy to chill, and effortless to enjoy, it's sparkling wine reimagined for beaches, rooftops, gatherings, and relaxed moments at home.
+              {t('moments.body')}
             </p>
           </motion.div>
         </div>
@@ -356,30 +361,30 @@ const HomePage = () => {
               className="order-2 lg:order-1"
             >
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-foreground mb-6">
-                How to Enjoy Kibay Sparkling
+                {t('enjoy.heading')}
               </h2>
               <div className="w-20 h-1 bg-orange-500 mb-8"></div>
               <p className="text-foreground/70 text-lg font-light leading-relaxed mb-6">
-                Serve well chilled. Enjoy Kibay Sparkling on its own or paired with light dishes, seafood, fresh salads, tropical cuisine, or soft cheeses. Its natural acidity and gentle fruit character make it ideal for warm climates and social occasions — from casual afternoons to elegant evenings.
+                {t('enjoy.body')}
               </p>
               <div className="flex gap-6 mt-8">
                 <div className="flex flex-col items-center">
                   <div className="w-12 h-12 rounded-full bg-foreground/5 flex items-center justify-center mb-2">
                     <GlassWater className="w-6 h-6 text-orange-400" />
                   </div>
-                  <span className="text-xs text-foreground/50 uppercase tracking-widest">Chill</span>
+                  <span className="text-xs text-foreground/50 uppercase tracking-widest">{t('enjoy.steps.chill')}</span>
                 </div>
                 <div className="flex flex-col items-center">
                   <div className="w-12 h-12 rounded-full bg-foreground/5 flex items-center justify-center mb-2">
                     <Zap className="w-6 h-6 text-orange-400" />
                   </div>
-                  <span className="text-xs text-foreground/50 uppercase tracking-widest">Pop</span>
+                  <span className="text-xs text-foreground/50 uppercase tracking-widest">{t('enjoy.steps.pop')}</span>
                 </div>
                 <div className="flex flex-col items-center">
                   <div className="w-12 h-12 rounded-full bg-foreground/5 flex items-center justify-center mb-2">
                     <Leaf className="w-6 h-6 text-orange-400" />
                   </div>
-                  <span className="text-xs text-foreground/50 uppercase tracking-widest">Enjoy</span>
+                  <span className="text-xs text-foreground/50 uppercase tracking-widest">{t('enjoy.steps.enjoy')}</span>
                 </div>
               </div>
             </motion.div>
@@ -419,10 +424,10 @@ const HomePage = () => {
               <Sun className="w-6 h-6 text-orange-500" />
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-foreground mb-6">
-              Inspired by the Tropics
+              {t('tropics.heading')}
             </h2>
             <p className="text-foreground/70 max-w-2xl mx-auto text-lg font-light leading-relaxed">
-              The visual identity of Kibay reflects its tropical origin — warm orange tones inspired by ripe mango, complemented by subtle passion fruit and sliced mango iconography. Clean layouts and natural textures keep the experience refined, modern, and unmistakably Caribbean.
+              {t('tropics.body')}
             </p>
           </motion.div>
         </div>
@@ -439,10 +444,13 @@ const HomePage = () => {
             className="text-center mb-16"
           >
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-foreground mb-6">
-              Our <span className="bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent font-normal">Products</span>
+              <Trans
+                i18nKey="home:products.heading"
+                components={{ accent: <span className="bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent font-normal" /> }}
+              />
             </h2>
             <p className="text-foreground/60 max-w-2xl mx-auto text-lg font-light">
-              Explore the unique flavors of the Dominican Republic. From our signature sparkling wine to our original still wine, Kibay brings the Caribbean terroir to your glass. Interested in distribution? Partner with us to bring Kibay to your market.
+              {t('products.subheading')}
             </p>
           </motion.div>
 
@@ -465,20 +473,20 @@ const HomePage = () => {
                 </div>
                 <div className="p-8 flex-grow flex flex-col justify-between">
                   <div>
-                    <h3 className="text-2xl font-normal text-foreground mb-2">Kibay Sparkling</h3>
+                    <h3 className="text-2xl font-normal text-foreground mb-2">{t('products.sparkling.title')}</h3>
                     <p className="text-foreground/60 font-light leading-relaxed mb-6">
-                      Organic sparkling wine with mango & passion fruit, naturally fermented. Fresh, modern, and unmistakably Caribbean.
+                      {t('products.sparkling.body')}
                     </p>
                   </div>
                   <div className="flex gap-4">
                     <Link to="/product/kibay-sparkling" className="flex-1">
-                      <Button className="w-full bg-orange-500 hover:bg-orange-600 text-foreground font-normal rounded-xl py-6">
-                        Buy Now
+                      <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white font-normal rounded-xl py-6">
+                        {t('products.buyNow')}
                       </Button>
                     </Link>
                     <Link to="/kibay-sparkling" className="flex-1">
                       <Button variant="outline" className="w-full border-foreground/20 hover:bg-foreground/10 text-foreground font-normal rounded-xl py-6">
-                        Learn More
+                        {t('products.learnMore')}
                       </Button>
                     </Link>
                   </div>
@@ -504,20 +512,20 @@ const HomePage = () => {
                 </div>
                 <div className="p-8 flex-grow flex flex-col justify-between">
                   <div>
-                    <h3 className="text-2xl font-normal text-foreground mb-2">Kibay Wine</h3>
+                    <h3 className="text-2xl font-normal text-foreground mb-2">{t('products.wine.title')}</h3>
                     <p className="text-foreground/60 font-light leading-relaxed mb-6">
-                      The original expression of Kibay. A still wine that captures the essence of our tropical terroir with balance and character.
+                      {t('products.wine.body')}
                     </p>
                   </div>
                   <div className="flex gap-4">
                      <Link to="/product/kibay-wine" className="flex-1">
-                      <Button className="w-full bg-orange-500 hover:bg-orange-600 text-foreground font-normal rounded-xl py-6">
-                        Buy Now
+                      <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white font-normal rounded-xl py-6">
+                        {t('products.buyNow')}
                       </Button>
                     </Link>
                     <Link to="/kibay-wine" className="flex-1">
                       <Button variant="outline" className="w-full border-foreground/20 hover:bg-foreground/10 text-foreground font-normal rounded-xl py-6">
-                        Learn More
+                        {t('products.learnMore')}
                       </Button>
                     </Link>
                   </div>

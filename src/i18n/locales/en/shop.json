@@ -1,0 +1,25 @@
+{
+  "seo": {
+    "title": "Shop Kibay Wines & Espumante | Caribbean Wine Store",
+    "description": "Browse our collection of Kibay Espumante and Caribbean wines. Organic, modern, and crafted in the Dominican Republic."
+  },
+  "header": {
+    "title": "The <accent>Collection</accent>",
+    "subtitle": "Discover the vibrant taste of the Dominican Republic. Sustainably crafted, naturally fermented, and delivered directly to your door."
+  },
+  "newsletterHeadline": "Not ready to order? Get tasting notes, cocktail ideas, and launch news by email.",
+  "newsletterButton": "Send me updates",
+  "promise": {
+    "heading": "Crafted by Nature, Perfected by Passion",
+    "body": "Every sip of Kibay connects you to the lush vineyards of Ocoa Bay. We believe in sustainable practices, organic ingredients, and the pure joy of Caribbean flavors.",
+    "cta": "Read our full story"
+  },
+  "list": {
+    "loading": "Loading products…",
+    "empty": "No products available yet.",
+    "addToCart": "Add to Cart",
+    "outOfStock": "Out of Stock",
+    "viewProduct": "View product",
+    "from": "From"
+  }
+}

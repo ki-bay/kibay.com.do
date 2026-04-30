@@ -1,0 +1,21 @@
+{
+  "loading": "Cargando producto…",
+  "notFound": "Producto no encontrado.",
+  "backToShop": "Volver a la tienda",
+  "addToCart": "Añadir al carrito",
+  "outOfStock": "Agotado",
+  "inStock": "En existencia",
+  "lowStock": "Pocas unidades",
+  "quantity": "Cantidad",
+  "increase": "Aumentar",
+  "decrease": "Disminuir",
+  "selectVariant": "Selecciona una opción",
+  "addedToCart": "Añadido al carrito",
+  "couldNotAdd": "No se pudo añadir",
+  "shipping": {
+    "title": "Envío y devoluciones",
+    "body": "Envío estándar a toda la República Dominicana. Envío gratuito en pedidos sobre RD$5,000."
+  },
+  "details": "Detalles del producto",
+  "additionalInfo": "Información adicional"
+}

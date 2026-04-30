@@ -1,0 +1,41 @@
+{
+  "title": "Checkout",
+  "contact": "Contact",
+  "email": "Email",
+  "shippingAddress": "Shipping address",
+  "fullName": "Full name",
+  "phone": "Phone",
+  "address": "Address",
+  "address2": "Apartment, suite, etc. (optional)",
+  "city": "City",
+  "state": "State / Province",
+  "zip": "Postal code",
+  "country": "Country",
+  "shippingMethod": "Shipping method",
+  "standard": "Standard",
+  "express": "Express",
+  "freeOver": "Free on orders over RD$5,000",
+  "taxId": "Tax ID / RNC (optional)",
+  "payment": "Payment",
+  "payNow": "Pay now",
+  "processing": "Processing…",
+  "orderSummary": "Order summary",
+  "subtotal": "Subtotal",
+  "shipping": "Shipping",
+  "total": "Total",
+  "secure": "Secure payment via Stripe.",
+  "errors": {
+    "required": "This field is required.",
+    "invalidEmail": "Invalid email address.",
+    "paymentFailed": "Payment could not be processed. Please try again.",
+    "outOfStock": "Some items are out of stock."
+  },
+  "success": {
+    "title": "Thank you for your order!",
+    "subtitle": "We've sent a confirmation to your email.",
+    "orderNumber": "Order number",
+    "downloadInvoice": "Download invoice",
+    "continueShopping": "Continue shopping",
+    "viewOrder": "View order"
+  }
+}

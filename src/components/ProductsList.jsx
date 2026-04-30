@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { ShoppingBag, Loader2 } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
@@ -14,16 +15,14 @@ const ProductCard = ({ product, index }) => {
   const { addToCart } = useCart();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { t } = useTranslation('shop');
 
   const displayVariant = useMemo(() => product.variants[0], [product]);
   const hasSale = useMemo(() => displayVariant && displayVariant.sale_price_in_cents !== null, [displayVariant]);
   const displayPrice = useMemo(() => hasSale ? displayVariant.sale_price_formatted : displayVariant.price_formatted, [displayVariant, hasSale]);
   const originalPrice = useMemo(() => hasSale ? displayVariant.price_formatted : null, [displayVariant, hasSale]);
 
-  // Ensure title displays "Sparkling" instead of "Espumante" if coming from DB
-  const displayTitle = useMemo(() => product.title.replace(/Espumante/gi, 'Sparkling'), [product.title]);
-  // Also fix description if needed, though card currently uses subtitle or static
-  const displaySubtitle = useMemo(() => (product.subtitle || 'Premium Organic Sparkling Wine').replace(/Espumante/gi, 'Sparkling'), [product.subtitle]);
+  const productHref = `/product/${product.slug || product.id}`;
 
   const handleAddToCart = useCallback(async (e) => {
     e.preventDefault();
@@ -31,7 +30,7 @@ const ProductCard = ({ product, index }) => {
 
     // If product has multiple variants, go to detail page to select
     if (product.variants.length > 1) {
-      navigate(`/product/${product.id}`);
+      navigate(productHref);
       return;
     }
 
@@ -40,18 +39,18 @@ const ProductCard = ({ product, index }) => {
     try {
       await addToCart(product, defaultVariant, 1, defaultVariant.inventory_quantity);
       toast({
-        title: "Added to Cart",
-        description: `${displayTitle} has been added to your cart.`,
+        title: t('list.addToCart'),
+        description: product.title,
         className: "bg-card text-foreground border-orange-500/20",
       });
     } catch (error) {
       toast({
-        title: "Could not add item",
+        title: t('list.outOfStock'),
         description: error.message,
         variant: "destructive",
       });
     }
-  }, [product, addToCart, toast, navigate, displayTitle]);
+  }, [product, addToCart, toast, navigate, productHref, t]);
 
   return (
     <motion.div
@@ -60,38 +59,39 @@ const ProductCard = ({ product, index }) => {
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className="group flex flex-col" // Add flex flex-col here to ensure consistent card height
     >
-      <Link to={`/product/${product.id}`} className="block h-full flex flex-col"> {/* Added flex flex-col */}
+      <Link to={productHref} className="block h-full flex flex-col">
         <div className="relative w-full h-72 overflow-hidden rounded-2xl bg-card mb-6 shadow-2xl hover:shadow-orange-500/20 transition-all duration-300">
           <img
             src={resolveProductMediaUrl(product.image) || placeholderImage}
-            alt={displayTitle}
+            alt={product.title}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
-          
+
           {/* Badge */}
           {product.ribbon_text && (
-            <div className="absolute top-4 left-4 bg-gradient-to-r from-orange-400 to-orange-600 text-foreground text-xs font-bold px-3 py-1 rounded-full shadow-lg uppercase tracking-wider">
+            <div className="absolute top-4 left-4 bg-gradient-to-r from-orange-400 to-orange-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg uppercase tracking-wider">
               {product.ribbon_text}
             </div>
           )}
 
           {/* Quick Add Button Overlay */}
           <div className="absolute bottom-4 right-4 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-            <Button 
-              onClick={handleAddToCart} 
+            <Button
+              onClick={handleAddToCart}
               size="icon"
-              className="rounded-full w-12 h-12 bg-background text-foreground hover:bg-orange-500 hover:text-foreground shadow-lg border-none transition-colors"
+              aria-label={t('list.addToCart')}
+              className="rounded-full w-12 h-12 bg-background text-foreground hover:bg-orange-500 hover:text-white shadow-lg border-none transition-colors"
             >
               <ShoppingBag className="w-5 h-5" />
             </Button>
           </div>
         </div>
 
-        <div className="flex-grow flex flex-col justify-between space-y-2 p-4 bg-background/50 rounded-xl border border-foreground/5 hover:border-orange-500/20 transition-colors"> {/* Added flex-grow */}
+        <div className="flex-grow flex flex-col justify-between space-y-2 p-4 bg-background/50 rounded-xl border border-foreground/5 hover:border-orange-500/20 transition-colors">
           <div>
-            <h3 className="text-xl font-bold text-foreground group-hover:text-orange-500 transition-colors">{displayTitle}</h3>
-            <p className="text-sm text-slate-400 line-clamp-1 h-5">{displaySubtitle}</p>
+            <h3 className="text-xl font-bold text-foreground group-hover:text-orange-500 transition-colors">{product.title}</h3>
+            {product.subtitle && <p className="text-sm text-foreground/50 line-clamp-1 h-5">{product.subtitle}</p>}
           </div>
           <div className="flex items-baseline gap-2 pt-1 mt-auto">
             <span className="text-lg font-medium text-foreground/90">{displayPrice}</span>
@@ -109,6 +109,7 @@ const ProductsList = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { t, i18n } = useTranslation('shop');
 
   useEffect(() => {
     const fetchProductsWithQuantities = async () => {
@@ -164,7 +165,7 @@ const ProductsList = () => {
     };
 
     fetchProductsWithQuantities();
-  }, []);
+  }, [i18n.language]);
 
   if (loading) {
     return (
@@ -177,16 +178,15 @@ const ProductsList = () => {
   if (error) {
     return (
       <div className="text-center text-red-400 p-8 bg-red-900/20 rounded-xl max-w-2xl mx-auto my-12 border border-red-900/50">
-        <p>Unable to load our collection at this time. Please try again later.</p>
+        <p>{error}</p>
       </div>
     );
   }
 
   if (products.length === 0) {
     return (
-      <div className="text-center text-slate-500 py-20">
-        <p className="text-lg font-light mb-4">Our premium collection is currently being updated.</p>
-        <p className="text-sm">Please check back soon for new releases.</p>
+      <div className="text-center text-foreground/60 py-20">
+        <p className="text-lg font-light mb-4">{t('list.empty')}</p>
       </div>
     );
   }
