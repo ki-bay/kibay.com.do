@@ -78,7 +78,7 @@ function App() {
             <Route path="/kibay-wine" element={<KibayWineProductPage />} />
 
             {/* Ecommerce Routes */}
-            <Route path="/product/:id" element={<ProductDetailPage />} />
+            <Route path="/product/:slug" element={<ProductDetailPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/checkout-success" element={<CheckoutSuccessPage />} />

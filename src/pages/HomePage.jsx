@@ -471,7 +471,7 @@ const HomePage = () => {
                     </p>
                   </div>
                   <div className="flex gap-4">
-                    <Link to="/product/prod_01KGN2VJG7VK77WSXB2V5YRBMW" className="flex-1">
+                    <Link to="/product/kibay-sparkling" className="flex-1">
                       <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white font-normal rounded-xl py-6">
                         Buy Now
                       </Button>
@@ -510,7 +510,7 @@ const HomePage = () => {
                     </p>
                   </div>
                   <div className="flex gap-4">
-                     <Link to="/product/prod_01KGN391RB74JH2YHXACF0XTT7" className="flex-1">
+                     <Link to="/product/kibay-wine" className="flex-1">
                       <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white font-normal rounded-xl py-6">
                         Buy Now
                       </Button>

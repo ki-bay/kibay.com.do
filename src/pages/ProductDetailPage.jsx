@@ -17,7 +17,8 @@ import ProductImageGallery from '@/components/ProductImageGallery';
 const placeholderImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjVmNWY0Ii8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2E4YTJhMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K";
 
 function ProductDetailPage() {
-  const { id } = useParams();
+  const { slug, id } = useParams();
+  const productKey = slug || id;
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -65,13 +66,12 @@ function ProductDetailPage() {
         setLoading(true);
         setError(null);
         
-        // Fetch product details by ID
-        const fetchedProduct = await getProduct(id);
+        // Fetch product details by slug (or UUID, for backward-compat)
+        const fetchedProduct = await getProduct(productKey);
 
         try {
           // Fetch real-time quantities
           const quantitiesResponse = await getProductQuantities({
-            fields: 'inventory_quantity',
             product_ids: [fetchedProduct.id]
           });
 
@@ -112,10 +112,10 @@ function ProductDetailPage() {
       }
     };
 
-    if (id) {
+    if (productKey) {
       fetchProductData();
     }
-  }, [id, navigate]);
+  }, [productKey, navigate]);
 
   const displayTitle = useMemo(() => product?.title ? product.title.replace(/Espumante/gi, 'Sparkling') : '', [product]);
   const displaySubtitle = useMemo(() => product?.subtitle ? product.subtitle.replace(/Espumante/gi, 'Sparkling') : '', [product]);
