@@ -14,15 +14,8 @@ CREATE TABLE IF NOT EXISTS public.users (
 
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY users_select_own_or_public_authors
-  ON public.users FOR SELECT TO anon, authenticated
-  USING (
-    auth.uid() = id
-    OR EXISTS (
-      SELECT 1 FROM public.blog_posts bp
-      WHERE bp.author_id = users.id AND bp.published = true
-    )
-  );
+-- NOTE: users_select_own_or_public_authors policy is created later (after blog_posts exists)
+-- to avoid a forward-reference error during migration.
 
 CREATE POLICY users_update_own
   ON public.users FOR UPDATE TO authenticated
@@ -109,6 +102,17 @@ CREATE POLICY blog_posts_update_auth
 
 CREATE POLICY blog_posts_delete_auth
   ON public.blog_posts FOR DELETE TO authenticated USING (true);
+
+-- Deferred from public.users block (forward reference to public.blog_posts)
+CREATE POLICY users_select_own_or_public_authors
+  ON public.users FOR SELECT TO anon, authenticated
+  USING (
+    auth.uid() = id
+    OR EXISTS (
+      SELECT 1 FROM public.blog_posts bp
+      WHERE bp.author_id = users.id AND bp.published = true
+    )
+  );
 
 -- ---------------------------------------------------------------------------
 -- blog_subscribers
