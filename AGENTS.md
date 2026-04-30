@@ -32,8 +32,10 @@ E‑commerce / brand site for **Kibay** (wines, espumante, cans, blog, checkout,
 ## Supabase CLI (`supabase/` folder)
 
 - **`npx supabase init`** has been run.
-- **Schema:** `supabase/migrations/20260419120000_kibay_initial_schema.sql` creates tables, RLS, storage buckets (`blog_images`, `blog_media`), and an **`auth.users` → `public.users`** sync trigger (`handle_new_user` on `auth.users` INSERT). **If the database already has objects with the same names,** review or edit the migration before applying (intended for a new project or empty `public` schema).
+- **All migrations are currently APPLIED to the live project** (`bsnxwajuqkatrmgoqcnu`).
+- **Schema:** `supabase/migrations/20260419120000_kibay_initial_schema.sql` creates tables, RLS, storage buckets (`blog_images`, `blog_media`), and an **`auth.users` → `public.users`** sync trigger (`handle_new_user` on `auth.users` INSERT).
 - **E-commerce migration:** `supabase/migrations/20260420120000_ecommerce_orders_admin.sql` adds **`users.role`** (`customer` | `admin`), order columns **`stripe_payment_intent_id`**, **`tracking_number`**, **`tax_id`**, **`shipping_method`**, **`paid_at`**, **`invoice_pdf_path`**, **`subtotal_amount`**, **`shipping_amount`**, admin RLS policies on **`orders`** / **`order_items`**, and sets **`role = admin`** for **`info@kibay.com.do`** when that row exists.
+- **Native catalog (Phase 1):** `supabase/migrations/20260430120000_product_catalog.sql` adds **`products`**, **`product_variants`** (with **bilingual ES/EN copy** and **USD + DOP price columns**), **`product_images`**, **`product_collections`**, **`product_collection_assignments`**, **`product_additional_info`**, plus **`orders.currency`** (`USD`|`DOP`), **`order_items.variant_id`** (FK), and an **inventory auto-decrement trigger** on the `orders.status='paid'` transition. Storage bucket **`product_images`** (public read, admin write). Seeds two collections: `sparkling` (Espumante), `fermented` (Fermentado).
 - Apply with:
   1. `npx supabase login`
   2. `npx supabase link --project-ref bsnxwajuqkatrmgoqcnu`
@@ -77,9 +79,22 @@ New clones must add the backup remote once:
 - **`.cursor/rules/git-push-main-vs-backup.mdc`** — enforces the push behavior above (`alwaysApply: true`).
 - **`.cursor/rules/read-project-agents.mdc`** — tells the agent to read this file and keep it current.
 
-## Shop (Hostinger catalog + Supabase orders + Stripe)
+## Bilingual + theme (Phase 1 — infrastructure live)
 
-- **Catalog / inventory:** `src/api/EcommerceApi.js` reads **`VITE_ECOMMERCE_API_URL`** and **`VITE_ECOMMERCE_STORE_ID`** (Hostinger E-commerce API). `getProducts`, `getProduct`, `getProductQuantities`, `getCategories` power **`/shop`**, **`/product/:id`**, and cart line items.
+- **Default language:** **Spanish (`es`)**. Secondary: English (`en`). `i18next` + `react-i18next` + browser language detector. Persisted in `localStorage.kibay_lang`.
+- **Default theme:** **dark**. Light mode opt-in via toggle. `next-themes` with `attribute="class"`, `storageKey="kibay_theme"`. Tailwind `darkMode: ['class']`.
+- **CSS variables:** `:root` = light palette, `.dark` = dark palette (in `src/index.css`). `body` uses `bg-background text-foreground`.
+- **Toggles:** `LanguageSwitcher` (ES/EN pill) + `ThemeToggle` (sun/moon). Live in: footer bottom-bar (desktop) + bottom of mobile nav menu. Hardcoded `text-white/70` etc. — fine while page surfaces remain dark.
+- **Translation namespaces** in `src/i18n/locales/{es,en}/`: `common.json` (actions, theme/language labels, currency), `nav.json`, `footer.json`. Pages add their own namespaces as they're translated.
+- **Currency convention:** UI in `es` shows **DOP** (`RD$`); UI in `en` shows **USD** (`$`). Each `product_variants` row carries both `price_usd_cents` and `price_dop_cents` — no FX math at runtime.
+- **Admin pages stay English-only** (internal use). Skip i18n there.
+- **Blog posts** are user-generated content and remain single-language (whatever the author wrote). Translating UGC needs a separate strategy and is out of scope.
+
+## Shop status — Hostinger → Supabase migration in progress
+
+- **Phase:** Schema is live in Supabase (Phase 1). Frontend currently still reads from **Hostinger** (`src/api/EcommerceApi.js`). Cutover happens once admin CRUD lands and the 2 products are re-entered.
+- **Hardcoded refs to flip later:** `src/pages/HomePage.jsx` lines ~474, ~513 use `prod_01KGN…` IDs. Switch to slugs (`/product/kibay-sparkling`, `/product/kibay-wine`) once routing changes. Route `App.jsx`: `/product/:id` → `/product/:slug`.
+- **Catalog / inventory (current):** `src/api/EcommerceApi.js` reads **`VITE_ECOMMERCE_API_URL`** and **`VITE_ECOMMERCE_STORE_ID`** (Hostinger E-commerce API). `getProducts`, `getProduct`, `getProductQuantities`, `getCategories` power **`/shop`**, **`/product/:id`**, and cart line items.
 - **Product images:** `src/config/mediaCdn.js` — **`resolveProductMediaUrl()`** remaps Horizons CDN URLs when **`VITE_MEDIA_CDN_BASE`** is set; **`mediaUrl()`** serves marketing assets from **`/public`** in production when no CDN base is set.
 - **Cart:** `src/hooks/useCart.jsx` — **React context** + **`localStorage`** key **`kibay_cart`**. Flyout cart and **`/cart`** both go to **`/checkout`** (Stripe Elements on-site flow; Hostinger **`initializeCheckout`** redirect is no longer used from the UI cart).
 - **Checkout:** `src/pages/CheckoutPage.jsx` — creates **`orders`** + **`order_items`** with status **`awaiting_payment`**, then **`create-payment-intent`** with **`order_id`** (server verifies amount vs order using **service role**). Shipping tiers in **`src/lib/shipping.js`**. Optional **tax ID** stored on the order as **`tax_id`**.
@@ -94,6 +109,13 @@ New clones must add the backup remote once:
 | `plugins/vite-plugin-iframe-route-restoration.js`, `plugins/visual-editor/*`, `plugins/selection-mode/*` | **Dev-only** plugins (not loaded in production build). |
 | `src/utils/sanitizeHtmlContent.js` | Allows **`<iframe>`** for **YouTube** embeds in blog HTML — unrelated to Horizons. |
 | `.env.example` | Documents **`VITE_HORIZONS_EMBED=0`** for explicit opt-out in preview builds. |
+
+## Live deploy
+
+- **URL:** https://kibay-com-do.pages.dev (Cloudflare Pages, auto-deploy from `origin/main`). Custom domain `kibay.com.do` not yet attached.
+- **CF Pages env vars set:** `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`. Still missing: `VITE_STRIPE_PUBLISHABLE_KEY` (block: checkout).
+- **Supabase Edge Functions deployed:** `create-payment-intent`, `stripe-webhook`. Still missing secrets: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` (block: payment processing).
+- **Stripe webhook endpoint** to register: `https://bsnxwajuqkatrmgoqcnu.supabase.co/functions/v1/stripe-webhook`, event `payment_intent.succeeded`.
 
 ## Misc notes
 
