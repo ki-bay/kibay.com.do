@@ -23,7 +23,7 @@ const LanguageSwitcher = ({ className = '', size = 'md' }) => {
       role="group"
       aria-label={t('language.label')}
       className={cn(
-        'inline-flex items-center rounded-full border border-white/15 bg-white/5 backdrop-blur-sm overflow-hidden',
+        'inline-flex items-center rounded-full border border-foreground/15 bg-foreground/5 backdrop-blur-sm overflow-hidden',
         className,
       )}
     >
@@ -41,7 +41,7 @@ const LanguageSwitcher = ({ className = '', size = 'md' }) => {
               i === 0 ? 'rounded-l-full' : 'rounded-r-full',
               active
                 ? 'bg-[#D4A574] text-stone-950'
-                : 'text-white/70 hover:text-white hover:bg-white/10',
+                : 'text-foreground/70 hover:text-foreground hover:bg-foreground/10',
             )}
           >
             {lang.label}

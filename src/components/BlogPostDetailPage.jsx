@@ -58,7 +58,7 @@ const BlogPostDetailPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="w-10 h-10 text-mango-500 animate-spin" />
       </div>
     );
@@ -66,12 +66,12 @@ const BlogPostDetailPage = () => {
 
   if (error || !post) {
     return (
-      <div className="min-h-screen bg-slate-900 flex flex-col">
+      <div className="min-h-screen bg-background flex flex-col">
         <Navigation />
         <div className="flex-grow flex items-center justify-center p-4">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-white mb-4">Post Not Found</h2>
-            <p className="text-white/60 mb-8">The article you're looking for doesn't exist or has been removed.</p>
+            <h2 className="text-3xl font-bold text-foreground mb-4">Post Not Found</h2>
+            <p className="text-foreground/60 mb-8">The article you're looking for doesn't exist or has been removed.</p>
             <Link to="/blog">
               <Button className="bg-mango-500 hover:bg-mango-600">Back to Blog</Button>
             </Link>
@@ -96,7 +96,7 @@ const BlogPostDetailPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="min-h-screen bg-background">
       <SEOHead 
         title={post.seo_title || post.title}
         description={post.seo_description || post.description}
@@ -129,11 +129,11 @@ const BlogPostDetailPage = () => {
              </div>
           )}
 
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
             {post.title}
           </h1>
 
-          <div className="flex flex-wrap items-center gap-6 text-sm text-white/60 border-b border-white/10 pb-8">
+          <div className="flex flex-wrap items-center gap-6 text-sm text-foreground/60 border-b border-foreground/10 pb-8">
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-mango-500" />
               {new Date(post.created_at).toLocaleDateString('en-US', {
@@ -181,10 +181,10 @@ const BlogPostDetailPage = () => {
           />
           
           {/* Share Section */}
-          <div className="mt-16 pt-8 border-t border-white/10 flex items-center justify-between">
-            <span className="text-white/60 font-medium">Share this article</span>
+          <div className="mt-16 pt-8 border-t border-foreground/10 flex items-center justify-between">
+            <span className="text-foreground/60 font-medium">Share this article</span>
             <div className="flex gap-2">
-                <Button variant="outline" size="sm" className="border-white/10 text-white hover:bg-white/5" onClick={() => {
+                <Button variant="outline" size="sm" className="border-foreground/10 text-foreground hover:bg-foreground/5" onClick={() => {
                     navigator.clipboard.writeText(window.location.href);
                     // could show toast here
                 }}>

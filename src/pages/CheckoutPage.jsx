@@ -90,7 +90,7 @@ const CheckoutForm = ({
 
 	return (
 		<form onSubmit={handleSubmit} className="space-y-6">
-			<div className="bg-slate-900 p-4 rounded-lg border border-white/10">
+			<div className="bg-background p-4 rounded-lg border border-foreground/10">
 				<PaymentElement
 					options={{
 						layout: 'tabs',
@@ -115,7 +115,7 @@ const CheckoutForm = ({
 			<Button
 				type="submit"
 				disabled={!stripe || processing}
-				className="w-full bg-mango-500 hover:bg-mango-600 text-white py-6 text-lg font-normal"
+				className="w-full bg-mango-500 hover:bg-mango-600 text-foreground py-6 text-lg font-normal"
 			>
 				{processing ? (
 					<>
@@ -289,39 +289,39 @@ const CheckoutPage = () => {
 
 			<Navigation />
 
-			<div className="min-h-screen bg-slate-900 pt-28 pb-20 px-4 sm:px-6 lg:px-8">
+			<div className="min-h-screen bg-background pt-28 pb-20 px-4 sm:px-6 lg:px-8">
 				<div className="max-w-6xl mx-auto">
-					<h1 className="text-3xl font-light text-white mb-8">Checkout</h1>
+					<h1 className="text-3xl font-light text-foreground mb-8">Checkout</h1>
 
 					<div className="grid lg:grid-cols-2 gap-12">
 						<div className="space-y-8">
-							<div className="bg-slate-800 p-6 rounded-xl border border-white/10">
-								<h2 className="text-xl font-normal text-white mb-6">Shipping Information</h2>
+							<div className="bg-card p-6 rounded-xl border border-foreground/10">
+								<h2 className="text-xl font-normal text-foreground mb-6">Shipping Information</h2>
 								<div className="space-y-4">
 									<div className="grid grid-cols-2 gap-4">
 										<div className="space-y-2">
-											<label className="text-sm font-light text-white/80">First Name</label>
+											<label className="text-sm font-light text-foreground/80">First Name</label>
 											<input
 												type="text"
 												value={shippingInfo.firstName}
 												onChange={(e) =>
 													setShippingInfo({ ...shippingInfo, firstName: e.target.value })
 												}
-												className="w-full bg-slate-900/50 border border-white/10 rounded-lg p-3 text-white focus:border-mango-500 focus:outline-none font-light"
+												className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground focus:border-mango-500 focus:outline-none font-light"
 												placeholder="John"
 												required
 												disabled={step === 'payment'}
 											/>
 										</div>
 										<div className="space-y-2">
-											<label className="text-sm font-light text-white/80">Last Name</label>
+											<label className="text-sm font-light text-foreground/80">Last Name</label>
 											<input
 												type="text"
 												value={shippingInfo.lastName}
 												onChange={(e) =>
 													setShippingInfo({ ...shippingInfo, lastName: e.target.value })
 												}
-												className="w-full bg-slate-900/50 border border-white/10 rounded-lg p-3 text-white focus:border-mango-500 focus:outline-none font-light"
+												className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground focus:border-mango-500 focus:outline-none font-light"
 												placeholder="Doe"
 												required
 												disabled={step === 'payment'}
@@ -330,14 +330,14 @@ const CheckoutPage = () => {
 									</div>
 
 									<div className="space-y-2">
-										<label className="text-sm font-light text-white/80">Email</label>
+										<label className="text-sm font-light text-foreground/80">Email</label>
 										<input
 											type="email"
 											value={shippingInfo.email}
 											onChange={(e) =>
 												setShippingInfo({ ...shippingInfo, email: e.target.value })
 											}
-											className="w-full bg-slate-900/50 border border-white/10 rounded-lg p-3 text-white focus:border-mango-500 focus:outline-none font-light"
+											className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground focus:border-mango-500 focus:outline-none font-light"
 											placeholder="john@example.com"
 											required
 											disabled={step === 'payment'}
@@ -345,28 +345,28 @@ const CheckoutPage = () => {
 									</div>
 
 									<div className="space-y-2">
-										<label className="text-sm font-light text-white/80">Tax ID (RNC / optional)</label>
+										<label className="text-sm font-light text-foreground/80">Tax ID (RNC / optional)</label>
 										<input
 											type="text"
 											value={shippingInfo.taxId}
 											onChange={(e) =>
 												setShippingInfo({ ...shippingInfo, taxId: e.target.value })
 											}
-											className="w-full bg-slate-900/50 border border-white/10 rounded-lg p-3 text-white focus:border-mango-500 focus:outline-none font-light"
+											className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground focus:border-mango-500 focus:outline-none font-light"
 											placeholder="Optional"
 											disabled={step === 'payment'}
 										/>
 									</div>
 
 									<div className="space-y-2">
-										<label className="text-sm font-light text-white/80">Address</label>
+										<label className="text-sm font-light text-foreground/80">Address</label>
 										<input
 											type="text"
 											value={shippingInfo.address}
 											onChange={(e) =>
 												setShippingInfo({ ...shippingInfo, address: e.target.value })
 											}
-											className="w-full bg-slate-900/50 border border-white/10 rounded-lg p-3 text-white focus:border-mango-500 focus:outline-none font-light"
+											className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground focus:border-mango-500 focus:outline-none font-light"
 											placeholder="123 Main St"
 											required
 											disabled={step === 'payment'}
@@ -375,28 +375,28 @@ const CheckoutPage = () => {
 
 									<div className="grid grid-cols-2 gap-4">
 										<div className="space-y-2">
-											<label className="text-sm font-light text-white/80">City</label>
+											<label className="text-sm font-light text-foreground/80">City</label>
 											<input
 												type="text"
 												value={shippingInfo.city}
 												onChange={(e) =>
 													setShippingInfo({ ...shippingInfo, city: e.target.value })
 												}
-												className="w-full bg-slate-900/50 border border-white/10 rounded-lg p-3 text-white focus:border-mango-500 focus:outline-none font-light"
+												className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground focus:border-mango-500 focus:outline-none font-light"
 												placeholder="Santo Domingo"
 												required
 												disabled={step === 'payment'}
 											/>
 										</div>
 										<div className="space-y-2">
-											<label className="text-sm font-light text-white/80">Phone</label>
+											<label className="text-sm font-light text-foreground/80">Phone</label>
 											<input
 												type="tel"
 												value={shippingInfo.phone}
 												onChange={(e) =>
 													setShippingInfo({ ...shippingInfo, phone: e.target.value })
 												}
-												className="w-full bg-slate-900/50 border border-white/10 rounded-lg p-3 text-white focus:border-mango-500 focus:outline-none font-light"
+												className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground focus:border-mango-500 focus:outline-none font-light"
 												placeholder="+1 (809) 555-0123"
 												required
 												disabled={step === 'payment'}
@@ -405,17 +405,17 @@ const CheckoutPage = () => {
 									</div>
 
 									<div className="space-y-2">
-										<label className="text-sm font-light text-white/80">Shipping method</label>
+										<label className="text-sm font-light text-foreground/80">Shipping method</label>
 										<select
 											value={shippingMethod}
 											onChange={(e) => setShippingMethod(e.target.value)}
 											disabled={step === 'payment'}
-											className="w-full bg-slate-900/50 border border-white/10 rounded-lg p-3 text-white focus:border-mango-500 focus:outline-none font-light"
+											className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground focus:border-mango-500 focus:outline-none font-light"
 										>
 											<option value="standard">Standard (RD$200 under RD$5,000 cart)</option>
 											<option value="express">Express (RD$400 under RD$5,000 cart)</option>
 										</select>
-										<p className="text-xs text-white/50 font-light">
+										<p className="text-xs text-foreground/50 font-light">
 											Orders RD$5,000+ ship free (same-origin policy; adjust in src/lib/shipping.js).
 										</p>
 									</div>
@@ -426,7 +426,7 @@ const CheckoutPage = () => {
 										type="button"
 										onClick={handleContinueToPayment}
 										disabled={loading}
-										className="w-full mt-8 bg-mango-500 hover:bg-mango-600 text-white py-6 text-lg font-normal"
+										className="w-full mt-8 bg-mango-500 hover:bg-mango-600 text-foreground py-6 text-lg font-normal"
 									>
 										{loading ? (
 											<>
@@ -444,15 +444,15 @@ const CheckoutPage = () => {
 										type="button"
 										variant="outline"
 										onClick={cancelPaymentStep}
-										className="w-full mt-4 border-white/20 text-white"
+										className="w-full mt-4 border-foreground/20 text-foreground"
 									>
 										Change shipping / cancel
 									</Button>
 								)}
 							</div>
 
-							<div className="bg-slate-800 p-6 rounded-xl border border-white/10">
-								<h2 className="text-xl font-normal text-white mb-6">Payment Details</h2>
+							<div className="bg-card p-6 rounded-xl border border-foreground/10">
+								<h2 className="text-xl font-normal text-foreground mb-6">Payment Details</h2>
 								{!hasStripePublishableKey ? (
 									<div className="bg-amber-500/10 border border-amber-500/30 text-amber-200 p-4 rounded-lg text-sm font-light">
 										Configure <code className="text-amber-100">VITE_STRIPE_PUBLISHABLE_KEY</code>{' '}
@@ -483,7 +483,7 @@ const CheckoutPage = () => {
 										/>
 									</Elements>
 								) : (
-									<div className="text-white/50 text-sm font-light py-6">
+									<div className="text-foreground/50 text-sm font-light py-6">
 										{step === 'shipping'
 											? 'Complete shipping above, then continue to enter card details securely.'
 											: null}
@@ -493,8 +493,8 @@ const CheckoutPage = () => {
 						</div>
 
 						<div>
-							<div className="bg-slate-800 p-6 rounded-xl border border-white/10 sticky top-28">
-								<h2 className="text-xl font-normal text-white mb-6">Order Summary</h2>
+							<div className="bg-card p-6 rounded-xl border border-foreground/10 sticky top-28">
+								<h2 className="text-xl font-normal text-foreground mb-6">Order Summary</h2>
 								<div className="space-y-4 mb-6">
 									{cartItems.map((item) => {
 										const unit =
@@ -502,10 +502,10 @@ const CheckoutPage = () => {
 										return (
 											<div
 												key={item.variant.id}
-												className="flex justify-between items-center py-2 border-b border-white/5 last:border-0"
+												className="flex justify-between items-center py-2 border-b border-foreground/5 last:border-0"
 											>
 												<div className="flex items-center gap-4">
-													<div className="w-12 h-12 bg-slate-900 rounded overflow-hidden">
+													<div className="w-12 h-12 bg-background rounded overflow-hidden">
 														<img
 															src={item.product.image}
 															alt={item.product.title}
@@ -513,12 +513,12 @@ const CheckoutPage = () => {
 														/>
 													</div>
 													<div>
-														<p className="text-white font-medium text-sm">{item.product.title}</p>
-														<p className="text-white/60 text-xs font-light">{item.variant.title}</p>
-														<p className="text-white/40 text-xs font-light">Qty: {item.quantity}</p>
+														<p className="text-foreground font-medium text-sm">{item.product.title}</p>
+														<p className="text-foreground/60 text-xs font-light">{item.variant.title}</p>
+														<p className="text-foreground/40 text-xs font-light">Qty: {item.quantity}</p>
 													</div>
 												</div>
-												<p className="text-white font-medium">
+												<p className="text-foreground font-medium">
 													RD${(unit * item.quantity).toFixed(2)}
 												</p>
 											</div>
@@ -526,23 +526,23 @@ const CheckoutPage = () => {
 									})}
 								</div>
 
-								<div className="space-y-2 pt-4 border-t border-white/10">
-									<div className="flex justify-between text-white/60 font-light">
+								<div className="space-y-2 pt-4 border-t border-foreground/10">
+									<div className="flex justify-between text-foreground/60 font-light">
 										<span>Subtotal</span>
 										<span>RD${subtotalMajor.toFixed(2)}</span>
 									</div>
-									<div className="flex justify-between text-white/60 font-light">
+									<div className="flex justify-between text-foreground/60 font-light">
 										<span>Shipping ({shippingMethod})</span>
 										<span>RD${shippingMajor.toFixed(2)}</span>
 									</div>
-									<div className="flex justify-between text-white font-normal text-xl pt-2 mt-2 border-t border-white/10">
+									<div className="flex justify-between text-foreground font-normal text-xl pt-2 mt-2 border-t border-foreground/10">
 										<span>Total</span>
 										<span className="text-mango-400">RD${totalMajor.toFixed(2)}</span>
 									</div>
 								</div>
 
 								{step === 'payment' && (
-									<p className="text-xs text-white/40 mt-4 font-light">
+									<p className="text-xs text-foreground/40 mt-4 font-light">
 										Stripe confirms payment; our webhook marks the order paid and stores a PDF
 										invoice under blog_media/invoices/.
 									</p>

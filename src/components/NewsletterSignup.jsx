@@ -43,7 +43,7 @@ const NewsletterSignup = ({
         toast({
           title: "Success!",
           description: successMessage,
-          className: "bg-[#D4A574] text-white border-none",
+          className: "bg-[#D4A574] text-foreground border-none",
         });
       } else {
         throw new Error(result.error);
@@ -66,12 +66,12 @@ const NewsletterSignup = ({
         animate={{ opacity: 1, scale: 1 }}
         className={cn(
           "text-center p-8 rounded-2xl border",
-          variant === 'hero' ? "bg-white/10 backdrop-blur-md border-white/20 text-white" : "bg-stone-50 border-stone-100 text-stone-900"
+          variant === 'hero' ? "bg-foreground/10 backdrop-blur-md border-foreground/20 text-foreground" : "bg-stone-50 border-stone-100 text-stone-900"
         )}
       >
         <CheckCircle2 className={cn("w-12 h-12 mx-auto mb-4", variant === 'hero' ? "text-[#D4A574]" : "text-[#D4A574]")} />
         <h3 className="text-2xl font-normal mb-2">You're on the list!</h3>
-        <p className={variant === 'hero' ? "text-white/80 font-normal" : "text-stone-600 font-normal"}>{successMessage}</p>
+        <p className={variant === 'hero' ? "text-foreground/80 font-normal" : "text-stone-600 font-normal"}>{successMessage}</p>
       </motion.div>
     );
   }
@@ -87,8 +87,8 @@ const NewsletterSignup = ({
       {headline && (
         <h2 className={cn(
           "font-normal mb-3",
-          isHero ? "text-3xl md:text-4xl text-white leading-tight" : "text-2xl md:text-3xl text-stone-900",
-          isFooter && "text-lg text-white mb-2"
+          isHero ? "text-3xl md:text-4xl text-foreground leading-tight" : "text-2xl md:text-3xl text-stone-900",
+          isFooter && "text-lg text-foreground mb-2"
         )}>
           {headline}
         </h2>
@@ -97,8 +97,8 @@ const NewsletterSignup = ({
       {subtext && (
         <p className={cn(
           "mb-6 font-light",
-          isHero ? "text-lg text-white/90" : "text-stone-600",
-          isFooter && "text-sm text-white/70 mb-4"
+          isHero ? "text-lg text-foreground/90" : "text-stone-600",
+          isFooter && "text-sm text-foreground/70 mb-4"
         )}>
           {subtext}
         </p>
@@ -120,9 +120,9 @@ const NewsletterSignup = ({
               className={cn(
                 "flex-1 px-4 py-3 rounded-lg border outline-none transition-all duration-300 font-light",
                 isHero 
-                  ? "bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:bg-white/20 focus:border-[#D4A574]" 
+                  ? "bg-foreground/10 border-foreground/20 text-foreground placeholder:text-foreground/60 focus:bg-foreground/20 focus:border-[#D4A574]" 
                   : "bg-white border-stone-200 text-stone-900 placeholder:text-stone-400 focus:border-[#D4A574] focus:ring-1 focus:ring-[#D4A574]",
-                isFooter && "bg-white/5 border-white/10 text-white placeholder:text-white/40"
+                isFooter && "bg-foreground/5 border-foreground/10 text-foreground placeholder:text-foreground/40"
               )}
             />
           )}
@@ -138,9 +138,9 @@ const NewsletterSignup = ({
               className={cn(
                 "flex-1 px-4 py-3 rounded-lg border outline-none transition-all duration-300 font-light",
                 isHero 
-                  ? "bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:bg-white/20 focus:border-[#D4A574]" 
+                  ? "bg-foreground/10 border-foreground/20 text-foreground placeholder:text-foreground/60 focus:bg-foreground/20 focus:border-[#D4A574]" 
                   : "bg-white border-stone-200 text-stone-900 placeholder:text-stone-400 focus:border-[#D4A574] focus:ring-1 focus:ring-[#D4A574]",
-                isFooter && "bg-white/5 border-white/10 text-white placeholder:text-white/40"
+                isFooter && "bg-foreground/5 border-foreground/10 text-foreground placeholder:text-foreground/40"
               )}
             />
           )}
@@ -152,9 +152,9 @@ const NewsletterSignup = ({
           className={cn(
             "w-full sm:w-auto font-normal transition-all duration-300",
             isHero 
-              ? "bg-[#D4A574] hover:bg-[#c29462] text-white py-6 text-lg shadow-lg hover:shadow-[#D4A574]/30" 
-              : "bg-[#D4A574] hover:bg-[#c29462] text-white py-6",
-            isFooter && "py-3 bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-white/40"
+              ? "bg-[#D4A574] hover:bg-[#c29462] text-foreground py-6 text-lg shadow-lg hover:shadow-[#D4A574]/30" 
+              : "bg-[#D4A574] hover:bg-[#c29462] text-foreground py-6",
+            isFooter && "py-3 bg-foreground/10 hover:bg-foreground/20 text-foreground border border-foreground/20 hover:border-foreground/40"
           )}
         >
           {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
@@ -167,8 +167,8 @@ const NewsletterSignup = ({
 
       <p className={cn(
         "mt-4 text-xs font-light",
-        isHero ? "text-white/50" : "text-stone-400",
-        isFooter && "text-white/30"
+        isHero ? "text-foreground/50" : "text-stone-400",
+        isFooter && "text-foreground/30"
       )}>
         By signing up, you agree to our <Link to="/privacy" className="underline hover:text-[#D4A574]">Privacy Policy</Link>. 
         You can unsubscribe at any time.

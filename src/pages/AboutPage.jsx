@@ -24,7 +24,7 @@ const AboutPage = () => {
             alt="Lush vineyard showcasing organic agricultural heritage"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/80 via-slate-900/60 to-slate-900"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background"></div>
         </div>
         
         <motion.div
@@ -33,17 +33,17 @@ const AboutPage = () => {
           transition={{ duration: 1 }}
           className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
         >
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-light mb-6 text-white">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-light mb-6 text-foreground">
             Our <span className="bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent font-normal">Story</span>
           </h1>
-          <p className="text-xl sm:text-2xl text-white/90 max-w-3xl mx-auto font-light">
+          <p className="text-xl sm:text-2xl text-foreground/90 max-w-3xl mx-auto font-light">
             Where Caribbean heritage meets modern innovation
           </p>
         </motion.div>
       </section>
       
       {/* Brand Story */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-900">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-background">
         <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -52,7 +52,7 @@ const AboutPage = () => {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl sm:text-4xl font-light mb-6 text-white">
+            <h2 className="text-3xl sm:text-4xl font-light mb-6 text-foreground">
               The Kibay Vision
             </h2>
           </motion.div>
@@ -62,7 +62,7 @@ const AboutPage = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
-            className="space-y-6 text-lg text-white/80 leading-relaxed font-light"
+            className="space-y-6 text-lg text-foreground/80 leading-relaxed font-light"
           >
             <p>
               Kibay Sparkling was born from a simple yet powerful idea: to create a sparkling wine that captures the vibrant spirit of the Caribbean while meeting the demands of modern life. We saw an opportunity to honor our Dominican heritage through organic ingredients and innovative winemaking.
@@ -78,7 +78,7 @@ const AboutPage = () => {
       </section>
       
       {/* Ocoa Bay Winery */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-slate-900 to-slate-800">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-card">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -89,22 +89,22 @@ const AboutPage = () => {
             >
               <div className="flex items-center gap-3 mb-6">
                 <Award className="w-10 h-10 text-orange-500" />
-                <h2 className="text-3xl sm:text-4xl font-light text-white">
+                <h2 className="text-3xl sm:text-4xl font-light text-foreground">
                   Ocoa Bay Winery
                 </h2>
               </div>
-              <p className="text-lg text-white/80 mb-6 leading-relaxed font-light">
+              <p className="text-lg text-foreground/80 mb-6 leading-relaxed font-light">
                 Nestled in the heart of the Dominican Republic, Ocoa Bay Winery has been a pioneer in Caribbean winemaking for over two decades. Our location provides the perfect terroir for cultivating exceptional tropical fruits.
               </p>
-              <Card className="p-6 bg-slate-900/50 border-orange-500/20 mb-6">
-                <h3 className="text-xl font-normal mb-3 text-white">Heritage & Innovation</h3>
-                <p className="text-white/70 font-light">
+              <Card className="p-6 bg-background/50 border-orange-500/20 mb-6">
+                <h3 className="text-xl font-normal mb-3 text-foreground">Heritage & Innovation</h3>
+                <p className="text-foreground/70 font-light">
                   We combine traditional fermentation techniques passed down through generations with cutting-edge technology. This unique blend allows us to create wines that honor the past while embracing the future.
                 </p>
               </Card>
-              <Card className="p-6 bg-slate-900/50 border-orange-500/20">
-                <h3 className="text-xl font-normal mb-3 text-white">Winemaking Excellence</h3>
-                <p className="text-white/70 font-light">
+              <Card className="p-6 bg-background/50 border-orange-500/20">
+                <h3 className="text-xl font-normal mb-3 text-foreground">Winemaking Excellence</h3>
+                <p className="text-foreground/70 font-light">
                   Our master winemakers bring decades of experience and an unwavering commitment to quality. Every batch of Kibay Sparkling undergoes rigorous quality control to ensure consistency and excellence.
                 </p>
               </Card>
@@ -122,7 +122,7 @@ const AboutPage = () => {
                   alt="Beautiful Caribbean sunset over tropical landscape"
                   className="w-full h-[600px] object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent"></div>
               </div>
             </motion.div>
           </div>
@@ -130,7 +130,7 @@ const AboutPage = () => {
       </section>
       
       {/* Organic Production Values */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-800">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-card">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -141,11 +141,11 @@ const AboutPage = () => {
           >
             <div className="flex items-center justify-center gap-3 mb-6">
               <Leaf className="w-10 h-10 text-orange-500" />
-              <h2 className="text-3xl sm:text-4xl font-light text-white">
+              <h2 className="text-3xl sm:text-4xl font-light text-foreground">
                 Organic Commitment
               </h2>
             </div>
-            <p className="text-lg text-white/80 max-w-3xl mx-auto font-light">
+            <p className="text-lg text-foreground/80 max-w-3xl mx-auto font-light">
               Organic isn't just a certification for us—it's a philosophy that guides every decision we make.
             </p>
           </motion.div>
@@ -159,12 +159,12 @@ const AboutPage = () => {
             >
               <Card className="p-8 h-full hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-300">
                 <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-8 h-8 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-normal mb-3 text-white text-center">Certified Organic</h3>
-                <p className="text-white/70 text-center font-light">
+                <h3 className="text-xl font-normal mb-3 text-foreground text-center">Certified Organic</h3>
+                <p className="text-foreground/70 text-center font-light">
                   Every ingredient meets strict organic certification standards, ensuring purity from fruit to finished product.
                 </p>
               </Card>
@@ -178,10 +178,10 @@ const AboutPage = () => {
             >
               <Card className="p-8 h-full hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-300">
                 <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Users className="w-8 h-8 text-white" />
+                  <Users className="w-8 h-8 text-foreground" />
                 </div>
-                <h3 className="text-xl font-normal mb-3 text-white text-center">Local Partnerships</h3>
-                <p className="text-white/70 text-center font-light">
+                <h3 className="text-xl font-normal mb-3 text-foreground text-center">Local Partnerships</h3>
+                <p className="text-foreground/70 text-center font-light">
                   We work exclusively with certified organic Dominican farms, supporting local agriculture and minimizing our carbon footprint.
                 </p>
               </Card>
@@ -195,10 +195,10 @@ const AboutPage = () => {
             >
               <Card className="p-8 h-full hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-300">
                 <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Heart className="w-8 h-8 text-white" />
+                  <Heart className="w-8 h-8 text-foreground" />
                 </div>
-                <h3 className="text-xl font-normal mb-3 text-white text-center">Sustainable Practices</h3>
-                <p className="text-white/70 text-center font-light">
+                <h3 className="text-xl font-normal mb-3 text-foreground text-center">Sustainable Practices</h3>
+                <p className="text-foreground/70 text-center font-light">
                   From water conservation to renewable energy, we minimize environmental impact at every stage of production.
                 </p>
               </Card>
@@ -208,7 +208,7 @@ const AboutPage = () => {
       </section>
       
       {/* Caribbean Heritage */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-slate-800 to-slate-900">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-card to-background">
         <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -216,18 +216,18 @@ const AboutPage = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl sm:text-4xl font-light text-center mb-8 text-white">
+            <h2 className="text-3xl sm:text-4xl font-light text-center mb-8 text-foreground">
               Proudly <span className="bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent font-normal">Dominican</span>
             </h2>
             
-            <Card className="p-8 md:p-12 bg-gradient-to-br from-slate-800 to-slate-900 border-orange-500/20">
-              <p className="text-lg text-white/80 mb-6 leading-relaxed font-light">
+            <Card className="p-8 md:p-12 bg-gradient-to-br from-card to-background border-orange-500/20">
+              <p className="text-lg text-foreground/80 mb-6 leading-relaxed font-light">
                 The Dominican Republic is blessed with abundant sunshine, rich soil, and a culture that celebrates life's pleasures. These elements are woven into every aspect of Kibay Sparkling.
               </p>
-              <p className="text-lg text-white/80 mb-6 leading-relaxed font-light">
+              <p className="text-lg text-foreground/80 mb-6 leading-relaxed font-light">
                 Our mangoes and passion fruits are grown in the same tropical paradise that produces world-renowned coffee, cacao, and sugarcane. This land has a unique ability to impart intense, vibrant flavors that simply cannot be replicated elsewhere.
               </p>
-              <p className="text-lg text-white/80 leading-relaxed font-light">
+              <p className="text-lg text-foreground/80 leading-relaxed font-light">
                 By sourcing locally and producing entirely within the Dominican Republic, we celebrate our heritage while supporting our community. Every bottle of Kibay is a testament to Dominican agricultural excellence and craftsmanship.
               </p>
             </Card>
@@ -236,7 +236,7 @@ const AboutPage = () => {
       </section>
       
       {/* Vision for Modern Wine */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-900">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-background">
         <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -245,11 +245,11 @@ const AboutPage = () => {
             viewport={{ once: true }}
             className="text-center"
           >
-            <h2 className="text-3xl sm:text-4xl font-light mb-8 text-white">
+            <h2 className="text-3xl sm:text-4xl font-light mb-8 text-foreground">
               Wine for the Modern World
             </h2>
             
-            <div className="space-y-6 text-lg text-white/80 leading-relaxed text-left font-light">
+            <div className="space-y-6 text-lg text-foreground/80 leading-relaxed text-left font-light">
               <p>
                 We envision a future where premium wine is accessible, sustainable, and perfectly suited to how people actually live. No more intimidating wine lists, fragile bottles, or wasteful half-empty glasses.
               </p>

@@ -32,7 +32,7 @@ const WebhookDocumentationPage = () => {
             </CardHeader>
             <CardContent className="pt-6 space-y-4">
               <p className="text-sm text-stone-600">All webhook endpoints require an API key to be passed in the <code>Authorization</code> header as a Bearer token.</p>
-              <div className="bg-stone-900 text-stone-300 p-4 rounded-lg font-mono text-sm overflow-x-auto">
+              <div className="bg-card text-stone-300 p-4 rounded-lg font-mono text-sm overflow-x-auto">
                 Authorization: Bearer sk_live_your_generated_api_key_here
               </div>
               <p className="text-sm text-stone-600">You can generate API keys in the <Link to="/admin/api-keys" className="text-[#D4A574] hover:underline">API Keys Management</Link> section.</p>
@@ -61,7 +61,7 @@ const WebhookDocumentationPage = () => {
 
               <div>
                 <h3 className="font-medium text-stone-900 mb-2">Example Payload (JSON)</h3>
-                <pre className="bg-stone-900 text-stone-300 p-4 rounded-lg font-mono text-sm overflow-x-auto">
+                <pre className="bg-card text-stone-300 p-4 rounded-lg font-mono text-sm overflow-x-auto">
 {`{
   "photo_url": "https://drive.google.com/uc?id=YOUR_FILE_ID",
   "filename": "summer_wine_campaign_2026.jpg"
@@ -71,7 +71,7 @@ const WebhookDocumentationPage = () => {
 
               <div>
                 <h3 className="font-medium text-stone-900 mb-2">Example cURL</h3>
-                <pre className="bg-stone-900 text-stone-300 p-4 rounded-lg font-mono text-sm overflow-x-auto whitespace-pre-wrap">
+                <pre className="bg-card text-stone-300 p-4 rounded-lg font-mono text-sm overflow-x-auto whitespace-pre-wrap">
 {`curl -X POST '${projectUrl}/functions/v1/webhook-handler' \\
 -H 'Authorization: Bearer sk_live_...' \\
 -H 'Content-Type: application/json' \\

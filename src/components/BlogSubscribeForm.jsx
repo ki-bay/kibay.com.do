@@ -55,7 +55,7 @@ const BlogSubscribeForm = () => {
   };
 
   return (
-    <div className="bg-slate-800 rounded-2xl border border-white/10 p-8 md:p-12 relative overflow-hidden">
+    <div className="bg-card rounded-2xl border border-foreground/10 p-8 md:p-12 relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-mango-500/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
       
@@ -65,10 +65,10 @@ const BlogSubscribeForm = () => {
             <Mail className="w-5 h-5" />
             <span>Stay in the loop</span>
           </div>
-          <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+          <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
             Subscribe to our newsletter
           </h3>
-          <p className="text-white/60 text-lg">
+          <p className="text-foreground/60 text-lg">
             Get the latest stories, cocktail recipes, and exclusive offers delivered straight to your inbox. No spam, just flavor.
           </p>
         </div>
@@ -83,8 +83,8 @@ const BlogSubscribeForm = () => {
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-green-500/20 text-green-400 mb-3">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
-              <h4 className="text-white font-bold text-lg">You're Subscribed!</h4>
-              <p className="text-white/60 text-sm mt-1">Thanks for joining us.</p>
+              <h4 className="text-foreground font-bold text-lg">You're Subscribed!</h4>
+              <p className="text-foreground/60 text-sm mt-1">Thanks for joining us.</p>
               <Button 
                 variant="ghost" 
                 className="mt-4 text-green-400 hover:text-green-300 hover:bg-green-500/10"
@@ -96,20 +96,20 @@ const BlogSubscribeForm = () => {
           ) : (
             <form onSubmit={handleSubscribe} className="flex flex-col gap-3">
               <div className="relative">
-                <Mail className="absolute left-3 top-3.5 h-5 w-5 text-white/40" />
+                <Mail className="absolute left-3 top-3.5 h-5 w-5 text-foreground/40" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   required
-                  className="w-full bg-slate-900/50 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder:text-white/30 focus:outline-none focus:border-mango-500 focus:ring-1 focus:ring-mango-500 transition-all shadow-inner"
+                  className="w-full bg-background/50 border border-foreground/10 rounded-xl py-3 pl-10 pr-4 text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-mango-500 focus:ring-1 focus:ring-mango-500 transition-all shadow-inner"
                   disabled={loading}
                 />
               </div>
               <Button 
                 type="submit" 
-                className="bg-mango-500 hover:bg-mango-600 text-white py-6 text-lg font-medium rounded-xl shadow-lg shadow-mango-500/20 w-full"
+                className="bg-mango-500 hover:bg-mango-600 text-foreground py-6 text-lg font-medium rounded-xl shadow-lg shadow-mango-500/20 w-full"
                 disabled={loading}
               >
                 {loading ? (
@@ -121,7 +121,7 @@ const BlogSubscribeForm = () => {
                   "Subscribe to Updates"
                 )}
               </Button>
-              <p className="text-xs text-white/30 text-center mt-2">
+              <p className="text-xs text-foreground/30 text-center mt-2">
                 We respect your privacy. Unsubscribe at any time.
               </p>
             </form>

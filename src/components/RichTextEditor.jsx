@@ -50,14 +50,14 @@ const MenuBar = ({ editor }) => {
   };
 
   return (
-    <div className="border-b border-white/10 p-2 flex flex-wrap gap-1 bg-slate-900/50 rounded-t-lg sticky top-0 z-10 backdrop-blur-sm">
-      <div className="flex gap-1 border-r border-white/10 pr-2 mr-1">
+    <div className="border-b border-foreground/10 p-2 flex flex-wrap gap-1 bg-background/50 rounded-t-lg sticky top-0 z-10 backdrop-blur-sm">
+      <div className="flex gap-1 border-r border-foreground/10 pr-2 mr-1">
         <Button
           type="button"
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleBold().run()}
-          className={editor.isActive('bold') ? 'bg-white/20' : ''}
+          className={editor.isActive('bold') ? 'bg-foreground/20' : ''}
           title="Bold"
         >
           <Bold className="w-4 h-4" />
@@ -67,7 +67,7 @@ const MenuBar = ({ editor }) => {
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={editor.isActive('italic') ? 'bg-white/20' : ''}
+          className={editor.isActive('italic') ? 'bg-foreground/20' : ''}
           title="Italic"
         >
           <Italic className="w-4 h-4" />
@@ -77,20 +77,20 @@ const MenuBar = ({ editor }) => {
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleStrike().run()}
-          className={editor.isActive('strike') ? 'bg-white/20' : ''}
+          className={editor.isActive('strike') ? 'bg-foreground/20' : ''}
           title="Strikethrough"
         >
           <Strikethrough className="w-4 h-4" />
         </Button>
       </div>
 
-      <div className="flex gap-1 border-r border-white/10 pr-2 mr-1">
+      <div className="flex gap-1 border-r border-foreground/10 pr-2 mr-1">
         <Button
           type="button"
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-          className={editor.isActive('heading', { level: 1 }) ? 'bg-white/20' : ''}
+          className={editor.isActive('heading', { level: 1 }) ? 'bg-foreground/20' : ''}
           title="H1"
         >
           <Heading1 className="w-4 h-4" />
@@ -100,7 +100,7 @@ const MenuBar = ({ editor }) => {
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-          className={editor.isActive('heading', { level: 2 }) ? 'bg-white/20' : ''}
+          className={editor.isActive('heading', { level: 2 }) ? 'bg-foreground/20' : ''}
           title="H2"
         >
           <Heading2 className="w-4 h-4" />
@@ -110,20 +110,20 @@ const MenuBar = ({ editor }) => {
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-          className={editor.isActive('heading', { level: 3 }) ? 'bg-white/20' : ''}
+          className={editor.isActive('heading', { level: 3 }) ? 'bg-foreground/20' : ''}
           title="H3"
         >
           <Heading3 className="w-4 h-4" />
         </Button>
       </div>
 
-      <div className="flex gap-1 border-r border-white/10 pr-2 mr-1">
+      <div className="flex gap-1 border-r border-foreground/10 pr-2 mr-1">
         <Button
           type="button"
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={editor.isActive('bulletList') ? 'bg-white/20' : ''}
+          className={editor.isActive('bulletList') ? 'bg-foreground/20' : ''}
           title="Bullet List"
         >
           <List className="w-4 h-4" />
@@ -133,20 +133,20 @@ const MenuBar = ({ editor }) => {
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={editor.isActive('orderedList') ? 'bg-white/20' : ''}
+          className={editor.isActive('orderedList') ? 'bg-foreground/20' : ''}
           title="Ordered List"
         >
           <ListOrdered className="w-4 h-4" />
         </Button>
       </div>
 
-      <div className="flex gap-1 border-r border-white/10 pr-2 mr-1">
+      <div className="flex gap-1 border-r border-foreground/10 pr-2 mr-1">
         <Button
           type="button"
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          className={editor.isActive('blockquote') ? 'bg-white/20' : ''}
+          className={editor.isActive('blockquote') ? 'bg-foreground/20' : ''}
           title="Quote"
         >
           <Quote className="w-4 h-4" />
@@ -156,7 +156,7 @@ const MenuBar = ({ editor }) => {
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-          className={editor.isActive('codeBlock') ? 'bg-white/20' : ''}
+          className={editor.isActive('codeBlock') ? 'bg-foreground/20' : ''}
           title="Code Block"
         >
           <Code className="w-4 h-4" />
@@ -172,13 +172,13 @@ const MenuBar = ({ editor }) => {
         </Button>
       </div>
 
-      <div className="flex gap-1 border-r border-white/10 pr-2 mr-1">
+      <div className="flex gap-1 border-r border-foreground/10 pr-2 mr-1">
         <Button
           type="button"
           variant="ghost"
           size="sm"
           onClick={setLink}
-          className={editor.isActive('link') ? 'bg-white/20' : ''}
+          className={editor.isActive('link') ? 'bg-foreground/20' : ''}
           title="Link"
         >
           <LinkIcon className="w-4 h-4" />
@@ -266,7 +266,7 @@ const RichTextEditor = ({ content, onChange }) => {
   }, [content, editor]);
 
   return (
-    <div className="bg-slate-900/50 border border-white/10 rounded-lg overflow-hidden flex flex-col">
+    <div className="bg-background/50 border border-foreground/10 rounded-lg overflow-hidden flex flex-col">
       <MenuBar editor={editor} />
       <EditorContent editor={editor} className="flex-grow" />
     </div>

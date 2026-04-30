@@ -136,19 +136,19 @@ const OtpModal = ({ isOpen, onClose, email, onVerify, onResend, isLoading, error
             initial={{ scale: 0.95, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
-            className="relative bg-slate-900 border border-white/10 rounded-2xl p-8 w-full max-w-md shadow-2xl z-10 mx-4"
+            className="relative bg-background border border-foreground/10 rounded-2xl p-8 w-full max-w-md shadow-2xl z-10 mx-4"
           >
             <button
               onClick={onClose}
-              className="absolute right-4 top-4 text-white/40 hover:text-white transition-colors"
+              className="absolute right-4 top-4 text-foreground/40 hover:text-foreground transition-colors"
               aria-label="Close modal"
             >
               <X className="w-5 h-5" />
             </button>
 
             <div className="text-center mb-8">
-              <h3 className="text-2xl font-bold text-white mb-2">Verification</h3>
-              <p className="text-white/60">
+              <h3 className="text-2xl font-bold text-foreground mb-2">Verification</h3>
+              <p className="text-foreground/60">
                 Enter the 6-digit code sent to <br />
                 <span className="text-mango-400 font-medium">{email}</span>
               </p>
@@ -168,7 +168,7 @@ const OtpModal = ({ isOpen, onClose, email, onVerify, onResend, isLoading, error
                     onKeyDown={(e) => handleKeyDown(e, index)}
                     onFocus={(e) => e.target.select()}
                     onPaste={index === 0 ? handlePaste : undefined}
-                    className="w-10 h-14 sm:w-12 sm:h-16 text-center text-xl sm:text-2xl font-bold bg-slate-800 border border-white/10 rounded-lg text-white focus:border-mango-500 focus:ring-1 focus:ring-mango-500 focus:outline-none transition-all"
+                    className="w-10 h-14 sm:w-12 sm:h-16 text-center text-xl sm:text-2xl font-bold bg-card border border-foreground/10 rounded-lg text-foreground focus:border-mango-500 focus:ring-1 focus:ring-mango-500 focus:outline-none transition-all"
                   />
                 ))}
               </div>
@@ -182,7 +182,7 @@ const OtpModal = ({ isOpen, onClose, email, onVerify, onResend, isLoading, error
               <Button
                 type="submit"
                 disabled={isLoading || otp.join('').length < 6}
-                className="w-full bg-mango-500 hover:bg-mango-600 text-white py-6 text-lg font-medium"
+                className="w-full bg-mango-500 hover:bg-mango-600 text-foreground py-6 text-lg font-medium"
               >
                 {isLoading ? (
                   <>
@@ -201,7 +201,7 @@ const OtpModal = ({ isOpen, onClose, email, onVerify, onResend, isLoading, error
                       type="button"
                       onClick={handleResendClick}
                       disabled={!canResend}
-                      className={`text-sm flex items-center justify-center gap-2 mx-auto transition-colors ${canResend ? 'text-mango-400 hover:text-mango-300' : 'text-white/30 cursor-not-allowed'}`}
+                      className={`text-sm flex items-center justify-center gap-2 mx-auto transition-colors ${canResend ? 'text-mango-400 hover:text-mango-300' : 'text-foreground/30 cursor-not-allowed'}`}
                   >
                       <RefreshCw className={`w-3 h-3 ${!canResend && 'animate-spin-slow'}`} />
                       {canResend ? "Resend Code" : `Resend in ${countdown}s`}
@@ -210,7 +210,7 @@ const OtpModal = ({ isOpen, onClose, email, onVerify, onResend, isLoading, error
                   <button 
                       type="button"
                       onClick={onClose}
-                      className="text-xs text-white/40 hover:text-white transition-colors block w-full"
+                      className="text-xs text-foreground/40 hover:text-foreground transition-colors block w-full"
                   >
                       Use a different email
                   </button>

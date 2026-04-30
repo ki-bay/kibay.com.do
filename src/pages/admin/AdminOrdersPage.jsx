@@ -80,29 +80,29 @@ const AdminOrdersPage = () => {
 				<title>Orders — Admin</title>
 			</Helmet>
 			<Navigation />
-			<div className="min-h-screen bg-slate-900 pt-28 pb-20 px-4">
+			<div className="min-h-screen bg-background pt-28 pb-20 px-4">
 				<div className="max-w-7xl mx-auto">
 					<div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-8">
 						<div>
-							<h1 className="text-3xl font-bold text-white">Order management</h1>
-							<p className="text-white/60 mt-1">
+							<h1 className="text-3xl font-bold text-foreground">Order management</h1>
+							<p className="text-foreground/60 mt-1">
 								Admin-only view (RLS + role). Update fulfillment fields after payment.
 							</p>
 						</div>
-						<Button variant="outline" onClick={load} className="border-white/20 text-white gap-2">
+						<Button variant="outline" onClick={load} className="border-foreground/20 text-foreground gap-2">
 							<RefreshCw className="w-4 h-4" />
 							Refresh
 						</Button>
 					</div>
 
 					<div className="grid sm:grid-cols-2 gap-4 mb-8">
-						<div className="bg-slate-800 border border-white/10 rounded-xl p-6">
-							<p className="text-white/50 text-sm">Paid / in-progress orders (count)</p>
+						<div className="bg-card border border-foreground/10 rounded-xl p-6">
+							<p className="text-foreground/50 text-sm">Paid / in-progress orders (count)</p>
 							<p className="text-3xl font-semibold text-mango-400">{stats.count}</p>
 						</div>
-						<div className="bg-slate-800 border border-white/10 rounded-xl p-6">
-							<p className="text-white/50 text-sm">Revenue (same set, DOP)</p>
-							<p className="text-3xl font-semibold text-white">{formatDopFromCents(stats.revenue)}</p>
+						<div className="bg-card border border-foreground/10 rounded-xl p-6">
+							<p className="text-foreground/50 text-sm">Revenue (same set, DOP)</p>
+							<p className="text-3xl font-semibold text-foreground">{formatDopFromCents(stats.revenue)}</p>
 						</div>
 					</div>
 
@@ -121,11 +121,11 @@ const AdminOrdersPage = () => {
 							{orders.map((o) => (
 								<div
 									key={o.id}
-									className="bg-slate-800 border border-white/10 rounded-xl p-4 md:p-6 grid gap-4 md:grid-cols-12"
+									className="bg-card border border-foreground/10 rounded-xl p-4 md:p-6 grid gap-4 md:grid-cols-12"
 								>
 									<div className="md:col-span-3">
-										<p className="text-white font-medium">{o.order_number}</p>
-										<p className="text-xs text-white/40 mt-1">{new Date(o.created_at).toLocaleString()}</p>
+										<p className="text-foreground font-medium">{o.order_number}</p>
+										<p className="text-xs text-foreground/40 mt-1">{new Date(o.created_at).toLocaleString()}</p>
 										<p className="text-mango-400 font-semibold mt-2">{formatDopFromCents(o.total_amount)}</p>
 										{o.invoice_pdf_path && (
 											<a
@@ -139,27 +139,27 @@ const AdminOrdersPage = () => {
 										)}
 									</div>
 									<div className="md:col-span-3 space-y-2">
-										<label className="text-xs text-white/50">Status</label>
+										<label className="text-xs text-foreground/50">Status</label>
 										<Input
-											className="bg-slate-900 border-white/10 text-white"
+											className="bg-background border-foreground/10 text-foreground"
 											value={o.status}
 											onChange={(e) => updateField(o.id, 'status', e.target.value)}
 											placeholder="paid, processing, shipped…"
 										/>
 									</div>
 									<div className="md:col-span-3 space-y-2">
-										<label className="text-xs text-white/50">Tracking number</label>
+										<label className="text-xs text-foreground/50">Tracking number</label>
 										<Input
-											className="bg-slate-900 border-white/10 text-white"
+											className="bg-background border-foreground/10 text-foreground"
 											value={o.tracking_number || ''}
 											onChange={(e) => updateField(o.id, 'tracking_number', e.target.value)}
 											placeholder="Carrier tracking"
 										/>
 									</div>
 									<div className="md:col-span-3 space-y-2">
-										<label className="text-xs text-white/50">Shipping method (label)</label>
+										<label className="text-xs text-foreground/50">Shipping method (label)</label>
 										<Input
-											className="bg-slate-900 border-white/10 text-white"
+											className="bg-background border-foreground/10 text-foreground"
 											value={o.shipping_method || ''}
 											onChange={(e) => updateField(o.id, 'shipping_method', e.target.value)}
 											placeholder="standard / express / …"
@@ -182,7 +182,7 @@ const AdminOrdersPage = () => {
 								</div>
 							))}
 							{orders.length === 0 && (
-								<p className="text-white/40 text-center py-12">No orders yet.</p>
+								<p className="text-foreground/40 text-center py-12">No orders yet.</p>
 							)}
 						</div>
 					)}

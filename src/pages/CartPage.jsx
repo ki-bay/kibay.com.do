@@ -13,7 +13,7 @@ const CartPage = () => {
       
       <Navigation />
       
-      <div className="min-h-screen bg-slate-900 pt-28 pb-20">
+      <div className="min-h-screen bg-background pt-28 pb-20">
         <Cart />
       </div>
       

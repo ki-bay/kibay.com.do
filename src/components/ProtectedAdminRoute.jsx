@@ -45,7 +45,7 @@ const ProtectedAdminRoute = ({ children }) => {
 
 	if (loading || !roleChecked) {
 		return (
-			<div className="min-h-screen flex items-center justify-center bg-slate-900">
+			<div className="min-h-screen flex items-center justify-center bg-background">
 				<Loader2 className="w-10 h-10 text-mango-500 animate-spin" />
 			</div>
 		);
@@ -57,18 +57,18 @@ const ProtectedAdminRoute = ({ children }) => {
 
 	if (!isAdmin) {
 		return (
-			<div className="min-h-screen flex items-center justify-center bg-slate-900 p-4">
-				<div className="bg-slate-800 p-8 rounded-2xl border border-red-500/20 shadow-2xl max-w-md text-center">
+			<div className="min-h-screen flex items-center justify-center bg-background p-4">
+				<div className="bg-card p-8 rounded-2xl border border-red-500/20 shadow-2xl max-w-md text-center">
 					<div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-500/10 mb-6 border border-red-500/20">
 						<ShieldAlert className="w-8 h-8 text-red-500" />
 					</div>
-					<h1 className="text-2xl font-bold text-white mb-2">Access Denied</h1>
-					<p className="text-white/60 mb-8">
-						This area is restricted to administrators (<code className="text-white/80">users.role =
+					<h1 className="text-2xl font-bold text-foreground mb-2">Access Denied</h1>
+					<p className="text-foreground/60 mb-8">
+						This area is restricted to administrators (<code className="text-foreground/80">users.role =
 						admin</code> or store owner email).
 					</p>
 					<Link to="/">
-						<Button className="w-full bg-slate-700 hover:bg-slate-600 text-white">Return to Home</Button>
+						<Button className="w-full bg-slate-700 hover:bg-slate-600 text-foreground">Return to Home</Button>
 					</Link>
 				</div>
 			</div>

@@ -72,7 +72,7 @@ const ContactPage = () => {
       toast({
         title: "Message Sent",
         description: "We'll get back to you within 24–48 hours.",
-        className: "bg-mango-500 text-white border-none"
+        className: "bg-mango-500 text-foreground border-none"
       });
     } catch (error) {
       console.error('Error sending message:', error);
@@ -95,7 +95,7 @@ const ContactPage = () => {
       
       <Navigation />
       
-      <main className="min-h-screen bg-slate-900 pt-24 pb-16">
+      <main className="min-h-screen bg-background pt-24 pb-16">
         
         {/* Hero Section */}
         <section className="relative px-4 sm:px-6 lg:px-8 py-16 text-center">
@@ -105,10 +105,10 @@ const ContactPage = () => {
             transition={{ duration: 0.6 }}
             className="max-w-3xl mx-auto"
           >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-white mb-6">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-foreground mb-6">
               Questions about <span className="bg-gradient-to-r from-mango-400 to-mango-600 bg-clip-text text-transparent font-normal">Kibay?</span>
             </h1>
-            <p className="text-xl text-white/80 font-light leading-relaxed">
+            <p className="text-xl text-foreground/80 font-light leading-relaxed">
               We'd love to hear from you. Whether you have questions about our products, need help with an order, or just want to say hello.
             </p>
           </motion.div>
@@ -124,16 +124,16 @@ const ContactPage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="group block p-8 bg-slate-800/50 hover:bg-slate-800 border border-white/5 hover:border-mango-500/30 rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-mango-500/10"
+                className="group block p-8 bg-card/50 hover:bg-card border border-foreground/5 hover:border-mango-500/30 rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-mango-500/10"
               >
-                <div className="w-12 h-12 bg-slate-900 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 border border-white/10 group-hover:border-mango-500/50">
+                <div className="w-12 h-12 bg-background rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 border border-foreground/10 group-hover:border-mango-500/50">
                   <option.icon className="w-6 h-6 text-mango-500" strokeWidth={1.5} />
                 </div>
-                <h3 className="text-lg font-normal text-white mb-2">{option.title}</h3>
+                <h3 className="text-lg font-normal text-foreground mb-2">{option.title}</h3>
                 <p className="text-mango-400 font-medium mb-3 group-hover:underline decoration-mango-400/50 underline-offset-4">
                   {option.isPhone ? option.phone : option.email}
                 </p>
-                <p className="text-sm text-white/60 font-light leading-relaxed">
+                <p className="text-sm text-foreground/60 font-light leading-relaxed">
                   {option.description}
                 </p>
               </motion.a>
@@ -150,11 +150,11 @@ const ContactPage = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-slate-800 rounded-2xl p-8 md:p-10 border border-white/10 shadow-2xl"
+              className="bg-card rounded-2xl p-8 md:p-10 border border-foreground/10 shadow-2xl"
             >
               <div className="flex items-center gap-3 mb-8">
                 <MessageSquare className="w-6 h-6 text-mango-500" />
-                <h2 className="text-2xl font-normal text-white">Send us a message</h2>
+                <h2 className="text-2xl font-normal text-foreground">Send us a message</h2>
               </div>
 
               {isSuccess ? (
@@ -162,14 +162,14 @@ const ContactPage = () => {
                   <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Send className="w-8 h-8 text-green-500" />
                   </div>
-                  <h3 className="text-xl font-normal text-white mb-2">Message Sent!</h3>
-                  <p className="text-white/70 font-light mb-6">
+                  <h3 className="text-xl font-normal text-foreground mb-2">Message Sent!</h3>
+                  <p className="text-foreground/70 font-light mb-6">
                     Thank you! Your message has been sent. We'll get back to you within 24–48 hours.
                   </p>
                   <Button 
                     onClick={() => setIsSuccess(false)}
                     variant="outline"
-                    className="border-white/20 text-white hover:bg-white/10 font-normal"
+                    className="border-foreground/20 text-foreground hover:bg-foreground/10 font-normal"
                   >
                     Send another message
                   </Button>
@@ -178,7 +178,7 @@ const ContactPage = () => {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid sm:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label htmlFor="name" className="text-sm text-white/80 font-light">Name <span className="text-mango-500">*</span></label>
+                      <label htmlFor="name" className="text-sm text-foreground/80 font-light">Name <span className="text-mango-500">*</span></label>
                       <input
                         type="text"
                         id="name"
@@ -186,12 +186,12 @@ const ContactPage = () => {
                         required
                         value={formData.name}
                         onChange={handleInputChange}
-                        className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-mango-500 focus:ring-1 focus:ring-mango-500 font-light transition-all"
+                        className="w-full bg-background/50 border border-foreground/10 rounded-lg px-4 py-3 text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-mango-500 focus:ring-1 focus:ring-mango-500 font-light transition-all"
                         placeholder="Your name"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label htmlFor="email" className="text-sm text-white/80 font-light">Email <span className="text-mango-500">*</span></label>
+                      <label htmlFor="email" className="text-sm text-foreground/80 font-light">Email <span className="text-mango-500">*</span></label>
                       <input
                         type="email"
                         id="email"
@@ -199,14 +199,14 @@ const ContactPage = () => {
                         required
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-mango-500 focus:ring-1 focus:ring-mango-500 font-light transition-all"
+                        className="w-full bg-background/50 border border-foreground/10 rounded-lg px-4 py-3 text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-mango-500 focus:ring-1 focus:ring-mango-500 font-light transition-all"
                         placeholder="you@example.com"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="topic" className="text-sm text-white/80 font-light">Topic <span className="text-mango-500">*</span></label>
+                    <label htmlFor="topic" className="text-sm text-foreground/80 font-light">Topic <span className="text-mango-500">*</span></label>
                     <div className="relative">
                       <select
                         id="topic"
@@ -214,21 +214,21 @@ const ContactPage = () => {
                         required
                         value={formData.topic}
                         onChange={handleInputChange}
-                        className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-mango-500 focus:ring-1 focus:ring-mango-500 font-light appearance-none cursor-pointer transition-all"
+                        className="w-full bg-background/50 border border-foreground/10 rounded-lg px-4 py-3 text-foreground focus:outline-none focus:border-mango-500 focus:ring-1 focus:ring-mango-500 font-light appearance-none cursor-pointer transition-all"
                       >
-                        <option value="Order" className="bg-slate-800 text-white">Order Inquiry</option>
-                        <option value="Sales / Partnership" className="bg-slate-800 text-white">Sales / Partnership</option>
-                        <option value="Event / Tasting" className="bg-slate-800 text-white">Event / Tasting</option>
-                        <option value="Other" className="bg-slate-800 text-white">Other</option>
+                        <option value="Order" className="bg-card text-foreground">Order Inquiry</option>
+                        <option value="Sales / Partnership" className="bg-card text-foreground">Sales / Partnership</option>
+                        <option value="Event / Tasting" className="bg-card text-foreground">Event / Tasting</option>
+                        <option value="Other" className="bg-card text-foreground">Other</option>
                       </select>
                       <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                        <svg className="w-4 h-4 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                        <svg className="w-4 h-4 text-foreground/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
                       </div>
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="message" className="text-sm text-white/80 font-light">Message <span className="text-mango-500">*</span></label>
+                    <label htmlFor="message" className="text-sm text-foreground/80 font-light">Message <span className="text-mango-500">*</span></label>
                     <textarea
                       id="message"
                       name="message"
@@ -236,7 +236,7 @@ const ContactPage = () => {
                       rows={5}
                       value={formData.message}
                       onChange={handleInputChange}
-                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-mango-500 focus:ring-1 focus:ring-mango-500 font-light transition-all resize-none"
+                      className="w-full bg-background/50 border border-foreground/10 rounded-lg px-4 py-3 text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-mango-500 focus:ring-1 focus:ring-mango-500 font-light transition-all resize-none"
                       placeholder="How can we help you?"
                     ></textarea>
                   </div>
@@ -244,7 +244,7 @@ const ContactPage = () => {
                   <Button 
                     type="submit" 
                     disabled={isSubmitting}
-                    className="w-full bg-mango-500 hover:bg-mango-600 text-white font-normal py-6 text-lg rounded-xl shadow-lg shadow-mango-500/20"
+                    className="w-full bg-mango-500 hover:bg-mango-600 text-foreground font-normal py-6 text-lg rounded-xl shadow-lg shadow-mango-500/20"
                   >
                     {isSubmitting ? (
                       <>
@@ -259,7 +259,7 @@ const ContactPage = () => {
                     )}
                   </Button>
                   
-                  <p className="text-xs text-white/40 text-center font-light">
+                  <p className="text-xs text-foreground/40 text-center font-light">
                     We only use your information to respond to your request. See our <a href="/privacy" className="underline hover:text-mango-400">Privacy Policy</a>.
                   </p>
                 </form>
@@ -273,26 +273,26 @@ const ContactPage = () => {
               transition={{ delay: 0.3 }}
               className="space-y-8"
             >
-              <div className="relative h-[400px] w-full rounded-2xl overflow-hidden shadow-2xl border border-white/10 group">
-                <div className="absolute inset-0 bg-slate-800/20 z-10 pointer-events-none group-hover:bg-transparent transition-colors duration-500"></div>
+              <div className="relative h-[400px] w-full rounded-2xl overflow-hidden shadow-2xl border border-foreground/10 group">
+                <div className="absolute inset-0 bg-card/20 z-10 pointer-events-none group-hover:bg-transparent transition-colors duration-500"></div>
                 <img 
                   src={mediaUrl('0658d94f57d843a069f9c7fa06b062bb.webp')} 
                   alt="Ocoa Bay Vineyard Landscape" 
                   className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
                 
                 <div className="absolute bottom-0 left-0 p-8 z-20 w-full">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-10 h-10 bg-mango-500 rounded-full flex items-center justify-center shadow-lg shadow-mango-500/30">
-                      <MapPin className="w-5 h-5 text-white" />
+                      <MapPin className="w-5 h-5 text-foreground" />
                     </div>
-                    <h2 className="text-2xl font-normal text-white">Visit us</h2>
+                    <h2 className="text-2xl font-normal text-foreground">Visit us</h2>
                   </div>
                   
-                  <p className="text-lg text-white/90 font-light mb-6 leading-relaxed">
+                  <p className="text-lg text-foreground/90 font-light mb-6 leading-relaxed">
                     Find your way to Ocoa Bay, Bahía de Ocoa. <br/>
-                    <span className="text-white/60 text-sm">Experience the vineyard where Kibay is born.</span>
+                    <span className="text-foreground/60 text-sm">Experience the vineyard where Kibay is born.</span>
                   </p>
                   
                   <Button 
@@ -311,20 +311,20 @@ const ContactPage = () => {
                 </div>
               </div>
               
-              <div className="bg-slate-800/50 rounded-2xl p-8 border border-white/5">
-                <h3 className="text-lg font-normal text-white mb-4">Vineyard Hours</h3>
-                <div className="space-y-3 text-white/70 font-light">
-                  <div className="flex justify-between border-b border-white/5 pb-2">
+              <div className="bg-card/50 rounded-2xl p-8 border border-foreground/5">
+                <h3 className="text-lg font-normal text-foreground mb-4">Vineyard Hours</h3>
+                <div className="space-y-3 text-foreground/70 font-light">
+                  <div className="flex justify-between border-b border-foreground/5 pb-2">
                     <span>Monday - Friday</span>
-                    <span className="text-white">9:00 AM - 5:00 PM</span>
+                    <span className="text-foreground">9:00 AM - 5:00 PM</span>
                   </div>
-                  <div className="flex justify-between border-b border-white/5 pb-2">
+                  <div className="flex justify-between border-b border-foreground/5 pb-2">
                     <span>Saturday</span>
-                    <span className="text-white">10:00 AM - 6:00 PM</span>
+                    <span className="text-foreground">10:00 AM - 6:00 PM</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Sunday</span>
-                    <span className="text-white">Closed</span>
+                    <span className="text-foreground">Closed</span>
                   </div>
                 </div>
               </div>

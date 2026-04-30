@@ -11,27 +11,27 @@ const OrderFiltersBar = ({
   setSortOption 
 }) => {
   return (
-    <div className="flex flex-col md:flex-row gap-4 mb-6 bg-white/5 p-4 rounded-xl border border-white/10">
+    <div className="flex flex-col md:flex-row gap-4 mb-6 bg-foreground/5 p-4 rounded-xl border border-foreground/10">
       {/* Search */}
       <div className="relative flex-1">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40 w-4 h-4" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-foreground/40 w-4 h-4" />
         <Input 
           type="text" 
           placeholder="Search by Order # or Amount..." 
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-9 bg-slate-900/50 border-white/10 text-white placeholder:text-white/30"
+          className="pl-9 bg-background/50 border-foreground/10 text-foreground placeholder:text-foreground/30"
         />
       </div>
 
       <div className="flex gap-4">
         {/* Status Filter */}
         <div className="relative min-w-[140px]">
-          <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40 w-4 h-4" />
+          <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-foreground/40 w-4 h-4" />
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="w-full pl-9 h-10 bg-slate-900/50 border border-white/10 rounded-md text-sm text-white focus:outline-none focus:ring-1 focus:ring-mango-500 appearance-none cursor-pointer"
+            className="w-full pl-9 h-10 bg-background/50 border border-foreground/10 rounded-md text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-mango-500 appearance-none cursor-pointer"
           >
             <option value="All">All Status</option>
             <option value="awaiting_payment">Awaiting payment</option>
@@ -48,11 +48,11 @@ const OrderFiltersBar = ({
 
         {/* Sort Options */}
         <div className="relative min-w-[160px]">
-          <ArrowUpDown className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40 w-4 h-4" />
+          <ArrowUpDown className="absolute left-3 top-1/2 transform -translate-y-1/2 text-foreground/40 w-4 h-4" />
           <select
             value={sortOption}
             onChange={(e) => setSortOption(e.target.value)}
-            className="w-full pl-9 h-10 bg-slate-900/50 border border-white/10 rounded-md text-sm text-white focus:outline-none focus:ring-1 focus:ring-mango-500 appearance-none cursor-pointer"
+            className="w-full pl-9 h-10 bg-background/50 border border-foreground/10 rounded-md text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-mango-500 appearance-none cursor-pointer"
           >
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>

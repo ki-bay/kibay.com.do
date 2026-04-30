@@ -27,7 +27,7 @@ const OrderCard = ({ order }) => {
       case 'cancelled':
         return 'bg-red-500/10 text-red-500 border-red-500/20';
       default:
-        return 'bg-white/5 text-white/50 border-white/10';
+        return 'bg-foreground/5 text-foreground/50 border-foreground/10';
     }
   };
 
@@ -36,21 +36,21 @@ const OrderCard = ({ order }) => {
       <motion.div 
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="group bg-slate-800/50 hover:bg-slate-800 border border-white/5 hover:border-mango-500/30 rounded-xl p-5 transition-all duration-300 shadow-sm hover:shadow-glow-orange flex flex-col md:flex-row md:items-center justify-between gap-4"
+        className="group bg-card/50 hover:bg-card border border-foreground/5 hover:border-mango-500/30 rounded-xl p-5 transition-all duration-300 shadow-sm hover:shadow-glow-orange flex flex-col md:flex-row md:items-center justify-between gap-4"
       >
         <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-lg bg-white/5 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-            <Package className="w-6 h-6 text-white/30 group-hover:text-mango-400 transition-colors" />
+          <div className="w-12 h-12 rounded-lg bg-foreground/5 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+            <Package className="w-6 h-6 text-foreground/30 group-hover:text-mango-400 transition-colors" />
           </div>
           
           <div>
             <div className="flex items-center gap-3 mb-1">
-              <span className="text-white font-medium">#{order.order_number}</span>
+              <span className="text-foreground font-medium">#{order.order_number}</span>
               <span className={`text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full border font-semibold ${getStatusStyle(order.status)}`}>
                 {order.status}
               </span>
             </div>
-            <p className="text-sm text-white/50 font-light">
+            <p className="text-sm text-foreground/50 font-light">
               {new Date(order.created_at).toLocaleDateString(undefined, { 
                 month: 'short', day: 'numeric', year: 'numeric' 
               })}
@@ -69,7 +69,7 @@ const OrderCard = ({ order }) => {
             variant="ghost" 
             size="sm" 
             onClick={() => setIsModalOpen(true)}
-            className="text-white/60 hover:text-white hover:bg-white/10 gap-1 group/btn"
+            className="text-foreground/60 hover:text-foreground hover:bg-foreground/10 gap-1 group/btn"
           >
             View Details
             <ChevronRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />

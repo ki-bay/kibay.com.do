@@ -19,7 +19,7 @@ const ShoppingCartIcon = forwardRef(({ onClick }, ref) => {
     >
       <ShoppingCart className="w-5 h-5" strokeWidth={1.5} />
       {count > 0 && (
-        <span className="absolute -top-1 -right-1 bg-[#D4A574] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
+        <span className="absolute -top-1 -right-1 bg-[#D4A574] text-foreground text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
           {count}
         </span>
       )}

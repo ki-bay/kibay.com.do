@@ -95,7 +95,7 @@ const AdminApiKeysPage = () => {
               <h1 className="text-3xl font-serif text-stone-900">API Keys Management</h1>
               <p className="text-stone-500 mt-2">Manage programmatic access tokens for automations and webhooks.</p>
             </div>
-            <Button onClick={() => setIsModalOpen(true)} className="gap-2 bg-stone-900 text-white hover:bg-stone-800">
+            <Button onClick={() => setIsModalOpen(true)} className="gap-2 bg-card text-foreground hover:bg-card">
               <Plus className="w-4 h-4" /> Generate New Key
             </Button>
           </div>
@@ -181,7 +181,7 @@ const AdminApiKeysPage = () => {
                   ))}
                 </div>
               </div>
-              <Button onClick={generateKey} disabled={loading} className="w-full mt-4 bg-stone-900 text-white">
+              <Button onClick={generateKey} disabled={loading} className="w-full mt-4 bg-card text-foreground">
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Generate Key'}
               </Button>
             </div>

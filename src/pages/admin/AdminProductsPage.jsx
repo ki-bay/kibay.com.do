@@ -79,21 +79,21 @@ const AdminProductsPage = () => {
 				<title>Products — Admin</title>
 			</Helmet>
 			<Navigation />
-			<main className="min-h-screen bg-slate-900 pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+			<main className="min-h-screen bg-background pt-32 pb-20 px-4 sm:px-6 lg:px-8">
 				<div className="max-w-7xl mx-auto">
 					<div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
 						<div>
-							<h1 className="text-3xl sm:text-4xl font-light text-white">Products</h1>
-							<p className="text-white/60 mt-2 font-light">
+							<h1 className="text-3xl sm:text-4xl font-light text-foreground">Products</h1>
+							<p className="text-foreground/60 mt-2 font-light">
 								Manage the native catalog. Bilingual ES/EN copy, USD + DOP prices, real inventory.
 							</p>
 						</div>
 						<div className="flex gap-3">
-							<Button onClick={load} variant="ghost" className="border border-white/10 text-white">
+							<Button onClick={load} variant="ghost" className="border border-foreground/10 text-foreground">
 								<RefreshCw className="w-4 h-4 mr-2" /> Refresh
 							</Button>
 							<Link to="/admin/products/new">
-								<Button className="bg-mango-500 hover:bg-mango-600 text-white">
+								<Button className="bg-mango-500 hover:bg-mango-600 text-foreground">
 									<Plus className="w-4 h-4 mr-2" /> New Product
 								</Button>
 							</Link>
@@ -112,18 +112,18 @@ const AdminProductsPage = () => {
 							<Loader2 className="w-8 h-8 text-mango-500 animate-spin" />
 						</div>
 					) : products.length === 0 ? (
-						<div className="text-center py-20 border border-dashed border-white/10 rounded-2xl">
-							<p className="text-white/60">No products yet.</p>
+						<div className="text-center py-20 border border-dashed border-foreground/10 rounded-2xl">
+							<p className="text-foreground/60">No products yet.</p>
 							<Link to="/admin/products/new">
-								<Button className="mt-4 bg-mango-500 hover:bg-mango-600 text-white">
+								<Button className="mt-4 bg-mango-500 hover:bg-mango-600 text-foreground">
 									<Plus className="w-4 h-4 mr-2" /> Create the first product
 								</Button>
 							</Link>
 						</div>
 					) : (
-						<div className="overflow-hidden rounded-2xl border border-white/10 bg-slate-800/40 backdrop-blur-sm">
+						<div className="overflow-hidden rounded-2xl border border-foreground/10 bg-card/40 backdrop-blur-sm">
 							<table className="w-full text-sm text-left">
-								<thead className="bg-slate-800 text-white/60 uppercase text-xs tracking-wider">
+								<thead className="bg-card text-foreground/60 uppercase text-xs tracking-wider">
 									<tr>
 										<th className="px-4 py-3"> </th>
 										<th className="px-4 py-3">Title (ES)</th>
@@ -139,38 +139,38 @@ const AdminProductsPage = () => {
 									{products.map((p) => {
 										const s = summarize(p.product_variants);
 										return (
-											<tr key={p.id} className="border-t border-white/5 hover:bg-white/5 transition-colors">
+											<tr key={p.id} className="border-t border-foreground/5 hover:bg-foreground/5 transition-colors">
 												<td className="px-4 py-3">
 													{p.thumbnail_url ? (
-														<img src={p.thumbnail_url} alt="" className="w-12 h-12 rounded-md object-cover bg-slate-900" />
+														<img src={p.thumbnail_url} alt="" className="w-12 h-12 rounded-md object-cover bg-background" />
 													) : (
-														<div className="w-12 h-12 rounded-md bg-slate-900 border border-white/5" />
+														<div className="w-12 h-12 rounded-md bg-background border border-foreground/5" />
 													)}
 												</td>
-												<td className="px-4 py-3 text-white">
-													<div className="font-normal">{p.title_es || <span className="text-white/40 italic">— missing —</span>}</div>
-													<div className="text-white/40 text-xs">{p.title_en}</div>
+												<td className="px-4 py-3 text-foreground">
+													<div className="font-normal">{p.title_es || <span className="text-foreground/40 italic">— missing —</span>}</div>
+													<div className="text-foreground/40 text-xs">{p.title_en}</div>
 												</td>
-												<td className="px-4 py-3 text-white/70 font-mono text-xs">{p.slug}</td>
+												<td className="px-4 py-3 text-foreground/70 font-mono text-xs">{p.slug}</td>
 												<td className="px-4 py-3">
 													<span className={`inline-flex items-center px-2 py-1 rounded-full text-xs border ${STATUS_STYLES[p.status] || STATUS_STYLES.draft}`}>
 														{p.status}
 													</span>
 													{!p.purchasable && (
-														<span className="ml-2 text-xs text-white/40">not purchasable</span>
+														<span className="ml-2 text-xs text-foreground/40">not purchasable</span>
 													)}
 												</td>
-												<td className="px-4 py-3 text-white/80">{s.count}</td>
-												<td className="px-4 py-3 text-white/80">
-													{s.tracksInventory ? s.totalStock : <span className="text-white/40 italic">untracked</span>}
+												<td className="px-4 py-3 text-foreground/80">{s.count}</td>
+												<td className="px-4 py-3 text-foreground/80">
+													{s.tracksInventory ? s.totalStock : <span className="text-foreground/40 italic">untracked</span>}
 												</td>
-												<td className="px-4 py-3 text-white/80">
+												<td className="px-4 py-3 text-foreground/80">
 													{formatPrice(s.lowest?.price_usd_cents, '$')} / {formatPrice(s.lowest?.price_dop_cents, 'RD$')}
 												</td>
 												<td className="px-4 py-3">
 													<div className="flex justify-end gap-2">
 														<Link to={`/admin/products/${p.id}/edit`}>
-															<Button size="sm" variant="ghost" className="text-white/80 hover:text-white">
+															<Button size="sm" variant="ghost" className="text-foreground/80 hover:text-foreground">
 																<Edit className="w-4 h-4" />
 															</Button>
 														</Link>

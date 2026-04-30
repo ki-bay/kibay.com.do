@@ -32,24 +32,24 @@
 
   /* Dark theme (applied when next-themes adds .dark on <html>). */
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 222 47% 7%;        /* page bg — slate-900-ish */
     --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
+    --card: 215 28% 14%;             /* one notch lighter than bg, like slate-800 */
     --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
+    --popover: 215 28% 11%;
     --popover-foreground: 210 40% 98%;
     --primary: 24 100% 63%;
     --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
+    --secondary: 215 28% 17%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
+    --muted: 215 28% 17%;
     --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
+    --accent: 215 28% 17%;
     --accent-foreground: 210 40% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
+    --border: 215 28% 22%;
+    --input: 215 28% 22%;
     --ring: 24 100% 63%;
   }
 }
@@ -105,7 +105,7 @@
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-slate-900;
+    @apply bg-background;
   }
 
   ::-webkit-scrollbar-thumb {

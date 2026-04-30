@@ -81,7 +81,7 @@ const BlogDetailPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-mango-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
@@ -89,7 +89,7 @@ const BlogDetailPage = () => {
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center text-white">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center text-foreground">
         <h1 className="text-4xl font-bold mb-4">Post not found</h1>
         <Link to="/blog" className="text-mango-400 hover:underline">Back to Blog</Link>
       </div>
@@ -112,11 +112,11 @@ const BlogDetailPage = () => {
       </Helmet>
       <Navigation />
       
-      <article className="min-h-screen bg-slate-900 pt-24 pb-20 font-lato">
+      <article className="min-h-screen bg-background pt-24 pb-20 font-lato">
         {/* Header Image */}
         {post.featured_image_url && (
           <div className="w-full h-[50vh] relative mb-12">
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent z-10"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent z-10"></div>
             <img 
               src={post.featured_image_url} 
               alt={post.title} 
@@ -127,12 +127,12 @@ const BlogDetailPage = () => {
 
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           {/* Back Link */}
-          <Link to="/blog" className="inline-flex items-center text-white/60 hover:text-mango-400 mb-8 transition-colors">
+          <Link to="/blog" className="inline-flex items-center text-foreground/60 hover:text-mango-400 mb-8 transition-colors">
             <ArrowLeft className="w-4 h-4 mr-2" /> Back to Blog
           </Link>
 
           {/* Meta */}
-          <div className="flex flex-wrap items-center gap-4 text-sm text-white/60 mb-6">
+          <div className="flex flex-wrap items-center gap-4 text-sm text-foreground/60 mb-6">
             <span className="bg-mango-500/20 text-mango-400 px-3 py-1 rounded-full font-medium">
               {post.category?.name}
             </span>
@@ -147,54 +147,54 @@ const BlogDetailPage = () => {
           </div>
 
           {/* Title */}
-          <h1 className="text-3xl md:text-5xl font-bold text-white mb-8 leading-tight">
+          <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-8 leading-tight">
             {post.title}
           </h1>
 
           {/* Author & Share */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-y border-white/10 py-6 mb-12 gap-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-y border-foreground/10 py-6 mb-12 gap-6">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-slate-700 flex items-center justify-center text-white font-bold text-lg">
+              <div className="w-12 h-12 rounded-full bg-slate-700 flex items-center justify-center text-foreground font-bold text-lg">
                 {post.author?.full_name?.charAt(0) || 'K'}
               </div>
               <div>
-                <p className="text-white font-medium text-lg">{post.author?.full_name || 'Kibay Team'}</p>
-                <p className="text-white/40 text-sm">Author</p>
+                <p className="text-foreground font-medium text-lg">{post.author?.full_name || 'Kibay Team'}</p>
+                <p className="text-foreground/40 text-sm">Author</p>
               </div>
             </div>
             
             <div className="flex items-center gap-2">
-              <span className="text-white/40 text-sm mr-2">Share:</span>
-              <Button variant="ghost" size="icon" onClick={() => handleShare('facebook')} className="text-white/60 hover:text-[#1877F2] hover:bg-white/5 transition-colors">
+              <span className="text-foreground/40 text-sm mr-2">Share:</span>
+              <Button variant="ghost" size="icon" onClick={() => handleShare('facebook')} className="text-foreground/60 hover:text-[#1877F2] hover:bg-foreground/5 transition-colors">
                 <Facebook className="w-5 h-5" />
               </Button>
-              <Button variant="ghost" size="icon" onClick={() => handleShare('twitter')} className="text-white/60 hover:text-[#1DA1F2] hover:bg-white/5 transition-colors">
+              <Button variant="ghost" size="icon" onClick={() => handleShare('twitter')} className="text-foreground/60 hover:text-[#1DA1F2] hover:bg-foreground/5 transition-colors">
                 <Twitter className="w-5 h-5" />
               </Button>
-              <Button variant="ghost" size="icon" onClick={() => handleShare('instagram')} className="text-white/60 hover:text-[#E4405F] hover:bg-white/5 transition-colors">
+              <Button variant="ghost" size="icon" onClick={() => handleShare('instagram')} className="text-foreground/60 hover:text-[#E4405F] hover:bg-foreground/5 transition-colors">
                 <div className="w-5 h-5 flex items-center justify-center"><div className="w-4 h-4 border-2 border-current rounded-sm flex items-center justify-center"><div className="w-1 h-1 bg-current rounded-full"></div></div></div>
               </Button>
-              <Button variant="ghost" size="icon" onClick={() => handleShare('tiktok')} className="text-white/60 hover:text-[#ff0050] hover:bg-white/5 transition-colors">
+              <Button variant="ghost" size="icon" onClick={() => handleShare('tiktok')} className="text-foreground/60 hover:text-[#ff0050] hover:bg-foreground/5 transition-colors">
                 <TikTokIcon className="w-5 h-5" />
               </Button>
-              <Button variant="ghost" size="icon" onClick={() => handleShare('copy')} className="text-white/60 hover:text-green-400 hover:bg-white/5 transition-colors" title="Copy Link">
+              <Button variant="ghost" size="icon" onClick={() => handleShare('copy')} className="text-foreground/60 hover:text-green-400 hover:bg-foreground/5 transition-colors" title="Copy Link">
                 <Copy className="w-5 h-5" />
               </Button>
             </div>
           </div>
 
           {/* Content */}
-          <div className="prose prose-invert prose-lg max-w-none text-white/80 leading-relaxed">
+          <div className="prose prose-invert prose-lg max-w-none text-foreground/80 leading-relaxed">
             <div dangerouslySetInnerHTML={{ __html: post.content }} />
           </div>
 
           {/* Tags */}
           {post.tags && post.tags.length > 0 && (
-            <div className="mt-12 pt-8 border-t border-white/10">
-              <h3 className="text-sm font-medium text-white/60 mb-4 uppercase tracking-wider">Tags</h3>
+            <div className="mt-12 pt-8 border-t border-foreground/10">
+              <h3 className="text-sm font-medium text-foreground/60 mb-4 uppercase tracking-wider">Tags</h3>
               <div className="flex flex-wrap gap-2">
                 {post.tags.map((tag, idx) => (
-                  <span key={idx} className="bg-slate-800 text-white/70 px-4 py-2 rounded-full text-sm hover:bg-slate-700 transition-colors cursor-default">
+                  <span key={idx} className="bg-card text-foreground/70 px-4 py-2 rounded-full text-sm hover:bg-slate-700 transition-colors cursor-default">
                     #{tag}
                   </span>
                 ))}
@@ -203,11 +203,11 @@ const BlogDetailPage = () => {
           )}
           
           {/* Post Footer */}
-          <div className="mt-16 bg-slate-800 rounded-xl p-8 text-center border border-white/5">
-             <h3 className="text-2xl text-white font-light mb-4">Enjoyed this story?</h3>
-             <p className="text-white/60 mb-6">Sign up for our newsletter to get the latest stories delivered to your inbox.</p>
+          <div className="mt-16 bg-card rounded-xl p-8 text-center border border-foreground/5">
+             <h3 className="text-2xl text-foreground font-light mb-4">Enjoyed this story?</h3>
+             <p className="text-foreground/60 mb-6">Sign up for our newsletter to get the latest stories delivered to your inbox.</p>
              <Link to="/contact">
-               <Button className="bg-mango-500 hover:bg-mango-600 text-white rounded-full px-8">Subscribe</Button>
+               <Button className="bg-mango-500 hover:bg-mango-600 text-foreground rounded-full px-8">Subscribe</Button>
              </Link>
           </div>
         </div>

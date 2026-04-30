@@ -35,7 +35,7 @@ const BlogEditor = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="w-10 h-10 text-mango-500 animate-spin" />
       </div>
     );
@@ -47,7 +47,7 @@ const BlogEditor = () => {
         <title>{id ? 'Edit Post' : 'New Post'} - Kibay Admin</title>
       </Helmet>
       <Navigation />
-      <div className="min-h-screen bg-slate-900 pt-28 pb-20 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-background pt-28 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto">
           <BlogPostForm 
             initialData={initialData} 

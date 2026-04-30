@@ -40,7 +40,7 @@ function ProductDetailPage() {
         toast({
           title: "Added to Cart",
           description: `${product.title.replace(/Espumante/gi, 'Sparkling')} has been added.`,
-          className: "bg-stone-900 text-white border-none",
+          className: "bg-card text-foreground border-none",
         });
       } catch (error) {
         toast({
@@ -151,7 +151,7 @@ function ProductDetailPage() {
           <h1 className="text-2xl font-serif text-stone-900 mb-4">Product Not Found</h1>
           <p className="text-stone-500 mb-8">{error || "We couldn't find the product you're looking for."}</p>
           <Link to="/shop">
-            <Button className="bg-[#D4A574] hover:bg-[#c29462] text-white">Return to Shop</Button>
+            <Button className="bg-[#D4A574] hover:bg-[#c29462] text-foreground">Return to Shop</Button>
           </Link>
         </div>
         <Footer />
@@ -268,7 +268,7 @@ function ProductDetailPage() {
                         onClick={() => setSelectedVariant(variant)}
                         className={`px-6 py-3 rounded-full border transition-all duration-300 text-sm font-medium ${
                           selectedVariant?.id === variant.id 
-                            ? 'bg-stone-900 text-white border-stone-900 shadow-md' 
+                            ? 'bg-card text-foreground border-border shadow-md' 
                             : 'bg-white text-stone-600 border-stone-200 hover:border-[#D4A574] hover:text-[#D4A574]'
                         }`}
                       >
@@ -302,7 +302,7 @@ function ProductDetailPage() {
                 <Button 
                   onClick={handleAddToCart} 
                   disabled={!canAddToCart || isSoldOut || !product.purchasable}
-                  className="flex-1 bg-[#D4A574] hover:bg-[#c29462] text-white rounded-full py-7 text-lg shadow-lg shadow-[#D4A574]/20 transition-all duration-300 disabled:bg-stone-200 disabled:text-stone-400 disabled:shadow-none disabled:cursor-not-allowed"
+                  className="flex-1 bg-[#D4A574] hover:bg-[#c29462] text-foreground rounded-full py-7 text-lg shadow-lg shadow-[#D4A574]/20 transition-all duration-300 disabled:bg-stone-200 disabled:text-stone-400 disabled:shadow-none disabled:cursor-not-allowed"
                 >
                   <ShoppingBag className="mr-2 h-5 w-5" />
                   {isSoldOut ? 'Out of Stock' : (!product.purchasable ? 'Unavailable' : 'Add to Cart')}

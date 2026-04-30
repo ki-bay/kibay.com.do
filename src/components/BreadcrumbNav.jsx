@@ -15,13 +15,13 @@ const BreadcrumbNav = ({ items }) => {
       <SchemaMarkup type="BreadcrumbList" data={{ items: breadcrumbs }} />
       
       <nav aria-label="Breadcrumb" className="mb-6">
-        <ol className="flex flex-wrap items-center space-x-2 text-sm text-white/60">
+        <ol className="flex flex-wrap items-center space-x-2 text-sm text-foreground/60">
           {breadcrumbs.map((item, index) => {
             const isLast = index === breadcrumbs.length - 1;
 
             return (
               <li key={index} className="flex items-center">
-                {index > 0 && <ChevronRight className="w-4 h-4 mx-2 text-white/40" />}
+                {index > 0 && <ChevronRight className="w-4 h-4 mx-2 text-foreground/40" />}
                 
                 {isLast ? (
                   <span className="text-mango-400 font-medium truncate max-w-[200px] md:max-w-none" aria-current="page">
@@ -30,7 +30,7 @@ const BreadcrumbNav = ({ items }) => {
                 ) : (
                   <Link 
                     to={item.url} 
-                    className="hover:text-white transition-colors flex items-center"
+                    className="hover:text-foreground transition-colors flex items-center"
                   >
                     {index === 0 && <Home className="w-3 h-3 mr-1" />}
                     {item.name}

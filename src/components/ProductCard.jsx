@@ -31,46 +31,46 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <Card className="overflow-hidden bg-slate-800 border-mango-500/20 hover:shadow-2xl hover:shadow-mango-500/10 transition-all duration-300 transform hover:-translate-y-1 flex flex-col">
-      <FlyToCartAnimation ref={productImgRef} className="w-full h-72 bg-slate-900/50 overflow-hidden group">
+    <Card className="overflow-hidden bg-card border-mango-500/20 hover:shadow-2xl hover:shadow-mango-500/10 transition-all duration-300 transform hover:-translate-y-1 flex flex-col">
+      <FlyToCartAnimation ref={productImgRef} className="w-full h-72 bg-background/50 overflow-hidden group">
         <img
           src={product.image}
           alt={product.name}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </FlyToCartAnimation>
       
       <div className="p-6 flex flex-col flex-grow">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h3 className="text-xl font-normal text-white mb-1">{product.name}</h3>
+            <h3 className="text-xl font-normal text-foreground mb-1">{product.name}</h3>
             <p className="text-sm text-mango-400 font-medium">{product.type}</p>
           </div>
-          <span className="text-xl font-normal text-white">
+          <span className="text-xl font-normal text-foreground">
             RD${product.price}
           </span>
         </div>
         
-        <p className="text-white/70 text-sm mb-6 line-clamp-2 font-light flex-grow">
+        <p className="text-foreground/70 text-sm mb-6 line-clamp-2 font-light flex-grow">
           {product.description}
         </p>
 
         <div className="flex items-center gap-4 mt-auto">
-          <div className="flex items-center bg-slate-900 rounded-lg border border-white/10">
+          <div className="flex items-center bg-background rounded-lg border border-foreground/10">
             <button
               onClick={handleDecrement}
-              className="p-2 text-white/70 hover:text-white transition-colors"
+              className="p-2 text-foreground/70 hover:text-foreground transition-colors"
               aria-label="Decrease quantity"
             >
               <Minus className="w-4 h-4" />
             </button>
-            <span className="w-8 text-center text-white font-normal">
+            <span className="w-8 text-center text-foreground font-normal">
               {quantity}
             </span>
             <button
               onClick={handleIncrement}
-              className="p-2 text-white/70 hover:text-white transition-colors"
+              className="p-2 text-foreground/70 hover:text-foreground transition-colors"
               aria-label="Increase quantity"
             >
               <Plus className="w-4 h-4" />
@@ -79,7 +79,7 @@ const ProductCard = ({ product }) => {
           
           <Button
             onClick={handleAddToCart}
-            className="flex-1 bg-mango-500 hover:bg-mango-600 text-white font-normal"
+            className="flex-1 bg-mango-500 hover:bg-mango-600 text-foreground font-normal"
           >
             <ShoppingBag className="w-4 h-4 mr-2" />
             Add to Cart

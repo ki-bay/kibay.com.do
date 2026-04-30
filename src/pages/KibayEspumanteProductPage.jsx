@@ -49,13 +49,13 @@ const KibayEspumanteProductPage = () => {
       <Navigation />
       
       {/* Hero Section - Redesigned for Mobile-First Responsiveness */}
-      <section className="relative min-h-screen lg:min-h-[85vh] flex items-center bg-slate-900 pt-24 pb-12 lg:pt-32 lg:pb-20 overflow-hidden">
+      <section className="relative min-h-screen lg:min-h-[85vh] flex items-center bg-background pt-24 pb-12 lg:pt-32 lg:pb-20 overflow-hidden">
         {/* Background Elements */}
         <div
           className="absolute inset-0 bg-cover bg-center opacity-10"
           style={{ backgroundImage: `url(${mediaUrl('09a4757f8d6894f3f809efc283dcd8d9.jpg')})` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-900/95 to-slate-900 lg:bg-gradient-to-r lg:from-slate-900 lg:via-slate-900/90 lg:to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background lg:bg-gradient-to-r lg:from-background lg:via-background/90 lg:to-transparent"></div>
         
         {/* Decorative Glow */}
         <div className="absolute top-1/4 right-0 w-64 h-64 bg-orange-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -74,23 +74,23 @@ const KibayEspumanteProductPage = () => {
                 The New Caribbean Standard
               </motion.span>
               
-              <motion.h1 variants={fadeIn} className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-light text-white leading-tight">
+              <motion.h1 variants={fadeIn} className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-light text-foreground leading-tight">
                 Kibay <br className="hidden sm:block" />
                 <span className="text-orange-500 font-normal">Sparkling</span>
               </motion.h1>
               
               <motion.div variants={fadeIn} className="space-y-4 max-w-lg lg:max-w-xl">
-                <h2 className="text-lg sm:text-xl lg:text-2xl text-white/90 font-light">
+                <h2 className="text-lg sm:text-xl lg:text-2xl text-foreground/90 font-light">
                   Organic Sparkling Wine with Mango & Passion Fruit
                 </h2>
-                <p className="text-base sm:text-lg text-white/70 font-light leading-relaxed">
+                <p className="text-base sm:text-lg text-foreground/70 font-light leading-relaxed">
                   Fermented, not flavored. Real wine, refreshingly alive. A sophisticated expression of Dominican terroir crafted for modern enjoyment.
                 </p>
               </motion.div>
               
               <motion.div variants={fadeIn} className="pt-4 w-full sm:w-auto">
                 <Link to="/shop" className="block w-full sm:w-auto">
-                  <Button className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white px-8 py-6 text-lg rounded-full font-normal shadow-[0_0_20px_rgba(249,115,22,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(249,115,22,0.5)]">
+                  <Button className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-foreground px-8 py-6 text-lg rounded-full font-normal shadow-[0_0_20px_rgba(249,115,22,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(249,115,22,0.5)]">
                     Discover the Wine
                   </Button>
                 </Link>
@@ -116,7 +116,7 @@ const KibayEspumanteProductPage = () => {
       </section>
 
       {/* Section 1: What Kibay Sparkling Is */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-900">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
         <div className="max-w-4xl mx-auto">
           <motion.div 
             initial="hidden"
@@ -125,9 +125,9 @@ const KibayEspumanteProductPage = () => {
             variants={fadeIn}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-light text-white mb-6">A Real Sparkling Wine</h2>
+            <h2 className="text-3xl md:text-4xl font-light text-foreground mb-6">A Real Sparkling Wine</h2>
             <div className="w-20 h-1 bg-orange-500 mx-auto rounded-full mb-8"></div>
-            <p className="text-xl text-white/80 font-light leading-relaxed">
+            <p className="text-xl text-foreground/80 font-light leading-relaxed">
               Kibay Sparkling is true wine, achieved through natural fermentation. We don't simply mix fruit juice with alcohol. We ferment premium, organic mango and passion fruit from Ocoa Bay to create a complex, structured sparkling wine that retains the authentic soul of its ingredients.
             </p>
           </motion.div>
@@ -138,12 +138,12 @@ const KibayEspumanteProductPage = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="bg-slate-800/50 p-8 rounded-2xl border border-white/5"
+              className="bg-card/50 p-8 rounded-2xl border border-foreground/5"
             >
-              <h3 className="text-xl font-normal text-white mb-4 flex items-center">
+              <h3 className="text-xl font-normal text-foreground mb-4 flex items-center">
                 <Check className="w-5 h-5 text-green-500 mr-2" /> What It Is
               </h3>
-              <ul className="space-y-3 text-white/70 font-light">
+              <ul className="space-y-3 text-foreground/70 font-light">
                 <li className="flex items-start"><span className="mr-2">•</span> Naturally fermented sparkling wine</li>
                 <li className="flex items-start"><span className="mr-2">•</span> Crafted from 100% organic fruit</li>
                 <li className="flex items-start"><span className="mr-2">•</span> A product of skilled winemaking</li>
@@ -156,12 +156,12 @@ const KibayEspumanteProductPage = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="bg-slate-800/30 p-8 rounded-2xl border border-white/5 opacity-75"
+              className="bg-card/30 p-8 rounded-2xl border border-foreground/5 opacity-75"
             >
-              <h3 className="text-xl font-normal text-white/90 mb-4 flex items-center">
+              <h3 className="text-xl font-normal text-foreground/90 mb-4 flex items-center">
                 <span className="text-orange-500 mr-2 text-xl">×</span> What It's Not
               </h3>
-              <ul className="space-y-3 text-white/60 font-light">
+              <ul className="space-y-3 text-foreground/60 font-light">
                 <li className="flex items-start"><span className="mr-2">•</span> Not a wine cooler or spritzer</li>
                 <li className="flex items-start"><span className="mr-2">•</span> Not a sugar-laden cocktail</li>
                 <li className="flex items-start"><span className="mr-2">•</span> Not artificially flavored</li>
@@ -173,7 +173,7 @@ const KibayEspumanteProductPage = () => {
       </section>
 
       {/* Section 2: Origin & Winery Credibility */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-950 relative overflow-hidden">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background relative overflow-hidden">
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div
@@ -186,15 +186,15 @@ const KibayEspumanteProductPage = () => {
                 <MapPin className="w-4 h-4" />
                 <span>Ocoa Bay, Dominican Republic</span>
               </div>
-              <h2 className="text-4xl md:text-5xl font-light text-white mb-6">From the Dominican Republic</h2>
-              <p className="text-lg text-white/80 font-light mb-6 leading-relaxed">
+              <h2 className="text-4xl md:text-5xl font-light text-foreground mb-6">From the Dominican Republic</h2>
+              <p className="text-lg text-foreground/80 font-light mb-6 leading-relaxed">
                 Born in the unique microclimate of Ocoa Bay, where the mountains meet the Caribbean Sea. This dry, sunny region produces mangoes and chinola (passion fruit) with concentrated flavors and exceptional aromatics essential for high-quality winemaking.
               </p>
-              <p className="text-lg text-white/80 font-light mb-8 leading-relaxed">
+              <p className="text-lg text-foreground/80 font-light mb-8 leading-relaxed">
                 Our production happens entirely on the island, supporting local agriculture and minimizing our carbon footprint.
               </p>
-              <div className="bg-slate-900 p-6 border-l-4 border-orange-500">
-                <p className="text-xl text-white font-light italic">
+              <div className="bg-background p-6 border-l-4 border-orange-500">
+                <p className="text-xl text-foreground font-light italic">
                   "From the same winery as Kibay wine — by Ocoa Bay"
                 </p>
               </div>
@@ -211,10 +211,10 @@ const KibayEspumanteProductPage = () => {
                 alt="Vineyard landscape" 
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent"></div>
               <div className="absolute bottom-8 left-8">
-                <p className="text-white font-normal text-xl">Ocoa Bay Winery</p>
-                <p className="text-white/70 text-sm font-light">The first vineyard in the Caribbean</p>
+                <p className="text-foreground font-normal text-xl">Ocoa Bay Winery</p>
+                <p className="text-foreground/70 text-sm font-light">The first vineyard in the Caribbean</p>
               </div>
             </motion.div>
           </div>
@@ -222,11 +222,11 @@ const KibayEspumanteProductPage = () => {
       </section>
 
       {/* Section 3: Flavor & Tasting Notes */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-slate-900">
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-background">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-light text-white mb-6">Taste the Terroir</h2>
-            <p className="text-white/60 font-light max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-5xl font-light text-foreground mb-6">Taste the Terroir</h2>
+            <p className="text-foreground/60 font-light max-w-2xl mx-auto">
               A sophisticated profile that balances the natural sweetness of tropical fruit with the crisp acidity of a well-crafted sparkling wine.
             </p>
           </div>
@@ -237,13 +237,13 @@ const KibayEspumanteProductPage = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-center p-8 border border-white/5 rounded-2xl bg-slate-800/20 hover:bg-slate-800/40 transition-colors"
+              className="text-center p-8 border border-foreground/5 rounded-2xl bg-card/20 hover:bg-card/40 transition-colors"
             >
               <div className="w-12 h-12 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
                 <WindIcon className="w-6 h-6 text-orange-500" />
               </div>
-              <h3 className="text-xl font-normal text-white mb-3">Aroma</h3>
-              <p className="text-white/70 font-light leading-relaxed">
+              <h3 className="text-xl font-normal text-foreground mb-3">Aroma</h3>
+              <p className="text-foreground/70 font-light leading-relaxed">
                 Elegant and expressive, opening with distinct notes of ripe mango and hints of tropical florals, underpinned by a fresh citrus zest.
               </p>
             </motion.div>
@@ -253,13 +253,13 @@ const KibayEspumanteProductPage = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-center p-8 border border-white/5 rounded-2xl bg-slate-800/20 hover:bg-slate-800/40 transition-colors"
+              className="text-center p-8 border border-foreground/5 rounded-2xl bg-card/20 hover:bg-card/40 transition-colors"
             >
               <div className="w-12 h-12 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Droplets className="w-6 h-6 text-orange-500" />
               </div>
-              <h3 className="text-xl font-normal text-white mb-3">Palate</h3>
-              <p className="text-white/70 font-light leading-relaxed">
+              <h3 className="text-xl font-normal text-foreground mb-3">Palate</h3>
+              <p className="text-foreground/70 font-light leading-relaxed">
                 Refreshing and balanced. The passion fruit brings a lively acidity that dances on the tongue, perfectly countered by a round, fruity body that is never cloying.
               </p>
             </motion.div>
@@ -269,13 +269,13 @@ const KibayEspumanteProductPage = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="text-center p-8 border border-white/5 rounded-2xl bg-slate-800/20 hover:bg-slate-800/40 transition-colors"
+              className="text-center p-8 border border-foreground/5 rounded-2xl bg-card/20 hover:bg-card/40 transition-colors"
             >
               <div className="w-12 h-12 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Wine className="w-6 h-6 text-orange-500" />
               </div>
-              <h3 className="text-xl font-normal text-white mb-3">Finish</h3>
-              <p className="text-white/70 font-light leading-relaxed">
+              <h3 className="text-xl font-normal text-foreground mb-3">Finish</h3>
+              <p className="text-foreground/70 font-light leading-relaxed">
                 Clean, crisp, and persistent. Leaves a pleasant tropical memory that invites another sip without coating the palate in sugar.
               </p>
             </motion.div>
@@ -284,7 +284,7 @@ const KibayEspumanteProductPage = () => {
       </section>
 
       {/* Section 4: Organic & Natural Philosophy */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-800">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-card">
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-12">
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
@@ -296,8 +296,8 @@ const KibayEspumanteProductPage = () => {
             <div className="inline-block p-3 rounded-xl bg-green-900/30 text-green-400 mb-6">
               <Leaf className="w-8 h-8" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-light text-white mb-6">Crafted with Intention</h2>
-            <div className="space-y-4 text-lg text-white/80 font-light leading-relaxed">
+            <h2 className="text-3xl md:text-4xl font-light text-foreground mb-6">Crafted with Intention</h2>
+            <div className="space-y-4 text-lg text-foreground/80 font-light leading-relaxed">
               <p>
                 We believe that the best flavors come from nature, not a lab. That's why Kibay Sparkling is made without artificial sugars, chemical flavorings, or synthetic additives.
               </p>
@@ -331,11 +331,11 @@ const KibayEspumanteProductPage = () => {
       </section>
 
       {/* Section 5: How to Enjoy */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-900">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-light text-white mb-4">Ready for Any Moment</h2>
-            <p className="text-white/60 font-light">Versatile enough for a glass, casual enough for the can.</p>
+            <h2 className="text-3xl md:text-4xl font-light text-foreground mb-4">Ready for Any Moment</h2>
+            <p className="text-foreground/60 font-light">Versatile enough for a glass, casual enough for the can.</p>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -351,11 +351,11 @@ const KibayEspumanteProductPage = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className="bg-slate-800/40 p-6 rounded-xl border border-white/5 text-center hover:border-orange-500/30 transition-colors"
+                className="bg-card/40 p-6 rounded-xl border border-foreground/5 text-center hover:border-orange-500/30 transition-colors"
               >
                 <item.icon className="w-8 h-8 text-orange-500 mx-auto mb-4" />
-                <h3 className="text-lg font-normal text-white mb-2">{item.title}</h3>
-                <p className="text-sm text-white/70 font-light">{item.desc}</p>
+                <h3 className="text-lg font-normal text-foreground mb-2">{item.title}</h3>
+                <p className="text-sm text-foreground/70 font-light">{item.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -363,9 +363,9 @@ const KibayEspumanteProductPage = () => {
       </section>
 
       {/* Section 6: Product Details */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-950 border-t border-white/5">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background border-t border-foreground/5">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-2xl font-normal text-white mb-8 text-center">Product Specifications</h2>
+          <h2 className="text-2xl font-normal text-foreground mb-8 text-center">Product Specifications</h2>
           <div className="grid gap-6">
             {[
               { label: "Category", value: "Organic Sparkling Wine" },
@@ -381,10 +381,10 @@ const KibayEspumanteProductPage = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.05 }}
-                className="flex justify-between items-center py-4 border-b border-white/10 last:border-0"
+                className="flex justify-between items-center py-4 border-b border-foreground/10 last:border-0"
               >
-                <span className="text-white/60 font-light uppercase tracking-wide text-sm">{detail.label}</span>
-                <span className="text-white font-medium text-right">{detail.value}</span>
+                <span className="text-foreground/60 font-light uppercase tracking-wide text-sm">{detail.label}</span>
+                <span className="text-foreground font-medium text-right">{detail.value}</span>
               </motion.div>
             ))}
           </div>
@@ -392,7 +392,7 @@ const KibayEspumanteProductPage = () => {
       </section>
 
       {/* Closing Section */}
-      <section className="py-32 px-4 sm:px-6 lg:px-8 bg-slate-900 text-center">
+      <section className="py-32 px-4 sm:px-6 lg:px-8 bg-background text-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -400,8 +400,8 @@ const KibayEspumanteProductPage = () => {
           transition={{ duration: 0.8 }}
           className="max-w-2xl mx-auto"
         >
-          <h2 className="text-4xl md:text-5xl font-light text-white mb-6">Wine Without Ceremony</h2>
-          <p className="text-xl text-white/70 font-light mb-10 leading-relaxed">
+          <h2 className="text-4xl md:text-5xl font-light text-foreground mb-6">Wine Without Ceremony</h2>
+          <p className="text-xl text-foreground/70 font-light mb-10 leading-relaxed">
             We've stripped away the pretension to reveal what matters: exceptional craftsmanship, authentic origin, and the pure joy of the Caribbean. This is modern wine culture.
           </p>
           <Link to="/shop">

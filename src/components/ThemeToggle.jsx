@@ -24,7 +24,7 @@ const ThemeToggle = ({ className = '', size = 'md' }) => {
       title={label}
       onClick={() => setTheme(next)}
       className={cn(
-        'inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 backdrop-blur-sm text-white/80 hover:text-white hover:bg-white/10 transition-colors',
+        'inline-flex items-center justify-center rounded-full border border-foreground/15 bg-foreground/5 backdrop-blur-sm text-foreground/80 hover:text-foreground hover:bg-foreground/10 transition-colors',
         sizeClasses,
         className,
       )}

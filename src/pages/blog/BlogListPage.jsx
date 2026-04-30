@@ -157,7 +157,7 @@ const BlogListPage = () => {
                               </div>
                             )}
                             {post.category && (
-                              <Badge className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm text-stone-900 shadow-sm font-normal">
+                              <Badge className="absolute top-4 right-4 bg-foreground/95 backdrop-blur-sm text-stone-900 shadow-sm font-normal">
                                 {post.category.name}
                               </Badge>
                             )}

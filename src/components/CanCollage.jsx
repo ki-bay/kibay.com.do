@@ -76,7 +76,7 @@ const CanCollage = () => {
             {/* Glow effect behind the can */}
             <div className="absolute inset-0 bg-orange-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
             
-            <div className="relative aspect-[9/16] rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-orange-500/20 transition-shadow duration-300 bg-slate-800 border border-white/5">
+            <div className="relative aspect-[9/16] rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-orange-500/20 transition-shadow duration-300 bg-card border border-foreground/5">
               <img 
                 src={can.src} 
                 alt={can.alt}

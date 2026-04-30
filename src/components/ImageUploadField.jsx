@@ -90,7 +90,7 @@ const ImageUploadField = ({ value, onChange, className }) => {
       <div 
         className={cn(
           "relative border-2 border-dashed rounded-xl p-6 transition-all duration-200 flex flex-col items-center justify-center text-center",
-          dragActive ? "border-mango-500 bg-mango-500/10" : "border-white/10 bg-slate-900/50 hover:border-white/20",
+          dragActive ? "border-mango-500 bg-mango-500/10" : "border-foreground/10 bg-background/50 hover:border-foreground/20",
           value ? "h-auto" : "h-48"
         )}
         onDragEnter={handleDrag}
@@ -109,7 +109,7 @@ const ImageUploadField = ({ value, onChange, className }) => {
         {uploading ? (
           <div className="flex flex-col items-center">
             <Loader2 className="w-8 h-8 text-mango-500 animate-spin mb-2" />
-            <p className="text-white/60 text-sm">Uploading...</p>
+            <p className="text-foreground/60 text-sm">Uploading...</p>
           </div>
         ) : value ? (
           <div className="w-full relative group">
@@ -124,7 +124,7 @@ const ImageUploadField = ({ value, onChange, className }) => {
                   variant="outline" 
                   size="sm"
                   onClick={() => inputRef.current?.click()}
-                  className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                  className="bg-foreground/10 border-foreground/20 text-foreground hover:bg-foreground/20"
                 >
                   Change
                 </Button>
@@ -140,11 +140,11 @@ const ImageUploadField = ({ value, onChange, className }) => {
           </div>
         ) : (
           <div className="flex flex-col items-center cursor-pointer" onClick={() => inputRef.current?.click()}>
-            <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center mb-3 text-mango-500">
+            <div className="w-12 h-12 rounded-full bg-card flex items-center justify-center mb-3 text-mango-500">
               <Upload className="w-6 h-6" />
             </div>
-            <p className="text-white font-medium mb-1">Click to upload featured image</p>
-            <p className="text-white/40 text-sm">SVG, PNG, JPG or GIF (max 5MB)</p>
+            <p className="text-foreground font-medium mb-1">Click to upload featured image</p>
+            <p className="text-foreground/40 text-sm">SVG, PNG, JPG or GIF (max 5MB)</p>
           </div>
         )}
       </div>

@@ -32,7 +32,7 @@ const PublicBlogPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="min-h-screen bg-background">
       <Navigation />
       
       <main className="pt-28 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -41,10 +41,10 @@ const PublicBlogPage = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
             The <span className="text-mango-500">Ki-BAY</span> Journal
           </h1>
-          <p className="text-xl text-white/60 max-w-2xl mx-auto">
+          <p className="text-xl text-foreground/60 max-w-2xl mx-auto">
             Stories, updates, and insights from the world of tropical flavors.
           </p>
         </motion.div>
@@ -53,7 +53,7 @@ const PublicBlogPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
              {/* Skeletons */}
              {[1, 2, 3].map(i => (
-               <div key={i} className="bg-slate-800 rounded-xl h-[400px] animate-pulse border border-white/5" />
+               <div key={i} className="bg-card rounded-xl h-[400px] animate-pulse border border-foreground/5" />
              ))}
           </div>
         ) : posts.length > 0 ? (
@@ -70,9 +70,9 @@ const PublicBlogPage = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-20 bg-slate-800/50 rounded-2xl border border-white/5 mb-20">
-            <h3 className="text-2xl font-bold text-white mb-2">Coming Soon</h3>
-            <p className="text-white/60">We haven't published any stories yet. Check back soon!</p>
+          <div className="text-center py-20 bg-card/50 rounded-2xl border border-foreground/5 mb-20">
+            <h3 className="text-2xl font-bold text-foreground mb-2">Coming Soon</h3>
+            <p className="text-foreground/60">We haven't published any stories yet. Check back soon!</p>
           </div>
         )}
         

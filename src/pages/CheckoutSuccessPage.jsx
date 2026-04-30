@@ -185,7 +185,7 @@ const CheckoutSuccessPage = () => {
 
 					<div className="relative z-10">
 						<Link to="/shop">
-							<Button className="w-full bg-[#D4A574] hover:bg-[#c29462] text-white rounded-full py-6 text-lg transition-all duration-300 shadow-lg shadow-[#D4A574]/20 font-normal">
+							<Button className="w-full bg-[#D4A574] hover:bg-[#c29462] text-foreground rounded-full py-6 text-lg transition-all duration-300 shadow-lg shadow-[#D4A574]/20 font-normal">
 								Continue shopping
 								<ArrowRight className="ml-2 w-5 h-5" />
 							</Button>

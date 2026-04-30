@@ -34,7 +34,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-stone-900/40 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-card/40 backdrop-blur-sm z-50"
             onClick={() => setIsCartOpen(false)}
           />
           
@@ -148,7 +148,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                 </div>
                 <Button 
                   onClick={handleCheckout} 
-                  className="w-full bg-[#D4A574] hover:bg-[#c29462] text-white font-medium py-6 rounded-full text-lg shadow-lg shadow-[#D4A574]/20 group transition-all duration-300"
+                  className="w-full bg-[#D4A574] hover:bg-[#c29462] text-foreground font-medium py-6 rounded-full text-lg shadow-lg shadow-[#D4A574]/20 group transition-all duration-300"
                 >
                   Proceed to Checkout
                   <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />

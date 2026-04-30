@@ -256,14 +256,14 @@ const BlogPostForm = () => {
 
   if (fetching) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-mango-500 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 pb-20">
+    <div className="min-h-screen bg-background pb-20">
       <Navigation />
       
       <div className="max-w-6xl mx-auto px-4 pt-28">
@@ -272,11 +272,11 @@ const BlogPostForm = () => {
             <Button 
                 variant="ghost" 
                 onClick={() => navigate('/dashboard/blog')}
-                className="text-white/60 hover:text-white"
+                className="text-foreground/60 hover:text-foreground"
             >
                 <ArrowLeft className="w-4 h-4 mr-2" /> Back
             </Button>
-            <h1 className="text-3xl font-bold text-white">
+            <h1 className="text-3xl font-bold text-foreground">
                 {id ? 'Edit Post' : 'Create New Post'}
             </h1>
             </div>
@@ -293,7 +293,7 @@ const BlogPostForm = () => {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="bg-slate-800 border border-white/10">
+            <TabsList className="bg-card border border-foreground/10">
                 <TabsTrigger value="content">Content</TabsTrigger>
                 <TabsTrigger value="seo">SEO & Metadata</TabsTrigger>
             </TabsList>
@@ -301,40 +301,40 @@ const BlogPostForm = () => {
             <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-slate-800 border border-white/10 rounded-xl p-8 shadow-xl"
+            className="bg-card border border-foreground/10 rounded-xl p-8 shadow-xl"
             >
             <form onSubmit={handleSubmit} className="space-y-6">
                 
                 <TabsContent value="content" className="space-y-6 mt-0">
                     {/* Title */}
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-white/80">Title *</label>
+                        <label className="text-sm font-medium text-foreground/80">Title *</label>
                         <input
                             type="text"
                             name="title"
                             value={formData.title}
                             onChange={handleChange}
                             placeholder="Enter post title"
-                            className="w-full bg-slate-900/50 border border-white/10 rounded-lg p-3 text-white placeholder:text-white/20 focus:border-mango-500 focus:outline-none transition-colors"
+                            className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground placeholder:text-foreground/20 focus:border-mango-500 focus:outline-none transition-colors"
                         />
                     </div>
 
                     {/* Description */}
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-white/80">Excerpt / Description *</label>
+                        <label className="text-sm font-medium text-foreground/80">Excerpt / Description *</label>
                         <textarea
                             name="description"
                             value={formData.description}
                             onChange={handleChange}
                             rows={3}
                             placeholder="Short summary for the card view..."
-                            className="w-full bg-slate-900/50 border border-white/10 rounded-lg p-3 text-white placeholder:text-white/20 focus:border-mango-500 focus:outline-none transition-colors resize-none"
+                            className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground placeholder:text-foreground/20 focus:border-mango-500 focus:outline-none transition-colors resize-none"
                         />
                     </div>
 
                     {/* Featured Image */}
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-white/80">Featured Image</label>
+                        <label className="text-sm font-medium text-foreground/80">Featured Image</label>
                         <ImageUploadField 
                             value={formData.featured_image_url} 
                             onChange={handleImageChange} 
@@ -343,7 +343,7 @@ const BlogPostForm = () => {
 
                     {/* Rich Text Content */}
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-white/80">Content</label>
+                        <label className="text-sm font-medium text-foreground/80">Content</label>
                         <RichTextEditor 
                             content={formData.content} 
                             onChange={handleEditorChange} 
@@ -352,13 +352,13 @@ const BlogPostForm = () => {
                 </TabsContent>
 
                 <TabsContent value="seo" className="space-y-8 mt-0">
-                    <div className="flex items-center justify-between bg-slate-900/30 p-4 rounded-lg border border-white/10">
+                    <div className="flex items-center justify-between bg-background/30 p-4 rounded-lg border border-foreground/10">
                         <div>
-                            <h3 className="text-white font-medium flex items-center gap-2">
+                            <h3 className="text-foreground font-medium flex items-center gap-2">
                                 <Sparkles className="w-4 h-4 text-mango-500" />
                                 Auto-Generate SEO Fields
                             </h3>
-                            <p className="text-white/60 text-sm mt-1">
+                            <p className="text-foreground/60 text-sm mt-1">
                                 Automatically populate SEO fields based on your content.
                             </p>
                         </div>
@@ -372,8 +372,8 @@ const BlogPostForm = () => {
                             {/* SEO Title */}
                             <div className="space-y-2">
                                 <div className="flex justify-between text-sm">
-                                    <label className="font-medium text-white/80">SEO Title</label>
-                                    <span className={`${formData.seo_title.length > 60 ? 'text-red-400' : 'text-white/40'}`}>
+                                    <label className="font-medium text-foreground/80">SEO Title</label>
+                                    <span className={`${formData.seo_title.length > 60 ? 'text-red-400' : 'text-foreground/40'}`}>
                                         {formData.seo_title.length}/60
                                     </span>
                                 </div>
@@ -383,15 +383,15 @@ const BlogPostForm = () => {
                                     value={formData.seo_title}
                                     onChange={handleChange}
                                     placeholder="Title for search engines"
-                                    className="w-full bg-slate-900/50 border border-white/10 rounded-lg p-3 text-white placeholder:text-white/20 focus:border-mango-500 focus:outline-none transition-colors"
+                                    className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground placeholder:text-foreground/20 focus:border-mango-500 focus:outline-none transition-colors"
                                 />
                             </div>
 
                              {/* Slug */}
                              <div className="space-y-2">
-                                <label className="text-sm font-medium text-white/80">URL Slug</label>
+                                <label className="text-sm font-medium text-foreground/80">URL Slug</label>
                                 <div className="flex items-center gap-2">
-                                    <span className="text-white/40 text-sm bg-slate-900/50 px-3 py-3 border border-white/10 rounded-l-lg border-r-0">
+                                    <span className="text-foreground/40 text-sm bg-background/50 px-3 py-3 border border-foreground/10 rounded-l-lg border-r-0">
                                         kibay.com.do/blog/
                                     </span>
                                     <input
@@ -400,7 +400,7 @@ const BlogPostForm = () => {
                                         value={formData.slug}
                                         onChange={handleChange}
                                         placeholder="url-slug-here"
-                                        className={`w-full bg-slate-900/50 border rounded-r-lg p-3 text-white placeholder:text-white/20 focus:outline-none transition-colors ${slugError ? 'border-red-500' : 'border-white/10 focus:border-mango-500'}`}
+                                        className={`w-full bg-background/50 border rounded-r-lg p-3 text-foreground placeholder:text-foreground/20 focus:outline-none transition-colors ${slugError ? 'border-red-500' : 'border-foreground/10 focus:border-mango-500'}`}
                                     />
                                 </div>
                                 {slugError && <p className="text-red-400 text-xs">{slugError}</p>}
@@ -409,8 +409,8 @@ const BlogPostForm = () => {
                             {/* SEO Description */}
                             <div className="space-y-2">
                                 <div className="flex justify-between text-sm">
-                                    <label className="font-medium text-white/80">SEO Description</label>
-                                    <span className={`${formData.seo_description.length > 160 ? 'text-red-400' : 'text-white/40'}`}>
+                                    <label className="font-medium text-foreground/80">SEO Description</label>
+                                    <span className={`${formData.seo_description.length > 160 ? 'text-red-400' : 'text-foreground/40'}`}>
                                         {formData.seo_description.length}/160
                                     </span>
                                 </div>
@@ -420,7 +420,7 @@ const BlogPostForm = () => {
                                     onChange={handleChange}
                                     rows={4}
                                     placeholder="Description for search results..."
-                                    className="w-full bg-slate-900/50 border border-white/10 rounded-lg p-3 text-white placeholder:text-white/20 focus:border-mango-500 focus:outline-none transition-colors resize-none"
+                                    className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground placeholder:text-foreground/20 focus:border-mango-500 focus:outline-none transition-colors resize-none"
                                 />
                             </div>
                         </div>
@@ -428,7 +428,7 @@ const BlogPostForm = () => {
                         <div className="space-y-6">
                             {/* Search Preview */}
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-white/80">Google Search Preview</label>
+                                <label className="text-sm font-medium text-foreground/80">Google Search Preview</label>
                                 <div className="bg-white p-4 rounded-lg font-sans">
                                     <div className="flex items-center gap-1 text-[#202124] text-sm mb-1">
                                         <div className="w-7 h-7 bg-slate-200 rounded-full flex items-center justify-center text-[10px] overflow-hidden">
@@ -450,40 +450,40 @@ const BlogPostForm = () => {
 
                             {/* Keywords */}
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-white/80">Keywords (Comma separated)</label>
+                                <label className="text-sm font-medium text-foreground/80">Keywords (Comma separated)</label>
                                 <input
                                     type="text"
                                     name="seo_keywords"
                                     value={formData.seo_keywords}
                                     onChange={handleChange}
                                     placeholder="tropical, mango, drink, ..."
-                                    className="w-full bg-slate-900/50 border border-white/10 rounded-lg p-3 text-white placeholder:text-white/20 focus:border-mango-500 focus:outline-none transition-colors"
+                                    className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground placeholder:text-foreground/20 focus:border-mango-500 focus:outline-none transition-colors"
                                 />
                             </div>
 
                              {/* Alt Text */}
                              <div className="space-y-2">
-                                <label className="text-sm font-medium text-white/80">Featured Image Alt Text</label>
+                                <label className="text-sm font-medium text-foreground/80">Featured Image Alt Text</label>
                                 <input
                                     type="text"
                                     name="alt_text"
                                     value={formData.alt_text}
                                     onChange={handleChange}
                                     placeholder="Describe the image for accessibility"
-                                    className="w-full bg-slate-900/50 border border-white/10 rounded-lg p-3 text-white placeholder:text-white/20 focus:border-mango-500 focus:outline-none transition-colors"
+                                    className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground placeholder:text-foreground/20 focus:border-mango-500 focus:outline-none transition-colors"
                                 />
                             </div>
 
                             {/* Canonical */}
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-white/80">Canonical URL (Optional)</label>
+                                <label className="text-sm font-medium text-foreground/80">Canonical URL (Optional)</label>
                                 <input
                                     type="text"
                                     name="canonical_url"
                                     value={formData.canonical_url}
                                     onChange={handleChange}
                                     placeholder="https://..."
-                                    className="w-full bg-slate-900/50 border border-white/10 rounded-lg p-3 text-white placeholder:text-white/20 focus:border-mango-500 focus:outline-none transition-colors"
+                                    className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground placeholder:text-foreground/20 focus:border-mango-500 focus:outline-none transition-colors"
                                 />
                             </div>
                         </div>
@@ -491,7 +491,7 @@ const BlogPostForm = () => {
                 </TabsContent>
 
                 {/* Publishing Options Footer */}
-                <div className="pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div className="pt-6 border-t border-foreground/10 flex flex-col md:flex-row justify-between items-center gap-4">
                     <div className="flex flex-col space-y-2 w-full md:w-auto">
                         <div className="flex items-center gap-3">
                             <input
@@ -500,9 +500,9 @@ const BlogPostForm = () => {
                                 name="published"
                                 checked={formData.published}
                                 onChange={handleChange}
-                                className="w-5 h-5 rounded border-white/20 bg-slate-800 text-mango-500 focus:ring-mango-500"
+                                className="w-5 h-5 rounded border-foreground/20 bg-card text-mango-500 focus:ring-mango-500"
                             />
-                            <label htmlFor="published" className="text-white cursor-pointer select-none font-medium">
+                            <label htmlFor="published" className="text-foreground cursor-pointer select-none font-medium">
                                 Publish immediately
                             </label>
                         </div>
@@ -514,9 +514,9 @@ const BlogPostForm = () => {
                                 checked={sendNotification}
                                 onChange={(e) => setSendNotification(e.target.checked)}
                                 disabled={!formData.published}
-                                className={`w-5 h-5 rounded border-white/20 bg-slate-800 text-mango-500 focus:ring-mango-500 ${!formData.published && 'opacity-50 cursor-not-allowed'}`}
+                                className={`w-5 h-5 rounded border-foreground/20 bg-card text-mango-500 focus:ring-mango-500 ${!formData.published && 'opacity-50 cursor-not-allowed'}`}
                             />
-                            <label htmlFor="sendNotification" className={`text-white cursor-pointer select-none flex items-center gap-2 ${!formData.published && 'opacity-50'}`}>
+                            <label htmlFor="sendNotification" className={`text-foreground cursor-pointer select-none flex items-center gap-2 ${!formData.published && 'opacity-50'}`}>
                                 <Send className="w-4 h-4" />
                                 Send email notification
                             </label>
@@ -528,14 +528,14 @@ const BlogPostForm = () => {
                             type="button" 
                             variant="outline"
                             onClick={() => navigate('/dashboard/blog')}
-                            className="border-white/10 text-white hover:bg-white/5"
+                            className="border-foreground/10 text-foreground hover:bg-foreground/5"
                         >
                             Cancel
                         </Button>
                         <Button 
                             type="submit" 
                             disabled={loading}
-                            className="bg-mango-500 hover:bg-mango-600 text-white min-w-[150px]"
+                            className="bg-mango-500 hover:bg-mango-600 text-foreground min-w-[150px]"
                         >
                             {loading ? (
                             <>

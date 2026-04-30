@@ -165,7 +165,7 @@ const KibayEspumanteCan = () => {
                 />
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-500"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
-                  <p className="text-white font-medium">Sustainable Viticulture in the Heart of the Caribbean</p>
+                  <p className="text-foreground font-medium">Sustainable Viticulture in the Heart of the Caribbean</p>
                 </div>
               </div>
             </section>

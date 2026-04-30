@@ -210,7 +210,7 @@ const BlogAdminDashboard = () => {
     if (status === 'success') return <span className="text-green-400">✓</span>;
     if (status === 'failed') return <span className="text-red-400">✕</span>;
     if (status === 'processing' || status === 'sent_to_workflow') return <Loader2 className="w-3 h-3 animate-spin text-yellow-400" />;
-    return <span className="text-white/20">•</span>;
+    return <span className="text-foreground/20">•</span>;
   };
 
   const filteredPosts = posts.filter(post => 
@@ -218,24 +218,24 @@ const BlogAdminDashboard = () => {
   );
 
   return (
-    <div className="min-h-screen bg-slate-900 pb-20">
+    <div className="min-h-screen bg-background pb-20">
       <Navigation />
       
       <div className="max-w-7xl mx-auto px-4 pt-28">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">Blog Dashboard</h1>
-            <p className="text-white/60">Manage your blog posts, create new content, and track status.</p>
+            <h1 className="text-3xl font-bold text-foreground mb-2">Blog Dashboard</h1>
+            <p className="text-foreground/60">Manage your blog posts, create new content, and track status.</p>
           </div>
           
           <div className="flex flex-wrap gap-3">
             <Link to="/admin/orders">
-              <Button variant="outline" className="border-white/20 text-white gap-2">
+              <Button variant="outline" className="border-foreground/20 text-foreground gap-2">
                 <Package className="w-4 h-4" /> Shop orders
               </Button>
             </Link>
             <Link to="/admin/blog/create">
-              <Button className="bg-mango-500 hover:bg-mango-600 text-white gap-2">
+              <Button className="bg-mango-500 hover:bg-mango-600 text-foreground gap-2">
                 <Plus className="w-4 h-4" /> Create New Post
               </Button>
             </Link>
@@ -243,46 +243,46 @@ const BlogAdminDashboard = () => {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="bg-slate-800 border border-white/10">
+            <TabsList className="bg-card border border-foreground/10">
                 <TabsTrigger value="overview">Posts Overview</TabsTrigger>
                 <TabsTrigger value="seo">SEO Audit</TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview">
                 {/* Search and Filters */}
-                <div className="bg-slate-800 p-4 rounded-xl border border-white/10 mb-6 flex flex-col md:flex-row gap-4">
+                <div className="bg-card p-4 rounded-xl border border-foreground/10 mb-6 flex flex-col md:flex-row gap-4">
                 <div className="relative flex-grow max-w-md">
-                    <Search className="absolute left-3 top-3 h-5 w-5 text-white/40" />
+                    <Search className="absolute left-3 top-3 h-5 w-5 text-foreground/40" />
                     <input
                     type="text"
                     placeholder="Search posts..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full bg-slate-900/50 border border-white/10 rounded-lg py-2.5 pl-10 pr-4 text-white placeholder:text-white/30 focus:outline-none focus:border-mango-500 transition-colors"
+                    className="w-full bg-background/50 border border-foreground/10 rounded-lg py-2.5 pl-10 pr-4 text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-mango-500 transition-colors"
                     />
                 </div>
                 </div>
 
                 {/* Content Table */}
-                <div className="bg-slate-800 border border-white/10 rounded-xl overflow-hidden shadow-xl">
+                <div className="bg-card border border-foreground/10 rounded-xl overflow-hidden shadow-xl">
                 {loading ? (
                     <div className="p-12 flex justify-center">
                     <Loader2 className="w-8 h-8 text-mango-500 animate-spin" />
                     </div>
                 ) : filteredPosts.length === 0 ? (
-                    <div className="p-12 text-center text-white/40">
+                    <div className="p-12 text-center text-foreground/40">
                     <p>No posts found.</p>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                        <tr className="border-b border-white/10 bg-slate-900/30">
-                            <th className="p-4 text-xs font-medium uppercase tracking-wider text-white/60 w-[35%]">Title</th>
-                            <th className="p-4 text-xs font-medium uppercase tracking-wider text-white/60">Status</th>
-                            <th className="p-4 text-xs font-medium uppercase tracking-wider text-white/60 text-center">Social Status</th>
-                            <th className="p-4 text-xs font-medium uppercase tracking-wider text-white/60">Date</th>
-                            <th className="p-4 text-xs font-medium uppercase tracking-wider text-white/60 text-right">Actions</th>
+                        <tr className="border-b border-foreground/10 bg-background/30">
+                            <th className="p-4 text-xs font-medium uppercase tracking-wider text-foreground/60 w-[35%]">Title</th>
+                            <th className="p-4 text-xs font-medium uppercase tracking-wider text-foreground/60">Status</th>
+                            <th className="p-4 text-xs font-medium uppercase tracking-wider text-foreground/60 text-center">Social Status</th>
+                            <th className="p-4 text-xs font-medium uppercase tracking-wider text-foreground/60">Date</th>
+                            <th className="p-4 text-xs font-medium uppercase tracking-wider text-foreground/60 text-right">Actions</th>
                         </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
@@ -295,11 +295,11 @@ const BlogAdminDashboard = () => {
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
-                                    className="hover:bg-white/5 transition-colors group"
+                                    className="hover:bg-foreground/5 transition-colors group"
                                 >
                                     <td className="p-4">
-                                    <div className="font-medium text-white line-clamp-1">{post.title}</div>
-                                    <div className="text-xs text-white/40 mt-1 line-clamp-1">{post.description}</div>
+                                    <div className="font-medium text-foreground line-clamp-1">{post.title}</div>
+                                    <div className="text-xs text-foreground/40 mt-1 line-clamp-1">{post.description}</div>
                                     </td>
                                     <td className="p-4">
                                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
@@ -313,20 +313,20 @@ const BlogAdminDashboard = () => {
                                     <td className="p-4">
                                         <div className="flex items-center justify-center gap-3">
                                             <div className="flex flex-col items-center gap-1" title="Instagram">
-                                                <Instagram className="w-3 h-3 text-white/60" />
+                                                <Instagram className="w-3 h-3 text-foreground/60" />
                                                 {getStatusIcon(stats?.instagram_status)}
                                             </div>
                                             <div className="flex flex-col items-center gap-1" title="TikTok">
-                                                <Video className="w-3 h-3 text-white/60" />
+                                                <Video className="w-3 h-3 text-foreground/60" />
                                                 {getStatusIcon(stats?.tiktok_status)}
                                             </div>
                                             <div className="flex flex-col items-center gap-1" title="Facebook">
-                                                <Facebook className="w-3 h-3 text-white/60" />
+                                                <Facebook className="w-3 h-3 text-foreground/60" />
                                                 {getStatusIcon(stats?.facebook_status)}
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="p-4 text-sm text-white/60 whitespace-nowrap">
+                                    <td className="p-4 text-sm text-foreground/60 whitespace-nowrap">
                                     <div className="flex items-center gap-2">
                                         <Calendar className="w-3 h-3" />
                                         {new Date(post.created_at).toLocaleDateString()}
@@ -338,7 +338,7 @@ const BlogAdminDashboard = () => {
                                             <Button 
                                                 variant="ghost" 
                                                 size="sm"
-                                                className="h-8 w-8 p-0 text-white/60 hover:text-white"
+                                                className="h-8 w-8 p-0 text-foreground/60 hover:text-foreground"
                                                 onClick={() => handleTriggerSocial(post)}
                                                 disabled={triggeringSocial === post.id}
                                                 title="Retry Social Posting via Make.com"
@@ -350,7 +350,7 @@ const BlogAdminDashboard = () => {
                                         <Button 
                                         variant="ghost" 
                                         size="sm"
-                                        className="h-8 w-8 p-0 text-white/60 hover:text-white"
+                                        className="h-8 w-8 p-0 text-foreground/60 hover:text-foreground"
                                         onClick={() => navigate(`/admin/blog/${post.id}/edit`)}
                                         title="Edit"
                                         >
@@ -369,11 +369,11 @@ const BlogAdminDashboard = () => {
 
                                         <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
-                                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-white/60 hover:text-white">
+                                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-foreground/60 hover:text-foreground">
                                             <MoreVertical className="w-4 h-4" />
                                             </Button>
                                         </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end" className="bg-slate-800 border-white/10 text-white">
+                                        <DropdownMenuContent align="end" className="bg-card border-foreground/10 text-foreground">
                                             <DropdownMenuItem 
                                             className="text-red-400 focus:text-red-400 focus:bg-red-500/10 cursor-pointer"
                                             onClick={() => setPostToDelete(post.id)}
@@ -402,18 +402,18 @@ const BlogAdminDashboard = () => {
       </div>
 
       <AlertDialog open={!!postToDelete} onOpenChange={() => setPostToDelete(null)}>
-        <AlertDialogContent className="bg-slate-800 border-white/10 text-white">
+        <AlertDialogContent className="bg-card border-foreground/10 text-foreground">
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription className="text-white/60">
+            <AlertDialogDescription className="text-foreground/60">
               This action cannot be undone. This will permanently delete the blog post and its analytics.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="bg-transparent border-white/10 text-white hover:bg-white/5 hover:text-white">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="bg-transparent border-foreground/10 text-foreground hover:bg-foreground/5 hover:text-foreground">Cancel</AlertDialogCancel>
             <AlertDialogAction 
               onClick={handleDelete}
-              className="bg-red-500 hover:bg-red-600 text-white border-0"
+              className="bg-red-500 hover:bg-red-600 text-foreground border-0"
             >
               Delete
             </AlertDialogAction>

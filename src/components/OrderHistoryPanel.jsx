@@ -43,7 +43,7 @@ const OrderHistoryPanel = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-white/40">
+      <div className="flex flex-col items-center justify-center py-20 text-foreground/40">
         <Loader2 className="w-10 h-10 animate-spin mb-4 text-mango-500" />
         <p className="font-light">Loading your order history...</p>
       </div>
@@ -64,8 +64,8 @@ const OrderHistoryPanel = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-normal text-white">Order History</h2>
-        <span className="text-sm text-white/40 font-light">
+        <h2 className="text-xl font-normal text-foreground">Order History</h2>
+        <span className="text-sm text-foreground/40 font-light">
           {orders.length} Order{orders.length !== 1 && 's'} Found
         </span>
       </div>
@@ -105,19 +105,19 @@ const OrderHistoryPanel = () => {
             <OrderCard key={order.id} order={order} />
           ))
         ) : (
-          <div className="text-center py-16 px-4 bg-white/5 rounded-xl border border-white/5 border-dashed">
-            <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
-              <ShoppingBag className="w-8 h-8 text-white/20" />
+          <div className="text-center py-16 px-4 bg-foreground/5 rounded-xl border border-foreground/5 border-dashed">
+            <div className="w-16 h-16 bg-foreground/5 rounded-full flex items-center justify-center mx-auto mb-4">
+              <ShoppingBag className="w-8 h-8 text-foreground/20" />
             </div>
-            <h3 className="text-white font-medium mb-2">No orders found</h3>
-            <p className="text-white/40 text-sm font-light mb-6 max-w-xs mx-auto">
+            <h3 className="text-foreground font-medium mb-2">No orders found</h3>
+            <p className="text-foreground/40 text-sm font-light mb-6 max-w-xs mx-auto">
               {searchQuery || filterStatus !== 'All' 
                 ? "Try adjusting your filters to see more results." 
                 : "Looks like you haven't placed any orders yet."}
             </p>
             {!searchQuery && filterStatus === 'All' && (
               <Link to="/shop">
-                <Button className="bg-mango-500 hover:bg-mango-600 text-white font-normal">
+                <Button className="bg-mango-500 hover:bg-mango-600 text-foreground font-normal">
                   Start Shopping
                 </Button>
               </Link>

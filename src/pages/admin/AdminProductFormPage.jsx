@@ -42,16 +42,16 @@ const blankAdditionalInfo = () => ({ id: null, title_es: '', title_en: '', descr
 
 const Field = ({ label, hint, children }) => (
 	<label className="block">
-		<span className="block text-xs uppercase tracking-wider text-white/60 mb-1.5">{label}</span>
+		<span className="block text-xs uppercase tracking-wider text-foreground/60 mb-1.5">{label}</span>
 		{children}
-		{hint && <span className="block text-xs text-white/40 mt-1">{hint}</span>}
+		{hint && <span className="block text-xs text-foreground/40 mt-1">{hint}</span>}
 	</label>
 );
 
 const Textarea = (props) => (
 	<textarea
 		{...props}
-		className={`w-full rounded-md bg-slate-900 border border-white/10 text-white px-3 py-2 text-sm focus:outline-none focus:border-mango-500/60 ${props.className || ''}`}
+		className={`w-full rounded-md bg-background border border-foreground/10 text-foreground px-3 py-2 text-sm focus:outline-none focus:border-mango-500/60 ${props.className || ''}`}
 	/>
 );
 
@@ -360,7 +360,7 @@ const AdminProductFormPage = () => {
 		return (
 			<>
 				<Navigation />
-				<div className="min-h-screen flex items-center justify-center bg-slate-900">
+				<div className="min-h-screen flex items-center justify-center bg-background">
 					<Loader2 className="w-10 h-10 text-mango-500 animate-spin" />
 				</div>
 			</>
@@ -373,20 +373,20 @@ const AdminProductFormPage = () => {
 				<title>{isEditing ? `Edit ${form.title_es || form.slug}` : 'New Product'} — Admin</title>
 			</Helmet>
 			<Navigation />
-			<main className="min-h-screen bg-slate-900 pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+			<main className="min-h-screen bg-background pt-32 pb-20 px-4 sm:px-6 lg:px-8">
 				<div className="max-w-5xl mx-auto">
 					<div className="flex items-center justify-between mb-8">
-						<Link to="/admin/products" className="inline-flex items-center text-white/60 hover:text-white text-sm">
+						<Link to="/admin/products" className="inline-flex items-center text-foreground/60 hover:text-foreground text-sm">
 							<ArrowLeft className="w-4 h-4 mr-2" /> Back to products
 						</Link>
-						<Button onClick={handleSave} disabled={saving} className="bg-mango-500 hover:bg-mango-600 text-white">
+						<Button onClick={handleSave} disabled={saving} className="bg-mango-500 hover:bg-mango-600 text-foreground">
 							{saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
 							{isEditing ? 'Save changes' : 'Create product'}
 						</Button>
 					</div>
 
-					<h1 className="text-3xl font-light text-white mb-2">{isEditing ? 'Edit Product' : 'New Product'}</h1>
-					<p className="text-white/50 text-sm mb-8 font-light">
+					<h1 className="text-3xl font-light text-foreground mb-2">{isEditing ? 'Edit Product' : 'New Product'}</h1>
+					<p className="text-foreground/50 text-sm mb-8 font-light">
 						All bilingual fields require both ES and EN. Currency conventions: ES UI sees DOP, EN UI sees USD.
 					</p>
 
@@ -399,8 +399,8 @@ const AdminProductFormPage = () => {
 
 					<div className="space-y-8">
 						{/* Basic */}
-						<section className="rounded-2xl bg-slate-800/40 border border-white/10 p-6 space-y-4">
-							<h2 className="text-lg text-white font-normal">Basics</h2>
+						<section className="rounded-2xl bg-card/40 border border-foreground/10 p-6 space-y-4">
+							<h2 className="text-lg text-foreground font-normal">Basics</h2>
 							<div className="grid sm:grid-cols-2 gap-4">
 								<Field label="Title (ES) *">
 									<Input value={form.title_es} onChange={onTitleEsChange} placeholder="Kibay Espumante Lata" />
@@ -412,7 +412,7 @@ const AdminProductFormPage = () => {
 									<Input value={form.slug} onChange={(e) => setForm((p) => ({ ...p, slug: slugify(e.target.value) }))} placeholder="kibay-sparkling" />
 								</Field>
 								<Field label="Status">
-									<select value={form.status} onChange={setField('status')} className="w-full rounded-md bg-slate-900 border border-white/10 text-white px-3 py-2 text-sm">
+									<select value={form.status} onChange={setField('status')} className="w-full rounded-md bg-background border border-foreground/10 text-foreground px-3 py-2 text-sm">
 										{STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
 									</select>
 								</Field>
@@ -432,7 +432,7 @@ const AdminProductFormPage = () => {
 									<Input type="number" value={form.sort_order} onChange={setField('sort_order')} />
 								</Field>
 								<Field label="Purchasable">
-									<label className="flex items-center gap-2 text-white/80 text-sm">
+									<label className="flex items-center gap-2 text-foreground/80 text-sm">
 										<input type="checkbox" checked={form.purchasable} onChange={setField('purchasable')} />
 										Customers can add this to cart
 									</label>
@@ -441,8 +441,8 @@ const AdminProductFormPage = () => {
 						</section>
 
 						{/* Descriptions */}
-						<section className="rounded-2xl bg-slate-800/40 border border-white/10 p-6 space-y-4">
-							<h2 className="text-lg text-white font-normal">Description (HTML)</h2>
+						<section className="rounded-2xl bg-card/40 border border-foreground/10 p-6 space-y-4">
+							<h2 className="text-lg text-foreground font-normal">Description (HTML)</h2>
 							<div className="grid lg:grid-cols-2 gap-4">
 								<Field label="Description (ES)">
 									<Textarea rows={10} value={form.description_es} onChange={setField('description_es')} />
@@ -454,16 +454,16 @@ const AdminProductFormPage = () => {
 						</section>
 
 						{/* Images */}
-						<section className="rounded-2xl bg-slate-800/40 border border-white/10 p-6 space-y-4">
+						<section className="rounded-2xl bg-card/40 border border-foreground/10 p-6 space-y-4">
 							<div className="flex items-center justify-between">
-								<h2 className="text-lg text-white font-normal">Images</h2>
+								<h2 className="text-lg text-foreground font-normal">Images</h2>
 								<div className="flex gap-2">
 									<input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
-									<Button type="button" onClick={() => fileInputRef.current?.click()} disabled={uploading} variant="ghost" className="border border-white/10 text-white">
+									<Button type="button" onClick={() => fileInputRef.current?.click()} disabled={uploading} variant="ghost" className="border border-foreground/10 text-foreground">
 										{uploading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <ImageIcon className="w-4 h-4 mr-2" />}
 										Upload
 									</Button>
-									<Button type="button" onClick={addImage} variant="ghost" className="border border-white/10 text-white">
+									<Button type="button" onClick={addImage} variant="ghost" className="border border-foreground/10 text-foreground">
 										<Plus className="w-4 h-4 mr-2" /> Add URL
 									</Button>
 								</div>
@@ -472,15 +472,15 @@ const AdminProductFormPage = () => {
 								<Input value={form.thumbnail_url} onChange={setField('thumbnail_url')} placeholder="https://..." />
 							</Field>
 							{images.length === 0 ? (
-								<p className="text-white/40 text-sm italic">No images yet.</p>
+								<p className="text-foreground/40 text-sm italic">No images yet.</p>
 							) : (
 								<div className="space-y-3">
 									{images.map((im, i) => (
 										<div key={i} className="grid grid-cols-12 gap-3 items-start">
 											{im.url ? (
-												<img src={im.url} alt={im.alt_text} className="col-span-2 w-full h-20 object-cover rounded-md bg-slate-900" />
+												<img src={im.url} alt={im.alt_text} className="col-span-2 w-full h-20 object-cover rounded-md bg-background" />
 											) : (
-												<div className="col-span-2 w-full h-20 rounded-md bg-slate-900 border border-white/5" />
+												<div className="col-span-2 w-full h-20 rounded-md bg-background border border-foreground/5" />
 											)}
 											<div className="col-span-7">
 												<Input value={im.url} onChange={(e) => updateImage(i, { url: e.target.value })} placeholder="Image URL" />
@@ -501,15 +501,15 @@ const AdminProductFormPage = () => {
 						</section>
 
 						{/* Variants */}
-						<section className="rounded-2xl bg-slate-800/40 border border-white/10 p-6 space-y-4">
+						<section className="rounded-2xl bg-card/40 border border-foreground/10 p-6 space-y-4">
 							<div className="flex items-center justify-between">
-								<h2 className="text-lg text-white font-normal">Variants & Inventory</h2>
-								<Button type="button" onClick={addVariant} variant="ghost" className="border border-white/10 text-white">
+								<h2 className="text-lg text-foreground font-normal">Variants & Inventory</h2>
+								<Button type="button" onClick={addVariant} variant="ghost" className="border border-foreground/10 text-foreground">
 									<Plus className="w-4 h-4 mr-2" /> Add variant
 								</Button>
 							</div>
 							{variants.map((v, i) => (
-								<div key={i} className="rounded-xl bg-slate-900/60 border border-white/5 p-4 space-y-3">
+								<div key={i} className="rounded-xl bg-background/60 border border-foreground/5 p-4 space-y-3">
 									<div className="grid sm:grid-cols-3 gap-3">
 										<Field label="Title (ES)"><Input value={v.title_es} onChange={(e) => updateVariant(i, { title_es: e.target.value })} /></Field>
 										<Field label="Title (EN)"><Input value={v.title_en} onChange={(e) => updateVariant(i, { title_en: e.target.value })} /></Field>
@@ -534,7 +534,7 @@ const AdminProductFormPage = () => {
 											<Input type="number" value={v.inventory_quantity} onChange={(e) => updateVariant(i, { inventory_quantity: e.target.value })} />
 										</Field>
 										<Field label="Track inventory">
-											<label className="flex items-center gap-2 text-white/80 text-sm h-9">
+											<label className="flex items-center gap-2 text-foreground/80 text-sm h-9">
 												<input type="checkbox" checked={v.manage_inventory} onChange={(e) => updateVariant(i, { manage_inventory: e.target.checked })} />
 												Auto-decrement on paid
 											</label>
@@ -553,16 +553,16 @@ const AdminProductFormPage = () => {
 						</section>
 
 						{/* Collections */}
-						<section className="rounded-2xl bg-slate-800/40 border border-white/10 p-6 space-y-4">
-							<h2 className="text-lg text-white font-normal">Collections</h2>
+						<section className="rounded-2xl bg-card/40 border border-foreground/10 p-6 space-y-4">
+							<h2 className="text-lg text-foreground font-normal">Collections</h2>
 							{allCollections.length === 0 ? (
-								<p className="text-white/40 text-sm italic">No collections defined.</p>
+								<p className="text-foreground/40 text-sm italic">No collections defined.</p>
 							) : (
 								<div className="grid sm:grid-cols-2 gap-2">
 									{allCollections.map((c) => (
-										<label key={c.id} className="flex items-center gap-2 text-white/80 text-sm">
+										<label key={c.id} className="flex items-center gap-2 text-foreground/80 text-sm">
 											<input type="checkbox" checked={collectionIds.has(c.id)} onChange={() => toggleCollection(c.id)} />
-											<span>{c.title_es} <span className="text-white/40">/ {c.title_en}</span> <span className="text-white/30 font-mono text-xs">({c.slug})</span></span>
+											<span>{c.title_es} <span className="text-foreground/40">/ {c.title_en}</span> <span className="text-foreground/30 font-mono text-xs">({c.slug})</span></span>
 										</label>
 									))}
 								</div>
@@ -570,18 +570,18 @@ const AdminProductFormPage = () => {
 						</section>
 
 						{/* Additional info */}
-						<section className="rounded-2xl bg-slate-800/40 border border-white/10 p-6 space-y-4">
+						<section className="rounded-2xl bg-card/40 border border-foreground/10 p-6 space-y-4">
 							<div className="flex items-center justify-between">
-								<h2 className="text-lg text-white font-normal">Additional Info Sections</h2>
-								<Button type="button" onClick={addInfo} variant="ghost" className="border border-white/10 text-white">
+								<h2 className="text-lg text-foreground font-normal">Additional Info Sections</h2>
+								<Button type="button" onClick={addInfo} variant="ghost" className="border border-foreground/10 text-foreground">
 									<Plus className="w-4 h-4 mr-2" /> Add section
 								</Button>
 							</div>
 							{additionalInfo.length === 0 ? (
-								<p className="text-white/40 text-sm italic">FAQ-style sections like "Storage", "Allergens", "Returns".</p>
+								<p className="text-foreground/40 text-sm italic">FAQ-style sections like "Storage", "Allergens", "Returns".</p>
 							) : (
 								additionalInfo.map((ai, i) => (
-									<div key={i} className="rounded-xl bg-slate-900/60 border border-white/5 p-4 space-y-3">
+									<div key={i} className="rounded-xl bg-background/60 border border-foreground/5 p-4 space-y-3">
 										<div className="grid sm:grid-cols-2 gap-3">
 											<Field label="Title (ES)"><Input value={ai.title_es} onChange={(e) => updateInfo(i, { title_es: e.target.value })} /></Field>
 											<Field label="Title (EN)"><Input value={ai.title_en} onChange={(e) => updateInfo(i, { title_en: e.target.value })} /></Field>
@@ -602,7 +602,7 @@ const AdminProductFormPage = () => {
 					</div>
 
 					<div className="mt-10 flex justify-end">
-						<Button onClick={handleSave} disabled={saving} className="bg-mango-500 hover:bg-mango-600 text-white">
+						<Button onClick={handleSave} disabled={saving} className="bg-mango-500 hover:bg-mango-600 text-foreground">
 							{saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
 							{isEditing ? 'Save changes' : 'Create product'}
 						</Button>

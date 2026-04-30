@@ -50,10 +50,10 @@ const BlogSeoAudit = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-           <h2 className="text-xl font-bold text-white">SEO Audit</h2>
-           <p className="text-white/60 text-sm">Analyze and optimize search engine visibility.</p>
+           <h2 className="text-xl font-bold text-foreground">SEO Audit</h2>
+           <p className="text-foreground/60 text-sm">Analyze and optimize search engine visibility.</p>
         </div>
-        <Button onClick={fetchPosts} variant="outline" className="border-white/10 text-white hover:bg-white/5">
+        <Button onClick={fetchPosts} variant="outline" className="border-foreground/10 text-foreground hover:bg-foreground/5">
           <RefreshCw className="w-4 h-4 mr-2" /> Refresh Analysis
         </Button>
       </div>
@@ -63,27 +63,27 @@ const BlogSeoAudit = () => {
            <Loader2 className="w-8 h-8 text-mango-500 animate-spin" />
         </div>
       ) : (
-        <div className="bg-slate-800 rounded-xl border border-white/10 overflow-hidden">
+        <div className="bg-card rounded-xl border border-foreground/10 overflow-hidden">
            <div className="overflow-x-auto">
              <table className="w-full text-left">
-                <thead className="bg-slate-900/50 border-b border-white/10">
+                <thead className="bg-background/50 border-b border-foreground/10">
                     <tr>
-                        <th className="p-4 text-xs font-medium uppercase text-white/60">Post</th>
-                        <th className="p-4 text-xs font-medium uppercase text-white/60 text-center">Score</th>
-                        <th className="p-4 text-xs font-medium uppercase text-white/60 text-center">Title</th>
-                        <th className="p-4 text-xs font-medium uppercase text-white/60 text-center">Desc</th>
-                        <th className="p-4 text-xs font-medium uppercase text-white/60 text-center">Slug</th>
-                        <th className="p-4 text-xs font-medium uppercase text-white/60 text-center">Image</th>
-                        <th className="p-4 text-xs font-medium uppercase text-white/60 text-center">Alt</th>
-                        <th className="p-4 text-xs font-medium uppercase text-white/60 text-right">Action</th>
+                        <th className="p-4 text-xs font-medium uppercase text-foreground/60">Post</th>
+                        <th className="p-4 text-xs font-medium uppercase text-foreground/60 text-center">Score</th>
+                        <th className="p-4 text-xs font-medium uppercase text-foreground/60 text-center">Title</th>
+                        <th className="p-4 text-xs font-medium uppercase text-foreground/60 text-center">Desc</th>
+                        <th className="p-4 text-xs font-medium uppercase text-foreground/60 text-center">Slug</th>
+                        <th className="p-4 text-xs font-medium uppercase text-foreground/60 text-center">Image</th>
+                        <th className="p-4 text-xs font-medium uppercase text-foreground/60 text-center">Alt</th>
+                        <th className="p-4 text-xs font-medium uppercase text-foreground/60 text-right">Action</th>
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
                     {posts.map(post => (
-                        <tr key={post.id} className="hover:bg-white/5 transition-colors">
+                        <tr key={post.id} className="hover:bg-foreground/5 transition-colors">
                             <td className="p-4">
-                                <div className="font-medium text-white max-w-[200px] truncate">{post.title}</div>
-                                <div className="text-xs text-white/40">{post.published ? 'Published' : 'Draft'}</div>
+                                <div className="font-medium text-foreground max-w-[200px] truncate">{post.title}</div>
+                                <div className="text-xs text-foreground/40">{post.published ? 'Published' : 'Draft'}</div>
                             </td>
                             <td className="p-4 text-center">
                                 <span className={`inline-block px-2 py-1 rounded border font-bold text-xs ${getScoreColor(post.seoScore)}`}>

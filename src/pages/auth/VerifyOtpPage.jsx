@@ -112,18 +112,18 @@ const VerifyOtpPage = () => {
         <title>Enter Code - Kibay Espumante</title>
       </Helmet>
       <Navigation />
-      <div className="min-h-screen flex items-center justify-center bg-slate-900 pt-20 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-background pt-20 px-4">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-md bg-slate-800 p-8 rounded-2xl border border-white/10 shadow-2xl"
+          className="w-full max-w-md bg-card p-8 rounded-2xl border border-foreground/10 shadow-2xl"
         >
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">Check Your Email</h1>
+            <h1 className="text-3xl font-bold text-foreground mb-2">Check Your Email</h1>
             {isLoading ? (
-              <p className="text-white/60">Verifying credentials...</p>
+              <p className="text-foreground/60">Verifying credentials...</p>
             ) : (
-              <div className="text-white/60">
+              <div className="text-foreground/60">
                 {email ? (
                   <>
                     <p>Enter the 6-digit code sent to:</p>
@@ -153,22 +153,22 @@ const VerifyOtpPage = () => {
           <form onSubmit={handleVerify} className="space-y-6">
             {!emailFromState && (
                <div className="space-y-2">
-               <label className="text-sm font-medium text-white/80">Email Address</label>
+               <label className="text-sm font-medium text-foreground/80">Email Address</label>
                <input
                  type="email"
                  value={email}
                  onChange={(e) => setEmail(e.target.value)}
                  placeholder="you@example.com"
-                 className="w-full bg-slate-900/50 border border-white/10 rounded-lg py-2.5 px-4 text-white focus:outline-none focus:border-mango-500"
+                 className="w-full bg-background/50 border border-foreground/10 rounded-lg py-2.5 px-4 text-foreground focus:outline-none focus:border-mango-500"
                  disabled={isLoading}
                />
              </div>
             )}
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-white/80">6-Digit Code</label>
+              <label className="text-sm font-medium text-foreground/80">6-Digit Code</label>
               <div className="relative">
-                <KeyRound className="absolute left-3 top-3 h-5 w-5 text-white/40" />
+                <KeyRound className="absolute left-3 top-3 h-5 w-5 text-foreground/40" />
                 <input
                   type="text"
                   value={token}
@@ -178,7 +178,7 @@ const VerifyOtpPage = () => {
                     setToken(val);
                   }}
                   placeholder="000000"
-                  className="w-full bg-slate-900/50 border border-white/10 rounded-lg py-2.5 pl-10 pr-4 text-white placeholder:text-white/30 focus:outline-none focus:border-mango-500 focus:ring-1 focus:ring-mango-500 transition-colors tracking-[0.5em] text-lg font-mono text-center"
+                  className="w-full bg-background/50 border border-foreground/10 rounded-lg py-2.5 pl-10 pr-4 text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-mango-500 focus:ring-1 focus:ring-mango-500 transition-colors tracking-[0.5em] text-lg font-mono text-center"
                   disabled={isLoading}
                   autoFocus
                 />
@@ -187,7 +187,7 @@ const VerifyOtpPage = () => {
 
             <Button 
               type="submit" 
-              className="w-full bg-mango-500 hover:bg-mango-600 text-white py-6 text-lg"
+              className="w-full bg-mango-500 hover:bg-mango-600 text-foreground py-6 text-lg"
               disabled={isLoading || token.length < 6}
             >
               {isLoading ? (
@@ -204,7 +204,7 @@ const VerifyOtpPage = () => {
             <button 
               onClick={handleResend}
               className={`text-sm transition-colors flex items-center justify-center w-full gap-2 ${
-                cooldown > 0 ? 'text-white/30 cursor-not-allowed' : 'text-white/50 hover:text-white'
+                cooldown > 0 ? 'text-foreground/30 cursor-not-allowed' : 'text-foreground/50 hover:text-foreground'
               }`}
               disabled={isLoading || cooldown > 0}
             >

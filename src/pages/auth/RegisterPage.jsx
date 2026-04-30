@@ -80,50 +80,50 @@ const RegisterPage = () => {
         <title>Create Account - Kibay Espumante</title>
       </Helmet>
       <Navigation />
-      <div className="min-h-screen flex items-center justify-center bg-slate-900 pt-20 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-background pt-20 px-4">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-md bg-slate-800 p-8 rounded-2xl border border-white/10 shadow-2xl relative overflow-hidden"
+          className="w-full max-w-md bg-card p-8 rounded-2xl border border-foreground/10 shadow-2xl relative overflow-hidden"
         >
           {/* Background decoration */}
           <div className="absolute top-0 right-0 w-32 h-32 bg-mango-500/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none" />
 
           <div className="text-center mb-8 relative z-10">
-            <h1 className="text-3xl font-bold text-white mb-2">Create Account</h1>
-            <p className="text-white/60">
+            <h1 className="text-3xl font-bold text-foreground mb-2">Create Account</h1>
+            <p className="text-foreground/60">
                 Join the Kibay community
             </p>
           </div>
 
           <form onSubmit={handleRegister} className="space-y-4 relative z-10">
               <div className="space-y-2">
-              <label className="text-sm font-medium text-white/80">Full Name</label>
+              <label className="text-sm font-medium text-foreground/80">Full Name</label>
               <div className="relative">
-                  <User className="absolute left-3 top-3 h-5 w-5 text-white/40" />
+                  <User className="absolute left-3 top-3 h-5 w-5 text-foreground/40" />
                   <input
                   type="text"
                   name="fullName"
                   value={formData.fullName}
                   onChange={handleChange}
                   placeholder="John Doe"
-                  className="w-full bg-slate-900/50 border border-white/10 rounded-lg py-2.5 pl-10 pr-4 text-white placeholder:text-white/30 focus:outline-none focus:border-mango-500 focus:ring-1 focus:ring-mango-500 transition-colors"
+                  className="w-full bg-background/50 border border-foreground/10 rounded-lg py-2.5 pl-10 pr-4 text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-mango-500 focus:ring-1 focus:ring-mango-500 transition-colors"
                   disabled={loading && !isModalOpen}
                   />
               </div>
               </div>
 
               <div className="space-y-2">
-              <label className="text-sm font-medium text-white/80">Email Address</label>
+              <label className="text-sm font-medium text-foreground/80">Email Address</label>
               <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-5 w-5 text-white/40" />
+                  <Mail className="absolute left-3 top-3 h-5 w-5 text-foreground/40" />
                   <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="you@example.com"
-                  className="w-full bg-slate-900/50 border border-white/10 rounded-lg py-2.5 pl-10 pr-4 text-white placeholder:text-white/30 focus:outline-none focus:border-mango-500 focus:ring-1 focus:ring-mango-500 transition-colors"
+                  className="w-full bg-background/50 border border-foreground/10 rounded-lg py-2.5 pl-10 pr-4 text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-mango-500 focus:ring-1 focus:ring-mango-500 transition-colors"
                   disabled={loading && !isModalOpen}
                   />
               </div>
@@ -138,7 +138,7 @@ const RegisterPage = () => {
 
               <Button 
               type="submit" 
-              className="w-full bg-mango-500 hover:bg-mango-600 text-white py-6 text-lg font-medium mt-4"
+              className="w-full bg-mango-500 hover:bg-mango-600 text-foreground py-6 text-lg font-medium mt-4"
               disabled={loading && !isModalOpen}
               >
               {loading && !isModalOpen ? (
@@ -154,7 +154,7 @@ const RegisterPage = () => {
               </Button>
           </form>
 
-          <div className="mt-6 text-center text-white/60 text-sm">
+          <div className="mt-6 text-center text-foreground/60 text-sm">
             <div>
               Already have an account?{' '}
               <Link to="/login" className="text-mango-400 hover:text-mango-300 font-medium">

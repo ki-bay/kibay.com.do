@@ -127,7 +127,7 @@ const DiagnosticPage = () => {
 
               <div className="bg-white rounded-xl shadow-sm border border-stone-200 p-6">
                 <h2 className="text-xl font-medium text-stone-900 border-b border-stone-100 pb-4 mb-4">Raw JSON Export</h2>
-                <pre className="bg-stone-900 text-stone-300 p-4 rounded-lg overflow-x-auto text-xs">
+                <pre className="bg-card text-stone-300 p-4 rounded-lg overflow-x-auto text-xs">
                   {JSON.stringify(report, null, 2)}
                 </pre>
               </div>

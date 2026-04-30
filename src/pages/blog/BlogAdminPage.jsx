@@ -115,39 +115,39 @@ const BlogAdminPage = () => {
       </Helmet>
       <Navigation />
       
-      <div className="min-h-screen bg-slate-900 pt-28 pb-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-background pt-28 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           
           {/* Header */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-white mb-2">Blog Dashboard</h1>
-              <p className="text-white/60 text-sm">Manage your stories, news, and updates.</p>
+              <h1 className="text-3xl font-bold text-foreground mb-2">Blog Dashboard</h1>
+              <p className="text-foreground/60 text-sm">Manage your stories, news, and updates.</p>
             </div>
             <Link to="/admin/blog/create">
-              <Button className="bg-mango-500 hover:bg-mango-600 text-white shadow-lg shadow-mango-500/20">
+              <Button className="bg-mango-500 hover:bg-mango-600 text-foreground shadow-lg shadow-mango-500/20">
                 <Plus className="w-4 h-4 mr-2" /> Create New Post
               </Button>
             </Link>
           </div>
 
           {/* Controls */}
-          <div className="bg-slate-800 rounded-xl border border-white/10 p-4 mb-6 flex flex-col md:flex-row justify-between gap-4">
+          <div className="bg-card rounded-xl border border-foreground/10 p-4 mb-6 flex flex-col md:flex-row justify-between gap-4">
             <div className="flex gap-4 flex-1">
               <div className="relative flex-1 max-w-sm">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40" />
                 <input 
                   type="text" 
                   placeholder="Search posts..." 
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full bg-slate-900 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-white focus:outline-none focus:border-mango-500 text-sm"
+                  className="w-full bg-background border border-foreground/10 rounded-lg pl-10 pr-4 py-2 text-foreground focus:outline-none focus:border-mango-500 text-sm"
                 />
               </div>
               <select 
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="bg-slate-900 border border-white/10 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-mango-500"
+                className="bg-background border border-foreground/10 rounded-lg px-4 py-2 text-foreground text-sm focus:outline-none focus:border-mango-500"
               >
                 <option value="all">All Status</option>
                 <option value="published">Published</option>
@@ -157,7 +157,7 @@ const BlogAdminPage = () => {
 
             {selectedPosts.length > 0 && (
               <div className="flex items-center gap-2 animate-in fade-in duration-300">
-                <span className="text-white/60 text-sm mr-2">{selectedPosts.length} selected</span>
+                <span className="text-foreground/60 text-sm mr-2">{selectedPosts.length} selected</span>
                 <Button variant="destructive" size="sm" onClick={handleBulkDelete}>
                   <Trash2 className="w-4 h-4 mr-2" /> Delete Selected
                 </Button>
@@ -166,63 +166,63 @@ const BlogAdminPage = () => {
           </div>
 
           {/* Table */}
-          <div className="bg-slate-800 rounded-xl border border-white/10 overflow-hidden shadow-xl">
+          <div className="bg-card rounded-xl border border-foreground/10 overflow-hidden shadow-xl">
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-slate-900/50 border-b border-white/10">
+                <thead className="bg-background/50 border-b border-foreground/10">
                   <tr>
                     <th className="px-6 py-4 w-12">
                       <input 
                         type="checkbox" 
                         onChange={handleSelectAll}
                         checked={selectedPosts.length === filteredPosts.length && filteredPosts.length > 0}
-                        className="rounded border-white/20 bg-slate-700 text-mango-500 focus:ring-mango-500"
+                        className="rounded border-foreground/20 bg-slate-700 text-mango-500 focus:ring-mango-500"
                       />
                     </th>
-                    <th className="px-6 py-4 text-sm font-medium text-white/60">Title</th>
-                    <th className="px-6 py-4 text-sm font-medium text-white/60">Author</th>
-                    <th className="px-6 py-4 text-sm font-medium text-white/60">Category</th>
-                    <th className="px-6 py-4 text-sm font-medium text-white/60">Status</th>
-                    <th className="px-6 py-4 text-sm font-medium text-white/60">Date</th>
-                    <th className="px-6 py-4 text-sm font-medium text-white/60 text-right">Actions</th>
+                    <th className="px-6 py-4 text-sm font-medium text-foreground/60">Title</th>
+                    <th className="px-6 py-4 text-sm font-medium text-foreground/60">Author</th>
+                    <th className="px-6 py-4 text-sm font-medium text-foreground/60">Category</th>
+                    <th className="px-6 py-4 text-sm font-medium text-foreground/60">Status</th>
+                    <th className="px-6 py-4 text-sm font-medium text-foreground/60">Date</th>
+                    <th className="px-6 py-4 text-sm font-medium text-foreground/60 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {isLoading ? (
                     <tr>
-                      <td colSpan="7" className="px-6 py-12 text-center text-white/40">Loading posts...</td>
+                      <td colSpan="7" className="px-6 py-12 text-center text-foreground/40">Loading posts...</td>
                     </tr>
                   ) : filteredPosts.length === 0 ? (
                     <tr>
-                      <td colSpan="7" className="px-6 py-12 text-center text-white/40">
+                      <td colSpan="7" className="px-6 py-12 text-center text-foreground/40">
                         {searchTerm ? 'No posts match your search.' : 'No blog posts found. Start writing!'}
                       </td>
                     </tr>
                   ) : (
                     filteredPosts.map(post => (
-                      <tr key={post.id} className="hover:bg-white/5 transition-colors group">
+                      <tr key={post.id} className="hover:bg-foreground/5 transition-colors group">
                         <td className="px-6 py-4">
                           <input 
                             type="checkbox" 
                             checked={selectedPosts.includes(post.id)}
                             onChange={() => handleSelectPost(post.id)}
-                            className="rounded border-white/20 bg-slate-700 text-mango-500 focus:ring-mango-500"
+                            className="rounded border-foreground/20 bg-slate-700 text-mango-500 focus:ring-mango-500"
                           />
                         </td>
                         <td className="px-6 py-4">
-                          <div className="font-medium text-white line-clamp-1">{post.title}</div>
-                          <div className="text-xs text-white/40 font-mono mt-1 truncate max-w-[200px]">{post.slug}</div>
+                          <div className="font-medium text-foreground line-clamp-1">{post.title}</div>
+                          <div className="text-xs text-foreground/40 font-mono mt-1 truncate max-w-[200px]">{post.slug}</div>
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-full bg-slate-700 flex items-center justify-center text-xs text-white">
+                            <div className="w-6 h-6 rounded-full bg-slate-700 flex items-center justify-center text-xs text-foreground">
                               {post.author?.full_name?.charAt(0) || 'U'}
                             </div>
-                            <span className="text-sm text-white/80">{post.author?.full_name || 'Unknown'}</span>
+                            <span className="text-sm text-foreground/80">{post.author?.full_name || 'Unknown'}</span>
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-slate-700 text-white/80">
+                          <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-slate-700 text-foreground/80">
                             {post.category?.name || 'Uncategorized'}
                           </span>
                         </td>
@@ -242,7 +242,7 @@ const BlogAdminPage = () => {
                             )}
                           </button>
                         </td>
-                        <td className="px-6 py-4 text-sm text-white/60">
+                        <td className="px-6 py-4 text-sm text-foreground/60">
                           {formatBlogDate(post.created_at)}
                         </td>
                         <td className="px-6 py-4 text-right">
@@ -276,7 +276,7 @@ const BlogAdminPage = () => {
             </div>
             
             {/* Footer Pagination (Simple for now) */}
-            <div className="px-6 py-4 border-t border-white/10 bg-slate-900/30 text-xs text-white/40 flex justify-between">
+            <div className="px-6 py-4 border-t border-foreground/10 bg-background/30 text-xs text-foreground/40 flex justify-between">
               <span>Showing {filteredPosts.length} of {posts.length} posts</span>
             </div>
           </div>

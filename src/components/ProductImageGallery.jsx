@@ -45,7 +45,7 @@ const ProductImageGallery = forwardRef(({ images = [], title, ribbonText }, ref)
           </AnimatePresence>
 
           {ribbonText && (
-            <div className="absolute top-6 left-6 bg-[#D4A574] text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg uppercase z-10">
+            <div className="absolute top-6 left-6 bg-[#D4A574] text-foreground text-sm font-bold px-4 py-2 rounded-full shadow-lg uppercase z-10">
               {ribbonText}
             </div>
           )}

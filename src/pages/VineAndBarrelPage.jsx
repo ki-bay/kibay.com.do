@@ -53,7 +53,7 @@ const VineAndBarrelPage = () => {
         toast({
           title: "Request Received",
           description: "We'll confirm your tasting tour shortly.",
-          className: "bg-emerald-900 text-white border-none",
+          className: "bg-emerald-900 text-foreground border-none",
         });
       } catch (error) {
         toast({
@@ -91,7 +91,7 @@ const VineAndBarrelPage = () => {
                 </div>
                 <h4 className="text-2xl font-serif text-stone-900 mb-2">Thank You!</h4>
                 <p className="text-stone-600 mb-6">Your booking request has been sent. Our concierge will contact you shortly to confirm the details.</p>
-                <Button onClick={() => setIsModalOpen(false)} className="bg-stone-900 hover:bg-stone-800 text-white w-full py-6">
+                <Button onClick={() => setIsModalOpen(false)} className="bg-card hover:bg-card text-foreground w-full py-6">
                   Close
                 </Button>
               </div>
@@ -171,7 +171,7 @@ const VineAndBarrelPage = () => {
                 <Button 
                   type="submit" 
                   disabled={isSubmitting}
-                  className="w-full bg-[#D4A574] hover:bg-[#c29462] text-white py-6 text-lg mt-4"
+                  className="w-full bg-[#D4A574] hover:bg-[#c29462] text-foreground py-6 text-lg mt-4"
                 >
                   {isSubmitting ? (
                     <>
@@ -218,15 +218,15 @@ const VineAndBarrelPage = () => {
             className="relative z-10 text-center px-4 max-w-4xl mx-auto"
           >
             <h2 className="text-[#D4A574] font-medium tracking-[0.2em] uppercase text-sm md:text-base mb-6">Premium Winery Collection</h2>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-8 leading-tight">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-foreground mb-8 leading-tight">
               Vine & Barrel
             </h1>
-            <p className="text-xl md:text-2xl text-white/90 font-light italic mb-10 max-w-2xl mx-auto font-serif">
+            <p className="text-xl md:text-2xl text-foreground/90 font-light italic mb-10 max-w-2xl mx-auto font-serif">
               "Discover Our Signature Wines"
             </p>
             <Button 
               onClick={() => document.getElementById('wine-of-month').scrollIntoView({ behavior: 'smooth' })}
-              className="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white rounded-full px-10 py-7 text-lg transition-all hover:scale-105"
+              className="bg-foreground/10 hover:bg-foreground/20 backdrop-blur-md border border-foreground/30 text-foreground rounded-full px-10 py-7 text-lg transition-all hover:scale-105"
             >
               Explore Collection
             </Button>
@@ -236,7 +236,7 @@ const VineAndBarrelPage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.5, duration: 1 }}
-            className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center text-white/50"
+            className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center text-foreground/50"
           >
             <span className="text-xs uppercase tracking-widest mb-2">Scroll</span>
             <div className="w-px h-16 bg-gradient-to-b from-white/50 to-transparent" />
@@ -283,7 +283,7 @@ const VineAndBarrelPage = () => {
                 </div>
               </div>
 
-              <Button className="bg-stone-900 hover:bg-stone-800 text-white px-8 py-6 rounded-lg text-lg w-full sm:w-auto">
+              <Button className="bg-card hover:bg-card text-foreground px-8 py-6 rounded-lg text-lg w-full sm:w-auto">
                 Learn More <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </div>
@@ -333,7 +333,7 @@ const VineAndBarrelPage = () => {
                   className="bg-stone-50 p-10 rounded-2xl shadow-lg border border-stone-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group"
                 >
                   <div className="w-12 h-12 bg-[#D4A574]/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-[#D4A574] transition-colors duration-300">
-                    <Wine className="text-[#D4A574] group-hover:text-white transition-colors" />
+                    <Wine className="text-[#D4A574] group-hover:text-foreground transition-colors" />
                   </div>
                   <h3 className="text-2xl font-serif text-stone-900 mb-1">{wine.name}</h3>
                   <p className="text-stone-400 italic mb-6 font-serif">{wine.year}</p>
@@ -359,7 +359,7 @@ const VineAndBarrelPage = () => {
         </section>
 
         {/* Food Pairings */}
-        <section className="py-24 bg-stone-900 text-white overflow-hidden">
+        <section className="py-24 bg-card text-foreground overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div {...fadeInUp} className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-serif mb-6">Perfect Pairings</h2>
@@ -408,8 +408,8 @@ const VineAndBarrelPage = () => {
                     icon: "🍫"
                   }
                 ].map((item, idx) => (
-                  <div key={idx} className="bg-white/5 p-6 rounded-xl border border-white/10 hover:bg-white/10 transition-colors flex gap-6 items-start">
-                    <div className="text-4xl bg-white/10 w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0">
+                  <div key={idx} className="bg-foreground/5 p-6 rounded-xl border border-foreground/10 hover:bg-foreground/10 transition-colors flex gap-6 items-start">
+                    <div className="text-4xl bg-foreground/10 w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0">
                       {item.icon}
                     </div>
                     <div>
@@ -425,7 +425,7 @@ const VineAndBarrelPage = () => {
 
         {/* Call to Action - Booking */}
         <section className="py-32 relative bg-[url('https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=2940&auto=format&fit=crop')] bg-cover bg-fixed bg-center">
-          <div className="absolute inset-0 bg-stone-900/80 backdrop-blur-sm" />
+          <div className="absolute inset-0 bg-card/80 backdrop-blur-sm" />
           
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
@@ -434,7 +434,7 @@ const VineAndBarrelPage = () => {
             className="relative z-10 max-w-3xl mx-auto text-center px-4"
           >
             <MapPin className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
-            <h2 className="text-5xl md:text-6xl font-serif text-white mb-8">Visit The Estate</h2>
+            <h2 className="text-5xl md:text-6xl font-serif text-foreground mb-8">Visit The Estate</h2>
             <p className="text-xl text-stone-300 mb-10 font-light leading-relaxed">
               Immerse yourself in the art of winemaking. Book a private tour of our vineyards and cellar, followed by an exclusive tasting session guided by our sommelier.
             </p>
@@ -447,7 +447,7 @@ const VineAndBarrelPage = () => {
 
             <Button 
               onClick={() => setIsModalOpen(true)}
-              className="bg-[#D4A574] hover:bg-[#c29462] text-white px-12 py-8 text-xl rounded-full shadow-[0_0_30px_rgba(212,165,116,0.3)] hover:shadow-[0_0_50px_rgba(212,165,116,0.5)] transition-all hover:scale-105"
+              className="bg-[#D4A574] hover:bg-[#c29462] text-foreground px-12 py-8 text-xl rounded-full shadow-[0_0_30px_rgba(212,165,116,0.3)] hover:shadow-[0_0_50px_rgba(212,165,116,0.5)] transition-all hover:scale-105"
             >
               Book a Private Tasting Tour
             </Button>

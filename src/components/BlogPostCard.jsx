@@ -15,9 +15,9 @@ const BlogPostCard = ({ post }) => {
   return (
     <motion.div
       whileHover={{ y: -5 }}
-      className="group bg-slate-800 rounded-xl overflow-hidden border border-white/5 hover:border-mango-500/30 transition-all duration-300 flex flex-col h-full shadow-lg"
+      className="group bg-card rounded-xl overflow-hidden border border-foreground/5 hover:border-mango-500/30 transition-all duration-300 flex flex-col h-full shadow-lg"
     >
-      <Link to={`/blog/${id}`} className="block relative aspect-video overflow-hidden bg-slate-900">
+      <Link to={`/blog/${id}`} className="block relative aspect-video overflow-hidden bg-background">
         {featured_image_url ? (
           <img 
             src={featured_image_url} 
@@ -25,17 +25,17 @@ const BlogPostCard = ({ post }) => {
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-slate-800 relative overflow-hidden">
+          <div className="w-full h-full flex items-center justify-center bg-card relative overflow-hidden">
              {/* Fallback pattern or placeholder */}
-            <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900" />
-            <span className="relative z-10 text-white/10 text-4xl font-bold">Ki-BAY</span>
+            <div className="absolute inset-0 bg-gradient-to-br from-card to-background" />
+            <span className="relative z-10 text-foreground/10 text-4xl font-bold">Ki-BAY</span>
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent opacity-60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-60" />
       </Link>
 
       <div className="p-6 flex flex-col flex-grow">
-        <div className="flex items-center gap-4 text-xs text-white/40 mb-3">
+        <div className="flex items-center gap-4 text-xs text-foreground/40 mb-3">
           <span className="flex items-center gap-1">
             <Calendar className="w-3 h-3" />
             {formattedDate}
@@ -49,10 +49,10 @@ const BlogPostCard = ({ post }) => {
         </div>
 
         <Link to={`/blog/${id}`} className="group-hover:text-mango-400 transition-colors">
-          <h3 className="text-xl font-bold text-white mb-2 line-clamp-2">{title}</h3>
+          <h3 className="text-xl font-bold text-foreground mb-2 line-clamp-2">{title}</h3>
         </Link>
         
-        <p className="text-white/60 text-sm mb-4 line-clamp-3 flex-grow">
+        <p className="text-foreground/60 text-sm mb-4 line-clamp-3 flex-grow">
           {description}
         </p>
 

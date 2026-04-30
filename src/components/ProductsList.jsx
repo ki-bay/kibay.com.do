@@ -42,7 +42,7 @@ const ProductCard = ({ product, index }) => {
       toast({
         title: "Added to Cart",
         description: `${displayTitle} has been added to your cart.`,
-        className: "bg-slate-800 text-white border-orange-500/20",
+        className: "bg-card text-foreground border-orange-500/20",
       });
     } catch (error) {
       toast({
@@ -61,7 +61,7 @@ const ProductCard = ({ product, index }) => {
       className="group flex flex-col" // Add flex flex-col here to ensure consistent card height
     >
       <Link to={`/product/${product.id}`} className="block h-full flex flex-col"> {/* Added flex flex-col */}
-        <div className="relative w-full h-72 overflow-hidden rounded-2xl bg-slate-800 mb-6 shadow-2xl hover:shadow-orange-500/20 transition-all duration-300">
+        <div className="relative w-full h-72 overflow-hidden rounded-2xl bg-card mb-6 shadow-2xl hover:shadow-orange-500/20 transition-all duration-300">
           <img
             src={resolveProductMediaUrl(product.image) || placeholderImage}
             alt={displayTitle}
@@ -71,7 +71,7 @@ const ProductCard = ({ product, index }) => {
           
           {/* Badge */}
           {product.ribbon_text && (
-            <div className="absolute top-4 left-4 bg-gradient-to-r from-orange-400 to-orange-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg uppercase tracking-wider">
+            <div className="absolute top-4 left-4 bg-gradient-to-r from-orange-400 to-orange-600 text-foreground text-xs font-bold px-3 py-1 rounded-full shadow-lg uppercase tracking-wider">
               {product.ribbon_text}
             </div>
           )}
@@ -81,20 +81,20 @@ const ProductCard = ({ product, index }) => {
             <Button 
               onClick={handleAddToCart} 
               size="icon"
-              className="rounded-full w-12 h-12 bg-slate-900 text-white hover:bg-orange-500 hover:text-white shadow-lg border-none transition-colors"
+              className="rounded-full w-12 h-12 bg-background text-foreground hover:bg-orange-500 hover:text-foreground shadow-lg border-none transition-colors"
             >
               <ShoppingBag className="w-5 h-5" />
             </Button>
           </div>
         </div>
 
-        <div className="flex-grow flex flex-col justify-between space-y-2 p-4 bg-slate-900/50 rounded-xl border border-white/5 hover:border-orange-500/20 transition-colors"> {/* Added flex-grow */}
+        <div className="flex-grow flex flex-col justify-between space-y-2 p-4 bg-background/50 rounded-xl border border-foreground/5 hover:border-orange-500/20 transition-colors"> {/* Added flex-grow */}
           <div>
-            <h3 className="text-xl font-bold text-white group-hover:text-orange-500 transition-colors">{displayTitle}</h3>
+            <h3 className="text-xl font-bold text-foreground group-hover:text-orange-500 transition-colors">{displayTitle}</h3>
             <p className="text-sm text-slate-400 line-clamp-1 h-5">{displaySubtitle}</p>
           </div>
           <div className="flex items-baseline gap-2 pt-1 mt-auto">
-            <span className="text-lg font-medium text-white/90">{displayPrice}</span>
+            <span className="text-lg font-medium text-foreground/90">{displayPrice}</span>
             {hasSale && (
               <span className="text-sm text-slate-500 line-through decoration-slate-500/50">{originalPrice}</span>
             )}

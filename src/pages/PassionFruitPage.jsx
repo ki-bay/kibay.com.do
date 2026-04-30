@@ -26,7 +26,7 @@ const PassionFruitPage = () => {
             alt="Vibrant passion fruit (Chinola)"
             className="w-full h-full object-cover brightness-50"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/80 via-slate-900/50 to-slate-900"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/50 to-background"></div>
         </div>
         
         <motion.div
@@ -35,17 +35,17 @@ const PassionFruitPage = () => {
           transition={{ duration: 1 }}
           className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
         >
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-light mb-6 text-white">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-light mb-6 text-foreground">
             Exotic <span className="bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent font-normal">Passion Fruit</span>
           </h1>
-          <p className="text-xl sm:text-2xl text-white/90 max-w-3xl mx-auto font-light leading-relaxed">
+          <p className="text-xl sm:text-2xl text-foreground/90 max-w-3xl mx-auto font-light leading-relaxed">
             Known locally as "Chinola," this tangy treasure is the heartbeat of Caribbean flavor.
           </p>
         </motion.div>
       </section>
 
       {/* Content Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-900 font-lato">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background font-lato">
         <div className="max-w-7xl mx-auto space-y-24">
           
           {/* Intro Grid */}
@@ -58,9 +58,9 @@ const PassionFruitPage = () => {
              >
                 <div className="flex items-center gap-3 mb-6">
                   <Info className="w-10 h-10 text-orange-500" />
-                  <h2 className="text-3xl font-light text-white">Characteristics</h2>
+                  <h2 className="text-3xl font-light text-foreground">Characteristics</h2>
                 </div>
-                <p className="text-lg text-white/80 leading-relaxed font-light">
+                <p className="text-lg text-foreground/80 leading-relaxed font-light">
                   Tart, aromatic, and juicy; typically has a wrinkled purple or yellow rind. The unmistakable scent of passion fruit fills the air as soon as you cut it open, revealing golden, seed-filled pulp that bursts with flavor.
                 </p>
              </motion.div>
@@ -72,9 +72,9 @@ const PassionFruitPage = () => {
              >
                 <div className="flex items-center gap-3 mb-6">
                   <Globe className="w-10 h-10 text-orange-500" />
-                  <h2 className="text-3xl font-light text-white">Origins & History</h2>
+                  <h2 className="text-3xl font-light text-foreground">Origins & History</h2>
                 </div>
-                <p className="text-lg text-white/80 leading-relaxed font-light">
+                <p className="text-lg text-foreground/80 leading-relaxed font-light">
                   Passion fruit is native to South America and is widely used in tropical cuisines. In the Dominican Republic, "Chinola" is more than a fruit—it's a staple ingredient for juices, desserts, and now, our premium sparkling wine.
                 </p>
              </motion.div>
@@ -88,7 +88,7 @@ const PassionFruitPage = () => {
                viewport={{ once: true }}
                className="text-center mb-12"
             >
-               <h2 className="text-3xl sm:text-4xl font-light text-white">Vibrant Health</h2>
+               <h2 className="text-3xl sm:text-4xl font-light text-foreground">Vibrant Health</h2>
             </motion.div>
 
             <div className="grid md:grid-cols-2 gap-8">
@@ -98,12 +98,12 @@ const PassionFruitPage = () => {
                  transition={{ delay: 0.1 }}
                  viewport={{ once: true }}
               >
-                <Card className="p-8 bg-slate-800/50 border-orange-500/20 h-full hover:bg-slate-800 transition-colors">
-                  <div className="w-12 h-12 bg-slate-900 rounded-full flex items-center justify-center mb-6">
+                <Card className="p-8 bg-card/50 border-orange-500/20 h-full hover:bg-card transition-colors">
+                  <div className="w-12 h-12 bg-background rounded-full flex items-center justify-center mb-6">
                     <Heart className="w-6 h-6 text-orange-500" />
                   </div>
-                  <h3 className="text-xl font-normal text-white mb-4">Health Benefits</h3>
-                  <p className="text-white/70 font-light leading-relaxed">
+                  <h3 className="text-xl font-normal text-foreground mb-4">Health Benefits</h3>
+                  <p className="text-foreground/70 font-light leading-relaxed">
                     Passion fruit is known for its high antioxidant content, helps improve digestion, and supports heart health. Its seeds are also a great source of fiber.
                   </p>
                 </Card>
@@ -115,12 +115,12 @@ const PassionFruitPage = () => {
                  transition={{ delay: 0.2 }}
                  viewport={{ once: true }}
               >
-                <Card className="p-8 bg-slate-800/50 border-orange-500/20 h-full hover:bg-slate-800 transition-colors">
-                  <div className="w-12 h-12 bg-slate-900 rounded-full flex items-center justify-center mb-6">
+                <Card className="p-8 bg-card/50 border-orange-500/20 h-full hover:bg-card transition-colors">
+                  <div className="w-12 h-12 bg-background rounded-full flex items-center justify-center mb-6">
                     <Zap className="w-6 h-6 text-orange-500" />
                   </div>
-                  <h3 className="text-xl font-normal text-white mb-4">Vitamins & Nutrients</h3>
-                  <p className="text-white/70 font-light leading-relaxed">
+                  <h3 className="text-xl font-normal text-foreground mb-4">Vitamins & Nutrients</h3>
+                  <p className="text-foreground/70 font-light leading-relaxed">
                     Rich in Vitamin C, Vitamin A, and dietary fiber. It provides an immune-boosting punch of nutrition in every serving, making it as healthy as it is delicious.
                   </p>
                 </Card>
@@ -136,12 +136,12 @@ const PassionFruitPage = () => {
             viewport={{ once: true }}
             className="text-center bg-gradient-to-r from-orange-500/10 to-orange-600/10 rounded-3xl p-12 border border-orange-500/20"
           >
-            <h2 className="text-3xl font-light text-white mb-6">Taste the Passion</h2>
-            <p className="text-lg text-white/80 max-w-2xl mx-auto mb-8 font-light">
+            <h2 className="text-3xl font-light text-foreground mb-6">Taste the Passion</h2>
+            <p className="text-lg text-foreground/80 max-w-2xl mx-auto mb-8 font-light">
               Experience the bold, refreshing zest of Chinola in our sparkling wine.
             </p>
             <Link to="/shop">
-              <Button size="lg" className="bg-orange-500 hover:bg-orange-600 text-white font-normal rounded-full px-10 py-6 text-lg shadow-lg hover:shadow-orange-500/30 transition-all">
+              <Button size="lg" className="bg-orange-500 hover:bg-orange-600 text-foreground font-normal rounded-full px-10 py-6 text-lg shadow-lg hover:shadow-orange-500/30 transition-all">
                 <ShoppingBag className="mr-2 h-5 w-5" />
                 Shop Now
               </Button>

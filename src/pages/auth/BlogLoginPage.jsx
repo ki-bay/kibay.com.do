@@ -59,40 +59,40 @@ const BlogLoginPage = () => {
       
       <Navigation />
       
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center py-20 px-4">
+      <div className="min-h-screen bg-background flex items-center justify-center py-20 px-4">
         <div className="w-full max-w-md">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="bg-slate-800 border border-white/10 rounded-2xl p-8 shadow-2xl"
+            className="bg-card border border-foreground/10 rounded-2xl p-8 shadow-2xl"
           >
             <div className="text-center mb-8">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-mango-500/10 mb-4 border border-mango-500/20">
                 <Lock className="w-8 h-8 text-mango-500" />
               </div>
-              <h1 className="text-2xl font-bold text-white mb-2">Blog Administration</h1>
-              <p className="text-white/60">Enter your credentials to access the dashboard</p>
+              <h1 className="text-2xl font-bold text-foreground mb-2">Blog Administration</h1>
+              <p className="text-foreground/60">Enter your credentials to access the dashboard</p>
             </div>
 
             <form onSubmit={handleLogin} className="space-y-6">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-white/80">Email Address</label>
+                <label className="text-sm font-medium text-foreground/80">Email Address</label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-foreground/40" />
                   <Input 
                     type="email" 
                     placeholder="admin@kibay.com.do" 
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 bg-slate-900 border-white/10 text-white placeholder:text-white/20 focus:border-mango-500"
+                    className="pl-10 bg-background border-foreground/10 text-foreground placeholder:text-foreground/20 focus:border-mango-500"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                   <label className="text-sm font-medium text-white/80">Password</label>
+                   <label className="text-sm font-medium text-foreground/80">Password</label>
                    <button 
                      type="button"
                      onClick={handleForgotPassword}
@@ -102,20 +102,20 @@ const BlogLoginPage = () => {
                    </button>
                 </div>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-foreground/40" />
                   <Input 
                     type="password" 
                     placeholder="••••••••" 
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 bg-slate-900 border-white/10 text-white placeholder:text-white/20 focus:border-mango-500"
+                    className="pl-10 bg-background border-foreground/10 text-foreground placeholder:text-foreground/20 focus:border-mango-500"
                   />
                 </div>
               </div>
 
               <Button 
                 type="submit" 
-                className="w-full bg-mango-500 hover:bg-mango-600 text-white h-12 text-lg"
+                className="w-full bg-mango-500 hover:bg-mango-600 text-foreground h-12 text-lg"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -128,8 +128,8 @@ const BlogLoginPage = () => {
               </Button>
             </form>
             
-            <div className="mt-8 pt-6 border-t border-white/10 text-center">
-              <p className="text-sm text-white/40">
+            <div className="mt-8 pt-6 border-t border-foreground/10 text-center">
+              <p className="text-sm text-foreground/40">
                 Authorized personnel only. <br/>All access attempts are logged.
               </p>
             </div>

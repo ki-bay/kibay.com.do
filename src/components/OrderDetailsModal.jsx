@@ -71,7 +71,7 @@ const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
       case 'cancelled':
         return 'text-red-400';
       default:
-        return 'text-white/60';
+        return 'text-foreground/60';
     }
   };
 
@@ -79,11 +79,11 @@ const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-slate-900 border border-white/10 text-white max-w-2xl max-h-[90vh] flex flex-col p-0 gap-0 overflow-hidden">
-        <DialogHeader className="p-6 border-b border-white/10 bg-slate-900/50">
+      <DialogContent className="bg-background border border-foreground/10 text-foreground max-w-2xl max-h-[90vh] flex flex-col p-0 gap-0 overflow-hidden">
+        <DialogHeader className="p-6 border-b border-foreground/10 bg-background/50">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <DialogTitle className="text-xl font-light text-white flex items-center gap-2">
+              <DialogTitle className="text-xl font-light text-foreground flex items-center gap-2">
                 Order #{currentOrder.order_number}
               </DialogTitle>
               <p className={`text-sm font-medium mt-1 ${getStatusColor(currentOrder.status)}`}>
@@ -91,7 +91,7 @@ const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
               </p>
             </div>
             <div className="text-right hidden sm:block">
-              <p className="text-xs text-white/40">Date Placed</p>
+              <p className="text-xs text-foreground/40">Date Placed</p>
               <p className="text-sm font-light">
                 {new Date(currentOrder.created_at).toLocaleDateString(undefined, { 
                   year: 'numeric', month: 'long', day: 'numeric' 
@@ -105,7 +105,7 @@ const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
           <div className="space-y-8">
             {/* Items List */}
             <div>
-              <h3 className="text-sm font-medium text-white/60 uppercase tracking-wider mb-4">Order Items</h3>
+              <h3 className="text-sm font-medium text-foreground/60 uppercase tracking-wider mb-4">Order Items</h3>
               {loading ? (
                 <div className="flex justify-center py-8">
                   <Loader2 className="w-8 h-8 animate-spin text-mango-500" />
@@ -113,21 +113,21 @@ const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
               ) : (
                 <div className="space-y-4">
                   {items.map((item) => (
-                    <div key={item.id} className="flex justify-between items-center py-3 border-b border-white/5 last:border-0">
+                    <div key={item.id} className="flex justify-between items-center py-3 border-b border-foreground/5 last:border-0">
                       <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-white/5 rounded-md flex items-center justify-center">
-                          <Package className="w-6 h-6 text-white/20" />
+                        <div className="w-12 h-12 bg-foreground/5 rounded-md flex items-center justify-center">
+                          <Package className="w-6 h-6 text-foreground/20" />
                         </div>
                         <div>
-                          <p className="font-medium text-white">{item.product_name}</p>
-                          <p className="text-sm text-white/40">Qty: {item.quantity} × {formatDopFromCents(item.price_per_item)}</p>
+                          <p className="font-medium text-foreground">{item.product_name}</p>
+                          <p className="text-sm text-foreground/40">Qty: {item.quantity} × {formatDopFromCents(item.price_per_item)}</p>
                         </div>
                       </div>
                       <p className="font-medium text-mango-400">{formatDopFromCents(item.total_price)}</p>
                     </div>
                   ))}
-                  <div className="flex justify-between items-center pt-4 mt-2 border-t border-white/10">
-                    <span className="font-bold text-white">Total</span>
+                  <div className="flex justify-between items-center pt-4 mt-2 border-t border-foreground/10">
+                    <span className="font-bold text-foreground">Total</span>
                     <span className="font-bold text-xl text-mango-400">{formatDopFromCents(currentOrder.total_amount)}</span>
                   </div>
                 </div>
@@ -136,38 +136,38 @@ const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
 
             {/* Order Details Grid */}
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-white/5 p-4 rounded-lg space-y-3">
+              <div className="bg-foreground/5 p-4 rounded-lg space-y-3">
                 <div className="flex items-center gap-2 text-mango-400 mb-2">
                   <MapPin className="w-4 h-4" />
                   <span className="font-medium text-sm">Shipping Address</span>
                 </div>
-                <div className="text-sm text-white/70 leading-relaxed font-light">
-                  <p className="text-white font-normal">{address.firstName} {address.lastName}</p>
+                <div className="text-sm text-foreground/70 leading-relaxed font-light">
+                  <p className="text-foreground font-normal">{address.firstName} {address.lastName}</p>
                   <p>{address.address}</p>
                   {address.apartment && <p>{address.apartment}</p>}
                   <p>{address.city}, {address.state} {address.zipCode}</p>
                   <p>{address.country}</p>
-                  <p className="mt-2 text-white/50">{address.phone}</p>
-                  <p className="text-white/50">{address.email}</p>
+                  <p className="mt-2 text-foreground/50">{address.phone}</p>
+                  <p className="text-foreground/50">{address.email}</p>
                 </div>
               </div>
 
-              <div className="bg-white/5 p-4 rounded-lg space-y-3">
+              <div className="bg-foreground/5 p-4 rounded-lg space-y-3">
                 <div className="flex items-center gap-2 text-mango-400 mb-2">
                   <Truck className="w-4 h-4" />
                   <span className="font-medium text-sm">Delivery Info</span>
                 </div>
                 <div className="space-y-2 text-sm">
                   {currentOrder.shipping_method && (
-                    <p className="text-white/70">
-                      Method: <span className="text-white">{currentOrder.shipping_method}</span>
+                    <p className="text-foreground/70">
+                      Method: <span className="text-foreground">{currentOrder.shipping_method}</span>
                     </p>
                   )}
                   {currentOrder.tracking_number ? (
                     <>
-                      <p className="text-white/70 mt-2">
+                      <p className="text-foreground/70 mt-2">
                         Tracking:{' '}
-                        <span className="text-white font-mono">{currentOrder.tracking_number}</span>
+                        <span className="text-foreground font-mono">{currentOrder.tracking_number}</span>
                       </p>
                       {currentOrder.tracking_url && (
                         <a
@@ -181,7 +181,7 @@ const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
                       )}
                     </>
                   ) : (
-                    <p className="text-white/40 italic">Tracking info will be available once shipped.</p>
+                    <p className="text-foreground/40 italic">Tracking info will be available once shipped.</p>
                   )}
                   {currentOrder.invoice_pdf_path && (
                     <a
@@ -195,16 +195,16 @@ const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
                     </a>
                   )}
                   {currentOrder.estimated_delivery_date && (
-                    <div className="flex items-center gap-2 mt-2 pt-2 border-t border-white/5">
-                      <Calendar className="w-3 h-3 text-white/40" />
-                      <span className="text-white/70">
+                    <div className="flex items-center gap-2 mt-2 pt-2 border-t border-foreground/5">
+                      <Calendar className="w-3 h-3 text-foreground/40" />
+                      <span className="text-foreground/70">
                         Est. Delivery: {new Date(currentOrder.estimated_delivery_date).toLocaleDateString()}
                       </span>
                     </div>
                   )}
-                   <div className="flex items-center gap-2 mt-2 pt-2 border-t border-white/5">
-                      <CreditCard className="w-3 h-3 text-white/40" />
-                      <span className="text-white/70">
+                   <div className="flex items-center gap-2 mt-2 pt-2 border-t border-foreground/5">
+                      <CreditCard className="w-3 h-3 text-foreground/40" />
+                      <span className="text-foreground/70">
                         {currentOrder.payment_method || 'Payment Card'}
                       </span>
                     </div>
@@ -214,9 +214,9 @@ const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
           </div>
         </ScrollArea>
 
-        <div className="p-6 border-t border-white/10 bg-slate-900/50 flex flex-col sm:flex-row gap-3 justify-end">
+        <div className="p-6 border-t border-foreground/10 bg-background/50 flex flex-col sm:flex-row gap-3 justify-end">
            <a href="mailto:support@kibay.com.do" className="w-full sm:w-auto">
-             <Button variant="ghost" className="w-full sm:w-auto text-white/60 hover:text-white hover:bg-white/10">
+             <Button variant="ghost" className="w-full sm:w-auto text-foreground/60 hover:text-foreground hover:bg-foreground/10">
                <Mail className="w-4 h-4 mr-2" />
                Contact Support
              </Button>

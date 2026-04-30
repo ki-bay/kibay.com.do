@@ -89,8 +89,8 @@ const EmailForm = ({ variant = 'default' }) => {
           onChange={handleChange}
           disabled={isSubmitting}
           className={cn(
-            'w-full px-4 py-3 rounded-lg bg-slate-800/50 border border-white/10',
-            'text-white placeholder:text-white/50 font-light',
+            'w-full px-4 py-3 rounded-lg bg-card/50 border border-foreground/10',
+            'text-foreground placeholder:text-foreground/50 font-light',
             'focus:outline-none focus:ring-2 focus:ring-mango-500/50 focus:border-mango-500',
             'transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed',
             variant === 'inline' ? 'flex-1' : ''
@@ -104,8 +104,8 @@ const EmailForm = ({ variant = 'default' }) => {
           onChange={handleChange}
           disabled={isSubmitting}
           className={cn(
-            'w-full px-4 py-3 rounded-lg bg-slate-800/50 border border-white/10',
-            'text-white placeholder:text-white/50 font-light',
+            'w-full px-4 py-3 rounded-lg bg-card/50 border border-foreground/10',
+            'text-foreground placeholder:text-foreground/50 font-light',
             'focus:outline-none focus:ring-2 focus:ring-mango-500/50 focus:border-mango-500',
             'transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed',
             variant === 'inline' ? 'flex-1' : ''
@@ -118,7 +118,7 @@ const EmailForm = ({ variant = 'default' }) => {
         className={cn(
           'bg-gradient-to-r from-mango-500 to-mango-600',
           'hover:from-mango-600 hover:to-mango-700',
-          'text-white font-medium px-8 py-3 rounded-lg',
+          'text-foreground font-medium px-8 py-3 rounded-lg',
           'transition-all duration-300 transform hover:scale-105',
           'disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none',
           variant === 'inline' ? 'sm:w-auto' : 'w-full'
