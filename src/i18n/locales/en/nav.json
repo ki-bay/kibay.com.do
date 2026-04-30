@@ -1,0 +1,23 @@
+{
+  "home": "Home",
+  "shop": "Shop",
+  "vineAndBarrel": "Vine & Barrel",
+  "ourProducts": "Our Products",
+  "kibaySparkling": "Kibay Sparkling",
+  "kibayWine": "Kibay Wine",
+  "about": "About",
+  "ourStory": "Our Story",
+  "whitepaper": "White Paper",
+  "blog": "Blog",
+  "contact": "Contact",
+  "myAccount": "My Account",
+  "adminPanel": "Admin Panel",
+  "blogDashboard": "Blog Dashboard",
+  "socialDashboard": "Social Dashboard",
+  "apiKeys": "API Keys",
+  "webhookDocs": "Webhook Docs",
+  "socialSettings": "Social Settings",
+  "systemLogs": "System Logs",
+  "menu": "Menu",
+  "close": "Close"
+}

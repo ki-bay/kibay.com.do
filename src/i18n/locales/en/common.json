@@ -1,0 +1,34 @@
+{
+  "language": {
+    "label": "Language",
+    "es": "ES",
+    "en": "EN",
+    "spanish": "Spanish",
+    "english": "English"
+  },
+  "theme": {
+    "label": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "toggleToLight": "Switch to light theme",
+    "toggleToDark": "Switch to dark theme"
+  },
+  "currency": {
+    "code": "USD",
+    "symbol": "$"
+  },
+  "actions": {
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "shopNow": "Shop Now",
+    "buyNow": "Buy Now",
+    "learnMore": "Learn More",
+    "viewCart": "View Cart",
+    "checkout": "Checkout"
+  },
+  "common": {
+    "loading": "Loading…",
+    "error": "Something went wrong.",
+    "comingSoon": "Coming Soon"
+  }
+}

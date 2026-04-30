@@ -1,0 +1,23 @@
+{
+  "home": "Inicio",
+  "shop": "Tienda",
+  "vineAndBarrel": "Viñedo y Barril",
+  "ourProducts": "Productos",
+  "kibaySparkling": "Kibay Espumante",
+  "kibayWine": "Kibay Vino",
+  "about": "Nosotros",
+  "ourStory": "Nuestra Historia",
+  "whitepaper": "Documento Técnico",
+  "blog": "Blog",
+  "contact": "Contacto",
+  "myAccount": "Mi cuenta",
+  "adminPanel": "Panel de Administración",
+  "blogDashboard": "Panel del Blog",
+  "socialDashboard": "Panel Social",
+  "apiKeys": "Claves API",
+  "webhookDocs": "Webhooks",
+  "socialSettings": "Ajustes Sociales",
+  "systemLogs": "Registros del Sistema",
+  "menu": "Menú",
+  "close": "Cerrar"
+}

@@ -1,0 +1,26 @@
+{
+  "newsletterHeadline": "Únete al estilo de vida Kibay",
+  "newsletterSubtext": "Estamos creando una comunidad de amantes del espumante. Sé parte del viaje.",
+  "newsletterFormSubtext": "Mantente en el círculo Kibay: noticias, maridajes y ofertas exclusivas.",
+  "newsletterButton": "Suscribirme",
+  "tagline": "Espumante orgánico premium de la República Dominicana. Elaborado con pasión, sostenibilidad y las mejores frutas locales.",
+  "address": "Bahía de Ocoa, Km 6 1/2 Hatillo, Azua 71003",
+  "explore": "Explorar",
+  "exploreLinks": {
+    "home": "Inicio",
+    "shop": "Tienda",
+    "blog": "Blog",
+    "whyCans": "¿Por qué latas?",
+    "ourStory": "Nuestra historia"
+  },
+  "legal": "Legal",
+  "legalLinks": {
+    "terms": "Términos y condiciones",
+    "privacy": "Política de privacidad",
+    "shippingReturns": "Envíos y devoluciones"
+  },
+  "contactHeading": "Contacto",
+  "followUs": "Síguenos",
+  "rights": "© {{year}} Kibay Sparkling. Todos los derechos reservados. Por favor, bebe con responsabilidad.",
+  "country": "República Dominicana"
+}

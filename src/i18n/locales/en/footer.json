@@ -1,0 +1,26 @@
+{
+  "newsletterHeadline": "Join the Kibay Lifestyle",
+  "newsletterSubtext": "We're building a community of sparkling wine lovers. Be part of the journey.",
+  "newsletterFormSubtext": "Stay in the Kibay circle – news, pairings, and early-bird offers.",
+  "newsletterButton": "Sign up",
+  "tagline": "Premium organic sparkling wine from the Dominican Republic. Crafted with passion, sustainability, and the finest local fruits.",
+  "address": "Bahia de Ocoa, Km 6 1/2 Hatillo, Azua 71003",
+  "explore": "Explore",
+  "exploreLinks": {
+    "home": "Home",
+    "shop": "Shop Collection",
+    "blog": "Blog",
+    "whyCans": "Why Cans",
+    "ourStory": "Our Story"
+  },
+  "legal": "Legal",
+  "legalLinks": {
+    "terms": "Terms & Conditions",
+    "privacy": "Privacy Policy",
+    "shippingReturns": "Shipping & Returns"
+  },
+  "contactHeading": "Contact",
+  "followUs": "Follow Us",
+  "rights": "© {{year}} Kibay Sparkling. All rights reserved. Please drink responsibly.",
+  "country": "Dominican Republic"
+}

@@ -1,0 +1,34 @@
+{
+  "language": {
+    "label": "Idioma",
+    "es": "ES",
+    "en": "EN",
+    "spanish": "Español",
+    "english": "Inglés"
+  },
+  "theme": {
+    "label": "Tema",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "toggleToLight": "Cambiar a tema claro",
+    "toggleToDark": "Cambiar a tema oscuro"
+  },
+  "currency": {
+    "code": "DOP",
+    "symbol": "RD$"
+  },
+  "actions": {
+    "signIn": "Iniciar sesión",
+    "signOut": "Cerrar sesión",
+    "shopNow": "Comprar ahora",
+    "buyNow": "Comprar",
+    "learnMore": "Más información",
+    "viewCart": "Ver carrito",
+    "checkout": "Finalizar compra"
+  },
+  "common": {
+    "loading": "Cargando…",
+    "error": "Algo salió mal.",
+    "comingSoon": "Próximamente"
+  }
+}

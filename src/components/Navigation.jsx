@@ -3,11 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, User, ChevronDown, LogOut, LayoutDashboard, Settings, Activity, Key, BookOpen } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { Button } from '@/components/ui/button';
 import ShoppingCartIcon from '@/components/ShoppingCartIcon';
 import ShoppingCart from '@/components/ShoppingCart';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+import ThemeToggle from '@/components/ThemeToggle';
 import { mediaUrl } from '@/config/mediaCdn';
 
 const Navigation = () => {
@@ -17,13 +20,14 @@ const Navigation = () => {
   const [adminMenuOpen, setAdminMenuOpen] = useState(false);
   
   const [expandedMobileMenus, setExpandedMobileMenus] = useState({
-    'Our Products': true,
-    'About': false,
-    'Admin': false
+    ourProducts: true,
+    about: false,
+    admin: false
   });
 
   const location = useLocation();
   const { user, signOut } = useAuth();
+  const { t } = useTranslation(['nav', 'common']);
 
   const isHomePage = location.pathname === '/';
   const isAdmin = user?.email === 'info@kibay.com.do';
@@ -50,25 +54,27 @@ const Navigation = () => {
   };
 
   const navLinks = [
-    { path: '/', label: 'Home' },
-    { path: '/shop', label: 'Shop' },
-    { path: '/vine-and-barrel', label: 'Vine & Barrel' },
-    { 
-      label: 'Our Products',
+    { path: '/', key: 'home', label: t('nav:home') },
+    { path: '/shop', key: 'shop', label: t('nav:shop') },
+    { path: '/vine-and-barrel', key: 'vineAndBarrel', label: t('nav:vineAndBarrel') },
+    {
+      key: 'ourProducts',
+      label: t('nav:ourProducts'),
       children: [
-        { path: '/kibay-sparkling', label: 'Kibay Sparkling' }, 
-        { path: '/kibay-wine', label: 'Kibay Wine' }
+        { path: '/kibay-sparkling', label: t('nav:kibaySparkling') },
+        { path: '/kibay-wine', label: t('nav:kibayWine') }
       ]
     },
-    { 
-      label: 'About',
+    {
+      key: 'about',
+      label: t('nav:about'),
       children: [
-        { path: '/about', label: 'Our Story' },
-        { path: '/whitepaper', label: 'White Paper' }
+        { path: '/about', label: t('nav:ourStory') },
+        { path: '/whitepaper', label: t('nav:whitepaper') }
       ]
     },
-    { path: '/blog', label: 'Blog' },
-    { path: '/contact', label: 'Contact' }
+    { path: '/blog', key: 'blog', label: t('nav:blog') },
+    { path: '/contact', key: 'contact', label: t('nav:contact') }
   ];
 
   const handleCartClick = () => setIsCartOpen(true);
@@ -95,7 +101,7 @@ const Navigation = () => {
 
             <div className="hidden lg:flex items-center gap-6">
               {navLinks.map(link => (
-                <div key={link.label} className="relative group">
+                <div key={link.key} className="relative group">
                   {link.children ? (
                     <button className={cn('flex items-center gap-1 text-xs uppercase tracking-widest transition-all duration-300 relative group font-light hover:text-[#D4A574]', textColorClass, link.children.some(child => location.pathname === child.path) && 'font-normal text-[#D4A574]')}>
                       {link.label}
@@ -134,6 +140,7 @@ const Navigation = () => {
                       <Button variant="ghost" className={cn("text-mango-400 hover:text-mango-300 hover:bg-white/10 transition-colors font-light flex gap-2 uppercase text-xs tracking-widest", textColorClass)}>
                         <LayoutDashboard className="w-4 h-4" strokeWidth={1.5} /> Admin <ChevronDown className="w-3 h-3"/>
                       </Button>
+                      {/* Admin dropdown labels stay in English (admin pages are English-only). */}
                       <AnimatePresence>
                         {adminMenuOpen && (
                           <motion.div 
@@ -164,7 +171,7 @@ const Navigation = () => {
                   </Button>
                 </div>
               ) : (
-                <Link to="/login"><Button variant="ghost" className={cn("hover:text-[#D4A574] hover:bg-white/10 font-light text-xs uppercase tracking-widest", textColorClass)}>Sign In</Button></Link>
+                <Link to="/login"><Button variant="ghost" className={cn("hover:text-[#D4A574] hover:bg-white/10 font-light text-xs uppercase tracking-widest", textColorClass)}>{t('common:actions.signIn')}</Button></Link>
               )}
             </div>
 
@@ -183,14 +190,14 @@ const Navigation = () => {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="fixed inset-0 z-30 bg-stone-900 lg:hidden pt-24 px-6 overflow-y-auto">
             <div className="flex flex-col gap-6 pb-8">
               {navLinks.map((link, index) => (
-                <motion.div key={link.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }}>
+                <motion.div key={link.key} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }}>
                   {link.children ? (
                     <div className="flex flex-col gap-4">
-                      <button onClick={() => toggleMobileMenu(link.label)} className="flex items-center justify-between text-2xl font-light text-white hover:text-[#D4A574] transition-colors w-full text-left">
-                        {link.label} <ChevronDown className={cn("w-6 h-6 transition-transform", expandedMobileMenus[link.label] && "rotate-180")} />
+                      <button onClick={() => toggleMobileMenu(link.key)} className="flex items-center justify-between text-2xl font-light text-white hover:text-[#D4A574] transition-colors w-full text-left">
+                        {link.label} <ChevronDown className={cn("w-6 h-6 transition-transform", expandedMobileMenus[link.key] && "rotate-180")} />
                       </button>
                       <AnimatePresence>
-                        {expandedMobileMenus[link.label] && (
+                        {expandedMobileMenus[link.key] && (
                           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="flex flex-col gap-4 pl-4 border-l-2 border-white/10">
                             {link.children.map(child => (
                               <Link key={child.path} to={child.path} onClick={() => setIsOpen(false)} className={cn("text-lg font-light text-white/80 hover:text-[#D4A574] transition-colors", location.pathname === child.path && "text-[#D4A574]")}>{child.label}</Link>
@@ -211,11 +218,11 @@ const Navigation = () => {
                 <div className="flex flex-col gap-4">
                   {isAdmin && (
                     <div className="flex flex-col gap-4">
-                      <button onClick={() => toggleMobileMenu('Admin')} className="flex items-center justify-between text-lg font-light text-mango-400 hover:text-mango-300 w-full text-left">
-                        <span className="flex items-center gap-2"><LayoutDashboard className="w-5 h-5"/> Admin Panel</span> <ChevronDown className={cn("w-5 h-5 transition-transform", expandedMobileMenus['Admin'] && "rotate-180")} />
+                      <button onClick={() => toggleMobileMenu('admin')} className="flex items-center justify-between text-lg font-light text-mango-400 hover:text-mango-300 w-full text-left">
+                        <span className="flex items-center gap-2"><LayoutDashboard className="w-5 h-5"/> Admin Panel</span> <ChevronDown className={cn("w-5 h-5 transition-transform", expandedMobileMenus['admin'] && "rotate-180")} />
                       </button>
                       <AnimatePresence>
-                        {expandedMobileMenus['Admin'] && (
+                        {expandedMobileMenus['admin'] && (
                            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="flex flex-col gap-4 pl-8 border-l-2 border-mango-400/20">
                               <Link to="/dashboard/blog" onClick={() => setIsOpen(false)} className="text-base text-white/80 hover:text-mango-400">Blog Dashboard</Link>
                               <Link to="/admin/social-media" onClick={() => setIsOpen(false)} className="text-base text-white/80 hover:text-mango-400">Social Dashboard</Link>
@@ -228,12 +235,18 @@ const Navigation = () => {
                       </AnimatePresence>
                     </div>
                   )}
-                  <Link to="/account" onClick={() => setIsOpen(false)} className="text-lg font-light text-white/80 flex items-center gap-2 hover:text-[#D4A574]"><User className="w-5 h-5" /> My Account</Link>
-                  <button onClick={handleSignOut} className="text-lg font-light text-red-400 flex items-center gap-2 hover:text-red-300 text-left"><LogOut className="w-5 h-5" /> Sign Out</button>
+                  <Link to="/account" onClick={() => setIsOpen(false)} className="text-lg font-light text-white/80 flex items-center gap-2 hover:text-[#D4A574]"><User className="w-5 h-5" /> {t('nav:myAccount')}</Link>
+                  <button onClick={handleSignOut} className="text-lg font-light text-red-400 flex items-center gap-2 hover:text-red-300 text-left"><LogOut className="w-5 h-5" /> {t('common:actions.signOut')}</button>
                 </div>
               ) : (
-                <Link to="/login" onClick={() => setIsOpen(false)} className="inline-block text-center py-3 px-6 rounded-full bg-[#D4A574] text-white font-normal text-lg shadow-lg shadow-[#D4A574]/20">Sign In</Link>
+                <Link to="/login" onClick={() => setIsOpen(false)} className="inline-block text-center py-3 px-6 rounded-full bg-[#D4A574] text-white font-normal text-lg shadow-lg shadow-[#D4A574]/20">{t('common:actions.signIn')}</Link>
               )}
+
+              <div className="h-px w-full bg-white/10 my-4" />
+              <div className="flex items-center justify-center gap-3 pb-4">
+                <LanguageSwitcher />
+                <ThemeToggle />
+              </div>
             </div>
           </motion.div>
         )}
