@@ -1,14 +1,16 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
+import { useTranslation } from 'react-i18next';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import Cart from '@/components/Cart';
 
 const CartPage = () => {
+  const { t } = useTranslation('cart');
   return (
     <>
       <Helmet>
-        <title>Shopping Cart - Kibay Espumante</title>
+        <title>{t('title')} — Kibay</title>
       </Helmet>
       
       <Navigation />

@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, X, Plus, Minus, Trash2, ArrowRight } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
@@ -7,23 +8,27 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { resolveProductMediaUrl } from '@/config/mediaCdn';
 
+const symbolFor = (currency) => (String(currency || '').toUpperCase() === 'USD' ? '$' : 'RD$');
+
 const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { cartItems, removeFromCart, updateQuantity, getCartTotal } = useCart();
+  const { t } = useTranslation('cart');
 
   const handleCheckout = useCallback(() => {
     if (cartItems.length === 0) {
       toast({
-        title: 'Your cart is empty',
-        description: 'Add some products to your cart before checking out.',
+        title: t('empty'),
         variant: 'destructive',
       });
       return;
     }
     setIsCartOpen(false);
     navigate('/checkout');
-  }, [cartItems.length, navigate, setIsCartOpen, toast]);
+  }, [cartItems.length, navigate, setIsCartOpen, toast, t]);
+
+  const symbol = symbolFor(cartItems[0]?.variant?.currency);
 
   return (
     <AnimatePresence>
@@ -51,12 +56,12 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
             <div className="flex items-center justify-between p-6 border-b border-stone-100 bg-white">
               <div className="flex items-center gap-3">
                 <ShoppingBag className="w-5 h-5 text-[#D4A574]" />
-                <h2 className="text-xl font-serif font-medium text-stone-900">Your Cart</h2>
+                <h2 className="text-xl font-serif font-medium text-stone-900">{t('title')}</h2>
               </div>
-              <Button 
-                onClick={() => setIsCartOpen(false)} 
-                variant="ghost" 
-                size="icon" 
+              <Button
+                onClick={() => setIsCartOpen(false)}
+                variant="ghost"
+                size="icon"
                 className="text-stone-400 hover:text-stone-900 hover:bg-stone-50 rounded-full"
               >
                 <X className="w-5 h-5" />
@@ -70,13 +75,13 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                   <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center">
                     <ShoppingBag className="w-8 h-8 text-stone-300" />
                   </div>
-                  <p className="text-stone-500 text-lg">Your cart is currently empty.</p>
-                  <Button 
+                  <p className="text-stone-500 text-lg">{t('empty')}</p>
+                  <Button
                     onClick={() => setIsCartOpen(false)}
-                    variant="link" 
+                    variant="link"
                     className="text-[#D4A574] font-medium"
                   >
-                    Start Shopping
+                    {t('continueShopping')}
                   </Button>
                 </div>
               ) : (
@@ -141,20 +146,20 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
             {cartItems.length > 0 && (
               <div className="p-6 bg-white border-t border-stone-100 shadow-[0_-10px_40px_rgba(0,0,0,0.03)]">
                 <div className="flex justify-between items-center mb-6">
-                  <span className="text-stone-500">Subtotal</span>
+                  <span className="text-stone-500">{t('subtotal')}</span>
                   <span className="text-2xl font-serif font-medium text-stone-900">
-                    RD${getCartTotal().toFixed(2)}
+                    {symbol}{getCartTotal().toFixed(2)}
                   </span>
                 </div>
-                <Button 
-                  onClick={handleCheckout} 
-                  className="w-full bg-[#D4A574] hover:bg-[#c29462] text-foreground font-medium py-6 rounded-full text-lg shadow-lg shadow-[#D4A574]/20 group transition-all duration-300"
+                <Button
+                  onClick={handleCheckout}
+                  className="w-full bg-[#D4A574] hover:bg-[#c29462] text-white font-medium py-6 rounded-full text-lg shadow-lg shadow-[#D4A574]/20 group transition-all duration-300"
                 >
-                  Proceed to Checkout
+                  {t('checkout')}
                   <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
                 <p className="text-center text-xs text-stone-400 mt-4">
-                  Shipping and taxes calculated at checkout.
+                  {t('shippingCalculated')}
                 </p>
               </div>
             )}

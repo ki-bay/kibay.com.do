@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { getProduct, getProductQuantities } from '@/api/EcommerceApi';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/hooks/useCart';
@@ -20,6 +21,7 @@ function ProductDetailPage() {
   const { slug, id } = useParams();
   const productKey = slug || id;
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation('product');
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -38,19 +40,19 @@ function ProductDetailPage() {
         triggerFlyToCart();
         await addToCart(product, selectedVariant, quantity, availableQuantity);
         toast({
-          title: "Added to Cart",
-          description: `${product.title.replace(/Espumante/gi, 'Sparkling')} has been added.`,
+          title: t('addedToCart'),
+          description: product.title,
           className: "bg-card text-foreground border-none",
         });
       } catch (error) {
         toast({
           variant: "destructive",
-          title: "Could not add item",
+          title: t('couldNotAdd'),
           description: error.message,
         });
       }
     }
-  }, [product, selectedVariant, quantity, addToCart, toast, triggerFlyToCart]);
+  }, [product, selectedVariant, quantity, addToCart, toast, triggerFlyToCart, t]);
 
   const handleQuantityChange = useCallback((amount) => {
     setQuantity(prevQuantity => {
@@ -115,20 +117,11 @@ function ProductDetailPage() {
     if (productKey) {
       fetchProductData();
     }
-  }, [productKey, navigate]);
+  }, [productKey, navigate, i18n.language]);
 
-  const displayTitle = useMemo(() => product?.title ? product.title.replace(/Espumante/gi, 'Sparkling') : '', [product]);
-  const displaySubtitle = useMemo(() => product?.subtitle ? product.subtitle.replace(/Espumante/gi, 'Sparkling') : '', [product]);
-  
-  // Correction logic for alcohol content in description specifically for Sparkling product
-  const displayDescription = useMemo(() => {
-    if (!product?.description) return '';
-    let desc = product.description.replace(/Espumante/gi, 'Sparkling');
-    if (product.id === 'prod_01KGN2VJG7VK77WSXB2V5YRBMW') {
-       desc = desc.replace(/11%/g, '6%').replace(/11 %/g, '6 %');
-    }
-    return desc;
-  }, [product]);
+  const displayTitle = product?.title || '';
+  const displaySubtitle = product?.subtitle || '';
+  const displayDescription = product?.description || '';
 
   if (loading) {
     return (
@@ -148,10 +141,10 @@ function ProductDetailPage() {
         <Navigation />
         <div className="min-h-screen bg-stone-50 pt-32 px-4 flex flex-col items-center justify-center">
           <AlertCircle className="h-16 w-16 text-stone-300 mb-4" />
-          <h1 className="text-2xl font-serif text-stone-900 mb-4">Product Not Found</h1>
-          <p className="text-stone-500 mb-8">{error || "We couldn't find the product you're looking for."}</p>
+          <h1 className="text-2xl font-serif text-stone-900 mb-4">{t('notFound')}</h1>
+          <p className="text-stone-500 mb-8">{error}</p>
           <Link to="/shop">
-            <Button className="bg-[#D4A574] hover:bg-[#c29462] text-foreground">Return to Shop</Button>
+            <Button className="bg-[#D4A574] hover:bg-[#c29462] text-white">{t('backToShop')}</Button>
           </Link>
         </div>
         <Footer />
@@ -169,25 +162,12 @@ function ProductDetailPage() {
   // SEO Image - Use the first image
   const seoImage = product.images?.[0];
 
-  // Check if product is Kibay Sparkling
-  const isSparkling = displayTitle.toLowerCase().includes('sparkling') || displayTitle.toLowerCase().includes('kibay');
-  const newsletterTags = isSparkling ? ['Sparkling Can Interest'] : [];
+  // SEO derived from the (now-bilingual) DB content
+  const seoTitle = `${displayTitle} | Kibay`;
+  const seoDescription = displaySubtitle || displayDescription.replace(/<[^>]+>/g, '').slice(0, 160);
+  const newsletterTags = product.slug === 'kibay-sparkling' ? ['Sparkling Can Interest'] : [];
 
-  // SEO Logic
-  // Default values
-  let seoTitle = `${displayTitle} | Kibay Wine Shop`;
-  let seoDescription = displaySubtitle || displayDescription.substring(0, 160);
-  
-  // Custom SEO Overrides for specific products
-  if (id === 'prod_01KGN2VJG7VK77WSXB2V5YRBMW') {
-    seoTitle = "Kibay Sparkling - Organic Mango & Passion Fruit Wine | Dominican Republic";
-    seoDescription = "Discover Kibay Sparkling, an organic sparkling wine with mango & passion fruit, naturally fermented in the Dominican Republic. Fresh, modern, and unmistakably Caribbean.";
-  } else if (id === 'prod_01KGN391RB74JH2YHXACF0XTT7') {
-    seoTitle = "Kibay Wine - Still Wine from Dominican Republic | Organic Terroir";
-    seoDescription = "Experience Kibay Wine, the original still wine capturing the essence of tropical terroir with balance and character. Organically crafted in the Dominican Republic.";
-  }
-
-  const productUrl = `${window.location.origin}/product/${id}`;
+  const productUrl = `${window.location.origin}/product/${product.slug || product.id}`;
   
   return (
     <>
@@ -206,10 +186,10 @@ function ProductDetailPage() {
           name: seoTitle,
           image: seoImage?.url || placeholderImage,
           description: seoDescription,
-          sku: selectedVariant?.sku || id,
+          sku: selectedVariant?.sku || product.id,
           url: productUrl,
-          price: selectedVariant?.price / 100, // Assuming price is in cents based on previous context
-          currency: 'USD', // Default currency
+          price: (selectedVariant?.price_in_cents ?? 0) / 100,
+          currency: selectedVariant?.currency?.toUpperCase() || 'USD',
           inStock: !isSoldOut
         }}
       />
@@ -221,7 +201,7 @@ function ProductDetailPage() {
           
           <Link to="/shop" className="inline-flex items-center gap-2 text-stone-500 hover:text-[#D4A574] transition-colors mb-8 group">
             <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-            Back to Collection
+            {t('backToShop')}
           </Link>
 
           <div className="grid lg:grid-cols-2 gap-12 xl:gap-20 mb-20">
@@ -260,19 +240,19 @@ function ProductDetailPage() {
               {/* Variants */}
               {product.variants.length > 1 && (
                 <div className="mb-8">
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-stone-900 mb-4">Select Option</h3>
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-stone-900 mb-4">{t('selectVariant')}</h3>
                   <div className="flex flex-wrap gap-3">
                     {product.variants.map(variant => (
                       <button
                         key={variant.id}
                         onClick={() => setSelectedVariant(variant)}
                         className={`px-6 py-3 rounded-full border transition-all duration-300 text-sm font-medium ${
-                          selectedVariant?.id === variant.id 
-                            ? 'bg-card text-foreground border-border shadow-md' 
+                          selectedVariant?.id === variant.id
+                            ? 'bg-card text-foreground border-border shadow-md'
                             : 'bg-white text-stone-600 border-stone-200 hover:border-[#D4A574] hover:text-[#D4A574]'
                         }`}
                       >
-                        {variant.title.replace(/Espumante/gi, 'Sparkling')}
+                        {variant.title}
                       </button>
                     ))}
                   </div>
@@ -299,27 +279,27 @@ function ProductDetailPage() {
                   </button>
                 </div>
 
-                <Button 
-                  onClick={handleAddToCart} 
+                <Button
+                  onClick={handleAddToCart}
                   disabled={!canAddToCart || isSoldOut || !product.purchasable}
-                  className="flex-1 bg-[#D4A574] hover:bg-[#c29462] text-foreground rounded-full py-7 text-lg shadow-lg shadow-[#D4A574]/20 transition-all duration-300 disabled:bg-stone-200 disabled:text-stone-400 disabled:shadow-none disabled:cursor-not-allowed"
+                  className="flex-1 bg-[#D4A574] hover:bg-[#c29462] text-white rounded-full py-7 text-lg shadow-lg shadow-[#D4A574]/20 transition-all duration-300 disabled:bg-stone-200 disabled:text-stone-400 disabled:shadow-none disabled:cursor-not-allowed"
                 >
                   <ShoppingBag className="mr-2 h-5 w-5" />
-                  {isSoldOut ? 'Out of Stock' : (!product.purchasable ? 'Unavailable' : 'Add to Cart')}
+                  {isSoldOut ? t('outOfStock') : t('addToCart')}
                 </Button>
               </div>
-              
+
               {/* Stock Warning */}
               {isStockManaged && product.purchasable && !isSoldOut && (
                  <div className="mb-8">
                    {canAddToCart ? (
                      <p className="text-sm text-stone-500 flex items-center gap-2">
-                       <CheckCircle size={14} className="text-green-500" /> In Stock
-                       {availableStock < 10 && <span className="text-[#D4A574]">({availableStock} left)</span>}
+                       <CheckCircle size={14} className="text-green-500" /> {t('inStock')}
+                       {availableStock < 10 && <span className="text-[#D4A574]">({availableStock})</span>}
                      </p>
                    ) : (
                      <p className="text-sm text-red-500 flex items-center gap-2">
-                       <AlertCircle size={14} /> Only {availableStock} left in stock
+                       <AlertCircle size={14} /> {t('lowStock')} ({availableStock})
                      </p>
                    )}
                  </div>
@@ -338,7 +318,7 @@ function ProductDetailPage() {
                     .map((info) => (
                       <div key={info.id}>
                         <h3 className="text-lg font-serif text-stone-900 mb-2">{info.title}</h3>
-                        <div className="text-stone-500 leading-relaxed" dangerouslySetInnerHTML={{ __html: info.description.replace(/Espumante/gi, 'Sparkling') }} />
+                        <div className="text-stone-500 leading-relaxed" dangerouslySetInnerHTML={{ __html: info.description || '' }} />
                       </div>
                     ))}
                 </div>
@@ -349,10 +329,10 @@ function ProductDetailPage() {
           {/* Newsletter Signup Mid-Page */}
           <div className="mb-20 bg-stone-100 rounded-3xl p-8 md:p-12">
             <div className="max-w-3xl mx-auto text-center">
-               <NewsletterSignup 
-                 headline="Not ready to order? Get tasting notes, cocktail ideas, and launch news by email."
+               <NewsletterSignup
+                 headline={i18n.t('shop:newsletterHeadline')}
                  fields={{ firstName: true, email: true }}
-                 buttonText="Send me updates"
+                 buttonText={i18n.t('shop:newsletterButton')}
                  source="Product Page Interest"
                  tags={newsletterTags}
                />

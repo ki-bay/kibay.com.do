@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { CheckCircle, ArrowRight, Sparkles, Loader2, AlertCircle, FileText } from 'lucide-react';
 import Navigation from '@/components/Navigation';
@@ -12,6 +13,7 @@ import { publicStorageObjectUrl } from '@/lib/supabaseStorage';
 const CheckoutSuccessPage = () => {
 	const [searchParams] = useSearchParams();
 	const orderId = searchParams.get('order_id');
+	const { t } = useTranslation('checkout');
 
 	const [order, setOrder] = useState(null);
 	const [loading, setLoading] = useState(true);
@@ -87,7 +89,7 @@ const CheckoutSuccessPage = () => {
 	return (
 		<>
 			<Helmet>
-				<title>Order Confirmed - Kibay Espumante</title>
+				<title>{t('success.title')} — Kibay</title>
 			</Helmet>
 
 			<Navigation />
@@ -104,16 +106,16 @@ const CheckoutSuccessPage = () => {
 					{loading ? (
 						<div className="flex flex-col items-center justify-center py-12">
 							<Loader2 className="w-10 h-10 text-[#D4A574] animate-spin mb-4" />
-							<p className="text-stone-500 font-light">Verifying order…</p>
+							<p className="text-stone-500 font-light">{t('processing')}</p>
 						</div>
 					) : error ? (
 						<div className="py-8">
 							<AlertCircle className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
-							<h1 className="text-2xl font-light text-stone-900 mb-2">Order status</h1>
+							<h1 className="text-2xl font-light text-stone-900 mb-2">{t('success.title')}</h1>
 							<p className="text-stone-500 mb-6 font-light">{error}</p>
 							<Link to="/account">
 								<Button variant="outline" className="border-[#D4A574] text-[#D4A574]">
-									Order history
+									{t('success.viewOrder')}
 								</Button>
 							</Link>
 						</div>
@@ -129,17 +131,12 @@ const CheckoutSuccessPage = () => {
 							</motion.div>
 
 							<h1 className="text-3xl md:text-4xl font-light text-stone-900 mb-4 relative z-10">
-								Order confirmed
+								{t('success.title')}
 							</h1>
 
 							<p className="text-stone-500 mb-8 leading-relaxed relative z-10 font-light">
-								Thank you for choosing Kibay. Your order{' '}
-								<span className="font-medium text-stone-900">#{order?.order_number}</span> is recorded.
-								Confirmation may be sent to{' '}
-								<span className="font-medium text-stone-900">
-									{order?.shipping_address?.email || 'your account email'}
-								</span>
-								.
+								{t('success.subtitle')}{' '}
+								<span className="font-medium text-stone-900">{t('success.orderNumber')} #{order?.order_number}</span>
 							</p>
 
 							<div className="bg-stone-50 rounded-xl p-6 mb-6 border border-stone-100 relative z-10 text-left">
@@ -164,19 +161,15 @@ const CheckoutSuccessPage = () => {
 										className="mt-4 flex items-center justify-center gap-2 text-[#D4A574] font-medium text-sm hover:underline"
 									>
 										<FileText className="w-4 h-4" />
-										Download invoice (PDF)
+										{t('success.downloadInvoice')}
 									</a>
-								) : (
-									<p className="text-xs text-stone-400 mt-3 text-center">
-										Invoice PDF appears here once payment is finalized (usually within a minute).
-									</p>
-								)}
+								) : null}
 							</div>
 
 							<div className="flex flex-col sm:flex-row gap-3 relative z-10 mb-4">
 								<Link to="/account" className="flex-1">
 									<Button variant="outline" className="w-full border-stone-200 text-stone-800">
-										View order history
+										{t('success.viewOrder')}
 									</Button>
 								</Link>
 							</div>
@@ -185,8 +178,8 @@ const CheckoutSuccessPage = () => {
 
 					<div className="relative z-10">
 						<Link to="/shop">
-							<Button className="w-full bg-[#D4A574] hover:bg-[#c29462] text-foreground rounded-full py-6 text-lg transition-all duration-300 shadow-lg shadow-[#D4A574]/20 font-normal">
-								Continue shopping
+							<Button className="w-full bg-[#D4A574] hover:bg-[#c29462] text-white rounded-full py-6 text-lg transition-all duration-300 shadow-lg shadow-[#D4A574]/20 font-normal">
+								{t('success.continueShopping')}
 								<ArrowRight className="ml-2 w-5 h-5" />
 							</Button>
 						</Link>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useCart } from '@/hooks/useCart';
@@ -11,6 +12,8 @@ import { Button } from '@/components/ui/button';
 import { Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import { supabase } from '@/lib/customSupabaseClient';
 import { computeShippingMajor } from '@/lib/shipping';
+
+const symbolFor = (currency) => (String(currency || '').toUpperCase() === 'USD' ? '$' : 'RD$');
 
 const stripePublishableKey =
 	import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY ||
@@ -28,6 +31,7 @@ const hasStripePublishableKey = !!(
 const CheckoutForm = ({
 	orderId,
 	totalAmountMajor,
+	currencySymbol,
 	cartItems,
 	shippingInfo,
 	onSuccess,
@@ -38,6 +42,7 @@ const CheckoutForm = ({
 	const [error, setError] = useState(null);
 	const [processing, setProcessing] = useState(false);
 	const { user } = useAuth();
+	const { t } = useTranslation('checkout');
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -115,15 +120,15 @@ const CheckoutForm = ({
 			<Button
 				type="submit"
 				disabled={!stripe || processing}
-				className="w-full bg-mango-500 hover:bg-mango-600 text-foreground py-6 text-lg font-normal"
+				className="w-full bg-mango-500 hover:bg-mango-600 text-white py-6 text-lg font-normal"
 			>
 				{processing ? (
 					<>
 						<Loader2 className="w-5 h-5 mr-2 animate-spin" />
-						Processing Order...
+						{t('processing')}
 					</>
 				) : (
-					`Pay RD$${totalAmountMajor.toFixed(2)}`
+					`${t('payNow')} ${currencySymbol}${totalAmountMajor.toFixed(2)}`
 				)}
 			</Button>
 		</form>
@@ -134,6 +139,7 @@ const CheckoutPage = () => {
 	const { cartItems, getCartTotal, clearCart } = useCart();
 	const { user } = useAuth();
 	const navigate = useNavigate();
+	const { t } = useTranslation('checkout');
 	const [step, setStep] = useState('shipping');
 	const [clientSecret, setClientSecret] = useState('');
 	const [pendingOrderId, setPendingOrderId] = useState(null);
@@ -168,6 +174,8 @@ const CheckoutPage = () => {
 	const totalCents = Math.round(totalMajor * 100);
 	const subtotalCents = Math.round(subtotalMajor * 100);
 	const shippingCents = Math.round(shippingMajor * 100);
+	const cartCurrency = cartItems[0]?.variant?.currency || 'DOP';
+	const symbol = symbolFor(cartCurrency);
 
 	useEffect(() => {
 		if (cartItems.length === 0 && step === 'shipping') {
@@ -224,6 +232,7 @@ const CheckoutPage = () => {
 					total_amount: totalCents,
 					subtotal_amount: subtotalCents,
 					shipping_amount: shippingCents,
+					currency: cartCurrency,
 					items_count: cartItems.length,
 					shipping_address: shippingInfo,
 					shipping_method: shippingMethod,
@@ -240,6 +249,7 @@ const CheckoutPage = () => {
 			const orderItems = cartItems.map((item) => ({
 				order_id: orderData.id,
 				product_id: item.product.id,
+				variant_id: item.variant.id,
 				product_name: item.product.title,
 				quantity: item.quantity,
 				price_per_item: item.variant.sale_price_in_cents ?? item.variant.price_in_cents,
@@ -253,7 +263,7 @@ const CheckoutPage = () => {
 			const { data, error } = await supabase.functions.invoke('create-payment-intent', {
 				body: {
 					amount: totalMajor,
-					currency: 'dop',
+					currency: cartCurrency.toLowerCase(),
 					order_id: orderData.id,
 				},
 			});
@@ -284,23 +294,23 @@ const CheckoutPage = () => {
 	return (
 		<>
 			<Helmet>
-				<title>Checkout - Kibay Espumante</title>
+				<title>{t('title')} — Kibay</title>
 			</Helmet>
 
 			<Navigation />
 
 			<div className="min-h-screen bg-background pt-28 pb-20 px-4 sm:px-6 lg:px-8">
 				<div className="max-w-6xl mx-auto">
-					<h1 className="text-3xl font-light text-foreground mb-8">Checkout</h1>
+					<h1 className="text-3xl font-light text-foreground mb-8">{t('title')}</h1>
 
 					<div className="grid lg:grid-cols-2 gap-12">
 						<div className="space-y-8">
 							<div className="bg-card p-6 rounded-xl border border-foreground/10">
-								<h2 className="text-xl font-normal text-foreground mb-6">Shipping Information</h2>
+								<h2 className="text-xl font-normal text-foreground mb-6">{t('shippingAddress')}</h2>
 								<div className="space-y-4">
 									<div className="grid grid-cols-2 gap-4">
 										<div className="space-y-2">
-											<label className="text-sm font-light text-foreground/80">First Name</label>
+											<label className="text-sm font-light text-foreground/80">{t('fullName')}</label>
 											<input
 												type="text"
 												value={shippingInfo.firstName}
@@ -314,7 +324,7 @@ const CheckoutPage = () => {
 											/>
 										</div>
 										<div className="space-y-2">
-											<label className="text-sm font-light text-foreground/80">Last Name</label>
+											<label className="text-sm font-light text-foreground/80"> </label>
 											<input
 												type="text"
 												value={shippingInfo.lastName}
@@ -330,7 +340,7 @@ const CheckoutPage = () => {
 									</div>
 
 									<div className="space-y-2">
-										<label className="text-sm font-light text-foreground/80">Email</label>
+										<label className="text-sm font-light text-foreground/80">{t('email')}</label>
 										<input
 											type="email"
 											value={shippingInfo.email}
@@ -345,7 +355,7 @@ const CheckoutPage = () => {
 									</div>
 
 									<div className="space-y-2">
-										<label className="text-sm font-light text-foreground/80">Tax ID (RNC / optional)</label>
+										<label className="text-sm font-light text-foreground/80">{t('taxId')}</label>
 										<input
 											type="text"
 											value={shippingInfo.taxId}
@@ -359,7 +369,7 @@ const CheckoutPage = () => {
 									</div>
 
 									<div className="space-y-2">
-										<label className="text-sm font-light text-foreground/80">Address</label>
+										<label className="text-sm font-light text-foreground/80">{t('address')}</label>
 										<input
 											type="text"
 											value={shippingInfo.address}
@@ -375,7 +385,7 @@ const CheckoutPage = () => {
 
 									<div className="grid grid-cols-2 gap-4">
 										<div className="space-y-2">
-											<label className="text-sm font-light text-foreground/80">City</label>
+											<label className="text-sm font-light text-foreground/80">{t('city')}</label>
 											<input
 												type="text"
 												value={shippingInfo.city}
@@ -389,7 +399,7 @@ const CheckoutPage = () => {
 											/>
 										</div>
 										<div className="space-y-2">
-											<label className="text-sm font-light text-foreground/80">Phone</label>
+											<label className="text-sm font-light text-foreground/80">{t('phone')}</label>
 											<input
 												type="tel"
 												value={shippingInfo.phone}
@@ -405,18 +415,18 @@ const CheckoutPage = () => {
 									</div>
 
 									<div className="space-y-2">
-										<label className="text-sm font-light text-foreground/80">Shipping method</label>
+										<label className="text-sm font-light text-foreground/80">{t('shippingMethod')}</label>
 										<select
 											value={shippingMethod}
 											onChange={(e) => setShippingMethod(e.target.value)}
 											disabled={step === 'payment'}
 											className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground focus:border-mango-500 focus:outline-none font-light"
 										>
-											<option value="standard">Standard (RD$200 under RD$5,000 cart)</option>
-											<option value="express">Express (RD$400 under RD$5,000 cart)</option>
+											<option value="standard">{t('standard')} (RD$200)</option>
+											<option value="express">{t('express')} (RD$400)</option>
 										</select>
 										<p className="text-xs text-foreground/50 font-light">
-											Orders RD$5,000+ ship free (same-origin policy; adjust in src/lib/shipping.js).
+											{t('freeOver')}
 										</p>
 									</div>
 								</div>
@@ -426,15 +436,15 @@ const CheckoutPage = () => {
 										type="button"
 										onClick={handleContinueToPayment}
 										disabled={loading}
-										className="w-full mt-8 bg-mango-500 hover:bg-mango-600 text-foreground py-6 text-lg font-normal"
+										className="w-full mt-8 bg-mango-500 hover:bg-mango-600 text-white py-6 text-lg font-normal"
 									>
 										{loading ? (
 											<>
 												<Loader2 className="w-5 h-5 mr-2 animate-spin" />
-												Preparing payment…
+												{t('processing')}
 											</>
 										) : (
-											'Continue to secure payment'
+											t('payNow')
 										)}
 									</Button>
 								)}
@@ -446,13 +456,13 @@ const CheckoutPage = () => {
 										onClick={cancelPaymentStep}
 										className="w-full mt-4 border-foreground/20 text-foreground"
 									>
-										Change shipping / cancel
+										{t('shippingAddress')} ↺
 									</Button>
 								)}
 							</div>
 
 							<div className="bg-card p-6 rounded-xl border border-foreground/10">
-								<h2 className="text-xl font-normal text-foreground mb-6">Payment Details</h2>
+								<h2 className="text-xl font-normal text-foreground mb-6">{t('payment')}</h2>
 								{!hasStripePublishableKey ? (
 									<div className="bg-amber-500/10 border border-amber-500/30 text-amber-200 p-4 rounded-lg text-sm font-light">
 										Configure <code className="text-amber-100">VITE_STRIPE_PUBLISHABLE_KEY</code>{' '}
@@ -476,6 +486,7 @@ const CheckoutPage = () => {
 										<CheckoutForm
 											orderId={pendingOrderId}
 											totalAmountMajor={totalMajor}
+											currencySymbol={symbol}
 											cartItems={cartItems}
 											shippingInfo={shippingInfo}
 											onSuccess={handleSuccess}
@@ -494,7 +505,7 @@ const CheckoutPage = () => {
 
 						<div>
 							<div className="bg-card p-6 rounded-xl border border-foreground/10 sticky top-28">
-								<h2 className="text-xl font-normal text-foreground mb-6">Order Summary</h2>
+								<h2 className="text-xl font-normal text-foreground mb-6">{t('orderSummary')}</h2>
 								<div className="space-y-4 mb-6">
 									{cartItems.map((item) => {
 										const unit =
@@ -515,11 +526,11 @@ const CheckoutPage = () => {
 													<div>
 														<p className="text-foreground font-medium text-sm">{item.product.title}</p>
 														<p className="text-foreground/60 text-xs font-light">{item.variant.title}</p>
-														<p className="text-foreground/40 text-xs font-light">Qty: {item.quantity}</p>
+														<p className="text-foreground/40 text-xs font-light">{t('quantity', { defaultValue: 'Qty' })}: {item.quantity}</p>
 													</div>
 												</div>
 												<p className="text-foreground font-medium">
-													RD${(unit * item.quantity).toFixed(2)}
+													{symbol}{(unit * item.quantity).toFixed(2)}
 												</p>
 											</div>
 										);
@@ -528,23 +539,22 @@ const CheckoutPage = () => {
 
 								<div className="space-y-2 pt-4 border-t border-foreground/10">
 									<div className="flex justify-between text-foreground/60 font-light">
-										<span>Subtotal</span>
-										<span>RD${subtotalMajor.toFixed(2)}</span>
+										<span>{t('subtotal')}</span>
+										<span>{symbol}{subtotalMajor.toFixed(2)}</span>
 									</div>
 									<div className="flex justify-between text-foreground/60 font-light">
-										<span>Shipping ({shippingMethod})</span>
-										<span>RD${shippingMajor.toFixed(2)}</span>
+										<span>{t('shipping')} ({t(shippingMethod)})</span>
+										<span>{symbol}{shippingMajor.toFixed(2)}</span>
 									</div>
 									<div className="flex justify-between text-foreground font-normal text-xl pt-2 mt-2 border-t border-foreground/10">
-										<span>Total</span>
-										<span className="text-mango-400">RD${totalMajor.toFixed(2)}</span>
+										<span>{t('total')}</span>
+										<span className="text-mango-400">{symbol}{totalMajor.toFixed(2)}</span>
 									</div>
 								</div>
 
 								{step === 'payment' && (
 									<p className="text-xs text-foreground/40 mt-4 font-light">
-										Stripe confirms payment; our webhook marks the order paid and stores a PDF
-										invoice under blog_media/invoices/.
+										{t('secure')}
 									</p>
 								)}
 							</div>
