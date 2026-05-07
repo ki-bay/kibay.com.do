@@ -112,10 +112,10 @@ New clones must add the backup remote once:
 
 ## Live deploy
 
-- **URL:** https://kibay-com-do.pages.dev (Cloudflare Pages, auto-deploy from `origin/main`). Custom domain `kibay.com.do` not yet attached.
-- **CF Pages env vars set:** `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`. Still missing: `VITE_STRIPE_PUBLISHABLE_KEY` (block: checkout).
-- **Supabase Edge Functions deployed:** `create-payment-intent`, `stripe-webhook`. Still missing secrets: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` (block: payment processing).
-- **Stripe webhook endpoint** to register: `https://bsnxwajuqkatrmgoqcnu.supabase.co/functions/v1/stripe-webhook`, event `payment_intent.succeeded`.
+- **URLs:** https://kibay.com.do, https://www.kibay.com.do (custom domains attached), https://kibay-com-do.pages.dev (Cloudflare Pages, auto-deploy from `origin/main`).
+- **CF Pages env vars set:** `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `VITE_STRIPE_PUBLISHABLE_KEY` (test mode — Stripe account `babulashotsrd.setmore`).
+- **Supabase Edge Functions deployed:** `create-payment-intent`, `stripe-webhook` (both ACTIVE). Secrets set: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, plus the platform-injected `SUPABASE_*` set.
+- **Stripe webhook registered:** destination `vibrant-victory` (ID `we_1TUb0KHkr4MqMDqIzR70NbGr`) — endpoint `https://bsnxwajuqkatrmgoqcnu.supabase.co/functions/v1/stripe-webhook`, event `payment_intent.succeeded`, **test mode**. Rotate test keys + register a live-mode webhook before flipping to production.
 
 ## Misc notes
 
