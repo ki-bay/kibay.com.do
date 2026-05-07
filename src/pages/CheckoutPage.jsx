@@ -166,16 +166,16 @@ const CheckoutPage = () => {
 	}, [user?.email]);
 
 	const subtotalMajor = getCartTotal();
+	const cartCurrency = cartItems[0]?.variant?.currency || 'DOP';
+	const symbol = symbolFor(cartCurrency);
 	const shippingMajor = useMemo(
-		() => computeShippingMajor(subtotalMajor, shippingMethod),
-		[subtotalMajor, shippingMethod],
+		() => computeShippingMajor(subtotalMajor, shippingMethod, cartCurrency),
+		[subtotalMajor, shippingMethod, cartCurrency],
 	);
 	const totalMajor = subtotalMajor + shippingMajor;
 	const totalCents = Math.round(totalMajor * 100);
 	const subtotalCents = Math.round(subtotalMajor * 100);
 	const shippingCents = Math.round(shippingMajor * 100);
-	const cartCurrency = cartItems[0]?.variant?.currency || 'DOP';
-	const symbol = symbolFor(cartCurrency);
 
 	useEffect(() => {
 		if (cartItems.length === 0 && step === 'shipping') {

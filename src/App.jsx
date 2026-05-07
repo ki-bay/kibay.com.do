@@ -56,6 +56,7 @@ import AdminLogsViewer from './pages/admin/AdminLogsViewer';
 import AdminOrdersPage from './pages/admin/AdminOrdersPage';
 import AdminProductsPage from './pages/admin/AdminProductsPage';
 import AdminProductFormPage from './pages/admin/AdminProductFormPage';
+import AdminApiKeysPage from './pages/admin/AdminApiKeysPage';
 
 // Utilities
 import SitemapRenderer from './pages/SitemapRenderer';
@@ -126,6 +127,7 @@ function App() {
             <Route path="/admin/products" element={<ProtectedAdminRoute><AdminProductsPage /></ProtectedAdminRoute>} />
             <Route path="/admin/products/new" element={<ProtectedAdminRoute><AdminProductFormPage /></ProtectedAdminRoute>} />
             <Route path="/admin/products/:id/edit" element={<ProtectedAdminRoute><AdminProductFormPage /></ProtectedAdminRoute>} />
+            <Route path="/admin/api-keys" element={<ProtectedAdminRoute><AdminApiKeysPage /></ProtectedAdminRoute>} />
 
           </Routes>
         </Router>
