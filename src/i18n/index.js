@@ -10,6 +10,7 @@ import esShop from './locales/es/shop.json';
 import esProduct from './locales/es/product.json';
 import esCart from './locales/es/cart.json';
 import esCheckout from './locales/es/checkout.json';
+import esAbout from './locales/es/about.json';
 
 import enCommon from './locales/en/common.json';
 import enNav from './locales/en/nav.json';
@@ -19,6 +20,7 @@ import enShop from './locales/en/shop.json';
 import enProduct from './locales/en/product.json';
 import enCart from './locales/en/cart.json';
 import enCheckout from './locales/en/checkout.json';
+import enAbout from './locales/en/about.json';
 
 const resources = {
   es: {
@@ -30,6 +32,7 @@ const resources = {
     product: esProduct,
     cart: esCart,
     checkout: esCheckout,
+    about: esAbout,
   },
   en: {
     common: enCommon,
@@ -40,6 +43,7 @@ const resources = {
     product: enProduct,
     cart: enCart,
     checkout: enCheckout,
+    about: enAbout,
   },
 };
 
@@ -51,7 +55,7 @@ i18n
     fallbackLng: 'es',
     supportedLngs: ['es', 'en'],
     defaultNS: 'common',
-    ns: ['common', 'nav', 'footer', 'home', 'shop', 'product', 'cart', 'checkout'],
+    ns: ['common', 'nav', 'footer', 'home', 'shop', 'product', 'cart', 'checkout', 'about'],
     interpolation: { escapeValue: false },
     detection: {
       order: ['localStorage', 'navigator', 'htmlTag'],

@@ -1,11 +1,11 @@
 import React from 'react';
-import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import ProductImageGallery from '@/components/ProductImageGallery';
 import ProductDetailsCard from '@/components/ProductDetailsCard';
 import ProductCard from '@/components/ProductCard';
+import SEOHead from '@/components/SEOHead';
 
 const KibayEspumanteBottle = () => {
   const productData = {
@@ -31,11 +31,10 @@ const KibayEspumanteBottle = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Kibay Sparkling – Organic Mango & Passion Fruit Sparkling Wine</title>
-        <meta name="description" content="Organic Dominican sparkling wine fermented with mango & passion fruit. Crafted by Ocoa Bay winery. Refreshing, natural, and unique." />
-        <link rel="canonical" href="https://yourwebsite.com/kibay-espumante-bottle" />
-      </Helmet>
+      <SEOHead
+        title="Kibay Sparkling – Organic Mango & Passion Fruit Sparkling Wine"
+        description="Organic Dominican sparkling wine fermented with mango & passion fruit. Crafted by Ocoa Bay winery. Refreshing, natural, and unique."
+      />
       
       <Navigation />
       

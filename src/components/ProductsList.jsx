@@ -63,7 +63,7 @@ const ProductCard = ({ product, index }) => {
         <div className="relative w-full h-72 overflow-hidden rounded-2xl bg-card mb-6 shadow-2xl hover:shadow-orange-500/20 transition-all duration-300">
           <img
             src={resolveProductMediaUrl(product.image) || placeholderImage}
-            alt={product.title}
+            alt={`${product.title} — Kibay Caribbean wine`}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />

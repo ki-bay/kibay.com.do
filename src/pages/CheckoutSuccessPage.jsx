@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Helmet } from 'react-helmet';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -9,6 +8,7 @@ import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/customSupabaseClient';
 import { publicStorageObjectUrl } from '@/lib/supabaseStorage';
+import SEOHead from '@/components/SEOHead';
 
 const CheckoutSuccessPage = () => {
 	const [searchParams] = useSearchParams();
@@ -88,9 +88,10 @@ const CheckoutSuccessPage = () => {
 
 	return (
 		<>
-			<Helmet>
-				<title>{t('success.title')} — Kibay</title>
-			</Helmet>
+			<SEOHead
+				title={`${t('success.title')} — Kibay`}
+				noindex
+			/>
 
 			<Navigation />
 

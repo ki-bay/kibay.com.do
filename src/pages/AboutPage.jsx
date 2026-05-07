@@ -1,19 +1,23 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { Heart, Award, Leaf, Users } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import Card from '@/components/ui/card';
 import SEOHead from '@/components/SEOHead';
+import SchemaMarkup from '@/components/SchemaMarkup';
 
 const AboutPage = () => {
+  const { t } = useTranslation('about');
   return (
     <>
-      <SEOHead 
-        title="About Kibay | Caribbean Wine Craftsmanship"
-        description="Learn about Kibay's mission to bring modern Caribbean wines and Espumante crafted from organic fruits to the world."
+      <SEOHead
+        title={t('seo.title')}
+        description={t('seo.description')}
       />
-      
+      <SchemaMarkup type="LocalBusiness" />
+
       <Navigation />
       
       {/* Hero Section */}

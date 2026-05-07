@@ -5,13 +5,15 @@
   },
   "hero": {
     "badge": "Nuevo Lanzamiento",
+    "h1": "Espumante Dominicano: Vino Caribeño Orgánico",
     "title": "Kibay Espumante",
     "tagline": "Vino espumante orgánico con mango y maracuyá.",
     "description": "Fermentado naturalmente en la República Dominicana, expresa una visión fresca y moderna del vino caribeño.",
     "origin": "De la misma bodega que el vino Kibay — por Ocoa Bay.",
     "ctaShop": "Comprar Ahora",
     "ctaAbout": "Nuestra Historia",
-    "scroll": "Desliza"
+    "scroll": "Desliza",
+    "imgAlt": "Lata de vino espumante caribeño Kibay — República Dominicana"
   },
   "origin": {
     "heading": "Nuestro <accent>Origen</accent>",
@@ -20,13 +22,15 @@
       "eyebrow": "Nuestros Ingredientes",
       "title": "MANGO",
       "body": "A través de la fermentación, el mango aporta cuerpo natural, suavidad y profundidad tropical al vino — sin dulzor artificial.",
-      "cta": "Conoce más sobre el mango"
+      "cta": "Conoce más sobre el mango",
+      "imgAlt": "Mango orgánico — ingrediente del vino caribeño Kibay"
     },
     "passion": {
       "eyebrow": "Nuestro Sabor",
       "title": "MARACUYÁ",
       "body": "El maracuyá fermentado aporta brillo y acidez natural, equilibrando el vino y realzando su acabado fresco y refrescante.",
-      "cta": "Conoce más sobre el maracuyá"
+      "cta": "Conoce más sobre el maracuyá",
+      "imgAlt": "Maracuyá — ingrediente de vino espumante caribeño"
     }
   },
   "wineFirst": {

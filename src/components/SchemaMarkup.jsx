@@ -59,6 +59,29 @@ const SchemaMarkup = ({ type, data }) => {
         "contactType": "Customer Service"
       }
     };
+  } else if (type === 'LocalBusiness') {
+    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://kibay.com.do';
+    schemaData = {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Kibay",
+      "brand": {
+        "@type": "Brand",
+        "name": "Kibay"
+      },
+      "url": (data && data.url) || origin,
+      "image": (data && data.image) || `${origin}/og-default.jpg`,
+      "logo": `${origin}/logo.png`,
+      "description": (data && data.description) || "Kibay crafts organic Caribbean sparkling wine in the Dominican Republic — made with mango and passion fruit at Ocoa Bay.",
+      "priceRange": "$$",
+      "areaServed": "Caribbean",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "DO"
+      },
+      // TODO: replace with real number once available
+      "telephone": (data && data.telephone) || undefined
+    };
   } else if (type === 'Product') {
     schemaData = {
       "@context": "https://schema.org",

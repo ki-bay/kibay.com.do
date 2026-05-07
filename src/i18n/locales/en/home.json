@@ -5,13 +5,15 @@
   },
   "hero": {
     "badge": "New Arrival",
+    "h1": "Caribbean Sparkling Wine from the Dominican Republic",
     "title": "Kibay Sparkling",
     "tagline": "Organic sparkling wine with mango & passion fruit.",
     "description": "Naturally fermented in the Dominican Republic, expressing a fresh and modern vision of Caribbean wine.",
     "origin": "From the same winery as Kibay wine — by Ocoa Bay.",
     "ctaShop": "Shop Now",
     "ctaAbout": "Our Story",
-    "scroll": "Scroll"
+    "scroll": "Scroll",
+    "imgAlt": "Kibay Caribbean sparkling wine can — Dominican Republic"
   },
   "origin": {
     "heading": "Our <accent>Origin</accent>",
@@ -20,13 +22,15 @@
       "eyebrow": "Our Ingredients",
       "title": "MANGO",
       "body": "Through fermentation, mango contributes natural body, softness, and tropical depth to the wine — without artificial sweetness.",
-      "cta": "Find Out More About Mango"
+      "cta": "Find Out More About Mango",
+      "imgAlt": "Organic mango — ingredient in Kibay Caribbean wine"
     },
     "passion": {
       "eyebrow": "Our Flavor",
       "title": "PASSION FRUIT",
       "body": "Fermented passion fruit brings brightness and natural acidity, balancing the wine and enhancing its crisp, refreshing finish.",
-      "cta": "Find Out More About Passion Fruit"
+      "cta": "Find Out More About Passion Fruit",
+      "imgAlt": "Passion fruit — Caribbean sparkling wine ingredient"
     }
   },
   "wineFirst": {

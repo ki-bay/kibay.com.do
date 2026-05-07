@@ -9,6 +9,7 @@ import Card from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { getProducts } from '@/api/EcommerceApi';
 import SEOHead from '@/components/SEOHead';
+import SchemaMarkup from '@/components/SchemaMarkup';
 import { mediaUrl } from '@/config/mediaCdn';
 
 const HomePage = () => {
@@ -59,6 +60,8 @@ const HomePage = () => {
         title={t('seo.title')}
         description={t('seo.description')}
       />
+      <SchemaMarkup type="LocalBusiness" />
+      <SchemaMarkup type="Organization" />
 
       <Navigation />
 
@@ -94,7 +97,7 @@ const HomePage = () => {
 
               <motion.h1 variants={fadeIn} className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-light text-foreground leading-[1.1] tracking-tight">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600 font-normal">
-                  {t('hero.title')}
+                  {t('hero.h1')}
                 </span>
               </motion.h1>
 
@@ -137,7 +140,11 @@ const HomePage = () => {
 
               <img
                 src={mediaUrl('bc5a0b64ce661332da23e928299b7c41.jpg')}
-                alt="Kibay Sparkling Can"
+                alt={t('hero.imgAlt')}
+                width="650"
+                height="650"
+                fetchPriority="high"
+                decoding="async"
                 className="relative z-10 w-auto h-[350px] sm:h-[450px] lg:h-[650px] object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-700"
               />
             </motion.div>
@@ -190,7 +197,11 @@ const HomePage = () => {
                   <div className="relative h-[500px] overflow-hidden">
                     <img
                       src="https://images.unsplash.com/photo-1697350495566-a094004aedd8"
-                      alt="Fresh organic mangoes"
+                      alt={t('origin.mango.imgAlt')}
+                      width="1200"
+                      height="900"
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover bg-center transform group-hover:scale-105 transition-transform duration-1000"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent opacity-90"></div>
@@ -219,7 +230,11 @@ const HomePage = () => {
                   <div className="relative h-[500px] overflow-hidden">
                     <img
                       src={mediaUrl('ai-generated-8983326-k1zSk.jpg')}
-                      alt="Fine dining experience with premium sparkling wine"
+                      alt={t('origin.passion.imgAlt')}
+                      width="1200"
+                      height="900"
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover bg-center transform group-hover:scale-105 transition-transform duration-1000"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent opacity-90"></div>
@@ -396,9 +411,13 @@ const HomePage = () => {
               viewport={{ once: true }}
               className="relative order-1 lg:order-2 h-[400px] lg:h-[500px] rounded-3xl overflow-hidden shadow-2xl"
             >
-               <img 
-                src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=2787&auto=format&fit=crop" 
-                alt="Chilled sparkling wine glass in tropical setting" 
+               <img
+                src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=2787&auto=format&fit=crop"
+                alt="Chilled sparkling wine glass in tropical setting"
+                width="1200"
+                height="900"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent"></div>
@@ -467,6 +486,10 @@ const HomePage = () => {
                   <img
                     src={sparklingImage}
                     alt="Kibay Sparkling Wine"
+                    width="800"
+                    height="600"
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
@@ -506,6 +529,10 @@ const HomePage = () => {
                    <img
                     src={wineImage}
                     alt="Kibay Original Wine"
+                    width="800"
+                    height="600"
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
