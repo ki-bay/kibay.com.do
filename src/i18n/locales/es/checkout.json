@@ -4,6 +4,10 @@
   "email": "Correo electrónico",
   "shippingAddress": "Dirección de envío",
   "fullName": "Nombre completo",
+  "fields": {
+    "firstName": "Nombre",
+    "lastName": "Apellido"
+  },
   "phone": "Teléfono",
   "address": "Dirección",
   "address2": "Apartamento, suite, etc. (opcional)",

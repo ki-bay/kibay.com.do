@@ -4,6 +4,10 @@
   "email": "Email",
   "shippingAddress": "Shipping address",
   "fullName": "Full name",
+  "fields": {
+    "firstName": "First name",
+    "lastName": "Last name"
+  },
   "phone": "Phone",
   "address": "Address",
   "address2": "Apartment, suite, etc. (optional)",

@@ -46,6 +46,19 @@ const Navigation = () => {
     setAdminMenuOpen(false);
   }, [location]);
 
+  // ESC closes the mobile menu
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isOpen]);
+
   const toggleMobileMenu = (label) => {
     setExpandedMobileMenus(prev => ({
       ...prev,
@@ -105,7 +118,7 @@ const Navigation = () => {
                   {link.children ? (
                     <button className={cn('flex items-center gap-1 text-xs uppercase tracking-widest transition-all duration-300 relative group font-light hover:text-[#D4A574]', textColorClass, link.children.some(child => location.pathname === child.path) && 'font-normal text-[#D4A574]')}>
                       {link.label}
-                      <ChevronDown className="w-3 h-3 transition-transform group-hover:rotate-180" />
+                      <ChevronDown className="w-3 h-3 transition-transform group-hover:rotate-180" aria-hidden="true" />
                     </button>
                   ) : (
                     <Link to={link.path} className={cn('text-xs uppercase tracking-widest transition-all duration-300 relative group whitespace-nowrap', textColorClass, 'hover:text-[#D4A574]', location.pathname === link.path ? 'font-normal' : 'font-light')}>
@@ -138,7 +151,7 @@ const Navigation = () => {
                   {isAdmin && (
                     <div className="relative" onMouseEnter={() => setAdminMenuOpen(true)} onMouseLeave={() => setAdminMenuOpen(false)}>
                       <Button variant="ghost" className={cn("text-mango-400 hover:text-mango-300 hover:bg-foreground/10 transition-colors font-light flex gap-2 uppercase text-xs tracking-widest", textColorClass)}>
-                        <LayoutDashboard className="w-4 h-4" strokeWidth={1.5} /> Admin <ChevronDown className="w-3 h-3"/>
+                        <LayoutDashboard className="w-4 h-4" strokeWidth={1.5} aria-hidden="true" /> Admin <ChevronDown className="w-3 h-3" aria-hidden="true" />
                       </Button>
                       {/* Admin dropdown labels stay in English (admin pages are English-only). */}
                       <AnimatePresence>
@@ -148,29 +161,29 @@ const Navigation = () => {
                             className="absolute right-0 top-full pt-2 w-56 z-50"
                           >
                             <div className="bg-card border border-border rounded-lg shadow-xl overflow-hidden p-2 flex flex-col gap-1">
-                              <Link to="/admin/products" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><Package className="w-3 h-3"/> Products</Link>
-                              <Link to="/admin/orders" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><Receipt className="w-3 h-3"/> Orders</Link>
+                              <Link to="/admin/products" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><Package className="w-3 h-3" aria-hidden="true" /> Products</Link>
+                              <Link to="/admin/orders" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><Receipt className="w-3 h-3" aria-hidden="true" /> Orders</Link>
                               <div className="border-t border-border my-1"></div>
-                              <Link to="/dashboard/blog" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><LayoutDashboard className="w-3 h-3"/> Blog Dashboard</Link>
-                              <Link to="/admin/social-media" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><Activity className="w-3 h-3"/> Social Dashboard</Link>
-                              <Link to="/admin/api-keys" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><Key className="w-3 h-3"/> API Keys</Link>
-                              <Link to="/admin/webhook-docs" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><BookOpen className="w-3 h-3"/> Webhook Docs</Link>
+                              <Link to="/dashboard/blog" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><LayoutDashboard className="w-3 h-3" aria-hidden="true" /> Blog Dashboard</Link>
+                              <Link to="/admin/social-media" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><Activity className="w-3 h-3" aria-hidden="true" /> Social Dashboard</Link>
+                              <Link to="/admin/api-keys" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><Key className="w-3 h-3" aria-hidden="true" /> API Keys</Link>
+                              <Link to="/admin/webhook-docs" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><BookOpen className="w-3 h-3" aria-hidden="true" /> Webhook Docs</Link>
                               <div className="border-t border-border my-1"></div>
-                              <Link to="/admin/social-media/settings" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><Settings className="w-3 h-3"/> Social Settings</Link>
-                              <Link to="/admin/social-media/logs" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><Activity className="w-3 h-3"/> System Logs</Link>
+                              <Link to="/admin/social-media/settings" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><Settings className="w-3 h-3" aria-hidden="true" /> Social Settings</Link>
+                              <Link to="/admin/social-media/logs" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><Activity className="w-3 h-3" aria-hidden="true" /> System Logs</Link>
                             </div>
                           </motion.div>
                         )}
                       </AnimatePresence>
                     </div>
                   )}
-                  <Link to="/account">
-                    <Button variant="ghost" size="icon" className={cn("hover:text-[#D4A574] hover:bg-foreground/10 transition-colors font-light", textColorClass)}>
-                      <User className="w-5 h-5" strokeWidth={1.5} />
+                  <Link to="/account" aria-label={t('nav:myAccount')}>
+                    <Button variant="ghost" size="icon" aria-label={t('nav:myAccount')} className={cn("hover:text-[#D4A574] hover:bg-foreground/10 transition-colors font-light", textColorClass)}>
+                      <User className="w-5 h-5" strokeWidth={1.5} aria-hidden="true" />
                     </Button>
                   </Link>
-                  <Button variant="ghost" size="icon" onClick={handleSignOut} className={cn("hover:text-red-400 hover:bg-foreground/10 transition-colors font-light", textColorClass)} title="Sign Out">
-                    <LogOut className="w-5 h-5" strokeWidth={1.5} />
+                  <Button variant="ghost" size="icon" onClick={handleSignOut} aria-label={t('common:actions.signOut')} className={cn("hover:text-red-400 hover:bg-foreground/10 transition-colors font-light", textColorClass)} title={t('common:actions.signOut')}>
+                    <LogOut className="w-5 h-5" strokeWidth={1.5} aria-hidden="true" />
                   </Button>
                 </div>
               ) : (
@@ -180,7 +193,16 @@ const Navigation = () => {
 
             <div className="flex items-center gap-4 lg:hidden">
               <div className={cn("transition-colors cursor-pointer hover:text-[#D4A574]", iconColorClass)}><ShoppingCartIcon onClick={handleCartClick} className="w-6 h-6" /></div>
-              <button onClick={() => setIsOpen(!isOpen)} className={cn("p-2 rounded-full hover:bg-foreground/10 transition-colors z-50", iconColorClass)}>{isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}</button>
+              <button
+                type="button"
+                onClick={() => setIsOpen(!isOpen)}
+                aria-expanded={isOpen}
+                aria-controls="mobile-menu"
+                aria-label={isOpen ? t('common:actions.close', { defaultValue: 'Close menu' }) : t('common:actions.menu', { defaultValue: 'Open menu' })}
+                className={cn("p-2 rounded-full hover:bg-foreground/10 transition-colors z-50", iconColorClass)}
+              >
+                {isOpen ? <X className="w-6 h-6" aria-hidden="true" /> : <Menu className="w-6 h-6" aria-hidden="true" />}
+              </button>
             </div>
           </div>
         </div>
@@ -190,14 +212,30 @@ const Navigation = () => {
 
       <AnimatePresence>
         {isOpen && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="fixed inset-0 z-30 bg-card lg:hidden pt-24 px-6 overflow-y-auto">
+          <motion.div
+            id="mobile-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="mobile-menu-title"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-30 bg-card lg:hidden pt-24 px-6 overflow-y-auto"
+          >
+            <h2 id="mobile-menu-title" className="sr-only">{t('nav:menu', { defaultValue: 'Menu' })}</h2>
             <div className="flex flex-col gap-6 pb-8">
               {navLinks.map((link, index) => (
                 <motion.div key={link.key} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }}>
                   {link.children ? (
                     <div className="flex flex-col gap-4">
-                      <button onClick={() => toggleMobileMenu(link.key)} className="flex items-center justify-between text-2xl font-light text-foreground hover:text-[#D4A574] transition-colors w-full text-left">
-                        {link.label} <ChevronDown className={cn("w-6 h-6 transition-transform", expandedMobileMenus[link.key] && "rotate-180")} />
+                      <button
+                        type="button"
+                        onClick={() => toggleMobileMenu(link.key)}
+                        aria-expanded={!!expandedMobileMenus[link.key]}
+                        className="flex items-center justify-between text-2xl font-light text-foreground hover:text-[#D4A574] transition-colors w-full text-left"
+                      >
+                        {link.label} <ChevronDown className={cn("w-6 h-6 transition-transform", expandedMobileMenus[link.key] && "rotate-180")} aria-hidden="true" />
                       </button>
                       <AnimatePresence>
                         {expandedMobileMenus[link.key] && (
@@ -221,8 +259,13 @@ const Navigation = () => {
                 <div className="flex flex-col gap-4">
                   {isAdmin && (
                     <div className="flex flex-col gap-4">
-                      <button onClick={() => toggleMobileMenu('admin')} className="flex items-center justify-between text-lg font-light text-mango-400 hover:text-mango-300 w-full text-left">
-                        <span className="flex items-center gap-2"><LayoutDashboard className="w-5 h-5"/> Admin Panel</span> <ChevronDown className={cn("w-5 h-5 transition-transform", expandedMobileMenus['admin'] && "rotate-180")} />
+                      <button
+                        type="button"
+                        onClick={() => toggleMobileMenu('admin')}
+                        aria-expanded={!!expandedMobileMenus['admin']}
+                        className="flex items-center justify-between text-lg font-light text-mango-400 hover:text-mango-300 w-full text-left"
+                      >
+                        <span className="flex items-center gap-2"><LayoutDashboard className="w-5 h-5" aria-hidden="true" /> Admin Panel</span> <ChevronDown className={cn("w-5 h-5 transition-transform", expandedMobileMenus['admin'] && "rotate-180")} aria-hidden="true" />
                       </button>
                       <AnimatePresence>
                         {expandedMobileMenus['admin'] && (
@@ -240,8 +283,8 @@ const Navigation = () => {
                       </AnimatePresence>
                     </div>
                   )}
-                  <Link to="/account" onClick={() => setIsOpen(false)} className="text-lg font-light text-foreground/80 flex items-center gap-2 hover:text-[#D4A574]"><User className="w-5 h-5" /> {t('nav:myAccount')}</Link>
-                  <button onClick={handleSignOut} className="text-lg font-light text-red-400 flex items-center gap-2 hover:text-red-300 text-left"><LogOut className="w-5 h-5" /> {t('common:actions.signOut')}</button>
+                  <Link to="/account" onClick={() => setIsOpen(false)} className="text-lg font-light text-foreground/80 flex items-center gap-2 hover:text-[#D4A574]"><User className="w-5 h-5" aria-hidden="true" /> {t('nav:myAccount')}</Link>
+                  <button type="button" onClick={handleSignOut} className="text-lg font-light text-red-400 flex items-center gap-2 hover:text-red-300 text-left"><LogOut className="w-5 h-5" aria-hidden="true" /> {t('common:actions.signOut')}</button>
                 </div>
               ) : (
                 <Link to="/login" onClick={() => setIsOpen(false)} className="inline-block text-center py-3 px-6 rounded-full bg-[#D4A574] text-foreground font-normal text-lg shadow-lg shadow-[#D4A574]/20">{t('common:actions.signIn')}</Link>

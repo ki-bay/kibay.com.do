@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -15,6 +15,40 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
   const navigate = useNavigate();
   const { cartItems, removeFromCart, updateQuantity, getCartTotal } = useCart();
   const { t } = useTranslation('cart');
+  const closeButtonRef = useRef(null);
+  const previouslyFocusedRef = useRef(null);
+
+  const closeCart = useCallback(() => setIsCartOpen(false), [setIsCartOpen]);
+
+  // ESC handler
+  useEffect(() => {
+    if (!isCartOpen) return undefined;
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        closeCart();
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isCartOpen, closeCart]);
+
+  // Focus management: save previously focused element, focus close button on open, restore on close
+  useEffect(() => {
+    if (isCartOpen) {
+      previouslyFocusedRef.current = document.activeElement;
+      // Defer focus until after the panel mounts
+      const id = window.setTimeout(() => {
+        if (closeButtonRef.current) closeButtonRef.current.focus();
+      }, 0);
+      return () => window.clearTimeout(id);
+    }
+    if (previouslyFocusedRef.current && typeof previouslyFocusedRef.current.focus === 'function') {
+      previouslyFocusedRef.current.focus();
+    }
+    previouslyFocusedRef.current = null;
+    return undefined;
+  }, [isCartOpen]);
 
   const handleCheckout = useCallback(() => {
     if (cartItems.length === 0) {
@@ -39,32 +73,38 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            aria-hidden="true"
             className="fixed inset-0 bg-card/40 backdrop-blur-sm z-50"
             onClick={() => setIsCartOpen(false)}
           />
-          
+
           {/* Slide-out Panel */}
           <motion.div
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="cart-title"
             className="fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl z-[51] flex flex-col border-l border-stone-100"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-stone-100 bg-white">
               <div className="flex items-center gap-3">
-                <ShoppingBag className="w-5 h-5 text-[#D4A574]" />
-                <h2 className="text-xl font-serif font-medium text-stone-900">{t('title')}</h2>
+                <ShoppingBag className="w-5 h-5 text-[#D4A574]" aria-hidden="true" />
+                <h2 id="cart-title" className="text-xl font-serif font-medium text-stone-900">{t('title')}</h2>
               </div>
               <Button
+                ref={closeButtonRef}
                 onClick={() => setIsCartOpen(false)}
                 variant="ghost"
                 size="icon"
+                aria-label={t('close', { defaultValue: 'Close' })}
                 className="text-stone-400 hover:text-stone-900 hover:bg-stone-50 rounded-full"
               >
-                <X className="w-5 h-5" />
+                <X className="w-5 h-5" aria-hidden="true" />
               </Button>
             </div>
 
@@ -73,7 +113,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
               {cartItems.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
                   <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center">
-                    <ShoppingBag className="w-8 h-8 text-stone-300" />
+                    <ShoppingBag className="w-8 h-8 text-stone-300" aria-hidden="true" />
                   </div>
                   <p className="text-stone-500 text-lg">{t('empty')}</p>
                   <Button
@@ -104,11 +144,13 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                         <div>
                           <div className="flex justify-between items-start">
                             <h3 className="font-medium text-stone-900 line-clamp-1">{item.product.title}</h3>
-                            <button 
+                            <button
+                              type="button"
                               onClick={() => removeFromCart(item.variant.id)}
+                              aria-label={t('remove', { defaultValue: 'Remove item' })}
                               className="text-stone-300 hover:text-red-400 transition-colors p-1"
                             >
-                              <Trash2 className="w-4 h-4" />
+                              <Trash2 className="w-4 h-4" aria-hidden="true" />
                             </button>
                           </div>
                           <p className="text-sm text-stone-500 mb-2">{item.variant.title}</p>
@@ -120,18 +162,22 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                           </p>
                           
                           <div className="flex items-center bg-stone-100 rounded-full p-1">
-                            <button 
+                            <button
+                              type="button"
                               onClick={() => updateQuantity(item.variant.id, Math.max(1, item.quantity - 1))}
+                              aria-label={t('decreaseQuantity', { defaultValue: 'Decrease quantity' })}
                               className="w-6 h-6 flex items-center justify-center rounded-full bg-white text-stone-600 shadow-sm hover:text-[#D4A574] transition-colors"
                             >
-                              <Minus className="w-3 h-3" />
+                              <Minus className="w-3 h-3" aria-hidden="true" />
                             </button>
                             <span className="w-8 text-center text-sm font-medium text-stone-700">{item.quantity}</span>
-                            <button 
+                            <button
+                              type="button"
                               onClick={() => updateQuantity(item.variant.id, item.quantity + 1)}
+                              aria-label={t('increaseQuantity', { defaultValue: 'Increase quantity' })}
                               className="w-6 h-6 flex items-center justify-center rounded-full bg-white text-stone-600 shadow-sm hover:text-[#D4A574] transition-colors"
                             >
-                              <Plus className="w-3 h-3" />
+                              <Plus className="w-3 h-3" aria-hidden="true" />
                             </button>
                           </div>
                         </div>
@@ -156,7 +202,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                   className="w-full bg-[#D4A574] hover:bg-[#c29462] text-white font-medium py-6 rounded-full text-lg shadow-lg shadow-[#D4A574]/20 group transition-all duration-300"
                 >
                   {t('checkout')}
-                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
                 </Button>
                 <p className="text-center text-xs text-stone-400 mt-4">
                   {t('shippingCalculated')}

@@ -295,6 +295,7 @@ const CheckoutPage = () => {
 		<>
 			<Helmet>
 				<title>{t('title')} — Kibay</title>
+				<meta name="robots" content="noindex,follow" />
 			</Helmet>
 
 			<Navigation />
@@ -310,8 +311,11 @@ const CheckoutPage = () => {
 								<div className="space-y-4">
 									<div className="grid grid-cols-2 gap-4">
 										<div className="space-y-2">
-											<label className="text-sm font-light text-foreground/80">{t('fullName')}</label>
+											<label htmlFor="checkout-firstName" className="text-sm font-light text-foreground/80">{t('fields.firstName')}</label>
 											<input
+												id="checkout-firstName"
+												name="firstName"
+												autoComplete="given-name"
 												type="text"
 												value={shippingInfo.firstName}
 												onChange={(e) =>
@@ -324,8 +328,11 @@ const CheckoutPage = () => {
 											/>
 										</div>
 										<div className="space-y-2">
-											<label className="text-sm font-light text-foreground/80"> </label>
+											<label htmlFor="checkout-lastName" className="text-sm font-light text-foreground/80">{t('fields.lastName')}</label>
 											<input
+												id="checkout-lastName"
+												name="lastName"
+												autoComplete="family-name"
 												type="text"
 												value={shippingInfo.lastName}
 												onChange={(e) =>
@@ -340,8 +347,11 @@ const CheckoutPage = () => {
 									</div>
 
 									<div className="space-y-2">
-										<label className="text-sm font-light text-foreground/80">{t('email')}</label>
+										<label htmlFor="checkout-email" className="text-sm font-light text-foreground/80">{t('email')}</label>
 										<input
+											id="checkout-email"
+											name="email"
+											autoComplete="email"
 											type="email"
 											value={shippingInfo.email}
 											onChange={(e) =>
@@ -355,8 +365,10 @@ const CheckoutPage = () => {
 									</div>
 
 									<div className="space-y-2">
-										<label className="text-sm font-light text-foreground/80">{t('taxId')}</label>
+										<label htmlFor="checkout-taxId" className="text-sm font-light text-foreground/80">{t('taxId')}</label>
 										<input
+											id="checkout-taxId"
+											name="taxId"
 											type="text"
 											value={shippingInfo.taxId}
 											onChange={(e) =>
@@ -369,8 +381,11 @@ const CheckoutPage = () => {
 									</div>
 
 									<div className="space-y-2">
-										<label className="text-sm font-light text-foreground/80">{t('address')}</label>
+										<label htmlFor="checkout-address" className="text-sm font-light text-foreground/80">{t('address')}</label>
 										<input
+											id="checkout-address"
+											name="address"
+											autoComplete="street-address"
 											type="text"
 											value={shippingInfo.address}
 											onChange={(e) =>
@@ -385,8 +400,11 @@ const CheckoutPage = () => {
 
 									<div className="grid grid-cols-2 gap-4">
 										<div className="space-y-2">
-											<label className="text-sm font-light text-foreground/80">{t('city')}</label>
+											<label htmlFor="checkout-city" className="text-sm font-light text-foreground/80">{t('city')}</label>
 											<input
+												id="checkout-city"
+												name="city"
+												autoComplete="address-level2"
 												type="text"
 												value={shippingInfo.city}
 												onChange={(e) =>
@@ -399,8 +417,11 @@ const CheckoutPage = () => {
 											/>
 										</div>
 										<div className="space-y-2">
-											<label className="text-sm font-light text-foreground/80">{t('phone')}</label>
+											<label htmlFor="checkout-phone" className="text-sm font-light text-foreground/80">{t('phone')}</label>
 											<input
+												id="checkout-phone"
+												name="phone"
+												autoComplete="tel"
 												type="tel"
 												value={shippingInfo.phone}
 												onChange={(e) =>
@@ -415,8 +436,10 @@ const CheckoutPage = () => {
 									</div>
 
 									<div className="space-y-2">
-										<label className="text-sm font-light text-foreground/80">{t('shippingMethod')}</label>
+										<label htmlFor="checkout-shippingMethod" className="text-sm font-light text-foreground/80">{t('shippingMethod')}</label>
 										<select
+											id="checkout-shippingMethod"
+											name="shippingMethod"
 											value={shippingMethod}
 											onChange={(e) => setShippingMethod(e.target.value)}
 											disabled={step === 'payment'}

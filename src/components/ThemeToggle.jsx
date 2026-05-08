@@ -21,6 +21,7 @@ const ThemeToggle = ({ className = '', size = 'md' }) => {
     <button
       type="button"
       aria-label={label}
+      aria-pressed={isDark}
       title={label}
       onClick={() => setTheme(next)}
       className={cn(
