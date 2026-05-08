@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { supabase } from '@/lib/customSupabaseClient';
 import BlogPostCard from '@/components/BlogPostCard';
 import BlogSubscribeForm from '@/components/BlogSubscribeForm';
@@ -35,8 +35,8 @@ const PublicBlogPage = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      <main className="pt-28 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <motion.div 
+      <main id="main" role="main" className="pt-28 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <m.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
@@ -47,7 +47,7 @@ const PublicBlogPage = () => {
           <p className="text-xl text-foreground/60 max-w-2xl mx-auto">
             Stories, updates, and insights from the world of tropical flavors.
           </p>
-        </motion.div>
+        </m.div>
 
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
@@ -59,14 +59,14 @@ const PublicBlogPage = () => {
         ) : posts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
             {posts.map((post, index) => (
-              <motion.div
+              <m.div
                 key={post.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
                 <BlogPostCard post={post} />
-              </motion.div>
+              </m.div>
             ))}
           </div>
         ) : (
@@ -76,13 +76,13 @@ const PublicBlogPage = () => {
           </div>
         )}
         
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
           <BlogSubscribeForm />
-        </motion.div>
+        </m.div>
       </main>
 
       <Footer />

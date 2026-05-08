@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
@@ -70,7 +70,7 @@ const EmailForm = ({ variant = 'default' }) => {
   };
 
   return (
-    <motion.form
+    <m.form
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
@@ -136,7 +136,7 @@ const EmailForm = ({ variant = 'default' }) => {
           </>
         )}
       </Button>
-    </motion.form>
+    </m.form>
   );
 };
 

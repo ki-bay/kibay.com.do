@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
@@ -53,7 +53,7 @@ const ProductCard = ({ product, index }) => {
   }, [product, addToCart, toast, navigate, productHref, t]);
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -101,7 +101,7 @@ const ProductCard = ({ product, index }) => {
           </div>
         </div>
       </Link>
-    </motion.div>
+    </m.div>
   );
 };
 

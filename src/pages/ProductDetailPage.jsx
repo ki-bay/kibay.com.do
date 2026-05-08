@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { getProduct, getProductQuantities } from '@/api/EcommerceApi';
 import { Button } from '@/components/ui/button';
@@ -127,9 +127,9 @@ function ProductDetailPage() {
     return (
       <>
         <Navigation />
-        <div className="flex justify-center items-center h-screen bg-stone-50">
+        <main id="main" role="main" className="flex justify-center items-center h-screen bg-stone-50">
           <Loader2 className="h-16 w-16 text-[#D4A574] animate-spin" />
-        </div>
+        </main>
         <Footer />
       </>
     );
@@ -139,14 +139,14 @@ function ProductDetailPage() {
     return (
       <>
         <Navigation />
-        <div className="min-h-screen bg-stone-50 pt-32 px-4 flex flex-col items-center justify-center">
+        <main id="main" role="main" className="min-h-screen bg-stone-50 pt-32 px-4 flex flex-col items-center justify-center">
           <AlertCircle className="h-16 w-16 text-stone-300 mb-4" />
           <h1 className="text-2xl font-serif text-stone-900 mb-4">{t('notFound')}</h1>
           <p className="text-stone-500 mb-8">{error}</p>
           <Link to="/shop">
             <Button className="bg-[#D4A574] hover:bg-[#c29462] text-white">{t('backToShop')}</Button>
           </Link>
-        </div>
+        </main>
         <Footer />
       </>
     );
@@ -195,8 +195,8 @@ function ProductDetailPage() {
       />
       
       <Navigation />
-      
-      <div className="min-h-screen bg-stone-50 pt-32 pb-20">
+
+      <main id="main" role="main" className="min-h-screen bg-stone-50 pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <Link to="/shop" className="inline-flex items-center gap-2 text-stone-500 hover:text-[#D4A574] transition-colors mb-8 group">
@@ -206,7 +206,7 @@ function ProductDetailPage() {
 
           <div className="grid lg:grid-cols-2 gap-12 xl:gap-20 mb-20">
             {/* Image Gallery */}
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
@@ -218,10 +218,10 @@ function ProductDetailPage() {
                 ribbonText={product.ribbon_text}
                 ref={productImgRef}
               />
-            </motion.div>
+            </m.div>
 
             {/* Product Details */}
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -323,7 +323,7 @@ function ProductDetailPage() {
                     ))}
                 </div>
               )}
-            </motion.div>
+            </m.div>
           </div>
           
           {/* Newsletter Signup Mid-Page */}
@@ -338,9 +338,9 @@ function ProductDetailPage() {
                />
             </div>
           </div>
-          
+
         </div>
-      </div>
+      </main>
       <Footer />
     </>
   );

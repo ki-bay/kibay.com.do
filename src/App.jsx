@@ -76,6 +76,7 @@ function App() {
       <AuthProvider>
         <HtmlLangSync />
         <Router>
+          <a href="#main" className="skip-to-content">Skip to main content</a>
           <ScrollToTop />
           <Suspense fallback={<div className="min-h-screen bg-background" />}>
             <Routes>

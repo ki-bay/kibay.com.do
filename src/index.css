@@ -5,6 +5,28 @@
 /* Import Lato font with weights 300 (Light), 400 (Regular), 700 (Bold) - keeping bold for fallback but primary use is 300/400 */
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
 
+/* Skip-to-content link: visually hidden until focused for keyboard a11y */
+.skip-to-content {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  padding: 0.75rem 1rem;
+  background: hsl(var(--foreground));
+  color: hsl(var(--background));
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 0 0 0.5rem 0;
+  transform: translateY(-100%);
+  transition: transform 0.15s ease-out;
+}
+.skip-to-content:focus,
+.skip-to-content:focus-visible {
+  transform: translateY(0);
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
 @layer base {
   /* Light theme (default vars; applied when no .dark class on <html>). */
   :root {

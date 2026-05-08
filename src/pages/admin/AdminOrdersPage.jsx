@@ -80,7 +80,7 @@ const AdminOrdersPage = () => {
 				<title>Orders — Admin</title>
 			</Helmet>
 			<Navigation />
-			<div className="min-h-screen bg-background pt-28 pb-20 px-4">
+			<main id="main" role="main" className="min-h-screen bg-background pt-28 pb-20 px-4">
 				<div className="max-w-7xl mx-auto">
 					<div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-8">
 						<div>
@@ -187,7 +187,7 @@ const AdminOrdersPage = () => {
 						</div>
 					)}
 				</div>
-			</div>
+			</main>
 			<Footer />
 		</>
 	);

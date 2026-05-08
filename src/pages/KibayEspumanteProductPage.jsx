@@ -1,6 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Droplets, Leaf, MapPin, Wine, Sun, Check } from 'lucide-react';
 import Navigation from '@/components/Navigation';
@@ -47,7 +47,8 @@ const KibayEspumanteProductPage = () => {
       </Helmet>
       
       <Navigation />
-      
+
+      <main id="main" role="main">
       {/* Hero Section - Redesigned for Mobile-First Responsiveness */}
       <section className="relative min-h-screen lg:min-h-[85vh] flex items-center bg-background pt-24 pb-12 lg:pt-32 lg:pb-20 overflow-hidden">
         {/* Background Elements */}
@@ -64,41 +65,41 @@ const KibayEspumanteProductPage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             
             {/* Text Content - Order 2 on Mobile (below image), Order 1 on Desktop */}
-            <motion.div 
+            <m.div 
               initial="hidden"
               animate="visible"
               variants={stagger}
               className="order-2 lg:order-1 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6 lg:space-y-8"
             >
-              <motion.span variants={fadeIn} className="inline-block text-orange-500 font-medium tracking-widest uppercase text-xs sm:text-sm">
+              <m.span variants={fadeIn} className="inline-block text-orange-500 font-medium tracking-widest uppercase text-xs sm:text-sm">
                 The New Caribbean Standard
-              </motion.span>
+              </m.span>
               
-              <motion.h1 variants={fadeIn} className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-light text-foreground leading-tight">
+              <m.h1 variants={fadeIn} className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-light text-foreground leading-tight">
                 Kibay <br className="hidden sm:block" />
                 <span className="text-orange-500 font-normal">Sparkling</span>
-              </motion.h1>
+              </m.h1>
               
-              <motion.div variants={fadeIn} className="space-y-4 max-w-lg lg:max-w-xl">
+              <m.div variants={fadeIn} className="space-y-4 max-w-lg lg:max-w-xl">
                 <h2 className="text-lg sm:text-xl lg:text-2xl text-foreground/90 font-light">
                   Organic Sparkling Wine with Mango & Passion Fruit
                 </h2>
                 <p className="text-base sm:text-lg text-foreground/70 font-light leading-relaxed">
                   Fermented, not flavored. Real wine, refreshingly alive. A sophisticated expression of Dominican terroir crafted for modern enjoyment.
                 </p>
-              </motion.div>
+              </m.div>
               
-              <motion.div variants={fadeIn} className="pt-4 w-full sm:w-auto">
+              <m.div variants={fadeIn} className="pt-4 w-full sm:w-auto">
                 <Link to="/shop" className="block w-full sm:w-auto">
                   <Button className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-foreground px-8 py-6 text-lg rounded-full font-normal shadow-[0_0_20px_rgba(249,115,22,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(249,115,22,0.5)]">
                     Discover the Wine
                   </Button>
                 </Link>
-              </motion.div>
-            </motion.div>
+              </m.div>
+            </m.div>
             
             {/* Image Content - Order 1 on Mobile (top), Order 2 on Desktop */}
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
@@ -110,7 +111,7 @@ const KibayEspumanteProductPage = () => {
                 alt="Kibay Sparkling Can" 
                 className="w-auto h-[300px] sm:h-[400px] lg:h-[600px] object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-700 ease-in-out"
               />
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
@@ -118,7 +119,7 @@ const KibayEspumanteProductPage = () => {
       {/* Section 1: What Kibay Sparkling Is */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
         <div className="max-w-4xl mx-auto">
-          <motion.div 
+          <m.div 
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
@@ -130,10 +131,10 @@ const KibayEspumanteProductPage = () => {
             <p className="text-xl text-foreground/80 font-light leading-relaxed">
               Kibay Sparkling is true wine, achieved through natural fermentation. We don't simply mix fruit juice with alcohol. We ferment premium, organic mango and passion fruit from Ocoa Bay to create a complex, structured sparkling wine that retains the authentic soul of its ingredients.
             </p>
-          </motion.div>
+          </m.div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -149,9 +150,9 @@ const KibayEspumanteProductPage = () => {
                 <li className="flex items-start"><span className="mr-2">•</span> A product of skilled winemaking</li>
                 <li className="flex items-start"><span className="mr-2">•</span> Complex, dry, and refreshing</li>
               </ul>
-            </motion.div>
+            </m.div>
 
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -167,7 +168,7 @@ const KibayEspumanteProductPage = () => {
                 <li className="flex items-start"><span className="mr-2">•</span> Not artificially flavored</li>
                 <li className="flex items-start"><span className="mr-2">•</span> Not a soda with alcohol</li>
               </ul>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
@@ -176,7 +177,7 @@ const KibayEspumanteProductPage = () => {
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background relative overflow-hidden">
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -198,8 +199,8 @@ const KibayEspumanteProductPage = () => {
                   "From the same winery as Kibay wine — by Ocoa Bay"
                 </p>
               </div>
-            </motion.div>
-            <motion.div
+            </m.div>
+            <m.div
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
@@ -216,7 +217,7 @@ const KibayEspumanteProductPage = () => {
                 <p className="text-foreground font-normal text-xl">Ocoa Bay Winery</p>
                 <p className="text-foreground/70 text-sm font-light">The first vineyard in the Caribbean</p>
               </div>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
@@ -232,7 +233,7 @@ const KibayEspumanteProductPage = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -246,9 +247,9 @@ const KibayEspumanteProductPage = () => {
               <p className="text-foreground/70 font-light leading-relaxed">
                 Elegant and expressive, opening with distinct notes of ripe mango and hints of tropical florals, underpinned by a fresh citrus zest.
               </p>
-            </motion.div>
+            </m.div>
 
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -262,9 +263,9 @@ const KibayEspumanteProductPage = () => {
               <p className="text-foreground/70 font-light leading-relaxed">
                 Refreshing and balanced. The passion fruit brings a lively acidity that dances on the tongue, perfectly countered by a round, fruity body that is never cloying.
               </p>
-            </motion.div>
+            </m.div>
 
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -278,7 +279,7 @@ const KibayEspumanteProductPage = () => {
               <p className="text-foreground/70 font-light leading-relaxed">
                 Clean, crisp, and persistent. Leaves a pleasant tropical memory that invites another sip without coating the palate in sugar.
               </p>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
@@ -286,7 +287,7 @@ const KibayEspumanteProductPage = () => {
       {/* Section 4: Organic & Natural Philosophy */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-card">
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-12">
-          <motion.div 
+          <m.div 
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -305,8 +306,8 @@ const KibayEspumanteProductPage = () => {
                 Our philosophy is simple: respect the ingredients. By using organic fermentation methods, we preserve the integrity of the fruit and the land it comes from. It's a cleaner, more authentic way to enjoy sparkling wine.
               </p>
             </div>
-          </motion.div>
-          <motion.div 
+          </m.div>
+          <m.div 
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -326,7 +327,7 @@ const KibayEspumanteProductPage = () => {
                   </div>
                </div>
             </div>
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
@@ -345,7 +346,7 @@ const KibayEspumanteProductPage = () => {
               { title: "Beachside", desc: "The perfect sunset companion. Refreshing, tropical, and unbreakable.", icon: Droplets },
               { title: "Dinner Pairing", desc: "Acidity cuts through rich foods; pairs beautifully with seafood or spice.", icon: Leaf },
             ].map((item, idx) => (
-              <motion.div
+              <m.div
                 key={idx}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -356,7 +357,7 @@ const KibayEspumanteProductPage = () => {
                 <item.icon className="w-8 h-8 text-orange-500 mx-auto mb-4" />
                 <h3 className="text-lg font-normal text-foreground mb-2">{item.title}</h3>
                 <p className="text-sm text-foreground/70 font-light">{item.desc}</p>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </div>
@@ -375,7 +376,7 @@ const KibayEspumanteProductPage = () => {
               { label: "Alcohol", value: "6% ABV" },
               { label: "Shelf Life", value: "Best consumed within 18 months" },
             ].map((detail, idx) => (
-              <motion.div 
+              <m.div 
                 key={idx}
                 initial={{ opacity: 0, x: -10 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -385,7 +386,7 @@ const KibayEspumanteProductPage = () => {
               >
                 <span className="text-foreground/60 font-light uppercase tracking-wide text-sm">{detail.label}</span>
                 <span className="text-foreground font-medium text-right">{detail.value}</span>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </div>
@@ -393,7 +394,7 @@ const KibayEspumanteProductPage = () => {
 
       {/* Closing Section */}
       <section className="py-32 px-4 sm:px-6 lg:px-8 bg-background text-center">
-        <motion.div
+        <m.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
@@ -409,8 +410,9 @@ const KibayEspumanteProductPage = () => {
               Shop Kibay Sparkling
             </Button>
           </Link>
-        </motion.div>
+        </m.div>
       </section>
+      </main>
 
       <Footer />
     </>

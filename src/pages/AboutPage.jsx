@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Heart, Award, Leaf, Users } from 'lucide-react';
 import Navigation from '@/components/Navigation';
@@ -19,7 +19,8 @@ const AboutPage = () => {
       <SchemaMarkup type="LocalBusiness" />
 
       <Navigation />
-      
+
+      <main id="main" role="main">
       {/* Hero Section */}
       <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden pt-20">
         <div className="absolute inset-0 z-0">
@@ -31,7 +32,7 @@ const AboutPage = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background"></div>
         </div>
         
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
@@ -43,13 +44,13 @@ const AboutPage = () => {
           <p className="text-xl sm:text-2xl text-foreground/90 max-w-3xl mx-auto font-light">
             Where Caribbean heritage meets modern innovation
           </p>
-        </motion.div>
+        </m.div>
       </section>
       
       {/* Brand Story */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-background">
         <div className="max-w-4xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -59,9 +60,9 @@ const AboutPage = () => {
             <h2 className="text-3xl sm:text-4xl font-light mb-6 text-foreground">
               The Kibay Vision
             </h2>
-          </motion.div>
+          </m.div>
           
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
@@ -77,7 +78,7 @@ const AboutPage = () => {
             <p>
               We believe that premium wine shouldn't be confined to formal occasions or traditional settings. Kibay is designed for now—for beach sunsets, rooftop gatherings, and spontaneous celebrations. It's wine without pretension, quality without compromise.
             </p>
-          </motion.div>
+          </m.div>
         </div>
       </section>
       
@@ -85,7 +86,7 @@ const AboutPage = () => {
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-card">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
@@ -112,9 +113,9 @@ const AboutPage = () => {
                   Our master winemakers bring decades of experience and an unwavering commitment to quality. Every batch of Kibay Sparkling undergoes rigorous quality control to ensure consistency and excellence.
                 </p>
               </Card>
-            </motion.div>
+            </m.div>
             
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
@@ -128,7 +129,7 @@ const AboutPage = () => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent"></div>
               </div>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
@@ -136,7 +137,7 @@ const AboutPage = () => {
       {/* Organic Production Values */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-card">
         <div className="max-w-6xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -152,10 +153,10 @@ const AboutPage = () => {
             <p className="text-lg text-foreground/80 max-w-3xl mx-auto font-light">
               Organic isn't just a certification for us—it's a philosophy that guides every decision we make.
             </p>
-          </motion.div>
+          </m.div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -172,9 +173,9 @@ const AboutPage = () => {
                   Every ingredient meets strict organic certification standards, ensuring purity from fruit to finished product.
                 </p>
               </Card>
-            </motion.div>
+            </m.div>
             
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -189,9 +190,9 @@ const AboutPage = () => {
                   We work exclusively with certified organic Dominican farms, supporting local agriculture and minimizing our carbon footprint.
                 </p>
               </Card>
-            </motion.div>
+            </m.div>
             
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
@@ -206,7 +207,7 @@ const AboutPage = () => {
                   From water conservation to renewable energy, we minimize environmental impact at every stage of production.
                 </p>
               </Card>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
@@ -214,7 +215,7 @@ const AboutPage = () => {
       {/* Caribbean Heritage */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-card to-background">
         <div className="max-w-4xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -235,14 +236,14 @@ const AboutPage = () => {
                 By sourcing locally and producing entirely within the Dominican Republic, we celebrate our heritage while supporting our community. Every bottle of Kibay is a testament to Dominican agricultural excellence and craftsmanship.
               </p>
             </Card>
-          </motion.div>
+          </m.div>
         </div>
       </section>
       
       {/* Vision for Modern Wine */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-background">
         <div className="max-w-4xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -267,10 +268,11 @@ const AboutPage = () => {
                 This is wine designed for now. This is Kibay.
               </p>
             </div>
-          </motion.div>
+          </m.div>
         </div>
       </section>
-      
+      </main>
+
       <Footer />
     </>
   );

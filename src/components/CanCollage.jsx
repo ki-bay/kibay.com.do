@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 
 const canImages = [
   {
@@ -51,7 +51,7 @@ const CanCollage = () => {
     <div className="w-full relative z-10 p-4 sm:p-0">
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mx-auto max-w-2xl lg:max-w-none">
         {canImages.map((can, index) => (
-          <motion.div
+          <m.div
             key={can.id + index} // unique key if we duplicate
             initial={{ opacity: 0, y: 100, rotate: 0 }}
             animate={{ 
@@ -84,7 +84,7 @@ const CanCollage = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60" />
             </div>
-          </motion.div>
+          </m.div>
         ))}
       </div>
     </div>

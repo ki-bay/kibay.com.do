@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { CheckCircle, ArrowRight, Sparkles, Loader2, AlertCircle, FileText } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
@@ -95,8 +95,8 @@ const CheckoutSuccessPage = () => {
 
 			<Navigation />
 
-			<div className="min-h-screen bg-stone-50 pt-28 pb-20 px-4 flex items-center justify-center">
-				<motion.div
+			<main id="main" role="main" className="min-h-screen bg-stone-50 pt-28 pb-20 px-4 flex items-center justify-center">
+				<m.div
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6 }}
@@ -122,14 +122,14 @@ const CheckoutSuccessPage = () => {
 						</div>
 					) : (
 						<>
-							<motion.div
+							<m.div
 								initial={{ scale: 0.8, opacity: 0 }}
 								animate={{ scale: 1, opacity: 1 }}
 								transition={{ delay: 0.2, type: 'spring' }}
 								className="w-20 h-20 bg-[#D4A574]/10 rounded-full flex items-center justify-center mx-auto mb-8 relative z-10"
 							>
 								<CheckCircle className="w-10 h-10 text-[#D4A574]" strokeWidth={1.5} />
-							</motion.div>
+							</m.div>
 
 							<h1 className="text-3xl md:text-4xl font-light text-stone-900 mb-4 relative z-10">
 								{t('success.title')}
@@ -185,8 +185,8 @@ const CheckoutSuccessPage = () => {
 							</Button>
 						</Link>
 					</div>
-				</motion.div>
-			</div>
+				</m.div>
+			</main>
 
 			<Footer />
 		</>

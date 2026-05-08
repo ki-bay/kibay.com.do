@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { 
   Plus, 
   Edit, 
@@ -220,8 +220,8 @@ const BlogAdminDashboard = () => {
   return (
     <div className="min-h-screen bg-background pb-20">
       <Navigation />
-      
-      <div className="max-w-7xl mx-auto px-4 pt-28">
+
+      <main id="main" role="main" className="max-w-7xl mx-auto px-4 pt-28">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
           <div>
             <h1 className="text-3xl font-bold text-foreground mb-2">Blog Dashboard</h1>
@@ -290,7 +290,7 @@ const BlogAdminDashboard = () => {
                             {filteredPosts.map((post) => {
                             const stats = socialStats[post.id];
                             return (
-                                <motion.tr 
+                                <m.tr 
                                     key={post.id}
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
@@ -384,7 +384,7 @@ const BlogAdminDashboard = () => {
                                         </DropdownMenu>
                                     </div>
                                     </td>
-                                </motion.tr>
+                                </m.tr>
                             );
                             })}
                         </AnimatePresence>
@@ -399,7 +399,7 @@ const BlogAdminDashboard = () => {
                 <BlogSeoAudit />
             </TabsContent>
         </Tabs>
-      </div>
+      </main>
 
       <AlertDialog open={!!postToDelete} onOpenChange={() => setPostToDelete(null)}>
         <AlertDialogContent className="bg-card border-foreground/10 text-foreground">

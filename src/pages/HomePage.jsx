@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { motion, useScroll } from 'framer-motion';
+import { m, useScroll } from 'framer-motion';
 import { Leaf, Zap, ArrowRight, ShoppingBag, MapPin, GlassWater, Sun, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation, Trans } from 'react-i18next';
@@ -65,6 +65,7 @@ const HomePage = () => {
 
       <Navigation />
 
+      <main id="main" role="main">
       {/* Hero Section */}
       <section className="relative min-h-screen lg:min-h-[90vh] flex items-center bg-background pt-24 pb-12 lg:pt-32 lg:pb-20 overflow-hidden font-lato">
         {/* Background Atmosphere */}
@@ -81,27 +82,27 @@ const HomePage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
 
             {/* Left Column: Content */}
-            <motion.div
+            <m.div
               initial="hidden"
               animate="visible"
               variants={stagger}
               className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-6 lg:space-y-8 order-1"
             >
-              <motion.div variants={fadeIn} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-sm font-medium tracking-wider uppercase mb-2">
+              <m.div variants={fadeIn} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-sm font-medium tracking-wider uppercase mb-2">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
                 </span>
                 {t('hero.badge')}
-              </motion.div>
+              </m.div>
 
-              <motion.h1 variants={fadeIn} className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-light text-foreground leading-[1.1] tracking-tight">
+              <m.h1 variants={fadeIn} className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-light text-foreground leading-[1.1] tracking-tight">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600 font-normal">
                   {t('hero.h1')}
                 </span>
-              </motion.h1>
+              </m.h1>
 
-              <motion.div variants={fadeIn} className="space-y-4 max-w-lg">
+              <m.div variants={fadeIn} className="space-y-4 max-w-lg">
                 <p className="text-lg sm:text-xl text-foreground/90 font-light">
                   {t('hero.tagline')}
                 </p>
@@ -111,9 +112,9 @@ const HomePage = () => {
                 <p className="text-sm text-foreground/50 font-light italic">
                   {t('hero.origin')}
                 </p>
-              </motion.div>
+              </m.div>
 
-              <motion.div variants={fadeIn} className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto pt-4">
+              <m.div variants={fadeIn} className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto pt-4">
                 <Link to="/shop" className="w-full sm:w-auto">
                   <Button size="lg" className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white font-normal rounded-full px-8 py-6 text-lg shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_30px_rgba(249,115,22,0.5)] transition-all hover:scale-105">
                     <ShoppingBag className="mr-2 h-5 w-5" />
@@ -125,11 +126,11 @@ const HomePage = () => {
                     {t('hero.ctaAbout')}
                   </Button>
                 </Link>
-              </motion.div>
-            </motion.div>
+              </m.div>
+            </m.div>
 
             {/* Right Column: Visual */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
@@ -147,12 +148,12 @@ const HomePage = () => {
                 decoding="async"
                 className="relative z-10 w-auto h-[350px] sm:h-[450px] lg:h-[650px] object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-700"
               />
-            </motion.div>
+            </m.div>
           </div>
         </div>
 
         {/* Scroll Indicator */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1, duration: 1 }}
@@ -160,13 +161,13 @@ const HomePage = () => {
         >
           <span className="text-xs uppercase tracking-widest font-light">{t('hero.scroll')}</span>
           <div className="w-px h-12 bg-gradient-to-b from-white/30 to-transparent"></div>
-        </motion.div>
+        </m.div>
       </section>
 
       {/* Our Story / Origin Section */}
       <section className="relative z-10 py-24 px-4 sm:px-6 lg:px-8 bg-card overflow-hidden shadow-[0_-20px_50px_rgba(0,0,0,0.5)] font-lato">
         <div className="max-w-7xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -182,10 +183,10 @@ const HomePage = () => {
             <p className="text-foreground/60 max-w-2xl mx-auto text-lg font-light">
               {t('origin.body')}
             </p>
-          </motion.div>
+          </m.div>
 
           <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
@@ -216,9 +217,9 @@ const HomePage = () => {
                   </div>
                 </Card>
               </Link>
-            </motion.div>
+            </m.div>
 
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
@@ -249,7 +250,7 @@ const HomePage = () => {
                   </div>
                 </Card>
               </Link>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
@@ -257,7 +258,7 @@ const HomePage = () => {
       {/* Wine Clarity Section */}
       <section className="relative z-10 py-24 px-4 sm:px-6 lg:px-8 bg-background font-lato text-center">
         <div className="max-w-3xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -269,7 +270,7 @@ const HomePage = () => {
             <p className="text-foreground/70 max-w-2xl mx-auto text-lg font-light">
               {t('wineFirst.body')}
             </p>
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
@@ -277,7 +278,7 @@ const HomePage = () => {
       <section className="relative z-10 py-24 px-4 sm:px-6 lg:px-8 bg-background font-lato">
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
         <div className="max-w-7xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -290,10 +291,10 @@ const HomePage = () => {
             <p className="text-foreground/60 max-w-2xl mx-auto text-lg font-light">
               {t('difference.subheading')}
             </p>
-          </motion.div>
+          </m.div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -308,9 +309,9 @@ const HomePage = () => {
                   {t('difference.features.organic.body')}
                 </p>
               </Card>
-            </motion.div>
+            </m.div>
 
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -325,9 +326,9 @@ const HomePage = () => {
                   {t('difference.features.caribbean.body')}
                 </p>
               </Card>
-            </motion.div>
+            </m.div>
 
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
@@ -340,7 +341,7 @@ const HomePage = () => {
                 <h3 className="text-xl font-normal mb-3 text-foreground">{t('difference.features.format.title')}</h3>
                 <p className="text-foreground/70 leading-relaxed font-light">{t('difference.features.format.body')}</p>
               </Card>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
@@ -348,7 +349,7 @@ const HomePage = () => {
       {/* Designed for Modern Wine Moments Section */}
       <section className="relative z-10 py-24 px-4 sm:px-6 lg:px-8 bg-card font-lato text-center">
         <div className="max-w-4xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -360,7 +361,7 @@ const HomePage = () => {
             <p className="text-foreground/70 max-w-3xl mx-auto text-lg font-light leading-relaxed">
               {t('moments.body')}
             </p>
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
@@ -368,7 +369,7 @@ const HomePage = () => {
       <section className="relative z-10 py-24 px-4 sm:px-6 lg:px-8 bg-background font-lato">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-             <motion.div
+             <m.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
@@ -402,9 +403,9 @@ const HomePage = () => {
                   <span className="text-xs text-foreground/50 uppercase tracking-widest">{t('enjoy.steps.enjoy')}</span>
                 </div>
               </div>
-            </motion.div>
+            </m.div>
             
-            <motion.div
+            <m.div
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8 }}
@@ -421,7 +422,7 @@ const HomePage = () => {
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent"></div>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
@@ -433,7 +434,7 @@ const HomePage = () => {
         </div>
         
         <div className="max-w-3xl mx-auto relative z-10">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -448,14 +449,14 @@ const HomePage = () => {
             <p className="text-foreground/70 max-w-2xl mx-auto text-lg font-light leading-relaxed">
               {t('tropics.body')}
             </p>
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
       {/* Our Products Section */}
       <section className="relative z-10 py-24 px-4 sm:px-6 lg:px-8 bg-background font-lato">
         <div className="max-w-7xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -471,11 +472,11 @@ const HomePage = () => {
             <p className="text-foreground/60 max-w-2xl mx-auto text-lg font-light">
               {t('products.subheading')}
             </p>
-          </motion.div>
+          </m.div>
 
           <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
             {/* Kibay Sparkling Card */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -515,10 +516,10 @@ const HomePage = () => {
                   </div>
                 </div>
               </Card>
-            </motion.div>
+            </m.div>
 
             {/* Kibay Wine Card */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -558,11 +559,12 @@ const HomePage = () => {
                   </div>
                 </div>
               </Card>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
 
+      </main>
       <Footer />
     </>
   );

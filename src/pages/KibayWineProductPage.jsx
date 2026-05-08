@@ -1,6 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Leaf, MapPin, Wine, Sun, Anchor, Heart } from 'lucide-react';
 import Navigation from '@/components/Navigation';
@@ -25,7 +25,8 @@ const KibayWineProductPage = () => {
       </Helmet>
       
       <Navigation />
-      
+
+      <main id="main" role="main">
       {/* Hero Section */}
       <section className="relative min-h-[85vh] flex items-center bg-background pt-20 overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1516594915697-87eb3b1c14ea?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-20"></div>
@@ -33,34 +34,34 @@ const KibayWineProductPage = () => {
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div 
+            <m.div 
               initial="hidden"
               animate="visible"
               variants={stagger}
               className="space-y-8"
             >
-              <motion.span variants={fadeIn} className="inline-block text-[#D4A574] font-medium tracking-widest uppercase text-sm">
+              <m.span variants={fadeIn} className="inline-block text-[#D4A574] font-medium tracking-widest uppercase text-sm">
                 Authentic Caribbean Wine
-              </motion.span>
-              <motion.h1 variants={fadeIn} className="text-5xl sm:text-6xl md:text-7xl font-light text-foreground leading-tight">
+              </m.span>
+              <m.h1 variants={fadeIn} className="text-5xl sm:text-6xl md:text-7xl font-light text-foreground leading-tight">
                 KiBay <br/><span className="text-[#D4A574]">Wine</span>
-              </motion.h1>
-              <motion.div variants={fadeIn} className="space-y-4">
+              </m.h1>
+              <m.div variants={fadeIn} className="space-y-4">
                 <h2 className="text-2xl text-foreground/90 font-light">Tropical Wine Crafted at Ocoa Bay</h2>
                 <p className="text-lg text-foreground/70 max-w-xl font-light leading-relaxed">
                   An expression of Caribbean terroir and innovative winemaking. Smooth, aromatic, and deeply rooted in the land of the Dominican Republic.
                 </p>
-              </motion.div>
-              <motion.div variants={fadeIn} className="pt-4">
+              </m.div>
+              <m.div variants={fadeIn} className="pt-4">
                 <Link to="/shop">
                   <Button className="bg-[#D4A574] hover:bg-[#b0865a] text-foreground px-8 py-6 text-lg rounded-full font-normal shadow-[0_0_20px_rgba(212,165,116,0.3)] transition-all hover:scale-105">
                     Explore the Collection
                   </Button>
                 </Link>
-              </motion.div>
-            </motion.div>
+              </m.div>
+            </m.div>
             
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
@@ -73,7 +74,7 @@ const KibayWineProductPage = () => {
                  alt="KiBay Wine Bottle" 
                  className="relative z-20 w-auto h-[550px] mx-auto object-contain drop-shadow-2xl rounded-lg opacity-90"
                />
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
@@ -81,7 +82,7 @@ const KibayWineProductPage = () => {
       {/* Section 1: Origin & Identity */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
         <div className="max-w-4xl mx-auto text-center mb-16">
-           <motion.div
+           <m.div
              initial={{ opacity: 0, y: 20 }}
              whileInView={{ opacity: 1, y: 0 }}
              viewport={{ once: true }}
@@ -92,7 +93,7 @@ const KibayWineProductPage = () => {
               <p className="text-xl text-foreground/80 font-light leading-relaxed max-w-2xl mx-auto">
                 KiBay Wine is not just made in the Caribbean; it is of the Caribbean. It captures the essence of Ocoa Bay—the salinity of the sea air, the minerality of the soil, and the intensity of the tropical sun.
               </p>
-           </motion.div>
+           </m.div>
         </div>
         
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
@@ -115,7 +116,7 @@ const KibayWineProductPage = () => {
       <section className="py-24 px-4 sm:px-6 lg:px-8 bg-background">
          <div className="max-w-6xl mx-auto">
             <div className="grid md:grid-cols-2 gap-16">
-               <motion.div 
+               <m.div 
                  initial={{ opacity: 0, x: -30 }}
                  whileInView={{ opacity: 1, x: 0 }}
                  viewport={{ once: true }}
@@ -147,9 +148,9 @@ const KibayWineProductPage = () => {
                         </div>
                      </div>
                   </div>
-               </motion.div>
+               </m.div>
                
-               <motion.div 
+               <m.div 
                  initial={{ opacity: 0, x: 30 }}
                  whileInView={{ opacity: 1, x: 0 }}
                  viewport={{ once: true }}
@@ -163,7 +164,7 @@ const KibayWineProductPage = () => {
                   <p className="text-foreground/70 font-light leading-relaxed text-center">
                      KiBay Wine captures the relaxed yet vibrant energy of the Dominican lifestyle. It is a wine that feels at home at a formal dinner as it does at a beachside gathering. It represents the harmony between land, sea, and fruit.
                   </p>
-               </motion.div>
+               </m.div>
             </div>
          </div>
       </section>
@@ -181,7 +182,7 @@ const KibayWineProductPage = () => {
               { title: "Perfect Pairing", text: "Complements fresh seafood, ceviche, mild cheeses, and light salads.", icon: Anchor },
               { title: "Sunset Ritual", text: "The ideal companion for the golden hour, reflecting the warmth of the sun.", icon: Sun }
            ].map((item, i) => (
-              <motion.div 
+              <m.div 
                  key={i}
                  initial={{ opacity: 0, y: 20 }}
                  whileInView={{ opacity: 1, y: 0 }}
@@ -192,7 +193,7 @@ const KibayWineProductPage = () => {
                  <item.icon className="w-10 h-10 text-[#D4A574] mx-auto mb-4" />
                  <h3 className="text-xl font-normal text-foreground mb-3">{item.title}</h3>
                  <p className="text-foreground/70 font-light">{item.text}</p>
-              </motion.div>
+              </m.div>
            ))}
         </div>
       </section>
@@ -235,7 +236,7 @@ const KibayWineProductPage = () => {
               { label: "Alcohol", value: "8% ABV" },
               { label: "Shelf Life", value: "Best consumed within 36 months" },
             ].map((detail, idx) => (
-              <motion.div 
+              <m.div 
                 key={idx}
                 initial={{ opacity: 0, x: -10 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -245,7 +246,7 @@ const KibayWineProductPage = () => {
               >
                 <span className="text-foreground/60 font-light uppercase tracking-wide text-sm">{detail.label}</span>
                 <span className="text-foreground font-medium text-right">{detail.value}</span>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </div>
@@ -253,7 +254,7 @@ const KibayWineProductPage = () => {
 
       {/* Closing Section */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 bg-background text-center">
-        <motion.div
+        <m.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
@@ -264,8 +265,9 @@ const KibayWineProductPage = () => {
           <p className="text-xl text-foreground/70 font-light mb-10 leading-relaxed">
              KiBay Wine stands at the intersection of Dominican agricultural heritage and modern viniculture. It is our invitation to the world to taste the Caribbean in a new, sophisticated way.
           </p>
-        </motion.div>
+        </m.div>
       </section>
+      </main>
 
       <Footer />
     </>

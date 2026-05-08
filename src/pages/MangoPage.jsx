@@ -1,6 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Heart, Sun, Globe, ShoppingBag, Info, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
@@ -17,7 +17,8 @@ const MangoPage = () => {
       </Helmet>
       
       <Navigation />
-      
+
+      <main id="main" role="main">
       {/* Hero Section */}
       <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden pt-20 font-lato">
         <div className="absolute inset-0 z-0">
@@ -29,7 +30,7 @@ const MangoPage = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/50 to-background"></div>
         </div>
         
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
@@ -41,7 +42,7 @@ const MangoPage = () => {
           <p className="text-xl sm:text-2xl text-foreground/90 max-w-3xl mx-auto font-light leading-relaxed">
             Sweet, juicy, and packed with sunshine—discover why we chose this tropical treasure for Kibay.
           </p>
-        </motion.div>
+        </m.div>
       </section>
 
       {/* Content Section */}
@@ -50,7 +51,7 @@ const MangoPage = () => {
           
           {/* Intro Grid */}
           <div className="grid md:grid-cols-2 gap-12 items-center">
-             <motion.div
+             <m.div
                initial={{ opacity: 0, x: -30 }}
                whileInView={{ opacity: 1, x: 0 }}
                transition={{ duration: 0.6 }}
@@ -63,8 +64,8 @@ const MangoPage = () => {
                 <p className="text-lg text-foreground/80 leading-relaxed font-light">
                   Sweet, juicy, and fragrant; typically orange in color with a smooth, fibrous texture. The mango's lush flavor profile makes it the perfect base for a refreshing sparkling wine, offering a natural sweetness balanced by subtle acidity.
                 </p>
-             </motion.div>
-             <motion.div
+             </m.div>
+             <m.div
                initial={{ opacity: 0, x: 30 }}
                whileInView={{ opacity: 1, x: 0 }}
                transition={{ duration: 0.6 }}
@@ -77,22 +78,22 @@ const MangoPage = () => {
                 <p className="text-lg text-foreground/80 leading-relaxed font-light">
                   Mangoes have a rich history in South Asia and are considered the national fruit of India. They have been cultivated for over 4,000 years and have traveled across the globe to the Caribbean, where they thrive in our tropical climate.
                 </p>
-             </motion.div>
+             </m.div>
           </div>
 
           {/* Benefits Cards */}
           <div>
-            <motion.div 
+            <m.div 
                initial={{ opacity: 0, y: 20 }}
                whileInView={{ opacity: 1, y: 0 }}
                viewport={{ once: true }}
                className="text-center mb-12"
             >
                <h2 className="text-3xl sm:text-4xl font-light text-foreground">Nature's Powerhouse</h2>
-            </motion.div>
+            </m.div>
 
             <div className="grid md:grid-cols-2 gap-8">
-              <motion.div
+              <m.div
                  initial={{ opacity: 0, y: 20 }}
                  whileInView={{ opacity: 1, y: 0 }}
                  transition={{ delay: 0.1 }}
@@ -107,9 +108,9 @@ const MangoPage = () => {
                     Mangoes are rich in antioxidants, improve digestion, boost immunity, and support eye health. Their natural enzymes aid in breaking down proteins, making them excellent for digestion.
                   </p>
                 </Card>
-              </motion.div>
+              </m.div>
 
-              <motion.div
+              <m.div
                  initial={{ opacity: 0, y: 20 }}
                  whileInView={{ opacity: 1, y: 0 }}
                  transition={{ delay: 0.2 }}
@@ -124,12 +125,12 @@ const MangoPage = () => {
                     High in Vitamin C, Vitamin A, and dietary fiber. A single serving provides a significant boost to your daily nutritional needs while satisfying your sweet tooth naturally.
                   </p>
                 </Card>
-              </motion.div>
+              </m.div>
             </div>
           </div>
 
           {/* CTA */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
@@ -146,10 +147,11 @@ const MangoPage = () => {
                 Shop Now
               </Button>
             </Link>
-          </motion.div>
+          </m.div>
 
         </div>
       </section>
+      </main>
 
       <Footer />
     </>

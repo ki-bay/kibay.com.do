@@ -1,5 +1,5 @@
 import React, { useState, forwardRef, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import FlyToCartAnimation from '@/components/FlyToCartAnimation';
 import { resolveProductMediaUrl } from '@/config/mediaCdn';
 
@@ -32,7 +32,7 @@ const ProductImageGallery = forwardRef(({ images = [], title, ribbonText }, ref)
           className="relative aspect-[4/5] bg-white rounded-2xl overflow-hidden shadow-sm group w-full mb-6 mx-auto"
         >
           <AnimatePresence mode="wait">
-            <motion.img
+            <m.img
               key={currentImage.url}
               src={currentImage.url || placeholderImage}
               alt={title}

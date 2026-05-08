@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Search, Calendar, Clock, User, ChevronRight, Filter } from 'lucide-react';
 import { supabase } from '@/lib/customSupabaseClient';
@@ -64,26 +64,26 @@ const BlogListPage = () => {
       
       <Navigation />
       
-      <main className="min-h-screen bg-stone-50 pt-24 pb-16 font-lato">
+      <main id="main" role="main" className="min-h-screen bg-stone-50 pt-24 pb-16 font-lato">
         <div className="container mx-auto px-4">
           
           {/* Header Section */}
           <div className="text-center mb-16 mt-8">
-            <motion.h1 
+            <m.h1 
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               className="text-4xl md:text-5xl font-bold text-stone-900 mb-4"
             >
               The Kibay Journal
-            </motion.h1>
-            <motion.p 
+            </m.h1>
+            <m.p 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
               className="text-lg text-stone-600 max-w-2xl mx-auto font-light"
             >
               Stories about our journey, winemaking, and the sparkling lifestyle.
-            </motion.p>
+            </m.p>
           </div>
 
           {/* Search and Filter Section */}
@@ -136,7 +136,7 @@ const BlogListPage = () => {
                 {filteredPosts.map((post, index) => {
                   const readTime = post.reading_time || calculateReadingTime(post.content);
                   return (
-                    <motion.div
+                    <m.div
                       key={post.id}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -200,7 +200,7 @@ const BlogListPage = () => {
                           </div>
                         </Card>
                       </Link>
-                    </motion.div>
+                    </m.div>
                   );
                 })}
               </div>

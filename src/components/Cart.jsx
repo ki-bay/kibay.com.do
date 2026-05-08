@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Trash2, Plus, Minus, ArrowRight, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { resolveProductMediaUrl } from '@/config/mediaCdn';
 
 const symbolFor = (currency) => (String(currency || '').toUpperCase() === 'USD' ? '$' : 'RD$');
@@ -41,7 +41,7 @@ const Cart = () => {
 							(item.variant.sale_price_in_cents ?? item.variant.price_in_cents) / 100;
 						const img = resolveProductMediaUrl(item.product.image) || item.product.image;
 						return (
-							<motion.div
+							<m.div
 								key={item.variant.id}
 								layout
 								initial={{ opacity: 0 }}
@@ -97,7 +97,7 @@ const Cart = () => {
 										<Trash2 className="w-5 h-5" />
 									</Button>
 								</div>
-							</motion.div>
+							</m.div>
 						);
 					})}
 				</div>

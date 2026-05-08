@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Loader2, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
@@ -61,7 +61,7 @@ const NewsletterSignup = ({
 
   if (isSuccess) {
     return (
-      <motion.div 
+      <m.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className={cn(
@@ -72,7 +72,7 @@ const NewsletterSignup = ({
         <CheckCircle2 className={cn("w-12 h-12 mx-auto mb-4", variant === 'hero' ? "text-[#D4A574]" : "text-[#D4A574]")} />
         <h3 className="text-2xl font-normal mb-2">You're on the list!</h3>
         <p className={variant === 'hero' ? "text-foreground/80 font-normal" : "text-stone-600 font-normal"}>{successMessage}</p>
-      </motion.div>
+      </m.div>
     );
   }
 

@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { Menu, X, User, ChevronDown, LogOut, LayoutDashboard, Settings, Activity, Key, BookOpen, Package, Receipt } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
@@ -156,7 +156,7 @@ const Navigation = () => {
                       {/* Admin dropdown labels stay in English (admin pages are English-only). */}
                       <AnimatePresence>
                         {adminMenuOpen && (
-                          <motion.div 
+                          <m.div 
                             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
                             className="absolute right-0 top-full pt-2 w-56 z-50"
                           >
@@ -172,7 +172,7 @@ const Navigation = () => {
                               <Link to="/admin/social-media/settings" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><Settings className="w-3 h-3" aria-hidden="true" /> Social Settings</Link>
                               <Link to="/admin/social-media/logs" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><Activity className="w-3 h-3" aria-hidden="true" /> System Logs</Link>
                             </div>
-                          </motion.div>
+                          </m.div>
                         )}
                       </AnimatePresence>
                     </div>
@@ -212,7 +212,7 @@ const Navigation = () => {
 
       <AnimatePresence>
         {isOpen && (
-          <motion.div
+          <m.div
             id="mobile-menu"
             role="dialog"
             aria-modal="true"
@@ -226,7 +226,7 @@ const Navigation = () => {
             <h2 id="mobile-menu-title" className="sr-only">{t('nav:menu', { defaultValue: 'Menu' })}</h2>
             <div className="flex flex-col gap-6 pb-8">
               {navLinks.map((link, index) => (
-                <motion.div key={link.key} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }}>
+                <m.div key={link.key} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }}>
                   {link.children ? (
                     <div className="flex flex-col gap-4">
                       <button
@@ -239,18 +239,18 @@ const Navigation = () => {
                       </button>
                       <AnimatePresence>
                         {expandedMobileMenus[link.key] && (
-                          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="flex flex-col gap-4 pl-4 border-l-2 border-foreground/10">
+                          <m.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="flex flex-col gap-4 pl-4 border-l-2 border-foreground/10">
                             {link.children.map(child => (
                               <Link key={child.path} to={child.path} onClick={() => setIsOpen(false)} className={cn("text-lg font-light text-foreground/80 hover:text-[#D4A574] transition-colors", location.pathname === child.path && "text-[#D4A574]")}>{child.label}</Link>
                             ))}
-                          </motion.div>
+                          </m.div>
                         )}
                       </AnimatePresence>
                     </div>
                   ) : (
                     <Link to={link.path} onClick={() => setIsOpen(false)} className={cn('block text-2xl font-light hover:text-[#D4A574] transition-colors', location.pathname === link.path ? 'text-[#D4A574]' : 'text-foreground')}>{link.label}</Link>
                   )}
-                </motion.div>
+                </m.div>
               ))}
               
               <div className="h-px w-full bg-foreground/10 my-4" />
@@ -269,7 +269,7 @@ const Navigation = () => {
                       </button>
                       <AnimatePresence>
                         {expandedMobileMenus['admin'] && (
-                           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="flex flex-col gap-4 pl-8 border-l-2 border-mango-400/20">
+                           <m.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="flex flex-col gap-4 pl-8 border-l-2 border-mango-400/20">
                               <Link to="/admin/products" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">Products</Link>
                               <Link to="/admin/orders" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">Orders</Link>
                               <Link to="/dashboard/blog" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">Blog Dashboard</Link>
@@ -278,7 +278,7 @@ const Navigation = () => {
                               <Link to="/admin/webhook-docs" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">Webhook Docs</Link>
                               <Link to="/admin/social-media/settings" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">Social Settings</Link>
                               <Link to="/admin/social-media/logs" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">System Logs</Link>
-                           </motion.div>
+                           </m.div>
                         )}
                       </AnimatePresence>
                     </div>
@@ -296,7 +296,7 @@ const Navigation = () => {
                 <ThemeToggle />
               </div>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </>

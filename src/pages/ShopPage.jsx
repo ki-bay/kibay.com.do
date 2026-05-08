@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useTranslation, Trans } from 'react-i18next';
 import Navigation from '@/components/Navigation';
@@ -21,11 +21,11 @@ const ShopPage = () => {
 
       <Navigation />
 
-      <div className="min-h-screen bg-background pt-20">
+      <main id="main" role="main" className="min-h-screen bg-background pt-20">
         {/* Shop Header */}
         <section className="bg-gradient-to-b from-background to-card py-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
@@ -39,7 +39,7 @@ const ShopPage = () => {
               <p className="text-xl text-foreground/80 max-w-2xl mx-auto font-light leading-relaxed">
                 {t('header.subtitle')}
               </p>
-            </motion.div>
+            </m.div>
           </div>
         </section>
 
@@ -86,7 +86,7 @@ const ShopPage = () => {
             </Link>
           </div>
         </section>
-      </div>
+      </main>
       <Footer />
     </>
   );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { ArrowLeft, Truck } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
@@ -54,8 +54,8 @@ const ShippingReturnsPolicyPage = () => {
       </Helmet>
       
       <Navigation />
-      
-      <div className="min-h-screen bg-stone-50 pt-32 pb-20">
+
+      <main id="main" role="main" className="min-h-screen bg-stone-50 pt-32 pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="mb-12">
@@ -64,7 +64,7 @@ const ShippingReturnsPolicyPage = () => {
               Back to Home
             </Link>
             
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
@@ -77,11 +77,11 @@ const ShippingReturnsPolicyPage = () => {
               <p className="text-lg text-stone-500 leading-relaxed max-w-2xl font-light">
                 We strive to ensure your Kibay experience is perfect from our winery to your glass. Here is what you need to know about our delivery and return processes.
               </p>
-            </motion.div>
+            </m.div>
           </div>
 
           {/* Content Sections */}
-          <motion.div 
+          <m.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
@@ -98,10 +98,10 @@ const ShippingReturnsPolicyPage = () => {
                 )}
               </div>
             ))}
-          </motion.div>
+          </m.div>
         </div>
-      </div>
-      
+      </main>
+
       <Footer />
     </>
   );

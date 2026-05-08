@@ -51,7 +51,7 @@ const DiagnosticPage = () => {
       <SEOHead title="System Diagnostic Report | Kibay" description="Database health check and diagnostic report." />
       <Navigation />
       
-      <main className="min-h-screen bg-stone-50 pt-32 pb-20">
+      <main id="main" role="main" className="min-h-screen bg-stone-50 pt-32 pb-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-4 mb-8">
             <Database className="w-8 h-8 text-[#D4A574]" />

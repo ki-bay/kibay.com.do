@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { useParams, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Calendar, Clock, User, ArrowLeft, Facebook, Twitter, Linkedin, Share2, Copy } from 'lucide-react';
 import { supabase } from '@/lib/customSupabaseClient';
 import Navigation from '@/components/Navigation';
@@ -81,18 +81,18 @@ const BlogDetailPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <main id="main" role="main" className="min-h-screen bg-background flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-mango-500 border-t-transparent rounded-full animate-spin"></div>
-      </div>
+      </main>
     );
   }
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center text-foreground">
+      <main id="main" role="main" className="min-h-screen bg-background flex flex-col items-center justify-center text-foreground">
         <h1 className="text-4xl font-bold mb-4">Post not found</h1>
         <Link to="/blog" className="text-mango-400 hover:underline">Back to Blog</Link>
-      </div>
+      </main>
     );
   }
 
@@ -111,7 +111,8 @@ const BlogDetailPage = () => {
         <meta name="description" content={post.excerpt} />
       </Helmet>
       <Navigation />
-      
+
+      <main id="main" role="main">
       <article className="min-h-screen bg-background pt-24 pb-20 font-lato">
         {/* Header Image */}
         {post.featured_image_url && (
@@ -212,6 +213,7 @@ const BlogDetailPage = () => {
           </div>
         </div>
       </article>
+      </main>
       <Footer />
     </>
   );

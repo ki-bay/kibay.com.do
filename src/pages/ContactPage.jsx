@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Mail, Phone, MapPin, Send, Loader2, ArrowRight, MessageSquare, ShoppingBag, Briefcase, HelpCircle } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
@@ -95,11 +95,11 @@ const ContactPage = () => {
       
       <Navigation />
       
-      <main className="min-h-screen bg-background pt-24 pb-16">
+      <main id="main" role="main" className="min-h-screen bg-background pt-24 pb-16">
         
         {/* Hero Section */}
         <section className="relative px-4 sm:px-6 lg:px-8 py-16 text-center">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -111,14 +111,14 @@ const ContactPage = () => {
             <p className="text-xl text-foreground/80 font-light leading-relaxed">
               We'd love to hear from you. Whether you have questions about our products, need help with an order, or just want to say hello.
             </p>
-          </motion.div>
+          </m.div>
         </section>
 
         {/* Contact Options Grid */}
         <section className="px-4 sm:px-6 lg:px-8 mb-24">
           <div className="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {contactOptions.map((option, index) => (
-              <motion.a
+              <m.a
                 key={option.title}
                 href={option.isPhone ? `tel:${option.phone.replace(/[^0-9+]/g, '')}` : `mailto:${option.email}`}
                 initial={{ opacity: 0, y: 20 }}
@@ -136,7 +136,7 @@ const ContactPage = () => {
                 <p className="text-sm text-foreground/60 font-light leading-relaxed">
                   {option.description}
                 </p>
-              </motion.a>
+              </m.a>
             ))}
           </div>
         </section>
@@ -146,7 +146,7 @@ const ContactPage = () => {
           <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-start">
             
             {/* Contact Form */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
@@ -264,10 +264,10 @@ const ContactPage = () => {
                   </p>
                 </form>
               )}
-            </motion.div>
+            </m.div>
 
             {/* Visit Us / Map Section */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
@@ -328,7 +328,7 @@ const ContactPage = () => {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </m.div>
 
           </div>
         </section>

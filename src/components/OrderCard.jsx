@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Package, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatDopFromCents } from '@/lib/formatMoney';
@@ -33,7 +33,7 @@ const OrderCard = ({ order }) => {
 
   return (
     <>
-      <motion.div 
+      <m.div 
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         className="group bg-card/50 hover:bg-card border border-foreground/5 hover:border-mango-500/30 rounded-xl p-5 transition-all duration-300 shadow-sm hover:shadow-glow-orange flex flex-col md:flex-row md:items-center justify-between gap-4"
@@ -75,7 +75,7 @@ const OrderCard = ({ order }) => {
             <ChevronRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
           </Button>
         </div>
-      </motion.div>
+      </m.div>
 
       <OrderDetailsModal 
         order={order} 

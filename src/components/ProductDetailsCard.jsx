@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Wine, Globe, Package, Leaf, Percent, Calendar, Tag } from 'lucide-react';
 
 const ProductDetailsCard = ({ details }) => {
@@ -22,7 +22,7 @@ const ProductDetailsCard = ({ details }) => {
         {Object.entries(details).map(([key, value], index) => {
           const Icon = icons[key] || Tag;
           return (
-            <motion.div
+            <m.div
               key={key}
               initial={{ opacity: 0, x: -10 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -37,7 +37,7 @@ const ProductDetailsCard = ({ details }) => {
               <span className="text-stone-800 font-light text-right group-hover:text-mango-600 transition-colors">
                 {value}
               </span>
-            </motion.div>
+            </m.div>
           );
         })}
       </div>

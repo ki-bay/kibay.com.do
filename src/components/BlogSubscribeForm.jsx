@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Mail, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
@@ -75,7 +75,7 @@ const BlogSubscribeForm = () => {
 
         <div className="w-full md:w-auto min-w-[300px] flex-shrink-0">
           {status === 'success' ? (
-            <motion.div 
+            <m.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               className="bg-green-500/10 border border-green-500/20 rounded-xl p-6 text-center"
@@ -92,7 +92,7 @@ const BlogSubscribeForm = () => {
               >
                 Subscribe another email
               </Button>
-            </motion.div>
+            </m.div>
           ) : (
             <form onSubmit={handleSubscribe} className="flex flex-col gap-3">
               <div className="relative">

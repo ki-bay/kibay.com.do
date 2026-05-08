@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Save, ArrowLeft, Loader2, Send, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/customSupabaseClient';
@@ -256,17 +256,17 @@ const BlogPostForm = () => {
 
   if (fetching) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <main id="main" role="main" className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-mango-500 animate-spin" />
-      </div>
+      </main>
     );
   }
 
   return (
     <div className="min-h-screen bg-background pb-20">
       <Navigation />
-      
-      <div className="max-w-6xl mx-auto px-4 pt-28">
+
+      <main id="main" role="main" className="max-w-6xl mx-auto px-4 pt-28">
         <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-4">
             <Button 
@@ -298,7 +298,7 @@ const BlogPostForm = () => {
                 <TabsTrigger value="seo">SEO & Metadata</TabsTrigger>
             </TabsList>
 
-            <motion.div 
+            <m.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="bg-card border border-foreground/10 rounded-xl p-8 shadow-xl"
@@ -552,9 +552,9 @@ const BlogPostForm = () => {
                     </div>
                 </div>
             </form>
-            </motion.div>
+            </m.div>
         </Tabs>
-      </div>
+      </main>
     </div>
   );
 };

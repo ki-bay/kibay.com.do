@@ -87,7 +87,7 @@ const AdminApiKeysPage = () => {
       <SEOHead title="API Keys | Admin" />
       <Navigation />
       
-      <main className="min-h-screen bg-stone-50 pt-32 pb-20">
+      <main id="main" role="main" className="min-h-screen bg-stone-50 pt-32 pb-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           
           <div className="flex justify-between items-end">

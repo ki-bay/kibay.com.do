@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Helmet } from 'react-helmet';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
@@ -70,7 +70,7 @@ const VineAndBarrelPage = () => {
 
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-        <motion.div 
+        <m.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
@@ -183,7 +183,7 @@ const VineAndBarrelPage = () => {
               </form>
             )}
           </div>
-        </motion.div>
+        </m.div>
       </div>
     );
   };
@@ -198,7 +198,7 @@ const VineAndBarrelPage = () => {
       <Navigation />
       <BookingModal />
 
-      <main className="bg-stone-50 min-h-screen">
+      <main id="main" role="main" className="bg-stone-50 min-h-screen">
         
         {/* Hero Section */}
         <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
@@ -211,7 +211,7 @@ const VineAndBarrelPage = () => {
             <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
           </div>
           
-          <motion.div 
+          <m.div 
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2 }}
@@ -230,9 +230,9 @@ const VineAndBarrelPage = () => {
             >
               Explore Collection
             </Button>
-          </motion.div>
+          </m.div>
 
-          <motion.div 
+          <m.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.5, duration: 1 }}
@@ -240,12 +240,12 @@ const VineAndBarrelPage = () => {
           >
             <span className="text-xs uppercase tracking-widest mb-2">Scroll</span>
             <div className="w-px h-16 bg-gradient-to-b from-white/50 to-transparent" />
-          </motion.div>
+          </m.div>
         </section>
 
         {/* Wine of the Month */}
         <section id="wine-of-month" className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-          <motion.div {...fadeInUp} className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
+          <m.div {...fadeInUp} className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div className="relative group">
               <div className="absolute inset-0 bg-[#D4A574] rounded-full blur-[100px] opacity-20 group-hover:opacity-30 transition-opacity duration-700" />
               <img 
@@ -287,18 +287,18 @@ const VineAndBarrelPage = () => {
                 Learn More <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </div>
-          </motion.div>
+          </m.div>
         </section>
 
         {/* Tasting Notes */}
         <section className="py-24 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div {...fadeInUp} className="text-center mb-16">
+            <m.div {...fadeInUp} className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-serif text-stone-900 mb-6">Tasting Notes</h2>
               <p className="text-stone-500 max-w-2xl mx-auto text-lg font-light">Explore the intricate profiles of our most celebrated vintages.</p>
-            </motion.div>
+            </m.div>
 
-            <motion.div 
+            <m.div 
               variants={staggerContainer}
               initial="initial"
               whileInView="whileInView"
@@ -327,7 +327,7 @@ const VineAndBarrelPage = () => {
                   finish: "Dry, refreshing, clean"
                 }
               ].map((wine, i) => (
-                <motion.div 
+                <m.div 
                   key={i}
                   variants={fadeInUp}
                   className="bg-stone-50 p-10 rounded-2xl shadow-lg border border-stone-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group"
@@ -352,22 +352,22 @@ const VineAndBarrelPage = () => {
                       <p className="text-stone-700 font-medium">{wine.finish}</p>
                     </div>
                   </div>
-                </motion.div>
+                </m.div>
               ))}
-            </motion.div>
+            </m.div>
           </div>
         </section>
 
         {/* Food Pairings */}
         <section className="py-24 bg-card text-foreground overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div {...fadeInUp} className="text-center mb-16">
+            <m.div {...fadeInUp} className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-serif mb-6">Perfect Pairings</h2>
               <p className="text-stone-400 max-w-2xl mx-auto text-lg font-light">Elevate your dining experience with our expert recommendations.</p>
-            </motion.div>
+            </m.div>
 
             <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <motion.div 
+              <m.div 
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8 }}
@@ -383,9 +383,9 @@ const VineAndBarrelPage = () => {
                   <h3 className="text-3xl font-serif mb-2">Grand Reserve Merlot</h3>
                   <p className="text-stone-300 font-light">Best served at 16-18°C</p>
                 </div>
-              </motion.div>
+              </m.div>
 
-              <motion.div 
+              <m.div 
                 initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8 }}
@@ -418,7 +418,7 @@ const VineAndBarrelPage = () => {
                     </div>
                   </div>
                 ))}
-              </motion.div>
+              </m.div>
             </div>
           </div>
         </section>
@@ -427,7 +427,7 @@ const VineAndBarrelPage = () => {
         <section className="py-32 relative bg-[url('https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=2940&auto=format&fit=crop')] bg-cover bg-fixed bg-center">
           <div className="absolute inset-0 bg-card/80 backdrop-blur-sm" />
           
-          <motion.div 
+          <m.div 
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
@@ -451,7 +451,7 @@ const VineAndBarrelPage = () => {
             >
               Book a Private Tasting Tour
             </Button>
-          </motion.div>
+          </m.div>
         </section>
 
       </main>

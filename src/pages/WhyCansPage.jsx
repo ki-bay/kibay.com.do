@@ -1,6 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Shield, Leaf, Clock } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
@@ -16,12 +16,13 @@ const WhyCansPage = () => {
       </Helmet>
       
       <Navigation />
-      
+
+      <main id="main" role="main">
       {/* Hero Section */}
       <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden pt-20">
         <div className="absolute inset-0 z-0 bg-gradient-to-b from-background via-card to-background"></div>
         
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
@@ -33,14 +34,14 @@ const WhyCansPage = () => {
           <p className="text-xl sm:text-2xl text-foreground/80 max-w-3xl mx-auto font-light">
             Premium quality meets modern convenience. Discover why aluminum cans are the future of fine wine.
           </p>
-        </motion.div>
+        </m.div>
       </section>
       
       {/* Light and Oxygen Protection */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-background">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
@@ -68,9 +69,9 @@ const WhyCansPage = () => {
                   Our advanced canning technology creates an absolute oxygen barrier. This means zero oxidation, maintaining the crisp effervescence and bright tropical flavors from the moment of canning to your first sip.
                 </p>
               </Card>
-            </motion.div>
+            </m.div>
             
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
@@ -85,7 +86,7 @@ const WhyCansPage = () => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent"></div>
               </div>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
@@ -94,7 +95,7 @@ const WhyCansPage = () => {
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-card">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
@@ -108,9 +109,9 @@ const WhyCansPage = () => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent"></div>
               </div>
-            </motion.div>
+            </m.div>
             
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
@@ -141,7 +142,7 @@ const WhyCansPage = () => {
                   Unlike bottles that deteriorate once opened, every can of Kibay Espumante is enjoyed at its absolute peak. The first sip tastes identical to the last—perfectly carbonated, perfectly fresh.
                 </p>
               </Card>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
@@ -149,7 +150,7 @@ const WhyCansPage = () => {
       {/* Sustainability */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-card">
         <div className="max-w-6xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -165,10 +166,10 @@ const WhyCansPage = () => {
             <p className="text-lg text-foreground/80 max-w-3xl mx-auto font-light">
               Premium quality shouldn't come at the planet's expense. Our aluminum cans represent a commitment to environmental responsibility.
             </p>
-          </motion.div>
+          </m.div>
           
           <div className="grid md:grid-cols-3 gap-8">
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -185,9 +186,9 @@ const WhyCansPage = () => {
                   Aluminum can be recycled endlessly without quality loss. Over 75% of all aluminum ever produced is still in use today.
                 </p>
               </Card>
-            </motion.div>
+            </m.div>
             
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -204,9 +205,9 @@ const WhyCansPage = () => {
                   Lighter than glass, cans require less fuel for transportation. This significantly reduces our carbon emissions per bottle.
                 </p>
               </Card>
-            </motion.div>
+            </m.div>
             
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
@@ -221,7 +222,7 @@ const WhyCansPage = () => {
                   Aluminum cans can be recycled and back on shelves as new cans in just 60 days—far faster than glass.
                 </p>
               </Card>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
@@ -229,7 +230,7 @@ const WhyCansPage = () => {
       {/* Convenience Without Compromise */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-card to-background">
         <div className="max-w-4xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -242,10 +243,10 @@ const WhyCansPage = () => {
             <p className="text-lg text-foreground/80 max-w-3xl mx-auto mb-8 font-light">
               Premium wine should fit your lifestyle, not complicate it. Kibay Espumante in aluminum cans brings sophistication to any occasion.
             </p>
-          </motion.div>
+          </m.div>
           
           <div className="grid sm:grid-cols-2 gap-8">
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -257,9 +258,9 @@ const WhyCansPage = () => {
                   No glass means no worries. Enjoy premium sparkling wine poolside, at the beach, or on the boat without safety concerns.
                 </p>
               </Card>
-            </motion.div>
+            </m.div>
             
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -271,9 +272,9 @@ const WhyCansPage = () => {
                   Perfect for picnics, concerts, hiking, and travel. Take premium wine anywhere without the weight and fragility of glass.
                 </p>
               </Card>
-            </motion.div>
+            </m.div>
             
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
@@ -285,9 +286,9 @@ const WhyCansPage = () => {
                   Aluminum conducts temperature 50x faster than glass. Chill your Kibay in minutes, not hours. Perfect for spontaneous celebrations.
                 </p>
               </Card>
-            </motion.div>
+            </m.div>
             
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
@@ -299,7 +300,7 @@ const WhyCansPage = () => {
                   Easy open, easy enjoy. Modern convenience meets traditional quality. No tools, no fuss—just great wine.
                 </p>
               </Card>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
@@ -307,7 +308,7 @@ const WhyCansPage = () => {
       {/* Winery Credibility */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-background">
         <div className="max-w-4xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -335,10 +336,11 @@ const WhyCansPage = () => {
                 </p>
               </div>
             </Card>
-          </motion.div>
+          </m.div>
         </div>
       </section>
-      
+      </main>
+
       <Footer />
     </>
   );

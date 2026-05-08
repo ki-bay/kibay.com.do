@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { User, LogOut, Save, Loader2, Mail, Clock, Settings, Package, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { supabase } from '@/lib/customSupabaseClient';
@@ -149,9 +149,9 @@ const UserProfilePage = () => {
         <title>Account - Kibay Espumante</title>
       </Helmet>
       <Navigation />
-      <div className="min-h-screen bg-background pt-28 pb-16 px-4 sm:px-6 lg:px-8">
+      <main id="main" role="main" className="min-h-screen bg-background pt-28 pb-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="bg-card rounded-2xl border border-foreground/10 overflow-hidden"
@@ -234,7 +234,7 @@ const UserProfilePage = () => {
               {/* Main Panel Content */}
               <div className="flex-1 p-6 md:pl-8">
                 {activeTab === 'profile' ? (
-                  <motion.div 
+                  <m.div 
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     className="space-y-8 max-w-xl"
@@ -301,20 +301,20 @@ const UserProfilePage = () => {
                         )}
                       </Button>
                     </div>
-                  </motion.div>
+                  </m.div>
                 ) : (
-                  <motion.div 
+                  <m.div 
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                   >
                     <OrderHistoryPanel />
-                  </motion.div>
+                  </m.div>
                 )}
               </div>
             </div>
-          </motion.div>
+          </m.div>
         </div>
-      </div>
+      </main>
       <Footer />
     </>
   );

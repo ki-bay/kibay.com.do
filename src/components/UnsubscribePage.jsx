@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Loader2, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/customSupabaseClient';
@@ -38,8 +38,8 @@ const UnsubscribePage = () => {
     <div className="min-h-screen bg-background flex flex-col">
       <Navigation />
       
-      <main className="flex-grow flex items-center justify-center p-4 pt-24">
-        <motion.div 
+      <main id="main" role="main" className="flex-grow flex items-center justify-center p-4 pt-24">
+        <m.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           className="bg-card border border-foreground/10 rounded-2xl p-8 max-w-md w-full shadow-2xl text-center"
@@ -118,7 +118,7 @@ const UnsubscribePage = () => {
               </Button>
             </>
           )}
-        </motion.div>
+        </m.div>
       </main>
       
       <Footer />

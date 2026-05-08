@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { X, Loader2, ArrowRight, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -123,7 +123,7 @@ const OtpModal = ({ isOpen, onClose, email, onVerify, onResend, isLoading, error
       {isOpen && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center">
           {/* Backdrop */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -132,7 +132,7 @@ const OtpModal = ({ isOpen, onClose, email, onVerify, onResend, isLoading, error
           />
           
           {/* Modal Content */}
-          <motion.div
+          <m.div
             initial={{ scale: 0.95, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
@@ -216,7 +216,7 @@ const OtpModal = ({ isOpen, onClose, email, onVerify, onResend, isLoading, error
                   </button>
               </div>
             </form>
-          </motion.div>
+          </m.div>
         </div>
       )}
     </AnimatePresence>

@@ -114,8 +114,8 @@ const BlogAdminPage = () => {
         <title>Blog Admin - Kibay Espumante</title>
       </Helmet>
       <Navigation />
-      
-      <div className="min-h-screen bg-background pt-28 pb-12 px-4 sm:px-6 lg:px-8">
+
+      <main id="main" role="main" className="min-h-screen bg-background pt-28 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           
           {/* Header */}
@@ -282,7 +282,7 @@ const BlogAdminPage = () => {
           </div>
 
         </div>
-      </div>
+      </main>
     </>
   );
 };

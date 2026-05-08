@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import ProductImageGallery from '@/components/ProductImageGallery';
@@ -37,24 +37,24 @@ const KibayEspumanteCan = () => {
       />
       
       <Navigation />
-      
-      <div className="min-h-screen bg-stone-50 pt-20">
+
+      <main id="main" role="main" className="min-h-screen bg-stone-50 pt-20">
         
         {/* Main Product Section */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
           <div className="grid lg:grid-cols-2 gap-12 xl:gap-20">
             {/* Gallery */}
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
               <ProductImageGallery images={images} altBase="Kibay Sparkling 250ml organic sparkling wine can" />
-            </motion.div>
+            </m.div>
 
             {/* Product Info & Purchase */}
             <div className="flex flex-col justify-center space-y-8">
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
@@ -77,7 +77,7 @@ const KibayEspumanteCan = () => {
                      image: images[0]
                    }} hideImage={true} />
                 </div>
-              </motion.div>
+              </m.div>
 
               <ProductDetailsCard details={productData.details} />
             </div>
@@ -172,7 +172,7 @@ const KibayEspumanteCan = () => {
           </div>
         </div>
 
-      </div>
+      </main>
       <Footer />
     </>
   );

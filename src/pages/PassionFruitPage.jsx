@@ -1,6 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Heart, Sun, Globe, ShoppingBag, Info, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
@@ -17,7 +17,8 @@ const PassionFruitPage = () => {
       </Helmet>
       
       <Navigation />
-      
+
+      <main id="main" role="main">
       {/* Hero Section */}
       <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden pt-20 font-lato">
         <div className="absolute inset-0 z-0">
@@ -29,7 +30,7 @@ const PassionFruitPage = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/50 to-background"></div>
         </div>
         
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
@@ -41,7 +42,7 @@ const PassionFruitPage = () => {
           <p className="text-xl sm:text-2xl text-foreground/90 max-w-3xl mx-auto font-light leading-relaxed">
             Known locally as "Chinola," this tangy treasure is the heartbeat of Caribbean flavor.
           </p>
-        </motion.div>
+        </m.div>
       </section>
 
       {/* Content Section */}
@@ -50,7 +51,7 @@ const PassionFruitPage = () => {
           
           {/* Intro Grid */}
           <div className="grid md:grid-cols-2 gap-12 items-center">
-             <motion.div
+             <m.div
                initial={{ opacity: 0, x: -30 }}
                whileInView={{ opacity: 1, x: 0 }}
                transition={{ duration: 0.6 }}
@@ -63,8 +64,8 @@ const PassionFruitPage = () => {
                 <p className="text-lg text-foreground/80 leading-relaxed font-light">
                   Tart, aromatic, and juicy; typically has a wrinkled purple or yellow rind. The unmistakable scent of passion fruit fills the air as soon as you cut it open, revealing golden, seed-filled pulp that bursts with flavor.
                 </p>
-             </motion.div>
-             <motion.div
+             </m.div>
+             <m.div
                initial={{ opacity: 0, x: 30 }}
                whileInView={{ opacity: 1, x: 0 }}
                transition={{ duration: 0.6 }}
@@ -77,22 +78,22 @@ const PassionFruitPage = () => {
                 <p className="text-lg text-foreground/80 leading-relaxed font-light">
                   Passion fruit is native to South America and is widely used in tropical cuisines. In the Dominican Republic, "Chinola" is more than a fruit—it's a staple ingredient for juices, desserts, and now, our premium sparkling wine.
                 </p>
-             </motion.div>
+             </m.div>
           </div>
 
           {/* Benefits Cards */}
           <div>
-            <motion.div 
+            <m.div 
                initial={{ opacity: 0, y: 20 }}
                whileInView={{ opacity: 1, y: 0 }}
                viewport={{ once: true }}
                className="text-center mb-12"
             >
                <h2 className="text-3xl sm:text-4xl font-light text-foreground">Vibrant Health</h2>
-            </motion.div>
+            </m.div>
 
             <div className="grid md:grid-cols-2 gap-8">
-              <motion.div
+              <m.div
                  initial={{ opacity: 0, y: 20 }}
                  whileInView={{ opacity: 1, y: 0 }}
                  transition={{ delay: 0.1 }}
@@ -107,9 +108,9 @@ const PassionFruitPage = () => {
                     Passion fruit is known for its high antioxidant content, helps improve digestion, and supports heart health. Its seeds are also a great source of fiber.
                   </p>
                 </Card>
-              </motion.div>
+              </m.div>
 
-              <motion.div
+              <m.div
                  initial={{ opacity: 0, y: 20 }}
                  whileInView={{ opacity: 1, y: 0 }}
                  transition={{ delay: 0.2 }}
@@ -124,12 +125,12 @@ const PassionFruitPage = () => {
                     Rich in Vitamin C, Vitamin A, and dietary fiber. It provides an immune-boosting punch of nutrition in every serving, making it as healthy as it is delicious.
                   </p>
                 </Card>
-              </motion.div>
+              </m.div>
             </div>
           </div>
 
           {/* CTA */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
@@ -146,10 +147,11 @@ const PassionFruitPage = () => {
                 Shop Now
               </Button>
             </Link>
-          </motion.div>
+          </m.div>
 
         </div>
       </section>
+      </main>
 
       <Footer />
     </>

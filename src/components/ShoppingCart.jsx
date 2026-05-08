@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, X, Plus, Minus, Trash2, ArrowRight } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import { Button } from '@/components/ui/button';
@@ -69,7 +69,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
       {isCartOpen && (
         <>
           {/* Backdrop */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -79,7 +79,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
           />
 
           {/* Slide-out Panel */}
-          <motion.div
+          <m.div
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
@@ -127,7 +127,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
               ) : (
                 <div className="space-y-6">
                   {cartItems.map(item => (
-                    <motion.div 
+                    <m.div 
                       layout
                       key={item.variant.id} 
                       className="flex gap-4 bg-white p-4 rounded-xl shadow-sm border border-stone-100"
@@ -182,7 +182,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                           </div>
                         </div>
                       </div>
-                    </motion.div>
+                    </m.div>
                   ))}
                 </div>
               )}
@@ -209,7 +209,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                 </p>
               </div>
             )}
-          </motion.div>
+          </m.div>
         </>
       )}
     </AnimatePresence>

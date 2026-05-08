@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { ArrowLeft, FileText } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
@@ -70,8 +70,8 @@ const TermsAndConditionsPage = () => {
       </Helmet>
       
       <Navigation />
-      
-      <div className="min-h-screen bg-stone-50 pt-32 pb-20">
+
+      <main id="main" role="main" className="min-h-screen bg-stone-50 pt-32 pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="mb-12">
@@ -80,7 +80,7 @@ const TermsAndConditionsPage = () => {
               Back to Home
             </Link>
             
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
@@ -94,11 +94,11 @@ const TermsAndConditionsPage = () => {
                 Please read these terms carefully before using our website or purchasing our products. By accessing or using any part of the site, you agree to be bound by these Terms of Service.
               </p>
               <p className="text-sm text-stone-400 mt-4 font-light">Last Updated: October 2024</p>
-            </motion.div>
+            </m.div>
           </div>
 
           {/* Content Sections */}
-          <motion.div 
+          <m.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
@@ -115,10 +115,10 @@ const TermsAndConditionsPage = () => {
                 )}
               </div>
             ))}
-          </motion.div>
+          </m.div>
         </div>
-      </div>
-      
+      </main>
+
       <Footer />
     </>
   );

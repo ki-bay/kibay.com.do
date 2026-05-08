@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { Mail, ArrowRight, Loader2, ShieldCheck, AlertCircle } from 'lucide-react';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -63,9 +63,9 @@ const LoginPage = () => {
         <title>Login - Kibay Espumante</title>
       </Helmet>
       <Navigation />
-      
-      <div className="min-h-screen flex items-center justify-center bg-background pt-20 px-4">
-        <motion.div 
+
+      <main id="main" role="main" className="min-h-screen flex items-center justify-center bg-background pt-20 px-4">
+        <m.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-md bg-card p-8 rounded-2xl border border-foreground/10 shadow-2xl relative overflow-hidden"
@@ -119,14 +119,14 @@ const LoginPage = () => {
           </form>
 
           {authError && !isModalOpen && (
-             <motion.div 
+             <m.div 
                initial={{ opacity: 0, height: 0 }}
                animate={{ opacity: 1, height: 'auto' }}
                className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center gap-2 text-red-400 text-sm"
              >
                <AlertCircle className="w-4 h-4 flex-shrink-0" />
                <p>{authError}</p>
-             </motion.div>
+             </m.div>
           )}
 
           <div className="mt-8 pt-6 border-t border-foreground/5 text-center text-foreground/60 text-sm">
@@ -138,10 +138,10 @@ const LoginPage = () => {
               Create an account
             </Link>
           </div>
-        </motion.div>
-      </div>
+        </m.div>
+      </main>
 
-      <OtpModal 
+      <OtpModal
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)}
         email={email}

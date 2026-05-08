@@ -1,6 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Wine, Thermometer, Award, Leaf } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
@@ -14,7 +14,8 @@ const ProductPage = () => {
       </Helmet>
       
       <Navigation />
-      
+
+      <main id="main" role="main">
       {/* Product Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         <div className="absolute inset-0 z-0">
@@ -22,7 +23,7 @@ const ProductPage = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/50 to-background"></div>
         </div>
         
-        <motion.div initial={{
+        <m.div initial={{
         opacity: 0,
         y: 30
       }} animate={{
@@ -40,13 +41,13 @@ const ProductPage = () => {
           <p className="text-lg text-foreground/70 max-w-2xl mx-auto">
             A celebration of Caribbean flavors, crafted with organic mango and passion fruit
           </p>
-        </motion.div>
+        </m.div>
       </section>
       
       {/* Product Description */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-background">
         <div className="max-w-4xl mx-auto">
-          <motion.div initial={{
+          <m.div initial={{
           opacity: 0,
           y: 20
         }} whileInView={{
@@ -66,14 +67,14 @@ const ProductPage = () => {
             <p className="text-lg text-foreground/80 leading-relaxed">
               Each batch begins with hand-selected organic fruits at peak ripeness. Through natural fermentation, we unlock complex flavor profiles that showcase the vibrant essence of the Caribbean. The result is a refreshingly elegant sparkling wine that captures the spirit of tropical paradise in every sip.
             </p>
-          </motion.div>
+          </m.div>
         </div>
       </section>
       
       {/* Tasting Notes */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-card">
         <div className="max-w-6xl mx-auto">
-          <motion.h2 initial={{
+          <m.h2 initial={{
           opacity: 0,
           y: 20
         }} whileInView={{
@@ -85,10 +86,10 @@ const ProductPage = () => {
           once: true
         }} className="text-3xl sm:text-4xl font-bold text-center mb-12 text-foreground">
             Tasting Notes
-          </motion.h2>
+          </m.h2>
           
           <div className="grid md:grid-cols-3 gap-8">
-            <motion.div initial={{
+            <m.div initial={{
             opacity: 0,
             y: 20
           }} whileInView={{
@@ -107,9 +108,9 @@ const ProductPage = () => {
                   Bright tropical fruit notes with hints of ripe mango, passion fruit zest, and subtle floral undertones
                 </p>
               </Card>
-            </motion.div>
+            </m.div>
             
-            <motion.div initial={{
+            <m.div initial={{
             opacity: 0,
             y: 20
           }} whileInView={{
@@ -130,9 +131,9 @@ const ProductPage = () => {
                   Crisp and effervescent with layers of tropical mango sweetness balanced by vibrant passion fruit acidity
                 </p>
               </Card>
-            </motion.div>
+            </m.div>
             
-            <motion.div initial={{
+            <m.div initial={{
             opacity: 0,
             y: 20
           }} whileInView={{
@@ -153,7 +154,7 @@ const ProductPage = () => {
                   Clean and refreshing with lingering tropical fruit notes and a delicate effervescence
                 </p>
               </Card>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
@@ -161,7 +162,7 @@ const ProductPage = () => {
       {/* Serving Suggestions */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-card">
         <div className="max-w-4xl mx-auto">
-          <motion.div initial={{
+          <m.div initial={{
           opacity: 0,
           y: 20
         }} whileInView={{
@@ -206,14 +207,14 @@ const ProductPage = () => {
                 </div>
               </div>
             </Card>
-          </motion.div>
+          </m.div>
         </div>
       </section>
       
       {/* Organic Certification & Origin */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-card to-background">
         <div className="max-w-6xl mx-auto">
-          <motion.h2 initial={{
+          <m.h2 initial={{
           opacity: 0,
           y: 20
         }} whileInView={{
@@ -225,10 +226,10 @@ const ProductPage = () => {
           once: true
         }} className="text-3xl sm:text-4xl font-bold text-center mb-12 text-foreground">
             Our Commitment to Excellence
-          </motion.h2>
+          </m.h2>
           
           <div className="grid md:grid-cols-2 gap-8">
-            <motion.div initial={{
+            <m.div initial={{
             opacity: 0,
             x: -20
           }} whileInView={{
@@ -249,9 +250,9 @@ const ProductPage = () => {
                   Our organic certification guarantees no synthetic pesticides, herbicides, or artificial additives—just pure, natural flavors from the Caribbean.
                 </p>
               </Card>
-            </motion.div>
+            </m.div>
             
-            <motion.div initial={{
+            <m.div initial={{
             opacity: 0,
             x: 20
           }} whileInView={{
@@ -272,7 +273,7 @@ const ProductPage = () => {
                   Each bottle tells the story of Dominican craftsmanship, local ingredients, and the vibrant culture that makes our island unique. We're proud to share this taste of the Caribbean with the world.
                 </p>
               </Card>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
@@ -280,7 +281,7 @@ const ProductPage = () => {
       {/* Fermentation Process */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-background">
         <div className="max-w-4xl mx-auto">
-          <motion.div initial={{
+          <m.div initial={{
           opacity: 0,
           y: 20
         }} whileInView={{
@@ -338,14 +339,14 @@ const ProductPage = () => {
                 </div>
               </div>
             </Card>
-          </motion.div>
+          </m.div>
         </div>
       </section>
       
       {/* Can Benefits */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-card">
         <div className="max-w-6xl mx-auto">
-          <motion.h2 initial={{
+          <m.h2 initial={{
           opacity: 0,
           y: 20
         }} whileInView={{
@@ -357,8 +358,8 @@ const ProductPage = () => {
           once: true
         }} className="text-3xl sm:text-4xl font-bold text-center mb-4 text-foreground">
             Why 250ml Aluminum Cans?
-          </motion.h2>
-          <motion.p initial={{
+          </m.h2>
+          <m.p initial={{
           opacity: 0,
           y: 20
         }} whileInView={{
@@ -371,10 +372,10 @@ const ProductPage = () => {
           once: true
         }} className="text-lg text-foreground/70 text-center mb-12 max-w-3xl mx-auto">
             Premium quality deserves premium packaging. Our aluminum cans offer unmatched freshness and convenience.
-          </motion.p>
+          </m.p>
           
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <motion.div initial={{
+            <m.div initial={{
             opacity: 0,
             y: 20
           }} whileInView={{
@@ -395,9 +396,9 @@ const ProductPage = () => {
                 <h3 className="text-lg font-bold mb-2 text-foreground">Light Protection</h3>
                 <p className="text-sm text-foreground/70">Complete UV protection preserves flavor and quality</p>
               </Card>
-            </motion.div>
+            </m.div>
             
-            <motion.div initial={{
+            <m.div initial={{
             opacity: 0,
             y: 20
           }} whileInView={{
@@ -418,9 +419,9 @@ const ProductPage = () => {
                 <h3 className="text-lg font-bold mb-2 text-foreground">Peak Freshness</h3>
                 <p className="text-sm text-foreground/70">Airtight seal locks in effervescence and aroma</p>
               </Card>
-            </motion.div>
+            </m.div>
             
-            <motion.div initial={{
+            <m.div initial={{
             opacity: 0,
             y: 20
           }} whileInView={{
@@ -441,9 +442,9 @@ const ProductPage = () => {
                 <h3 className="text-lg font-bold mb-2 text-foreground">Sustainable</h3>
                 <p className="text-sm text-foreground/70">Infinitely recyclable with minimal environmental impact</p>
               </Card>
-            </motion.div>
+            </m.div>
             
-            <motion.div initial={{
+            <m.div initial={{
             opacity: 0,
             y: 20
           }} whileInView={{
@@ -464,11 +465,12 @@ const ProductPage = () => {
                 <h3 className="text-lg font-bold mb-2 text-foreground">Perfect Portion</h3>
                 <p className="text-sm text-foreground/70">250ml is ideal for enjoying without waste</p>
               </Card>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
-      
+      </main>
+
       <Footer />
     </>;
 };

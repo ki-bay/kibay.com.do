@@ -300,7 +300,7 @@ const CheckoutPage = () => {
 
 			<Navigation />
 
-			<div className="min-h-screen bg-background pt-28 pb-20 px-4 sm:px-6 lg:px-8">
+			<main id="main" role="main" className="min-h-screen bg-background pt-28 pb-20 px-4 sm:px-6 lg:px-8">
 				<div className="max-w-6xl mx-auto">
 					<h1 className="text-3xl font-light text-foreground mb-8">{t('title')}</h1>
 
@@ -584,7 +584,7 @@ const CheckoutPage = () => {
 						</div>
 					</div>
 				</div>
-			</div>
+			</main>
 
 			<Footer />
 		</>

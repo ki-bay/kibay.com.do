@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { ArrowLeft, Calendar, User, Clock, Share2, Loader2 } from 'lucide-react';
 import { supabase } from '@/lib/customSupabaseClient';
 import Navigation from '@/components/Navigation';
@@ -58,9 +58,9 @@ const BlogPostDetailPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <main id="main" role="main" className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="w-10 h-10 text-mango-500 animate-spin" />
-      </div>
+      </main>
     );
   }
 
@@ -68,7 +68,7 @@ const BlogPostDetailPage = () => {
     return (
       <div className="min-h-screen bg-background flex flex-col">
         <Navigation />
-        <div className="flex-grow flex items-center justify-center p-4">
+        <main id="main" role="main" className="flex-grow flex items-center justify-center p-4">
           <div className="text-center">
             <h2 className="text-3xl font-bold text-foreground mb-4">Post Not Found</h2>
             <p className="text-foreground/60 mb-8">The article you're looking for doesn't exist or has been removed.</p>
@@ -76,7 +76,7 @@ const BlogPostDetailPage = () => {
               <Button className="bg-mango-500 hover:bg-mango-600">Back to Blog</Button>
             </Link>
           </div>
-        </div>
+        </main>
         <Footer />
       </div>
     );
@@ -110,7 +110,8 @@ const BlogPostDetailPage = () => {
       <SchemaMarkup type="Article" data={schemaData} />
       
       <Navigation />
-      
+
+      <main id="main" role="main">
       <article className="pt-28 pb-20">
         {/* Breadcrumb & Header */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 mb-8">
@@ -158,7 +159,7 @@ const BlogPostDetailPage = () => {
         {/* Featured Image */}
         {post.featured_image_url && (
           <div className="max-w-6xl mx-auto px-4 sm:px-6 mb-12">
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               className="aspect-video rounded-2xl overflow-hidden shadow-2xl"
@@ -169,7 +170,7 @@ const BlogPostDetailPage = () => {
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
-            </motion.div>
+            </m.div>
           </div>
         )}
 
@@ -194,6 +195,7 @@ const BlogPostDetailPage = () => {
           </div>
         </div>
       </article>
+      </main>
 
       <Footer />
     </div>

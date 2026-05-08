@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Calendar, User, ArrowRight } from 'lucide-react';
 
 const BlogPostCard = ({ post }) => {
@@ -13,7 +13,7 @@ const BlogPostCard = ({ post }) => {
   });
 
   return (
-    <motion.div
+    <m.div
       whileHover={{ y: -5 }}
       className="group bg-card rounded-xl overflow-hidden border border-foreground/5 hover:border-mango-500/30 transition-all duration-300 flex flex-col h-full shadow-lg"
     >
@@ -63,7 +63,7 @@ const BlogPostCard = ({ post }) => {
           Read Article <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
         </Link>
       </div>
-    </motion.div>
+    </m.div>
   );
 };
 

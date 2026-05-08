@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Helmet } from 'react-helmet';
 import { Lock, Mail, Loader2, ArrowRight } from 'lucide-react';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -58,10 +58,10 @@ const BlogLoginPage = () => {
       </Helmet>
       
       <Navigation />
-      
-      <div className="min-h-screen bg-background flex items-center justify-center py-20 px-4">
+
+      <main id="main" role="main" className="min-h-screen bg-background flex items-center justify-center py-20 px-4">
         <div className="w-full max-w-md">
-          <motion.div 
+          <m.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -133,10 +133,10 @@ const BlogLoginPage = () => {
                 Authorized personnel only. <br/>All access attempts are logged.
               </p>
             </div>
-          </motion.div>
+          </m.div>
         </div>
-      </div>
-      
+      </main>
+
       <Footer />
     </>
   );

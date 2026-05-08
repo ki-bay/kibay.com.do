@@ -79,7 +79,7 @@ const AdminProductsPage = () => {
 				<title>Products — Admin</title>
 			</Helmet>
 			<Navigation />
-			<main className="min-h-screen bg-background pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+			<main id="main" role="main" className="min-h-screen bg-background pt-32 pb-20 px-4 sm:px-6 lg:px-8">
 				<div className="max-w-7xl mx-auto">
 					<div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
 						<div>

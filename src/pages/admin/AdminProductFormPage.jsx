@@ -360,9 +360,9 @@ const AdminProductFormPage = () => {
 		return (
 			<>
 				<Navigation />
-				<div className="min-h-screen flex items-center justify-center bg-background">
+				<main id="main" role="main" className="min-h-screen flex items-center justify-center bg-background">
 					<Loader2 className="w-10 h-10 text-mango-500 animate-spin" />
-				</div>
+				</main>
 			</>
 		);
 	}
@@ -373,7 +373,7 @@ const AdminProductFormPage = () => {
 				<title>{isEditing ? `Edit ${form.title_es || form.slug}` : 'New Product'} — Admin</title>
 			</Helmet>
 			<Navigation />
-			<main className="min-h-screen bg-background pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+			<main id="main" role="main" className="min-h-screen bg-background pt-32 pb-20 px-4 sm:px-6 lg:px-8">
 				<div className="max-w-5xl mx-auto">
 					<div className="flex items-center justify-between mb-8">
 						<Link to="/admin/products" className="inline-flex items-center text-foreground/60 hover:text-foreground text-sm">

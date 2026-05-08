@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { Mail, User, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -80,8 +80,8 @@ const RegisterPage = () => {
         <title>Create Account - Kibay Espumante</title>
       </Helmet>
       <Navigation />
-      <div className="min-h-screen flex items-center justify-center bg-background pt-20 px-4">
-        <motion.div 
+      <main id="main" role="main" className="min-h-screen flex items-center justify-center bg-background pt-20 px-4">
+        <m.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-md bg-card p-8 rounded-2xl border border-foreground/10 shadow-2xl relative overflow-hidden"
@@ -162,10 +162,10 @@ const RegisterPage = () => {
               </Link>
             </div>
           </div>
-        </motion.div>
-      </div>
-      
-      <OtpModal 
+        </m.div>
+      </main>
+
+      <OtpModal
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)}
         email={formData.email}

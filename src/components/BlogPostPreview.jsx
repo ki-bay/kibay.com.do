@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { X, Calendar, Clock, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatBlogDate, calculateReadingTime } from '@/utils/blogUtils';
@@ -10,7 +10,7 @@ const BlogPostPreview = ({ post, onClose, authorName }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4 overflow-y-auto">
-      <motion.div 
+      <m.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
@@ -105,7 +105,7 @@ const BlogPostPreview = ({ post, onClose, authorName }) => {
             </div>
           </article>
         </div>
-      </motion.div>
+      </m.div>
     </div>
   );
 };

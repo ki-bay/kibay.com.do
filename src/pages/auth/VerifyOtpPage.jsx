@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { KeyRound, ArrowRight, Loader2, AlertCircle, CheckCircle2, Clock } from 'lucide-react';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -112,8 +112,8 @@ const VerifyOtpPage = () => {
         <title>Enter Code - Kibay Espumante</title>
       </Helmet>
       <Navigation />
-      <div className="min-h-screen flex items-center justify-center bg-background pt-20 px-4">
-        <motion.div 
+      <main id="main" role="main" className="min-h-screen flex items-center justify-center bg-background pt-20 px-4">
+        <m.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-md bg-card p-8 rounded-2xl border border-foreground/10 shadow-2xl"
@@ -217,8 +217,8 @@ const VerifyOtpPage = () => {
               )}
             </button>
           </div>
-        </motion.div>
-      </div>
+        </m.div>
+      </main>
       <Footer />
     </>
   );
