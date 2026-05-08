@@ -311,7 +311,66 @@ export default defineConfig({
 				'@babel/traverse',
 				'@babel/generator',
 				'@babel/types'
-			]
+			],
+			output: {
+				manualChunks(id) {
+					if (!id.includes('node_modules')) return undefined;
+
+					// Normalize package name from id (handles scoped packages)
+					const match = id.match(/node_modules\/(?:\.pnpm\/)?(@[^/]+\/[^/]+|[^/]+)/);
+					const pkg = match ? match[1] : '';
+
+					if (
+						pkg === 'react' ||
+						pkg === 'react-dom' ||
+						pkg === 'react-router-dom' ||
+						pkg === 'react-router' ||
+						pkg === 'react-helmet' ||
+						pkg === 'react-helmet-async' ||
+						pkg === 'scheduler'
+					) {
+						return 'react-vendor';
+					}
+
+					if (pkg.startsWith('@radix-ui/')) {
+						return 'radix';
+					}
+
+					if (pkg === '@supabase/supabase-js' || pkg.startsWith('@supabase/')) {
+						return 'supabase';
+					}
+
+					if (pkg === '@stripe/stripe-js' || pkg === '@stripe/react-stripe-js') {
+						return 'stripe';
+					}
+
+					if (pkg === 'framer-motion') {
+						return 'framer';
+					}
+
+					if (pkg.startsWith('@tiptap/')) {
+						return 'tiptap';
+					}
+
+					if (pkg === 'recharts') {
+						return 'charts';
+					}
+
+					if (pkg === 'jspdf' || pkg === 'jspdf-autotable' || pkg === 'html2canvas') {
+						return 'pdf';
+					}
+
+					if (
+						pkg === 'i18next' ||
+						pkg === 'react-i18next' ||
+						pkg === 'i18next-browser-languagedetector'
+					) {
+						return 'i18n';
+					}
+
+					return undefined;
+				}
+			}
 		}
 	}
 });

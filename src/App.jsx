@@ -1,135 +1,147 @@
 
-import React from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import ScrollToTop from './components/ScrollToTop';
 import ProtectedRoute from './components/ProtectedRoute';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute';
 import { CartProvider } from './hooks/useCart';
 import { AuthProvider } from './contexts/SupabaseAuthContext';
 
-// Pages
-import HomePage from './pages/HomePage';
-import ProductDetailPage from './pages/ProductDetailPage';
-import ShopPage from './pages/ShopPage';
-import CartPage from './pages/CartPage';
-import CheckoutPage from './pages/CheckoutPage';
-import CheckoutSuccessPage from './pages/CheckoutSuccessPage';
-import WhyCansPage from './pages/WhyCansPage';
-import AboutPage from './pages/AboutPage';
-import WhitepaperPage from './pages/WhitepaperPage';
-import ContactPage from './pages/ContactPage';
-import VineAndBarrelPage from './pages/VineAndBarrelPage';
-import DiagnosticPage from './pages/DiagnosticPage';
+// Pages (lazy)
+const HomePage = lazy(() => import('./pages/HomePage'));
+const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage'));
+const ShopPage = lazy(() => import('./pages/ShopPage'));
+const CartPage = lazy(() => import('./pages/CartPage'));
+const CheckoutPage = lazy(() => import('./pages/CheckoutPage'));
+const CheckoutSuccessPage = lazy(() => import('./pages/CheckoutSuccessPage'));
+const WhyCansPage = lazy(() => import('./pages/WhyCansPage'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
+const WhitepaperPage = lazy(() => import('./pages/WhitepaperPage'));
+const ContactPage = lazy(() => import('./pages/ContactPage'));
+const VineAndBarrelPage = lazy(() => import('./pages/VineAndBarrelPage'));
+const DiagnosticPage = lazy(() => import('./pages/DiagnosticPage'));
 
 // Ingredient Pages
-import MangoPage from './pages/MangoPage';
-import PassionFruitPage from './pages/PassionFruitPage';
+const MangoPage = lazy(() => import('./pages/MangoPage'));
+const PassionFruitPage = lazy(() => import('./pages/PassionFruitPage'));
 
 // Legal & Policy Pages
-import TermsAndConditionsPage from './pages/TermsAndConditionsPage';
-import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
-import ShippingReturnsPolicyPage from './pages/ShippingReturnsPolicyPage';
+const TermsAndConditionsPage = lazy(() => import('./pages/TermsAndConditionsPage'));
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
+const ShippingReturnsPolicyPage = lazy(() => import('./pages/ShippingReturnsPolicyPage'));
 
 // Product Landing Pages
-import KibayEspumanteCan from './pages/KibayEspumanteCan';
-import KibayEspumanteBottle from './pages/KibayEspumanteBottle';
-import KibayEspumanteProductPage from './pages/KibayEspumanteProductPage';
-import KibayWineProductPage from './pages/KibayWineProductPage';
+const KibayEspumanteCan = lazy(() => import('./pages/KibayEspumanteCan'));
+const KibayEspumanteBottle = lazy(() => import('./pages/KibayEspumanteBottle'));
+const KibayEspumanteProductPage = lazy(() => import('./pages/KibayEspumanteProductPage'));
+const KibayWineProductPage = lazy(() => import('./pages/KibayWineProductPage'));
 
 // Auth Pages
-import LoginPage from './pages/auth/LoginPage';
-import RegisterPage from './pages/auth/RegisterPage';
-import BlogLoginPage from './pages/auth/BlogLoginPage';
-import UserProfilePage from './pages/UserProfilePage';
+const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
+const RegisterPage = lazy(() => import('./pages/auth/RegisterPage'));
+const BlogLoginPage = lazy(() => import('./pages/auth/BlogLoginPage'));
+const UserProfilePage = lazy(() => import('./pages/UserProfilePage'));
 
 // Blog Pages
-import PublicBlogPage from './components/PublicBlogPage';
-import BlogPostDetailPage from './components/BlogPostDetailPage';
-import BlogAdminDashboard from './components/BlogAdminDashboard';
-import BlogPostForm from './components/BlogPostForm';
-import UnsubscribePage from './components/UnsubscribePage';
+const PublicBlogPage = lazy(() => import('./components/PublicBlogPage'));
+const BlogPostDetailPage = lazy(() => import('./components/BlogPostDetailPage'));
+const BlogAdminDashboard = lazy(() => import('./components/BlogAdminDashboard'));
+const BlogPostForm = lazy(() => import('./components/BlogPostForm'));
+const UnsubscribePage = lazy(() => import('./components/UnsubscribePage'));
 
 // Admin Social Pages
-import AdminSocialMediaDashboard from './pages/admin/AdminSocialMediaDashboard';
-import AdminSocialMediaSettings from './pages/admin/AdminSocialMediaSettings';
-import AdminLogsViewer from './pages/admin/AdminLogsViewer';
-import AdminOrdersPage from './pages/admin/AdminOrdersPage';
-import AdminProductsPage from './pages/admin/AdminProductsPage';
-import AdminProductFormPage from './pages/admin/AdminProductFormPage';
-import AdminApiKeysPage from './pages/admin/AdminApiKeysPage';
+const AdminSocialMediaDashboard = lazy(() => import('./pages/admin/AdminSocialMediaDashboard'));
+const AdminSocialMediaSettings = lazy(() => import('./pages/admin/AdminSocialMediaSettings'));
+const AdminLogsViewer = lazy(() => import('./pages/admin/AdminLogsViewer'));
+const AdminOrdersPage = lazy(() => import('./pages/admin/AdminOrdersPage'));
+const AdminProductsPage = lazy(() => import('./pages/admin/AdminProductsPage'));
+const AdminProductFormPage = lazy(() => import('./pages/admin/AdminProductFormPage'));
+const AdminApiKeysPage = lazy(() => import('./pages/admin/AdminApiKeysPage'));
 
 // Utilities
-import SitemapRenderer from './pages/SitemapRenderer';
+const SitemapRenderer = lazy(() => import('./pages/SitemapRenderer'));
+
+function HtmlLangSync() {
+  const { i18n } = useTranslation();
+  useEffect(() => {
+    document.documentElement.lang = i18n.resolvedLanguage || 'es';
+  }, [i18n.resolvedLanguage]);
+  return null;
+}
 
 function App() {
   return (
     <CartProvider>
       <AuthProvider>
+        <HtmlLangSync />
         <Router>
           <ScrollToTop />
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<HomePage />} />
-            <Route path="/shop" element={<ShopPage />} />
-            <Route path="/vine-and-barrel" element={<VineAndBarrelPage />} />
-            <Route path="/diagnostic" element={<DiagnosticPage />} />
-            
-            <Route path="/mango" element={<MangoPage />} />
-            <Route path="/passion-fruit" element={<PassionFruitPage />} />
+          <Suspense fallback={<div className="min-h-screen bg-background" />}>
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/" element={<HomePage />} />
+              <Route path="/shop" element={<ShopPage />} />
+              <Route path="/vine-and-barrel" element={<VineAndBarrelPage />} />
+              <Route path="/diagnostic" element={<DiagnosticPage />} />
 
-            <Route path="/kibay-sparkling" element={<KibayEspumanteProductPage />} />
-            <Route path="/kibay-wine" element={<KibayWineProductPage />} />
+              <Route path="/mango" element={<MangoPage />} />
+              <Route path="/passion-fruit" element={<PassionFruitPage />} />
 
-            {/* Ecommerce Routes */}
-            <Route path="/product/:slug" element={<ProductDetailPage />} />
-            <Route path="/cart" element={<CartPage />} />
-            <Route path="/checkout" element={<CheckoutPage />} />
-            <Route path="/checkout-success" element={<CheckoutSuccessPage />} />
+              <Route path="/kibay-sparkling" element={<KibayEspumanteProductPage />} />
+              <Route path="/kibay-wine" element={<KibayWineProductPage />} />
 
-            {/* Legal Routes */}
-            <Route path="/terms" element={<TermsAndConditionsPage />} />
-            <Route path="/privacy" element={<PrivacyPolicyPage />} />
-            <Route path="/shipping-returns" element={<ShippingReturnsPolicyPage />} />
+              {/* Ecommerce Routes */}
+              <Route path="/product/:slug" element={<ProductDetailPage />} />
+              <Route path="/cart" element={<CartPage />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/checkout-success" element={<CheckoutSuccessPage />} />
 
-            {/* Legacy/Specific Product Routes */}
-            <Route path="/kibay-espumante-can" element={<KibayEspumanteCan />} />
-            <Route path="/kibay-espumante-bottle" element={<KibayEspumanteBottle />} />
-            
-            <Route path="/why-cans" element={<WhyCansPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/whitepaper" element={<WhitepaperPage />} />
-            <Route path="/contact" element={<ContactPage />} />
+              {/* Legal Routes */}
+              <Route path="/terms" element={<TermsAndConditionsPage />} />
+              <Route path="/privacy" element={<PrivacyPolicyPage />} />
+              <Route path="/shipping-returns" element={<ShippingReturnsPolicyPage />} />
 
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/blog/login" element={<BlogLoginPage />} />
-            
-            {/* Blog Public Routes */}
-            <Route path="/blog" element={<PublicBlogPage />} />
-            <Route path="/blog/:id" element={<BlogPostDetailPage />} />
-            <Route path="/unsubscribe/:email" element={<UnsubscribePage />} />
-            
-            {/* Dynamic Sitemap */}
-            <Route path="/sitemap.xml" element={<SitemapRenderer />} />
+              {/* Legacy/Specific Product Routes */}
+              <Route path="/kibay-espumante-can" element={<KibayEspumanteCan />} />
+              <Route path="/kibay-espumante-bottle" element={<KibayEspumanteBottle />} />
 
-            {/* Protected Routes */}
-            <Route path="/account" element={<ProtectedRoute><UserProfilePage /></ProtectedRoute>} />
-            
-            {/* Admin Routes */}
-            <Route path="/dashboard/blog" element={<ProtectedAdminRoute><BlogAdminDashboard /></ProtectedAdminRoute>} />
-            <Route path="/admin/blog/create" element={<ProtectedAdminRoute><BlogPostForm /></ProtectedAdminRoute>} />
-            <Route path="/admin/blog/:id/edit" element={<ProtectedAdminRoute><BlogPostForm /></ProtectedAdminRoute>} />
-            
-            <Route path="/admin/social-media" element={<ProtectedAdminRoute><AdminSocialMediaDashboard /></ProtectedAdminRoute>} />
-            <Route path="/admin/social-media/settings" element={<ProtectedAdminRoute><AdminSocialMediaSettings /></ProtectedAdminRoute>} />
-            <Route path="/admin/social-media/logs" element={<ProtectedAdminRoute><AdminLogsViewer /></ProtectedAdminRoute>} />
-            <Route path="/admin/orders" element={<ProtectedAdminRoute><AdminOrdersPage /></ProtectedAdminRoute>} />
-            <Route path="/admin/products" element={<ProtectedAdminRoute><AdminProductsPage /></ProtectedAdminRoute>} />
-            <Route path="/admin/products/new" element={<ProtectedAdminRoute><AdminProductFormPage /></ProtectedAdminRoute>} />
-            <Route path="/admin/products/:id/edit" element={<ProtectedAdminRoute><AdminProductFormPage /></ProtectedAdminRoute>} />
-            <Route path="/admin/api-keys" element={<ProtectedAdminRoute><AdminApiKeysPage /></ProtectedAdminRoute>} />
+              <Route path="/why-cans" element={<WhyCansPage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/whitepaper" element={<WhitepaperPage />} />
+              <Route path="/contact" element={<ContactPage />} />
 
-          </Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/blog/login" element={<BlogLoginPage />} />
+
+              {/* Blog Public Routes */}
+              <Route path="/blog" element={<PublicBlogPage />} />
+              <Route path="/blog/:id" element={<BlogPostDetailPage />} />
+              <Route path="/unsubscribe/:email" element={<UnsubscribePage />} />
+
+              {/* Dynamic Sitemap */}
+              <Route path="/sitemap.xml" element={<SitemapRenderer />} />
+
+              {/* Protected Routes */}
+              <Route path="/account" element={<ProtectedRoute><UserProfilePage /></ProtectedRoute>} />
+
+              {/* Admin Routes */}
+              <Route path="/dashboard/blog" element={<ProtectedAdminRoute><BlogAdminDashboard /></ProtectedAdminRoute>} />
+              <Route path="/admin/blog/create" element={<ProtectedAdminRoute><BlogPostForm /></ProtectedAdminRoute>} />
+              <Route path="/admin/blog/:id/edit" element={<ProtectedAdminRoute><BlogPostForm /></ProtectedAdminRoute>} />
+
+              <Route path="/admin/social-media" element={<ProtectedAdminRoute><AdminSocialMediaDashboard /></ProtectedAdminRoute>} />
+              <Route path="/admin/social-media/settings" element={<ProtectedAdminRoute><AdminSocialMediaSettings /></ProtectedAdminRoute>} />
+              <Route path="/admin/social-media/logs" element={<ProtectedAdminRoute><AdminLogsViewer /></ProtectedAdminRoute>} />
+              <Route path="/admin/orders" element={<ProtectedAdminRoute><AdminOrdersPage /></ProtectedAdminRoute>} />
+              <Route path="/admin/products" element={<ProtectedAdminRoute><AdminProductsPage /></ProtectedAdminRoute>} />
+              <Route path="/admin/products/new" element={<ProtectedAdminRoute><AdminProductFormPage /></ProtectedAdminRoute>} />
+              <Route path="/admin/products/:id/edit" element={<ProtectedAdminRoute><AdminProductFormPage /></ProtectedAdminRoute>} />
+              <Route path="/admin/api-keys" element={<ProtectedAdminRoute><AdminApiKeysPage /></ProtectedAdminRoute>} />
+
+            </Routes>
+          </Suspense>
         </Router>
       </AuthProvider>
     </CartProvider>

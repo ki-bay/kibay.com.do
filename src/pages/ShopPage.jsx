@@ -68,6 +68,10 @@ const ShopPage = () => {
               <img
                 src={mediaUrl('8557ed8a8cfde6155f713b177c6452a7.png')}
                 alt=""
+                width="64"
+                height="64"
+                loading="lazy"
+                decoding="async"
                 className="w-16 h-16 object-contain"
               />
             </div>

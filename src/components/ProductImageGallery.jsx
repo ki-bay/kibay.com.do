@@ -36,6 +36,11 @@ const ProductImageGallery = forwardRef(({ images = [], title, ribbonText }, ref)
               key={currentImage.url}
               src={currentImage.url || placeholderImage}
               alt={title}
+              width="800"
+              height="1000"
+              fetchPriority={activeImageIndex === 0 ? 'high' : undefined}
+              decoding="async"
+              loading={activeImageIndex === 0 ? undefined : 'lazy'}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -66,6 +71,10 @@ const ProductImageGallery = forwardRef(({ images = [], title, ribbonText }, ref)
                 <img
                   src={image.url || placeholderImage}
                   alt={`${title} thumbnail ${index + 1}`}
+                  width="80"
+                  height="80"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover"
                 />
               </button>
