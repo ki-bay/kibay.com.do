@@ -334,7 +334,11 @@ export default defineConfig({
 						// properties of undefined (reading 'createContext')").
 						pkg === 'i18next' ||
 						pkg === 'react-i18next' ||
-						pkg === 'i18next-browser-languagedetector'
+						pkg === 'i18next-browser-languagedetector' ||
+						// recharts calls React.forwardRef at module init — same
+						// timing race as i18n, same fix: fold into the React
+						// chunk so React is always evaluated first.
+						pkg === 'recharts'
 					) {
 						return 'react-vendor';
 					}
@@ -357,10 +361,6 @@ export default defineConfig({
 
 					if (pkg.startsWith('@tiptap/')) {
 						return 'tiptap';
-					}
-
-					if (pkg === 'recharts') {
-						return 'charts';
 					}
 
 					if (pkg === 'jspdf' || pkg === 'jspdf-autotable' || pkg === 'html2canvas') {
