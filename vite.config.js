@@ -327,7 +327,14 @@ export default defineConfig({
 						pkg === 'react-router' ||
 						pkg === 'react-helmet' ||
 						pkg === 'react-helmet-async' ||
-						pkg === 'scheduler'
+						pkg === 'scheduler' ||
+						// i18n libs call React.createContext at module init.
+						// Keep them in the React chunk so React is guaranteed
+						// evaluated before they run (else: "Cannot read
+						// properties of undefined (reading 'createContext')").
+						pkg === 'i18next' ||
+						pkg === 'react-i18next' ||
+						pkg === 'i18next-browser-languagedetector'
 					) {
 						return 'react-vendor';
 					}
@@ -358,14 +365,6 @@ export default defineConfig({
 
 					if (pkg === 'jspdf' || pkg === 'jspdf-autotable' || pkg === 'html2canvas') {
 						return 'pdf';
-					}
-
-					if (
-						pkg === 'i18next' ||
-						pkg === 'react-i18next' ||
-						pkg === 'i18next-browser-languagedetector'
-					) {
-						return 'i18n';
 					}
 
 					return undefined;
