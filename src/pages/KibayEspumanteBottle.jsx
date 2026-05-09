@@ -156,11 +156,14 @@ const KibayEspumanteBottle = () => {
               <p className="text-lg text-stone-500 italic mb-10">From the same winery as Kibay Wine — by Ocoa Bay</p>
               
               <div className="relative rounded-2xl overflow-hidden shadow-xl max-w-3xl mx-auto group">
-                <img 
-                  src="https://images.unsplash.com/photo-1587895656140-88dc74ed96de" 
+                <img
+                  src="https://images.unsplash.com/photo-1587895656140-88dc74ed96de"
                   alt="Ocoa Bay winery Dominican vineyard organic farming"
+                  width="1600"
+                  height="1067"
                   className="w-full h-80 object-cover transform group-hover:scale-105 transition-transform duration-1000"
                   loading="lazy"
+                  decoding="async"
                 />
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-500"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">

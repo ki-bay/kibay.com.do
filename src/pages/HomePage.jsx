@@ -303,7 +303,7 @@ const HomePage = () => {
             >
               <Card className="p-8 text-center hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-300 border-foreground/5 bg-card/50 h-full backdrop-blur-sm group hover:-translate-y-2">
                 <div className="w-16 h-16 bg-background rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-inner group-hover:bg-orange-500 transition-colors duration-300">
-                  <Leaf className="w-8 h-8 text-orange-500 group-hover:text-foreground transition-colors" strokeWidth={2} />
+                  <Leaf className="w-8 h-8 text-orange-500 group-hover:text-foreground transition-colors" strokeWidth={2} aria-hidden="true" />
                 </div>
                 <h3 className="text-xl font-normal mb-3 text-foreground">{t('difference.features.organic.title')}</h3>
                 <p className="text-foreground/70 leading-relaxed font-light">
@@ -320,7 +320,7 @@ const HomePage = () => {
             >
               <Card className="p-8 text-center hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-300 border-foreground/5 bg-card/50 h-full backdrop-blur-sm group hover:-translate-y-2">
                 <div className="w-16 h-16 bg-background rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-inner group-hover:bg-orange-500 transition-colors duration-300">
-                  <MapPin className="w-8 h-8 text-orange-500 group-hover:text-foreground transition-colors" strokeWidth={2} />
+                  <MapPin className="w-8 h-8 text-orange-500 group-hover:text-foreground transition-colors" strokeWidth={2} aria-hidden="true" />
                 </div>
                 <h3 className="text-xl font-normal mb-3 text-foreground">{t('difference.features.caribbean.title')}</h3>
                 <p className="text-foreground/70 leading-relaxed font-light">
@@ -337,7 +337,7 @@ const HomePage = () => {
             >
               <Card className="p-8 text-center hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-300 border-foreground/5 bg-card/50 h-full backdrop-blur-sm group hover:-translate-y-2">
                 <div className="w-16 h-16 bg-background rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-inner group-hover:bg-orange-500 transition-colors duration-300">
-                  <Zap className="w-8 h-8 text-orange-500 group-hover:text-foreground transition-colors" />
+                  <Zap className="w-8 h-8 text-orange-500 group-hover:text-foreground transition-colors" aria-hidden="true" />
                 </div>
                 <h3 className="text-xl font-normal mb-3 text-foreground">{t('difference.features.format.title')}</h3>
                 <p className="text-foreground/70 leading-relaxed font-light">{t('difference.features.format.body')}</p>
@@ -387,19 +387,19 @@ const HomePage = () => {
               <div className="flex gap-6 mt-8">
                 <div className="flex flex-col items-center">
                   <div className="w-12 h-12 rounded-full bg-foreground/5 flex items-center justify-center mb-2">
-                    <GlassWater className="w-6 h-6 text-orange-400" />
+                    <GlassWater className="w-6 h-6 text-orange-400" aria-hidden="true" />
                   </div>
                   <span className="text-xs text-foreground/50 uppercase tracking-widest">{t('enjoy.steps.chill')}</span>
                 </div>
                 <div className="flex flex-col items-center">
                   <div className="w-12 h-12 rounded-full bg-foreground/5 flex items-center justify-center mb-2">
-                    <Zap className="w-6 h-6 text-orange-400" />
+                    <Zap className="w-6 h-6 text-orange-400" aria-hidden="true" />
                   </div>
                   <span className="text-xs text-foreground/50 uppercase tracking-widest">{t('enjoy.steps.pop')}</span>
                 </div>
                 <div className="flex flex-col items-center">
                   <div className="w-12 h-12 rounded-full bg-foreground/5 flex items-center justify-center mb-2">
-                    <Leaf className="w-6 h-6 text-orange-400" />
+                    <Leaf className="w-6 h-6 text-orange-400" aria-hidden="true" />
                   </div>
                   <span className="text-xs text-foreground/50 uppercase tracking-widest">{t('enjoy.steps.enjoy')}</span>
                 </div>
@@ -442,7 +442,7 @@ const HomePage = () => {
             viewport={{ once: true }}
           >
             <div className="inline-flex items-center justify-center p-3 rounded-full bg-orange-500/10 mb-6">
-              <Sun className="w-6 h-6 text-orange-500" />
+              <Sun className="w-6 h-6 text-orange-500" aria-hidden="true" />
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-foreground mb-6">
               {t('tropics.heading')}

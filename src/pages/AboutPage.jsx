@@ -24,9 +24,13 @@ const AboutPage = () => {
       {/* Hero Section */}
       <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden pt-20">
         <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1602757205362-336105af9324" 
+          <img
+            src="https://images.unsplash.com/photo-1602757205362-336105af9324"
             alt="Lush vineyard showcasing organic agricultural heritage"
+            width="1920"
+            height="1080"
+            fetchPriority="high"
+            decoding="async"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background"></div>
@@ -122,9 +126,13 @@ const AboutPage = () => {
               viewport={{ once: true }}
             >
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                <img 
-                  src="https://images.unsplash.com/photo-1621437218583-7028065980f8" 
+                <img
+                  src="https://images.unsplash.com/photo-1621437218583-7028065980f8"
                   alt="Beautiful Caribbean sunset over tropical landscape"
+                  width="1600"
+                  height="1067"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-[600px] object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent"></div>

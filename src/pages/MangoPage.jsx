@@ -22,9 +22,13 @@ const MangoPage = () => {
       {/* Hero Section */}
       <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden pt-20 font-lato">
         <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1602081593819-65e7a8cee0dd" 
+          <img
+            src="https://images.unsplash.com/photo-1602081593819-65e7a8cee0dd"
             alt="Delicious ripe mangoes"
+            width="1920"
+            height="1080"
+            fetchPriority="high"
+            decoding="async"
             className="w-full h-full object-cover brightness-50"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/50 to-background"></div>

@@ -111,8 +111,8 @@ const CheckoutSuccessPage = () => {
 						</div>
 					) : error ? (
 						<div className="py-8">
-							<AlertCircle className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
-							<h1 className="text-2xl font-light text-stone-900 mb-2">{t('success.title')}</h1>
+							<AlertCircle className="w-16 h-16 text-yellow-500 mx-auto mb-4" aria-hidden="true" />
+							<h2 className="text-2xl font-light text-stone-900 mb-2">{t('success.title')}</h2>
 							<p className="text-stone-500 mb-6 font-light">{error}</p>
 							<Link to="/account">
 								<Button variant="outline" className="border-[#D4A574] text-[#D4A574]">
@@ -143,13 +143,13 @@ const CheckoutSuccessPage = () => {
 							<div className="bg-stone-50 rounded-xl p-6 mb-6 border border-stone-100 relative z-10 text-left">
 								<div className="flex items-center justify-center gap-2 mb-2">
 									<Sparkles className="w-4 h-4 text-[#D4A574]" />
-									<p className="text-stone-400 text-xs uppercase tracking-widest font-normal text-center w-full">
+									<p className="text-stone-600 text-xs uppercase tracking-widest font-normal text-center w-full">
 										Status
 									</p>
 								</div>
 								<p className="text-stone-800 font-medium text-lg text-center">{order?.status}</p>
 								{order?.estimated_delivery_date && (
-									<p className="text-xs text-stone-400 mt-2 text-center">
+									<p className="text-xs text-stone-600 mt-2 text-center">
 										Est. delivery:{' '}
 										{new Date(order.estimated_delivery_date).toLocaleDateString()}
 									</p>
@@ -158,7 +158,7 @@ const CheckoutSuccessPage = () => {
 									<a
 										href={invoiceHref}
 										target="_blank"
-										rel="noreferrer"
+										rel="noopener noreferrer"
 										className="mt-4 flex items-center justify-center gap-2 text-[#D4A574] font-medium text-sm hover:underline"
 									>
 										<FileText className="w-4 h-4" />

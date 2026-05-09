@@ -118,9 +118,13 @@ const BlogDetailPage = () => {
         {post.featured_image_url && (
           <div className="w-full h-[50vh] relative mb-12">
             <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent z-10"></div>
-            <img 
-              src={post.featured_image_url} 
-              alt={post.title} 
+            <img
+              src={post.featured_image_url}
+              alt={post.title}
+              width="1600"
+              height="900"
+              fetchPriority="high"
+              decoding="async"
               className="w-full h-full object-cover"
             />
           </div>

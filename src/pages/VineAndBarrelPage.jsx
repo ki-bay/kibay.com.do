@@ -208,6 +208,8 @@ const VineAndBarrelPage = () => {
             <img
               src="/media/vino-produccion-ocoabay-vinedo.webp"
               alt="Aerial view of the Ocoa Bay vineyard at sunset — Caribbean wine grown in the Dominican Republic"
+              width="1920"
+              height="1080"
               className="max-w-full max-h-full w-auto h-auto object-contain"
               fetchPriority="high"
               decoding="async"
@@ -255,6 +257,8 @@ const VineAndBarrelPage = () => {
               <img
                 src="/media/kibay-vino-dominicano.webp"
                 alt="Visitors at Ocoa Bay's Casa Club overlooking the Caribbean — wine tasting experience in the Dominican Republic"
+                width="1600"
+                height="1067"
                 className="relative z-10 w-full h-auto rounded-2xl shadow-2xl transform transition-transform duration-700 hover:scale-[1.02]"
                 loading="lazy"
                 decoding="async"
@@ -268,7 +272,7 @@ const VineAndBarrelPage = () => {
 
               <h2 className="text-5xl md:text-6xl font-serif text-stone-900 leading-none">
                 A Caribbean winery
-                <span className="block text-3xl md:text-4xl text-stone-400 mt-2 font-light italic">where Kibay is born</span>
+                <span className="block text-3xl md:text-4xl text-stone-600 mt-2 font-light italic">where Kibay is born</span>
               </h2>
 
               <p className="text-lg text-stone-600 leading-relaxed font-light">
@@ -324,6 +328,8 @@ const VineAndBarrelPage = () => {
                 <img
                   src="/media/ocoabay-degustacion-vino-dominicano.webp"
                   alt="Guided Caribbean wine tasting at Ocoa Bay vineyard — Dominican Republic"
+                  width="1600"
+                  height="1067"
                   className="w-full h-auto"
                   loading="lazy"
                   decoding="async"
@@ -333,12 +339,12 @@ const VineAndBarrelPage = () => {
                   <Wine className="text-[#D4A574]" />
                 </div>
                 <h3 className="text-2xl font-serif text-stone-900 mb-1">Wine Tour</h3>
-                <p className="text-stone-400 italic mb-4 font-serif">90 minutes · Sat &amp; Sun</p>
+                <p className="text-stone-600 italic mb-4 font-serif">90 minutes · Sat &amp; Sun</p>
                 <p className="text-stone-600 leading-relaxed font-light mb-6 flex-1">
                   Guided tasting of Ocoa Wines and other organic products from the estate, plus an electric-cart tour of the vineyards and winery overlooking Bahía de Ocoa.
                 </p>
                 <div className="text-3xl font-serif text-stone-900 mb-6">
-                  US$65 <span className="text-sm text-stone-400 font-light">/ person · + taxes</span>
+                  US$65 <span className="text-sm text-stone-600 font-light">/ person · + taxes</span>
                 </div>
                 <div className="flex flex-col gap-3">
                   <Link to="/product/ocoa-bay-wine-tour" className="w-full">
@@ -361,6 +367,8 @@ const VineAndBarrelPage = () => {
                 <img
                   src="/media/vinedo-republica-dominicana-aerial.webp"
                   alt="Ocoa Bay full-day experience — Caribbean wine, pool and farm-to-table dining at the Casa Club"
+                  width="1600"
+                  height="1067"
                   className="w-full h-auto"
                   loading="lazy"
                   decoding="async"
@@ -401,6 +409,8 @@ const VineAndBarrelPage = () => {
                 <img
                   src="/media/kibay-vino-ocoa-bay.webp"
                   alt="Casa Club at Ocoa Bay — Dominican wines on a dining table overlooking the Caribbean"
+                  width="1600"
+                  height="1067"
                   className="w-full h-auto"
                   loading="lazy"
                   decoding="async"
@@ -410,12 +420,12 @@ const VineAndBarrelPage = () => {
                   <Utensils className="text-[#D4A574]" />
                 </div>
                 <h3 className="text-2xl font-serif text-stone-900 mb-1">Casa Club</h3>
-                <p className="text-stone-400 italic mb-4 font-serif">By reservation · à la carte</p>
+                <p className="text-stone-600 italic mb-4 font-serif">By reservation · à la carte</p>
                 <p className="text-stone-600 leading-relaxed font-light mb-6 flex-1">
                   Farm-to-table dining with à la carte minimum consumption. Pool and Casa Club access from 11:00 AM to 6:30 PM. Perfect if you've already toured the vineyard or want a quieter day on the bay.
                 </p>
                 <div className="text-3xl font-serif text-stone-900 mb-6">
-                  À la carte <span className="text-sm text-stone-400 font-light">/ por consumo</span>
+                  À la carte <span className="text-sm text-stone-600 font-light">/ por consumo</span>
                 </div>
                 <div className="flex flex-col gap-3">
                   <a href="https://ocoabay.com/reservacion/" target="_blank" rel="noopener noreferrer" className="w-full">
@@ -423,7 +433,7 @@ const VineAndBarrelPage = () => {
                       Reserve at ocoabay.com <ExternalLink className="ml-2 w-4 h-4" />
                     </Button>
                   </a>
-                  <p className="text-xs text-stone-400 text-center">Reservations handled directly by Ocoa Bay.</p>
+                  <p className="text-xs text-stone-600 text-center">Reservations handled directly by Ocoa Bay.</p>
                 </div>
                 </div>
               </m.div>
@@ -487,19 +497,19 @@ const VineAndBarrelPage = () => {
                     <Wine className="text-[#D4A574] group-hover:text-foreground transition-colors" />
                   </div>
                   <h3 className="text-2xl font-serif text-stone-900 mb-1">{wine.name}</h3>
-                  <p className="text-stone-400 italic mb-6 font-serif">{wine.year}</p>
-                  
+                  <p className="text-stone-600 italic mb-6 font-serif">{wine.year}</p>
+
                   <div className="space-y-4">
                     <div>
-                      <span className="block text-xs uppercase text-stone-400 tracking-wider mb-1">Aroma</span>
+                      <span className="block text-xs uppercase text-stone-600 tracking-wider mb-1">Aroma</span>
                       <p className="text-stone-700 font-medium">{wine.aroma}</p>
                     </div>
                     <div>
-                      <span className="block text-xs uppercase text-stone-400 tracking-wider mb-1">Flavor</span>
+                      <span className="block text-xs uppercase text-stone-600 tracking-wider mb-1">Flavor</span>
                       <p className="text-stone-700 font-medium">{wine.flavor}</p>
                     </div>
                     <div>
-                      <span className="block text-xs uppercase text-stone-400 tracking-wider mb-1">Finish</span>
+                      <span className="block text-xs uppercase text-stone-600 tracking-wider mb-1">Finish</span>
                       <p className="text-stone-700 font-medium">{wine.finish}</p>
                     </div>
                   </div>
@@ -524,9 +534,13 @@ const VineAndBarrelPage = () => {
                 transition={{ duration: 0.8 }}
                 className="relative rounded-2xl overflow-hidden shadow-2xl"
               >
-                <img 
-                  src="https://images.unsplash.com/photo-1519092796169-bb9cc75a4b68" 
-                  alt="Wine and Cheese Pairing" 
+                <img
+                  src="https://images.unsplash.com/photo-1519092796169-bb9cc75a4b68"
+                  alt="Wine and Cheese Pairing"
+                  width="1600"
+                  height="1067"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-[500px] object-cover hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />

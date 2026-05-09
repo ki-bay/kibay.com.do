@@ -22,9 +22,13 @@ const PassionFruitPage = () => {
       {/* Hero Section */}
       <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden pt-20 font-lato">
         <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1637019449619-37ea52b9a699" 
+          <img
+            src="https://images.unsplash.com/photo-1637019449619-37ea52b9a699"
             alt="Vibrant passion fruit (Chinola)"
+            width="1920"
+            height="1080"
+            fetchPriority="high"
+            decoding="async"
             className="w-full h-full object-cover brightness-50"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/50 to-background"></div>

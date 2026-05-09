@@ -146,9 +146,13 @@ const BlogListPage = () => {
                         <Card className="h-full hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col border-stone-200 bg-white rounded-2xl">
                           <div className="h-56 overflow-hidden bg-stone-100 relative">
                             {post.featured_image_url ? (
-                              <img 
-                                src={post.featured_image_url} 
-                                alt={post.title} 
+                              <img
+                                src={post.featured_image_url}
+                                alt={post.title}
+                                width="600"
+                                height="400"
+                                loading="lazy"
+                                decoding="async"
                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                               />
                             ) : (

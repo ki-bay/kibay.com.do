@@ -142,7 +142,7 @@ const AdminProductsPage = () => {
 											<tr key={p.id} className="border-t border-foreground/5 hover:bg-foreground/5 transition-colors">
 												<td className="px-4 py-3">
 													{p.thumbnail_url ? (
-														<img src={p.thumbnail_url} alt="" className="w-12 h-12 rounded-md object-cover bg-background" />
+														<img src={p.thumbnail_url} alt="Product thumbnail" width="48" height="48" loading="lazy" decoding="async" className="w-12 h-12 rounded-md object-cover bg-background" />
 													) : (
 														<div className="w-12 h-12 rounded-md bg-background border border-foreground/5" />
 													)}
