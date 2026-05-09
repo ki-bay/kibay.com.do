@@ -4,7 +4,8 @@ import { Helmet } from 'react-helmet';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Wine, Utensils, Calendar, Clock, MapPin, X, Loader2, Send } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ArrowRight, Wine, Utensils, Calendar, Clock, MapPin, X, Loader2, Send, Grape, Users, ExternalLink } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/lib/customSupabaseClient';
 import SEOHead from '@/components/SEOHead';
@@ -190,9 +191,10 @@ const VineAndBarrelPage = () => {
 
   return (
     <>
-      <SEOHead 
-        title="Vine & Barrel – Signature Wines | Kibay"
-        description="Experience the finest signature wines at Vine & Barrel. Discover our curated collection, tasting notes, and book private tasting tours."
+      <SEOHead
+        title="Wine Tours at Ocoa Bay — Caribbean Vineyard Experience | Kibay"
+        description="Visit Ocoa Bay, one of the few working vineyards in the Caribbean. Guided tastings of Dominican wines, electric-cart vineyard tours, Casa Club organic dining and pool. Reserve your wine tour in the Dominican Republic."
+        keywords="Ocoa Bay wine tour, Caribbean vineyard tour, wine tasting Dominican Republic, Dominican vineyard, Casa Club Ocoa Bay, vino dominicano experiencia, wine tour Caribbean"
       />
 
       <Navigation />
@@ -217,18 +219,18 @@ const VineAndBarrelPage = () => {
             transition={{ duration: 1, delay: 0.2 }}
             className="relative z-10 text-center px-4 max-w-4xl mx-auto"
           >
-            <h2 className="text-[#D4A574] font-medium tracking-[0.2em] uppercase text-sm md:text-base mb-6">Premium Winery Collection</h2>
+            <h2 className="text-[#D4A574] font-medium tracking-[0.2em] uppercase text-sm md:text-base mb-6">Caribbean Vineyard · Dominican Republic</h2>
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-foreground mb-8 leading-tight">
-              Vine & Barrel
+              Visit Ocoa Bay
             </h1>
             <p className="text-xl md:text-2xl text-foreground/90 font-light italic mb-10 max-w-2xl mx-auto font-serif">
-              "Discover Our Signature Wines"
+              "Caribbean wine, organic dining, and the ocean breeze of Bahía de Ocoa."
             </p>
-            <Button 
-              onClick={() => document.getElementById('wine-of-month').scrollIntoView({ behavior: 'smooth' })}
+            <Button
+              onClick={() => document.getElementById('experiences').scrollIntoView({ behavior: 'smooth' })}
               className="bg-foreground/10 hover:bg-foreground/20 backdrop-blur-md border border-foreground/30 text-foreground rounded-full px-10 py-7 text-lg transition-all hover:scale-105"
             >
-              Explore Collection
+              See the experiences
             </Button>
           </m.div>
 
@@ -243,51 +245,169 @@ const VineAndBarrelPage = () => {
           </m.div>
         </section>
 
-        {/* Wine of the Month */}
-        <section id="wine-of-month" className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        {/* Ocoa Bay — about the place */}
+        <section id="about-ocoa-bay" className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
           <m.div {...fadeInUp} className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div className="relative group">
               <div className="absolute inset-0 bg-[#D4A574] rounded-full blur-[100px] opacity-20 group-hover:opacity-30 transition-opacity duration-700" />
-              <img 
-                src="https://images.unsplash.com/photo-1663624806613-1995492051b2" 
-                alt="Cabernet Reserve 2018" 
+              <img
+                src="https://images.unsplash.com/photo-1474722883778-792e7990302f?q=80&w=1600&auto=format&fit=crop"
+                alt="Ocoa Bay vineyard — organic Caribbean winery in the Dominican Republic"
                 className="relative z-10 w-full h-[600px] object-cover rounded-2xl shadow-2xl transform transition-transform duration-700 hover:scale-[1.02]"
               />
             </div>
-            
+
             <div className="space-y-8">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#D4A574]/10 text-[#D4A574] rounded-full text-sm font-medium tracking-wide uppercase">
-                <Calendar size={14} /> Wine of the Month
-              </div>
-              
-              <h2 className="text-5xl md:text-6xl font-serif text-stone-900 leading-none">
-                Cabernet Reserve <span className="block text-3xl md:text-4xl text-stone-400 mt-2 font-light italic">Vintage 2018</span>
-              </h2>
-              
-              <p className="text-lg text-stone-600 leading-relaxed font-light">
-                A masterpiece of robust flavor and elegance. Our 2018 Reserve is aged for 24 months in French oak barrels, resulting in deep notes of black cherry, currant, and a hint of vanilla spice. The finish is long, velvety, and unforgettable. Perfect for aging or enjoying tonight.
-              </p>
-              
-              <div className="grid grid-cols-3 gap-6 pt-4 border-t border-stone-200">
-                <div className="text-center">
-                  <span className="block text-2xl font-serif text-stone-900">14.5%</span>
-                  <span className="text-xs uppercase text-stone-500 tracking-wider">Alcohol</span>
-                </div>
-                <div className="text-center border-l border-stone-200">
-                  <span className="block text-2xl font-serif text-stone-900">3.6</span>
-                  <span className="text-xs uppercase text-stone-500 tracking-wider">pH Level</span>
-                </div>
-                <div className="text-center border-l border-stone-200">
-                  <span className="block text-2xl font-serif text-stone-900">Dry</span>
-                  <span className="text-xs uppercase text-stone-500 tracking-wider">Sweetness</span>
-                </div>
+                <MapPin size={14} /> Bahía de Ocoa · Azua, DO
               </div>
 
-              <Button className="bg-card hover:bg-card text-foreground px-8 py-6 rounded-lg text-lg w-full sm:w-auto">
-                Learn More <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
+              <h2 className="text-5xl md:text-6xl font-serif text-stone-900 leading-none">
+                A Caribbean winery
+                <span className="block text-3xl md:text-4xl text-stone-400 mt-2 font-light italic">where Kibay is born</span>
+              </h2>
+
+              <p className="text-lg text-stone-600 leading-relaxed font-light">
+                Ocoa Bay is one of the few working vineyards in the Caribbean — a coastal estate in the Dominican Republic where organic grapes, mango and passion fruit are grown side by side under the same Atlantic sun. The same land you see on the bottle is the land you walk through on the tour.
+              </p>
+
+              <p className="text-lg text-stone-600 leading-relaxed font-light">
+                Spend the day. Taste the wines. Eat lunch at the Casa Club. Swim in the pool overlooking the bay. It's the slow side of the Caribbean — and the truest way to understand what makes Dominican wine its own thing.
+              </p>
+
+              <div className="grid grid-cols-3 gap-6 pt-4 border-t border-stone-200">
+                <div className="text-center">
+                  <span className="block text-2xl font-serif text-stone-900">90 min</span>
+                  <span className="text-xs uppercase text-stone-500 tracking-wider">Tour + tasting</span>
+                </div>
+                <div className="text-center border-l border-stone-200">
+                  <span className="block text-2xl font-serif text-stone-900">Sat–Sun</span>
+                  <span className="text-xs uppercase text-stone-500 tracking-wider">Open weekends</span>
+                </div>
+                <div className="text-center border-l border-stone-200">
+                  <span className="block text-2xl font-serif text-stone-900">~2hrs</span>
+                  <span className="text-xs uppercase text-stone-500 tracking-wider">From Santo Domingo</span>
+                </div>
+              </div>
             </div>
           </m.div>
+        </section>
+
+        {/* Experiences — purchasable */}
+        <section id="experiences" className="py-24 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <m.div {...fadeInUp} className="text-center mb-16">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#D4A574]/10 text-[#D4A574] rounded-full text-sm font-medium tracking-wide uppercase mb-6">
+                <Grape size={14} /> Caribbean Wine Experiences
+              </div>
+              <h2 className="text-4xl md:text-5xl font-serif text-stone-900 mb-6">Reserve your day at Ocoa Bay</h2>
+              <p className="text-stone-500 max-w-2xl mx-auto text-lg font-light">
+                Three ways to spend a Saturday or Sunday at the Caribbean's vineyard. Buy your spot through the Kibay shop, then confirm your date directly with the estate.
+              </p>
+            </m.div>
+
+            <m.div
+              variants={staggerContainer}
+              initial="initial"
+              whileInView="whileInView"
+              className="grid md:grid-cols-3 gap-8"
+            >
+              {/* Wine Tour */}
+              <m.div
+                variants={fadeInUp}
+                className="bg-stone-50 p-10 rounded-2xl shadow-lg border border-stone-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col"
+              >
+                <div className="w-12 h-12 bg-[#D4A574]/10 rounded-full flex items-center justify-center mb-6">
+                  <Wine className="text-[#D4A574]" />
+                </div>
+                <h3 className="text-2xl font-serif text-stone-900 mb-1">Wine Tour</h3>
+                <p className="text-stone-400 italic mb-4 font-serif">90 minutes · Sat &amp; Sun</p>
+                <p className="text-stone-600 leading-relaxed font-light mb-6 flex-1">
+                  Guided tasting of Ocoa Wines and other organic products from the estate, plus an electric-cart tour of the vineyards and winery overlooking Bahía de Ocoa.
+                </p>
+                <div className="text-3xl font-serif text-stone-900 mb-6">
+                  US$65 <span className="text-sm text-stone-400 font-light">/ person · + taxes</span>
+                </div>
+                <div className="flex flex-col gap-3">
+                  <Link to="/product/ocoa-bay-wine-tour" className="w-full">
+                    <Button className="w-full bg-[#D4A574] hover:bg-[#c29462] text-foreground py-6">
+                      Buy on Kibay <ArrowRight className="ml-2 w-4 h-4" />
+                    </Button>
+                  </Link>
+                  <a href="https://ocoabay.com/reservacion/" target="_blank" rel="noopener noreferrer" className="text-sm text-stone-500 hover:text-[#D4A574] inline-flex items-center justify-center gap-1">
+                    Book a date at ocoabay.com <ExternalLink className="w-3 h-3" />
+                  </a>
+                </div>
+              </m.div>
+
+              {/* Complete Experience */}
+              <m.div
+                variants={fadeInUp}
+                className="bg-stone-900 p-10 rounded-2xl shadow-lg border border-stone-800 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col text-foreground relative overflow-hidden"
+              >
+                <div className="absolute top-4 right-4 px-3 py-1 bg-[#D4A574] text-stone-900 rounded-full text-xs font-medium uppercase tracking-wider">
+                  Most popular
+                </div>
+                <div className="w-12 h-12 bg-[#D4A574]/20 rounded-full flex items-center justify-center mb-6">
+                  <Grape className="text-[#D4A574]" />
+                </div>
+                <h3 className="text-2xl font-serif text-foreground mb-1">Complete Experience</h3>
+                <p className="text-foreground/50 italic mb-4 font-serif">Full day · 11am – 6:30pm</p>
+                <p className="text-foreground/70 leading-relaxed font-light mb-6 flex-1">
+                  Wine tour and tasting · welcome toast at Casa Club · 3-course farm-to-table organic menu · pool and grounds access until 6:30pm.
+                </p>
+                <div className="text-3xl font-serif text-foreground mb-6">
+                  US$145 <span className="text-sm text-foreground/40 font-light">/ person · + taxes</span>
+                </div>
+                <div className="flex flex-col gap-3">
+                  <Link to="/product/ocoa-bay-complete-experience" className="w-full">
+                    <Button className="w-full bg-[#D4A574] hover:bg-[#c29462] text-stone-900 py-6">
+                      Buy on Kibay <ArrowRight className="ml-2 w-4 h-4" />
+                    </Button>
+                  </Link>
+                  <a href="https://ocoabay.com/reservacion/" target="_blank" rel="noopener noreferrer" className="text-sm text-foreground/60 hover:text-[#D4A574] inline-flex items-center justify-center gap-1">
+                    Book a date at ocoabay.com <ExternalLink className="w-3 h-3" />
+                  </a>
+                </div>
+              </m.div>
+
+              {/* Casa Club à la carte */}
+              <m.div
+                variants={fadeInUp}
+                className="bg-stone-50 p-10 rounded-2xl shadow-lg border border-stone-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col"
+              >
+                <div className="w-12 h-12 bg-[#D4A574]/10 rounded-full flex items-center justify-center mb-6">
+                  <Utensils className="text-[#D4A574]" />
+                </div>
+                <h3 className="text-2xl font-serif text-stone-900 mb-1">Casa Club</h3>
+                <p className="text-stone-400 italic mb-4 font-serif">By reservation · à la carte</p>
+                <p className="text-stone-600 leading-relaxed font-light mb-6 flex-1">
+                  Farm-to-table dining with à la carte minimum consumption. Pool and Casa Club access from 11:00 AM to 6:30 PM. Perfect if you've already toured the vineyard or want a quieter day on the bay.
+                </p>
+                <div className="text-3xl font-serif text-stone-900 mb-6">
+                  À la carte <span className="text-sm text-stone-400 font-light">/ por consumo</span>
+                </div>
+                <div className="flex flex-col gap-3">
+                  <a href="https://ocoabay.com/reservacion/" target="_blank" rel="noopener noreferrer" className="w-full">
+                    <Button className="w-full bg-stone-900 hover:bg-stone-800 text-foreground py-6">
+                      Reserve at ocoabay.com <ExternalLink className="ml-2 w-4 h-4" />
+                    </Button>
+                  </a>
+                  <p className="text-xs text-stone-400 text-center">Reservations handled directly by Ocoa Bay.</p>
+                </div>
+              </m.div>
+            </m.div>
+
+            <m.div {...fadeInUp} className="mt-12 text-center text-sm text-stone-500 max-w-3xl mx-auto">
+              <p>
+                Taxes: 18% ITBIS + 10% by law. Open Saturdays and Sundays only (and holidays). Some product and wine availability varies seasonally.
+              </p>
+              <p className="mt-3">
+                <Users className="inline w-4 h-4 mr-1" />
+                Group bookings welcome — message <a href="mailto:info@kibay.com.do" className="text-[#D4A574] hover:underline">info@kibay.com.do</a> or call <a href="tel:+18498766563" className="text-[#D4A574] hover:underline">+1 (849) 876-6563</a>.
+              </p>
+            </m.div>
+          </div>
         </section>
 
         {/* Tasting Notes */}
@@ -434,23 +554,35 @@ const VineAndBarrelPage = () => {
             className="relative z-10 max-w-3xl mx-auto text-center px-4"
           >
             <MapPin className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
-            <h2 className="text-5xl md:text-6xl font-serif text-foreground mb-8">Visit The Estate</h2>
+            <h2 className="text-5xl md:text-6xl font-serif text-foreground mb-8">Reserve your visit</h2>
             <p className="text-xl text-stone-300 mb-10 font-light leading-relaxed">
-              Immerse yourself in the art of winemaking. Book a private tour of our vineyards and cellar, followed by an exclusive tasting session guided by our sommelier.
+              Pick the experience that fits your day, then confirm your date with the Ocoa Bay reservations team. The Caribbean's working vineyard is two hours from Santo Domingo.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12 text-stone-400 text-sm tracking-wider uppercase">
-              <span className="flex items-center gap-2"><Clock size={16} /> Daily 10am - 5pm</span>
+              <span className="flex items-center gap-2"><Clock size={16} /> Saturdays &amp; Sundays</span>
               <span className="hidden sm:inline">•</span>
-              <span className="flex items-center gap-2"><Utensils size={16} /> Private Dining Available</span>
+              <span className="flex items-center gap-2"><Utensils size={16} /> Casa Club farm-to-table</span>
+              <span className="hidden sm:inline">•</span>
+              <span className="flex items-center gap-2"><MapPin size={16} /> Bahía de Ocoa, Azua</span>
             </div>
 
-            <Button 
-              onClick={() => setIsModalOpen(true)}
-              className="bg-[#D4A574] hover:bg-[#c29462] text-foreground px-12 py-8 text-xl rounded-full shadow-[0_0_30px_rgba(212,165,116,0.3)] hover:shadow-[0_0_50px_rgba(212,165,116,0.5)] transition-all hover:scale-105"
-            >
-              Book a Private Tasting Tour
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button
+                onClick={() => document.getElementById('experiences').scrollIntoView({ behavior: 'smooth' })}
+                className="bg-[#D4A574] hover:bg-[#c29462] text-foreground px-12 py-8 text-xl rounded-full shadow-[0_0_30px_rgba(212,165,116,0.3)] hover:shadow-[0_0_50px_rgba(212,165,116,0.5)] transition-all hover:scale-105"
+              >
+                See the experiences
+              </Button>
+              <a href="https://ocoabay.com/reservacion/" target="_blank" rel="noopener noreferrer">
+                <Button
+                  variant="outline"
+                  className="border-[#D4A574]/40 text-foreground hover:bg-[#D4A574]/10 px-12 py-8 text-xl rounded-full"
+                >
+                  Reservation form <ExternalLink className="ml-2 w-5 h-5" />
+                </Button>
+              </a>
+            </div>
           </m.div>
         </section>
 
