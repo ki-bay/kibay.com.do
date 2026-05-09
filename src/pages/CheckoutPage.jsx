@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import { supabase } from '@/lib/customSupabaseClient';
-import { computeShippingMajor } from '@/lib/shipping';
+import { computeShippingMajor, tiersFromShippingRates } from '@/lib/shipping';
 
 const symbolFor = (currency) => (String(currency || '').toUpperCase() === 'USD' ? '$' : 'RD$');
 
@@ -150,6 +150,21 @@ const CheckoutPage = () => {
 	const [couponError, setCouponError] = useState(null);
 	const [couponValidating, setCouponValidating] = useState(false);
 
+	// Shipping tiers loaded from the shipping_rates table; falls back to
+	// the lib defaults if the fetch fails. Major-units shape.
+	const [shippingTiers, setShippingTiers] = useState(null);
+	useEffect(() => {
+		let cancelled = false;
+		(async () => {
+			const { data, error } = await supabase.from('shipping_rates').select('*');
+			if (cancelled) return;
+			if (!error && data?.length) setShippingTiers(tiersFromShippingRates(data));
+		})();
+		return () => {
+			cancelled = true;
+		};
+	}, []);
+
 	const [shippingInfo, setShippingInfo] = useState({
 		firstName: '',
 		lastName: '',
@@ -172,8 +187,8 @@ const CheckoutPage = () => {
 	const cartCurrency = cartItems[0]?.variant?.currency || 'DOP';
 	const symbol = symbolFor(cartCurrency);
 	const shippingMajor = useMemo(
-		() => computeShippingMajor(subtotalMajor, shippingMethod, cartCurrency),
-		[subtotalMajor, shippingMethod, cartCurrency],
+		() => computeShippingMajor(subtotalMajor, shippingMethod, cartCurrency, shippingTiers),
+		[subtotalMajor, shippingMethod, cartCurrency, shippingTiers],
 	);
 	const subtotalCents = Math.round(subtotalMajor * 100);
 	const shippingCents = Math.round(shippingMajor * 100);
