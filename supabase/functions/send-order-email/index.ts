@@ -1,4 +1,4 @@
-// Sends transactional order emails via Resend.
+// Sends transactional order emails via Brevo (formerly Sendinblue).
 //
 // Caller may be:
 //   - An Edge Function with the service-role key in the Authorization header
@@ -9,11 +9,12 @@
 // Body: { order_id: uuid, type: 'confirmation' | 'tracking' | 'refund' }
 //
 // Required Supabase secrets:
-//   RESEND_API_KEY       — from resend.com/api-keys
-//   ORDER_EMAIL_FROM     — optional; defaults to "Kibay <onboarding@resend.dev>"
-//                          (Resend's verified-sender shortcut for testing).
-//                          For prod, verify kibay.com.do in Resend and set
-//                          this to e.g. "Kibay <orders@kibay.com.do>".
+//   BREVO_API_KEY        — from app.brevo.com/settings/keys/api
+//   ORDER_EMAIL_FROM     — must be a Brevo-verified sender. Format:
+//                          "Kibay <orders@kibay.com.do>" or just an address.
+//                          Brevo requires sender verification; verify a single
+//                          email at app.brevo.com/senders/list (fast) or your
+//                          full domain via DNS for production.
 //   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_KEY (auto-injected)
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
@@ -22,8 +23,21 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.1';
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const anonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
-const resendKey = Deno.env.get('RESEND_API_KEY');
-const fromAddress = Deno.env.get('ORDER_EMAIL_FROM') || 'Kibay <onboarding@resend.dev>';
+const brevoKey = Deno.env.get('BREVO_API_KEY');
+const fromAddress = Deno.env.get('ORDER_EMAIL_FROM') || '';
+
+// Parse "Name <email>" format into Brevo's sender shape.
+function parseFrom(s: string): { name?: string; email: string } | null {
+	const trimmed = (s || '').trim();
+	if (!trimmed) return null;
+	const m = trimmed.match(/^(.*?)<\s*([^>]+)\s*>\s*$/);
+	if (m) {
+		const name = m[1].trim().replace(/^"(.*)"$/, '$1');
+		return { name: name || undefined, email: m[2].trim() };
+	}
+	if (trimmed.includes('@')) return { email: trimmed };
+	return null;
+}
 
 const cors = {
 	'Access-Control-Allow-Origin': '*',
@@ -35,9 +49,14 @@ serve(async (req) => {
 	if (req.method === 'OPTIONS') return new Response(null, { headers: cors });
 	if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
 
-	if (!resendKey) {
-		console.error('RESEND_API_KEY not set');
+	if (!brevoKey) {
+		console.error('BREVO_API_KEY not set');
 		return json({ error: 'Email provider not configured' }, 500);
+	}
+	const sender = parseFrom(fromAddress);
+	if (!sender) {
+		console.error('ORDER_EMAIL_FROM not set or invalid');
+		return json({ error: 'Sender address not configured' }, 500);
 	}
 
 	const auth = req.headers.get('authorization') || '';
@@ -98,26 +117,30 @@ serve(async (req) => {
 	const lang: 'es' | 'en' = order.currency === 'USD' ? 'en' : 'es';
 	const { subject, html } = renderEmail(type, order, items || [], lang);
 
-	const resp = await fetch('https://api.resend.com/emails', {
+	const recipientName =
+		`${ship.firstName || ''} ${ship.lastName || ''}`.trim() || undefined;
+
+	const resp = await fetch('https://api.brevo.com/v3/smtp/email', {
 		method: 'POST',
 		headers: {
-			Authorization: `Bearer ${resendKey}`,
+			'api-key': brevoKey,
 			'Content-Type': 'application/json',
+			Accept: 'application/json',
 		},
 		body: JSON.stringify({
-			from: fromAddress,
-			to: [to],
+			sender,
+			to: [{ email: to, ...(recipientName ? { name: recipientName } : {}) }],
 			subject,
-			html,
+			htmlContent: html,
 		}),
 	});
 	if (!resp.ok) {
 		const errText = await resp.text();
-		console.error('Resend send failed', resp.status, errText);
+		console.error('Brevo send failed', resp.status, errText);
 		return json({ error: 'Send failed', details: errText }, 502);
 	}
 	const sent = await resp.json();
-	return json({ success: true, id: sent.id });
+	return json({ success: true, id: sent.messageId });
 });
 
 function json(body: unknown, status = 200) {
