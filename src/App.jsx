@@ -7,6 +7,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute';
 import { CartProvider } from './hooks/useCart';
 import { AuthProvider } from './contexts/SupabaseAuthContext';
+import ErrorBoundary from './components/ErrorBoundary';
+import CookieConsent from './components/CookieConsent';
 
 // Pages (lazy)
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -63,6 +65,7 @@ const AdminCouponsPage = lazy(() => import('./pages/admin/AdminCouponsPage'));
 const AdminAnalyticsPage = lazy(() => import('./pages/admin/AdminAnalyticsPage'));
 const AdminNewsletterPage = lazy(() => import('./pages/admin/AdminNewsletterPage'));
 const AdminShippingPage = lazy(() => import('./pages/admin/AdminShippingPage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 // Utilities
 const SitemapRenderer = lazy(() => import('./pages/SitemapRenderer'));
@@ -151,8 +154,11 @@ function App() {
               <Route path="/admin/newsletter" element={<ProtectedAdminRoute><AdminNewsletterPage /></ProtectedAdminRoute>} />
               <Route path="/admin/shipping" element={<ProtectedAdminRoute><AdminShippingPage /></ProtectedAdminRoute>} />
 
+              {/* 404 catch-all — must stay LAST */}
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </Suspense>
+          <CookieConsent />
         </Router>
       </AuthProvider>
     </CartProvider>

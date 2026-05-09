@@ -136,6 +136,17 @@ const Footer = () => {
           </div>
         </div>
 
+        {/* Trust signals */}
+        <div className="pt-8 border-t border-foreground/10 mb-6">
+          <div className="flex flex-wrap justify-center md:justify-between items-center gap-x-8 gap-y-3 text-foreground/50 text-xs uppercase tracking-widest font-light">
+            <span className="flex items-center gap-2"><span aria-hidden="true">🌱</span> 100% Organic</span>
+            <span className="flex items-center gap-2"><span aria-hidden="true">🇩🇴</span> Made in Dominican Republic</span>
+            <span className="flex items-center gap-2"><span aria-hidden="true">🔒</span> Secure checkout · Stripe</span>
+            <span className="flex items-center gap-2"><span aria-hidden="true">📦</span> Caribbean shipping</span>
+            <span className="flex items-center gap-2"><span aria-hidden="true">↩️</span> 48h refund policy</span>
+          </div>
+        </div>
+
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-foreground/10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">

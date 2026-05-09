@@ -36,6 +36,7 @@ if (typeof window !== 'undefined') {
 import { ThemeProvider } from 'next-themes';
 import { LazyMotion, domAnimation } from 'framer-motion';
 import App from '@/App';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import '@/index.css';
 import '@/i18n';
 import { AuthProvider } from '@/contexts/SupabaseAuthContext';
@@ -47,9 +48,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} storageKey="kibay_theme">
     <AuthProvider>
       <CartProvider>
-        <LazyMotion features={domAnimation} strict>
-          <App />
-        </LazyMotion>
+        <ErrorBoundary>
+          <LazyMotion features={domAnimation} strict>
+            <App />
+          </LazyMotion>
+        </ErrorBoundary>
         <Toaster />
         <SonnerToaster />
       </CartProvider>

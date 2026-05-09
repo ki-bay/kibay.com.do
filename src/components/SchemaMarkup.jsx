@@ -103,6 +103,40 @@ const SchemaMarkup = ({ type, data }) => {
         "itemCondition": "https://schema.org/NewCondition"
       }
     };
+
+    // Optional aggregate rating (only emit when reviewCount > 0).
+    if (
+      data.aggregateRating &&
+      Number(data.aggregateRating.reviewCount) > 0 &&
+      data.aggregateRating.ratingValue != null
+    ) {
+      schemaData.aggregateRating = {
+        "@type": "AggregateRating",
+        "ratingValue": String(data.aggregateRating.ratingValue),
+        "reviewCount": String(data.aggregateRating.reviewCount)
+      };
+    }
+
+    // Optional review array (Schema.org Review). Each entry expects
+    // { author, datePublished, ratingValue, reviewBody, name? }.
+    if (Array.isArray(data.reviews) && data.reviews.length) {
+      schemaData.review = data.reviews.map((r) => ({
+        "@type": "Review",
+        "author": {
+          "@type": "Person",
+          "name": r.author || "Anonymous"
+        },
+        "datePublished": r.datePublished,
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": String(r.ratingValue),
+          "bestRating": "5",
+          "worstRating": "1"
+        },
+        "name": r.name,
+        "reviewBody": r.reviewBody
+      }));
+    }
   } else if (type === 'FAQPage') {
     schemaData = {
       "@context": "https://schema.org",

@@ -14,6 +14,8 @@ import SEOHead from '@/components/SEOHead';
 import SchemaMarkup from '@/components/SchemaMarkup';
 import { useFlyToCart } from '@/hooks/useFlyToCart';
 import ProductImageGallery from '@/components/ProductImageGallery';
+import ProductReviews from '@/components/ProductReviews';
+import RelatedProducts from '@/components/RelatedProducts';
 
 const placeholderImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjVmNWY0Ii8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2E4YTJhMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K";
 
@@ -27,6 +29,7 @@ function ProductDetailPage() {
   const [error, setError] = useState(null);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [reviewAggregate, setReviewAggregate] = useState(null);
   const { addToCart } = useCart();
   const { toast } = useToast();
 
@@ -190,7 +193,14 @@ function ProductDetailPage() {
           url: productUrl,
           price: (selectedVariant?.price_in_cents ?? 0) / 100,
           currency: selectedVariant?.currency?.toUpperCase() || 'USD',
-          inStock: !isSoldOut
+          inStock: !isSoldOut,
+          aggregateRating:
+            reviewAggregate?.count > 0
+              ? {
+                  ratingValue: reviewAggregate.avg.toFixed(1),
+                  reviewCount: reviewAggregate.count,
+                }
+              : undefined,
         }}
       />
 
@@ -351,7 +361,19 @@ function ProductDetailPage() {
               )}
             </m.div>
           </div>
-          
+
+          {/* Customer Reviews */}
+          <div className="mb-20">
+            <ProductReviews
+              productId={product.id}
+              onAggregateChange={setReviewAggregate}
+            />
+          </div>
+
+          {/* Related products */}
+          <RelatedProducts excludeId={product.id} />
+
+
           {/* Newsletter Signup Mid-Page */}
           <div className="mb-20 bg-stone-100 rounded-3xl p-8 md:p-12">
             <div className="max-w-3xl mx-auto text-center">

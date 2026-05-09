@@ -6,7 +6,7 @@
 //   - An admin user calling from the dashboard (Resend confirmation /
 //     Send tracking buttons in AdminOrdersPage).
 //
-// Body: { order_id: uuid, type: 'confirmation' | 'tracking' | 'refund' }
+// Body: { order_id: uuid, type: 'confirmation' | 'tracking' | 'refund' | 'abandoned_cart' | 'admin_new_order' | 'admin_refunded' }
 //
 // Required Supabase secrets:
 //   BREVO_API_KEY        — from app.brevo.com/settings/keys/api
@@ -98,7 +98,7 @@ serve(async (req) => {
 	}
 	const { order_id, type } = body;
 	if (!order_id) return json({ error: 'order_id required' }, 400);
-	const VALID_TYPES = ['confirmation', 'tracking', 'refund', 'admin_new_order', 'admin_refunded'];
+	const VALID_TYPES = ['confirmation', 'tracking', 'refund', 'abandoned_cart', 'admin_new_order', 'admin_refunded'];
 	if (!VALID_TYPES.includes(type as string)) {
 		return json({ error: `type must be one of ${VALID_TYPES.join(' | ')}` }, 400);
 	}
@@ -137,6 +137,8 @@ serve(async (req) => {
 
 	// BCC removed: admin gets dedicated admin_new_order / admin_refunded
 	// emails instead, so we no longer need to copy them on the customer's.
+	// Note: abandoned_cart is a customer email but intentionally NEVER BCCs
+	// admin — we don't want to spam the owner with every transient cart drop.
 	const wantsBcc =
 		false &&
 		!!adminNotifyEmail &&
@@ -254,6 +256,32 @@ const T = {
 			outro: 'If you have any questions, just reply to this email.',
 		},
 	},
+	abandoned_cart: {
+		es: {
+			subject: (o: Order) => `¿Olvidaste algo? — Pedido ${o.order_number}`,
+			heading: 'Tu pedido te está esperando',
+			intro: 'Vimos que empezaste un pedido pero no llegaste al pago. No te preocupes — está guardado por un rato más. Termina cuando puedas.',
+			itemsLabel: 'Productos en tu carrito',
+			subtotalLabel: 'Subtotal',
+			shippingLabel: 'Envío',
+			totalLabel: 'Total',
+			shipToLabel: 'Envío a',
+			outro: 'Si decides terminar la compra, vuelve a kibay.com.do/cart o responde a este correo si tienes alguna pregunta.',
+			ctaLabel: 'Terminar mi pedido',
+		},
+		en: {
+			subject: (o: Order) => `Did you forget something? — Order ${o.order_number}`,
+			heading: 'Your order is still waiting',
+			intro: "We saw you started an order but didn't make it to payment. Don't worry — it's still saved for a little while. Finish when you can.",
+			itemsLabel: 'Items in your cart',
+			subtotalLabel: 'Subtotal',
+			shippingLabel: 'Shipping',
+			totalLabel: 'Total',
+			shipToLabel: 'Ship to',
+			outro: 'To finish your order, head to kibay.com.do/cart or reply to this email with any questions.',
+			ctaLabel: 'Finish my order',
+		},
+	},
 	admin_new_order: {
 		en: {
 			subject: (o: Order) => `[Kibay] New order ${o.order_number}`,
@@ -271,7 +299,7 @@ const T = {
 };
 
 function renderEmail(
-	type: 'confirmation' | 'tracking' | 'refund' | 'admin_new_order' | 'admin_refunded',
+	type: 'confirmation' | 'tracking' | 'refund' | 'abandoned_cart' | 'admin_new_order' | 'admin_refunded',
 	order: Order,
 	items: Item[],
 	lang: 'es' | 'en',
@@ -285,6 +313,12 @@ function renderEmail(
 	const fmt = (cents: number) => `${symbol}${(Number(cents) / 100).toFixed(2)}`;
 	const ship = order.shipping_address || {};
 	const customerName = `${ship.firstName || ''} ${ship.lastName || ''}`.trim() || ship.email || '';
+
+	// abandoned_cart shares confirmation's full layout (line items + totals)
+	// but adds a prominent CTA back to the cart so the customer can finish.
+	const showItems = type === 'confirmation' || type === 'abandoned_cart';
+	const showCta = type === 'abandoned_cart';
+	const ctaLabel = showCta ? (tpl as Record<string, string>).ctaLabel || 'Finish my order' : '';
 
 	const html = `<!DOCTYPE html>
 <html lang="${lang}">
@@ -303,9 +337,11 @@ function renderEmail(
           <p style="margin:0 0 24px 0;font-size:15px;line-height:1.55;color:#44403c;">${escapeHtml(tpl.intro)}</p>
           <p style="margin:0 0 24px 0;font-size:14px;color:#78716c;">${lang === 'es' ? 'Pedido' : 'Order'}: <strong style="color:#1c1917;">${escapeHtml(order.order_number)}</strong></p>
 
-          ${type === 'confirmation' ? renderItemsTable(items, fmt, tpl as Record<string, string>, order, symbol) : ''}
+          ${showItems ? renderItemsTable(items, fmt, tpl as Record<string, string>, order, symbol) : ''}
 
           ${type === 'tracking' ? renderTrackingBlock(order, tpl as Record<string, string>) : ''}
+
+          ${showCta ? `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 24px 0;"><tr><td align="center"><a href="https://kibay.com.do/cart" style="display:inline-block;padding:14px 28px;background:#FF7500;color:#ffffff;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;letter-spacing:0.01em;">${escapeHtml(ctaLabel)}</a></td></tr></table>` : ''}
 
           ${renderShipToBlock(ship, customerName, lang)}
 

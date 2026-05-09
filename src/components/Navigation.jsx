@@ -9,6 +9,7 @@ import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { Button } from '@/components/ui/button';
 import ShoppingCartIcon from '@/components/ShoppingCartIcon';
 import ShoppingCart from '@/components/ShoppingCart';
+import SearchBar from '@/components/SearchBar';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import ThemeToggle from '@/components/ThemeToggle';
 import { mediaUrl } from '@/config/mediaCdn';
@@ -142,6 +143,7 @@ const Navigation = () => {
             </div>
 
             <div className="hidden lg:flex items-center gap-4">
+              <SearchBar />
               <div className={cn("transition-colors cursor-pointer hover:text-[#D4A574] p-1", iconColorClass)}>
                  <ShoppingCartIcon onClick={handleCartClick} className="w-5 h-5" />
               </div>
@@ -230,6 +232,9 @@ const Navigation = () => {
           >
             <h2 id="mobile-menu-title" className="sr-only">{t('nav:menu', { defaultValue: 'Menu' })}</h2>
             <div className="flex flex-col gap-6 pb-8">
+              <div className="pb-2">
+                <SearchBar mobile />
+              </div>
               {navLinks.map((link, index) => (
                 <m.div key={link.key} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }}>
                   {link.children ? (

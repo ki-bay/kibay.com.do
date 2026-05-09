@@ -19,5 +19,13 @@
   "socialSettings": "Ajustes Sociales",
   "systemLogs": "Registros del Sistema",
   "menu": "Menú",
-  "close": "Cerrar"
+  "close": "Cerrar",
+  "search": {
+    "label": "Buscar",
+    "placeholder": "Buscar vinos, tours, blog...",
+    "noResults": "Sin resultados para",
+    "products": "Productos",
+    "blog": "Blog",
+    "trySearches": "Prueba buscar"
+  }
 }

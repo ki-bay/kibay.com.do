@@ -19,5 +19,13 @@
   "socialSettings": "Social Settings",
   "systemLogs": "System Logs",
   "menu": "Menu",
-  "close": "Close"
+  "close": "Close",
+  "search": {
+    "label": "Search",
+    "placeholder": "Search wines, tours, blog...",
+    "noResults": "No results for",
+    "products": "Products",
+    "blog": "Blog",
+    "trySearches": "Try searching"
+  }
 }
