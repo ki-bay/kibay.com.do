@@ -205,10 +205,12 @@ const VineAndBarrelPage = () => {
         {/* Hero Section */}
         <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0 z-0">
-            <img 
-              src="https://images.unsplash.com/photo-1602757205362-336105af9324" 
-              alt="Vine & Barrel Vineyard" 
+            <img
+              src="/media/vino-produccion-ocoabay-vinedo.webp"
+              alt="Aerial view of the Ocoa Bay vineyard at sunset — Caribbean wine grown in the Dominican Republic"
               className="w-full h-full object-cover"
+              fetchPriority="high"
+              decoding="async"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
           </div>
@@ -251,9 +253,11 @@ const VineAndBarrelPage = () => {
             <div className="relative group">
               <div className="absolute inset-0 bg-[#D4A574] rounded-full blur-[100px] opacity-20 group-hover:opacity-30 transition-opacity duration-700" />
               <img
-                src="https://images.unsplash.com/photo-1474722883778-792e7990302f?q=80&w=1600&auto=format&fit=crop"
-                alt="Ocoa Bay vineyard — organic Caribbean winery in the Dominican Republic"
+                src="/media/kibay-vino-dominicano.webp"
+                alt="Visitors at Ocoa Bay's Casa Club overlooking the Caribbean — wine tasting experience in the Dominican Republic"
                 className="relative z-10 w-full h-[600px] object-cover rounded-2xl shadow-2xl transform transition-transform duration-700 hover:scale-[1.02]"
+                loading="lazy"
+                decoding="async"
               />
             </div>
 
@@ -315,8 +319,16 @@ const VineAndBarrelPage = () => {
               {/* Wine Tour */}
               <m.div
                 variants={fadeInUp}
-                className="bg-stone-50 p-10 rounded-2xl shadow-lg border border-stone-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col"
+                className="bg-stone-50 rounded-2xl shadow-lg border border-stone-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col overflow-hidden"
               >
+                <img
+                  src="/media/ocoabay-degustacion-vino-dominicano.webp"
+                  alt="Guided Caribbean wine tasting at Ocoa Bay vineyard — Dominican Republic"
+                  className="w-full h-56 object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div className="p-10 flex flex-col flex-1">
                 <div className="w-12 h-12 bg-[#D4A574]/10 rounded-full flex items-center justify-center mb-6">
                   <Wine className="text-[#D4A574]" />
                 </div>
@@ -338,13 +350,22 @@ const VineAndBarrelPage = () => {
                     Book a date at ocoabay.com <ExternalLink className="w-3 h-3" />
                   </a>
                 </div>
+                </div>
               </m.div>
 
               {/* Complete Experience */}
               <m.div
                 variants={fadeInUp}
-                className="bg-stone-900 p-10 rounded-2xl shadow-lg border border-stone-800 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col text-foreground relative overflow-hidden"
+                className="bg-stone-900 rounded-2xl shadow-lg border border-stone-800 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col text-foreground relative overflow-hidden"
               >
+                <img
+                  src="/media/vinedo-republica-dominicana-aerial.webp"
+                  alt="Ocoa Bay full-day experience — Caribbean wine, pool and farm-to-table dining at the Casa Club"
+                  className="w-full h-56 object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div className="p-10 flex flex-col flex-1">
                 <div className="absolute top-4 right-4 px-3 py-1 bg-[#D4A574] text-stone-900 rounded-full text-xs font-medium uppercase tracking-wider">
                   Most popular
                 </div>
@@ -369,13 +390,22 @@ const VineAndBarrelPage = () => {
                     Book a date at ocoabay.com <ExternalLink className="w-3 h-3" />
                   </a>
                 </div>
+                </div>
               </m.div>
 
               {/* Casa Club à la carte */}
               <m.div
                 variants={fadeInUp}
-                className="bg-stone-50 p-10 rounded-2xl shadow-lg border border-stone-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col"
+                className="bg-stone-50 rounded-2xl shadow-lg border border-stone-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col overflow-hidden"
               >
+                <img
+                  src="/media/kibay-vino-ocoa-bay.webp"
+                  alt="Casa Club at Ocoa Bay — Dominican wines on a dining table overlooking the Caribbean"
+                  className="w-full h-56 object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div className="p-10 flex flex-col flex-1">
                 <div className="w-12 h-12 bg-[#D4A574]/10 rounded-full flex items-center justify-center mb-6">
                   <Utensils className="text-[#D4A574]" />
                 </div>
@@ -394,6 +424,7 @@ const VineAndBarrelPage = () => {
                     </Button>
                   </a>
                   <p className="text-xs text-stone-400 text-center">Reservations handled directly by Ocoa Bay.</p>
+                </div>
                 </div>
               </m.div>
             </m.div>
