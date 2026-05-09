@@ -25,6 +25,11 @@ const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const anonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
 const brevoKey = Deno.env.get('BREVO_API_KEY');
 const fromAddress = Deno.env.get('ORDER_EMAIL_FROM') || '';
+// Optional admin notification BCC. When set, the admin receives a copy of every
+// customer 'confirmation' and 'refund' email. Default: 'info@kibay.com.do'.
+// Set to an empty string in Supabase secrets to disable.
+const adminNotifyEmail =
+	Deno.env.get('ADMIN_NOTIFY_EMAIL') ?? 'info@kibay.com.do';
 
 // Parse "Name <email>" format into Brevo's sender shape.
 function parseFrom(s: string): { name?: string; email: string } | null {
@@ -120,6 +125,15 @@ serve(async (req) => {
 	const recipientName =
 		`${ship.firstName || ''} ${ship.lastName || ''}`.trim() || undefined;
 
+	// BCC the admin on customer confirmation + refund emails so the owner
+	// gets a copy of every transactional message. Skip BCC for tracking
+	// (admin clicked the button themselves) and when admin equals the
+	// customer (avoid Brevo rejecting "same address in TO and BCC").
+	const wantsBcc =
+		!!adminNotifyEmail &&
+		(type === 'confirmation' || type === 'refund') &&
+		adminNotifyEmail.toLowerCase() !== String(to).toLowerCase();
+
 	const resp = await fetch('https://api.brevo.com/v3/smtp/email', {
 		method: 'POST',
 		headers: {
@@ -130,6 +144,7 @@ serve(async (req) => {
 		body: JSON.stringify({
 			sender,
 			to: [{ email: to, ...(recipientName ? { name: recipientName } : {}) }],
+			...(wantsBcc ? { bcc: [{ email: adminNotifyEmail, name: 'Kibay Admin' }] } : {}),
 			subject,
 			htmlContent: html,
 		}),
