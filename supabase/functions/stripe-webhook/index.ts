@@ -152,8 +152,9 @@ async function handlePaymentIntentSucceeded(
 		console.error('Invoice generation failed', pdfErr);
 	}
 
-	// Confirmation email (best-effort).
+	// Customer confirmation + admin notification (both best-effort).
 	await triggerOrderEmail(orderId, 'confirmation');
+	await triggerOrderEmail(orderId, 'admin_new_order');
 }
 
 async function setOrderStatusFromIntent(
@@ -208,10 +209,14 @@ async function handleChargeRefunded(
 		return;
 	}
 	await triggerOrderEmail(order.id, 'refund');
+	await triggerOrderEmail(order.id, 'admin_refunded');
 }
 
 // Best-effort: invoke send-order-email; don't fail the webhook if it errors.
-async function triggerOrderEmail(orderId: string, type: 'confirmation' | 'tracking' | 'refund') {
+async function triggerOrderEmail(
+	orderId: string,
+	type: 'confirmation' | 'tracking' | 'refund' | 'admin_new_order' | 'admin_refunded',
+) {
 	try {
 		const resp = await fetch(`${supabaseUrl}/functions/v1/send-order-email`, {
 			method: 'POST',

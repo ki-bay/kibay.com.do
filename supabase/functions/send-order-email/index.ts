@@ -98,8 +98,9 @@ serve(async (req) => {
 	}
 	const { order_id, type } = body;
 	if (!order_id) return json({ error: 'order_id required' }, 400);
-	if (type !== 'confirmation' && type !== 'tracking' && type !== 'refund') {
-		return json({ error: "type must be 'confirmation' | 'tracking' | 'refund'" }, 400);
+	const VALID_TYPES = ['confirmation', 'tracking', 'refund', 'admin_new_order', 'admin_refunded'];
+	if (!VALID_TYPES.includes(type as string)) {
+		return json({ error: `type must be one of ${VALID_TYPES.join(' | ')}` }, 400);
 	}
 
 	const admin = createClient(supabaseUrl, serviceKey);
@@ -116,20 +117,28 @@ serve(async (req) => {
 		.eq('order_id', order_id);
 
 	const ship = order.shipping_address || {};
-	const to = ship.email;
-	if (!to) return json({ error: 'Order has no shipping email' }, 400);
+	const isAdminEmail = type === 'admin_new_order' || type === 'admin_refunded';
+	const to = isAdminEmail ? adminNotifyEmail : ship.email;
+	if (!to) {
+		return json(
+			{ error: isAdminEmail ? 'ADMIN_NOTIFY_EMAIL not set' : 'Order has no shipping email' },
+			400,
+		);
+	}
 
 	const lang: 'es' | 'en' = order.currency === 'USD' ? 'en' : 'es';
-	const { subject, html } = renderEmail(type, order, items || [], lang);
+	// Admin emails are always English regardless of the customer's locale.
+	const renderLang: 'es' | 'en' = isAdminEmail ? 'en' : lang;
+	const { subject, html } = renderEmail(type, order, items || [], renderLang);
 
-	const recipientName =
-		`${ship.firstName || ''} ${ship.lastName || ''}`.trim() || undefined;
+	const recipientName = isAdminEmail
+		? 'Kibay Admin'
+		: `${ship.firstName || ''} ${ship.lastName || ''}`.trim() || undefined;
 
-	// BCC the admin on customer confirmation + refund emails so the owner
-	// gets a copy of every transactional message. Skip BCC for tracking
-	// (admin clicked the button themselves) and when admin equals the
-	// customer (avoid Brevo rejecting "same address in TO and BCC").
+	// BCC removed: admin gets dedicated admin_new_order / admin_refunded
+	// emails instead, so we no longer need to copy them on the customer's.
 	const wantsBcc =
+		false &&
 		!!adminNotifyEmail &&
 		(type === 'confirmation' || type === 'refund') &&
 		adminNotifyEmail.toLowerCase() !== String(to).toLowerCase();
@@ -245,14 +254,31 @@ const T = {
 			outro: 'If you have any questions, just reply to this email.',
 		},
 	},
+	admin_new_order: {
+		en: {
+			subject: (o: Order) => `[Kibay] New order ${o.order_number}`,
+			heading: 'New paid order',
+			intro: 'A customer just completed checkout. Details below.',
+		},
+	},
+	admin_refunded: {
+		en: {
+			subject: (o: Order) => `[Kibay] Refunded ${o.order_number}`,
+			heading: 'Order refunded',
+			intro: 'A refund was processed for the order below.',
+		},
+	},
 };
 
 function renderEmail(
-	type: 'confirmation' | 'tracking' | 'refund',
+	type: 'confirmation' | 'tracking' | 'refund' | 'admin_new_order' | 'admin_refunded',
 	order: Order,
 	items: Item[],
 	lang: 'es' | 'en',
 ): { subject: string; html: string } {
+	if (type === 'admin_new_order' || type === 'admin_refunded') {
+		return renderAdminEmail(type, order, items);
+	}
 	const tpl = T[type][lang];
 	const subject = tpl.subject(order);
 	const symbol = order.currency === 'USD' ? '$' : 'RD$';
@@ -319,6 +345,77 @@ function renderItemsTable(
     ${order.shipping_amount != null ? `<tr><td style="padding:4px 0;font-size:14px;color:#78716c;">${escapeHtml(tpl.shippingLabel)}</td><td style="padding:4px 0;font-size:14px;color:#78716c;text-align:right;">${fmt(order.shipping_amount)}</td></tr>` : ''}
     <tr><td style="padding:8px 0 0 0;font-size:15px;font-weight:600;color:#1c1917;">${escapeHtml(tpl.totalLabel)}</td><td style="padding:8px 0 0 0;font-size:15px;font-weight:600;color:#1c1917;text-align:right;">${fmt(order.total_amount)}</td></tr>
   </table>`;
+}
+
+function renderAdminEmail(
+	type: 'admin_new_order' | 'admin_refunded',
+	order: Order,
+	items: Item[],
+): { subject: string; html: string } {
+	const tpl = (T as Record<string, Record<'en', { subject: (o: Order) => string; heading: string; intro: string }>>)[type].en;
+	const subject = tpl.subject(order);
+	const symbol = order.currency === 'USD' ? '$' : 'RD$';
+	const fmt = (cents: number) => `${symbol}${(Number(cents) / 100).toFixed(2)}`;
+	const ship = order.shipping_address || {};
+	const customerName = `${ship.firstName || ''} ${ship.lastName || ''}`.trim() || ship.email || '—';
+	const itemsRows = items
+		.map(
+			(i) => `<tr>
+      <td style="padding:6px 0;font-size:13px;color:#1c1917;">${escapeHtml(i.product_name)}</td>
+      <td style="padding:6px 0;font-size:13px;color:#1c1917;text-align:right;">×${i.quantity}</td>
+      <td style="padding:6px 0;font-size:13px;color:#1c1917;text-align:right;">${fmt(i.total_price)}</td>
+    </tr>`,
+		)
+		.join('');
+
+	const adminUrl = `https://kibay.com.do/admin/orders`;
+	const stripeUrl = (order as { stripe_payment_intent_id?: string }).stripe_payment_intent_id
+		? `https://dashboard.stripe.com/test/payments/${(order as { stripe_payment_intent_id: string }).stripe_payment_intent_id}`
+		: null;
+
+	const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>${escapeHtml(subject)}</title>
+</head>
+<body style="margin:0;padding:0;background:#f5f5f4;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#1c1917;">
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f5f5f4;padding:24px 16px;">
+    <tr><td align="center">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="640" style="max-width:640px;background:#ffffff;border:1px solid #e7e5e4;border-radius:8px;">
+        <tr><td style="padding:20px 24px;border-bottom:1px solid #e7e5e4;">
+          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#a8a29e;">Kibay admin</div>
+          <h1 style="margin:4px 0 0 0;font-size:18px;font-weight:600;color:#1c1917;">${escapeHtml(tpl.heading)} — ${escapeHtml(order.order_number)}</h1>
+          <p style="margin:4px 0 0 0;font-size:13px;color:#78716c;">${escapeHtml(tpl.intro)}</p>
+        </td></tr>
+        <tr><td style="padding:20px 24px;">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="font-size:13px;color:#44403c;">
+            <tr><td style="padding:4px 0;color:#78716c;width:130px;">Total</td><td style="padding:4px 0;font-weight:600;color:#1c1917;">${fmt(order.total_amount)} ${escapeHtml(order.currency)}</td></tr>
+            <tr><td style="padding:4px 0;color:#78716c;">Customer</td><td style="padding:4px 0;">${escapeHtml(customerName)}</td></tr>
+            <tr><td style="padding:4px 0;color:#78716c;">Email</td><td style="padding:4px 0;"><a href="mailto:${escapeHtml(ship.email || '')}" style="color:#1c1917;">${escapeHtml(ship.email || '—')}</a></td></tr>
+            ${ship.phone ? `<tr><td style="padding:4px 0;color:#78716c;">Phone</td><td style="padding:4px 0;"><a href="tel:${escapeHtml(ship.phone)}" style="color:#1c1917;">${escapeHtml(ship.phone)}</a></td></tr>` : ''}
+            <tr><td style="padding:4px 0;color:#78716c;vertical-align:top;">Ship to</td><td style="padding:4px 0;">${escapeHtml([ship.address, [ship.city, ship.zipCode].filter(Boolean).join(', '), ship.country].filter(Boolean).join(' · '))}</td></tr>
+            ${order.shipping_method ? `<tr><td style="padding:4px 0;color:#78716c;">Shipping method</td><td style="padding:4px 0;">${escapeHtml(order.shipping_method)}</td></tr>` : ''}
+            ${(order as { coupon_code?: string }).coupon_code ? `<tr><td style="padding:4px 0;color:#78716c;">Coupon</td><td style="padding:4px 0;">${escapeHtml((order as { coupon_code: string }).coupon_code)}</td></tr>` : ''}
+          </table>
+        </td></tr>
+        ${itemsRows ? `<tr><td style="padding:0 24px 20px;">
+          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#a8a29e;margin-bottom:8px;">Line items</div>
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-top:1px solid #e7e5e4;">
+            ${itemsRows}
+          </table>
+        </td></tr>` : ''}
+        <tr><td style="padding:0 24px 24px;">
+          <a href="${adminUrl}" style="display:inline-block;padding:10px 16px;background:#1c1917;color:#ffffff;border-radius:6px;font-size:13px;font-weight:500;text-decoration:none;">Open in admin</a>
+          ${stripeUrl ? `&nbsp;<a href="${stripeUrl}" style="display:inline-block;padding:10px 16px;background:#ffffff;border:1px solid #e7e5e4;color:#1c1917;border-radius:6px;font-size:13px;font-weight:500;text-decoration:none;">View in Stripe</a>` : ''}
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+	return { subject, html };
 }
 
 function renderTrackingBlock(order: Order, tpl: Record<string, string>): string {
