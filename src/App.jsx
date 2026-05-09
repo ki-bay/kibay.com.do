@@ -58,6 +58,7 @@ const AdminOrdersPage = lazy(() => import('./pages/admin/AdminOrdersPage'));
 const AdminProductsPage = lazy(() => import('./pages/admin/AdminProductsPage'));
 const AdminProductFormPage = lazy(() => import('./pages/admin/AdminProductFormPage'));
 const AdminApiKeysPage = lazy(() => import('./pages/admin/AdminApiKeysPage'));
+const AdminCustomersPage = lazy(() => import('./pages/admin/AdminCustomersPage'));
 
 // Utilities
 const SitemapRenderer = lazy(() => import('./pages/SitemapRenderer'));
@@ -140,6 +141,7 @@ function App() {
               <Route path="/admin/products/new" element={<ProtectedAdminRoute><AdminProductFormPage /></ProtectedAdminRoute>} />
               <Route path="/admin/products/:id/edit" element={<ProtectedAdminRoute><AdminProductFormPage /></ProtectedAdminRoute>} />
               <Route path="/admin/api-keys" element={<ProtectedAdminRoute><AdminApiKeysPage /></ProtectedAdminRoute>} />
+              <Route path="/admin/customers" element={<ProtectedAdminRoute><AdminCustomersPage /></ProtectedAdminRoute>} />
 
             </Routes>
           </Suspense>

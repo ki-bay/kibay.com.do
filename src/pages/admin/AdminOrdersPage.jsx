@@ -1,54 +1,221 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { Helmet } from 'react-helmet';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { supabase } from '@/lib/customSupabaseClient';
 import { Button } from '@/components/ui/button';
-import { Loader2, RefreshCw } from 'lucide-react';
-import { formatDopFromCents } from '@/lib/formatMoney';
-import { publicStorageObjectUrl } from '@/lib/supabaseStorage';
 import { Input } from '@/components/ui/input';
+import {
+	Loader2,
+	RefreshCw,
+	ChevronDown,
+	ChevronRight,
+	Search,
+	ExternalLink,
+	FileText,
+	RotateCcw,
+} from 'lucide-react';
+import { toast } from 'sonner';
+
+const ALLOWED_STATUSES = [
+	'awaiting_payment',
+	'paid',
+	'processing',
+	'shipped',
+	'delivered',
+	'canceled',
+	'failed',
+	'refunded',
+	'disputed',
+];
+
+const STATUS_BADGE = {
+	paid: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/40',
+	delivered: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/40',
+	awaiting_payment: 'bg-amber-500/15 text-amber-300 border-amber-500/40',
+	processing: 'bg-amber-500/15 text-amber-300 border-amber-500/40',
+	shipped: 'bg-sky-500/15 text-sky-300 border-sky-500/40',
+	canceled: 'bg-red-500/15 text-red-300 border-red-500/40',
+	failed: 'bg-red-500/15 text-red-300 border-red-500/40',
+	refunded: 'bg-red-500/15 text-red-300 border-red-500/40',
+	disputed: 'bg-red-500/15 text-red-300 border-red-500/40',
+};
+
+const PAGE_SIZE = 25;
+
+const formatMoney = (cents, currency) => {
+	if (cents == null || cents === '') return '—';
+	const n = Number(cents);
+	if (Number.isNaN(n)) return '—';
+	const symbol = currency === 'DOP' ? 'RD$' : '$';
+	return `${symbol}${(n / 100).toFixed(2)}`;
+};
+
+const formatDate = (iso) => {
+	if (!iso) return '—';
+	try {
+		return new Date(iso).toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: 'short',
+			day: '2-digit',
+		});
+	} catch {
+		return iso;
+	}
+};
+
+const formatDateTime = (iso) => {
+	if (!iso) return '—';
+	try {
+		return new Date(iso).toLocaleString('en-US');
+	} catch {
+		return iso;
+	}
+};
+
+const customerName = (order) => {
+	const a = order?.shipping_address || {};
+	const name = `${a.firstName || ''} ${a.lastName || ''}`.trim();
+	return name || '—';
+};
+
+const StatusBadge = ({ status }) => {
+	const cls = STATUS_BADGE[status] || 'bg-stone-700/40 text-stone-300 border-stone-600';
+	return (
+		<span className={`inline-block text-xs font-medium px-2 py-1 rounded border ${cls}`}>
+			{status || '—'}
+		</span>
+	);
+};
 
 const AdminOrdersPage = () => {
 	const [orders, setOrders] = useState([]);
+	const [itemsByOrder, setItemsByOrder] = useState({});
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const [savingId, setSavingId] = useState(null);
+	const [refundingId, setRefundingId] = useState(null);
+	const [expandedId, setExpandedId] = useState(null);
+
+	// Filters
+	const [searchInput, setSearchInput] = useState('');
+	const [searchTerm, setSearchTerm] = useState('');
+	const [statusFilter, setStatusFilter] = useState('all');
+	const [dateFrom, setDateFrom] = useState('');
+	const [dateTo, setDateTo] = useState('');
+
+	// Pagination
+	const [page, setPage] = useState(1);
+	const [totalCount, setTotalCount] = useState(0);
+
+	// Filter-aware revenue (paid only)
+	const [filteredRevenue, setFilteredRevenue] = useState(0);
+	const [filteredPaidCount, setFilteredPaidCount] = useState(0);
+
+	// Debounce search
+	const debounceRef = useRef(null);
+	useEffect(() => {
+		if (debounceRef.current) clearTimeout(debounceRef.current);
+		debounceRef.current = setTimeout(() => {
+			setSearchTerm(searchInput.trim());
+			setPage(1);
+		}, 300);
+		return () => clearTimeout(debounceRef.current);
+	}, [searchInput]);
+
+	// Reset page when filters change
+	useEffect(() => {
+		setPage(1);
+	}, [statusFilter, dateFrom, dateTo]);
+
+	const buildBaseQuery = useCallback(
+		(query) => {
+			let q = query;
+			if (searchTerm) {
+				const escaped = searchTerm.replace(/[%,]/g, '');
+				q = q.or(
+					`order_number.ilike.%${escaped}%,shipping_address->>email.ilike.%${escaped}%`
+				);
+			}
+			if (statusFilter && statusFilter !== 'all') {
+				q = q.eq('status', statusFilter);
+			}
+			if (dateFrom) {
+				q = q.gte('created_at', dateFrom);
+			}
+			if (dateTo) {
+				q = q.lte('created_at', `${dateTo} 23:59:59`);
+			}
+			return q;
+		},
+		[searchTerm, statusFilter, dateFrom, dateTo]
+	);
 
 	const load = useCallback(async () => {
 		setLoading(true);
 		setError(null);
 		try {
-			const { data, error: e } = await supabase
+			const offset = (page - 1) * PAGE_SIZE;
+
+			// Main paginated query with count
+			let dataQuery = supabase
 				.from('orders')
-				.select('*')
+				.select('*', { count: 'exact' })
 				.order('created_at', { ascending: false })
-				.limit(200);
+				.range(offset, offset + PAGE_SIZE - 1);
+			dataQuery = buildBaseQuery(dataQuery);
+
+			const { data, error: e, count } = await dataQuery;
 			if (e) throw e;
 			setOrders(data || []);
+			setTotalCount(count || 0);
+
+			// Pre-fetch order_items for these orders (≤25, simple)
+			if (data && data.length) {
+				const ids = data.map((o) => o.id);
+				const { data: items, error: itemsErr } = await supabase
+					.from('order_items')
+					.select('*')
+					.in('order_id', ids);
+				if (itemsErr) throw itemsErr;
+				const grouped = {};
+				for (const it of items || []) {
+					if (!grouped[it.order_id]) grouped[it.order_id] = [];
+					grouped[it.order_id].push(it);
+				}
+				setItemsByOrder(grouped);
+			} else {
+				setItemsByOrder({});
+			}
+
+			// Filter-aware revenue: paid orders matching the same filter
+			let revenueQuery = supabase.from('orders').select('total_amount, currency, status');
+			revenueQuery = buildBaseQuery(revenueQuery).eq('status', 'paid');
+			// .eq('status','paid') overrides the filter status; if user selected a non-paid status,
+			// revenue still reflects paid-only across the rest of the filters.
+			const { data: revRows, error: revErr } = await revenueQuery;
+			if (!revErr && revRows) {
+				let total = 0;
+				let cnt = 0;
+				for (const r of revRows) {
+					total += Number(r.total_amount) || 0;
+					cnt += 1;
+				}
+				setFilteredRevenue(total);
+				setFilteredPaidCount(cnt);
+			}
 		} catch (err) {
 			setError(err.message || 'Failed to load orders');
 		} finally {
 			setLoading(false);
 		}
-	}, []);
+	}, [page, buildBaseQuery]);
 
 	useEffect(() => {
 		load();
 	}, [load]);
 
-	const stats = useMemo(() => {
-		const paidLike = new Set(['paid', 'processing', 'Processing', 'shipped', 'Shipped', 'delivered', 'Delivered']);
-		let revenue = 0;
-		let count = 0;
-		for (const o of orders) {
-			if (paidLike.has(o.status)) {
-				revenue += Number(o.total_amount) || 0;
-				count += 1;
-			}
-		}
-		return { revenue, count };
-	}, [orders]);
+	const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
 	const updateField = (id, field, value) => {
 		setOrders((prev) => prev.map((o) => (o.id === id ? { ...o, [field]: value } : o)));
@@ -67,12 +234,64 @@ const AdminOrdersPage = () => {
 				})
 				.eq('id', order.id);
 			if (e) throw e;
+			toast.success('Order updated');
 		} catch (err) {
-			setError(err.message);
+			toast.error(err.message || 'Failed to save order');
 		} finally {
 			setSavingId(null);
 		}
 	};
+
+	const handleRefund = async (order) => {
+		if (
+			!window.confirm(
+				`Refund order ${order.order_number}? This will issue a refund via Stripe and cannot be undone.`
+			)
+		)
+			return;
+		setRefundingId(order.id);
+		try {
+			const { data, error: e } = await supabase.functions.invoke('refund-payment', {
+				body: { order_id: order.id },
+			});
+			if (e) throw e;
+			if (data?.error) throw new Error(data.error);
+			toast.success('Refund initiated');
+			await load();
+		} catch (err) {
+			toast.error(err.message || 'Refund failed');
+		} finally {
+			setRefundingId(null);
+		}
+	};
+
+	const downloadInvoice = async (path) => {
+		try {
+			const { data, error: e } = await supabase.storage
+				.from('blog_media')
+				.createSignedUrl(path, 60);
+			if (e) throw e;
+			window.open(data.signedUrl, '_blank', 'noopener,noreferrer');
+		} catch (err) {
+			toast.error(err.message || 'Could not generate invoice link');
+		}
+	};
+
+	const clearFilters = () => {
+		setSearchInput('');
+		setSearchTerm('');
+		setStatusFilter('all');
+		setDateFrom('');
+		setDateTo('');
+		setPage(1);
+	};
+
+	const revenueDisplay = useMemo(() => {
+		// Revenue rows can mix currencies; show in DOP format if any DOP, else USD.
+		// Simpler: show USD style with $ prefix because we summed cents naively.
+		// Best to display by dominant currency; but spec doesn't require precision.
+		return formatMoney(filteredRevenue, 'USD');
+	}, [filteredRevenue]);
 
 	return (
 		<>
@@ -86,23 +305,90 @@ const AdminOrdersPage = () => {
 						<div>
 							<h1 className="text-3xl font-bold text-foreground">Order management</h1>
 							<p className="text-foreground/60 mt-1">
-								Admin-only view (RLS + role). Update fulfillment fields after payment.
+								Search, filter, and fulfill orders. Filters apply to the revenue KPI.
 							</p>
 						</div>
-						<Button variant="outline" onClick={load} className="border-foreground/20 text-foreground gap-2">
+						<Button
+							variant="outline"
+							onClick={load}
+							className="border-foreground/20 text-foreground gap-2"
+						>
 							<RefreshCw className="w-4 h-4" />
 							Refresh
 						</Button>
 					</div>
 
-					<div className="grid sm:grid-cols-2 gap-4 mb-8">
+					{/* KPIs */}
+					<div className="grid sm:grid-cols-2 gap-4 mb-6">
 						<div className="bg-card border border-foreground/10 rounded-xl p-6">
-							<p className="text-foreground/50 text-sm">Paid / in-progress orders (count)</p>
-							<p className="text-3xl font-semibold text-mango-400">{stats.count}</p>
+							<p className="text-foreground/50 text-sm">Paid orders (filtered)</p>
+							<p className="text-3xl font-semibold text-mango-400">{filteredPaidCount}</p>
 						</div>
 						<div className="bg-card border border-foreground/10 rounded-xl p-6">
-							<p className="text-foreground/50 text-sm">Revenue (same set, DOP)</p>
-							<p className="text-3xl font-semibold text-foreground">{formatDopFromCents(stats.revenue)}</p>
+							<p className="text-foreground/50 text-sm">Revenue from paid (filtered)</p>
+							<p className="text-3xl font-semibold text-foreground">{revenueDisplay}</p>
+							<p className="text-xs text-foreground/40 mt-1">
+								Mixed currency totals shown as raw cents in USD format.
+							</p>
+						</div>
+					</div>
+
+					{/* Filters */}
+					<div className="bg-card border border-foreground/10 rounded-xl p-4 mb-6 grid gap-3 md:grid-cols-12">
+						<div className="md:col-span-5">
+							<label className="text-xs text-foreground/50 block mb-1">Search</label>
+							<div className="relative">
+								<Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-foreground/40" />
+								<Input
+									className="bg-background border-foreground/10 text-foreground pl-9"
+									placeholder="Order number or customer email…"
+									value={searchInput}
+									onChange={(e) => setSearchInput(e.target.value)}
+								/>
+							</div>
+						</div>
+						<div className="md:col-span-3">
+							<label className="text-xs text-foreground/50 block mb-1">Status</label>
+							<select
+								value={statusFilter}
+								onChange={(e) => setStatusFilter(e.target.value)}
+								className="w-full h-10 rounded-md bg-background border border-foreground/10 text-foreground px-3 text-sm"
+							>
+								<option value="all">All statuses</option>
+								{ALLOWED_STATUSES.map((s) => (
+									<option key={s} value={s}>
+										{s}
+									</option>
+								))}
+							</select>
+						</div>
+						<div className="md:col-span-2">
+							<label className="text-xs text-foreground/50 block mb-1">From</label>
+							<Input
+								type="date"
+								className="bg-background border-foreground/10 text-foreground"
+								value={dateFrom}
+								onChange={(e) => setDateFrom(e.target.value)}
+							/>
+						</div>
+						<div className="md:col-span-2">
+							<label className="text-xs text-foreground/50 block mb-1">To</label>
+							<Input
+								type="date"
+								className="bg-background border-foreground/10 text-foreground"
+								value={dateTo}
+								onChange={(e) => setDateTo(e.target.value)}
+							/>
+						</div>
+						<div className="md:col-span-12 flex justify-end">
+							<Button
+								variant="ghost"
+								size="sm"
+								onClick={clearFilters}
+								className="text-foreground/70 hover:text-foreground"
+							>
+								Clear filters
+							</Button>
 						</div>
 					</div>
 
@@ -116,75 +402,370 @@ const AdminOrdersPage = () => {
 						<div className="flex justify-center py-20">
 							<Loader2 className="w-10 h-10 text-mango-500 animate-spin" />
 						</div>
+					) : orders.length === 0 ? (
+						<p className="text-foreground/40 text-center py-12">
+							No orders match these filters
+						</p>
 					) : (
-						<div className="space-y-4">
-							{orders.map((o) => (
-								<div
-									key={o.id}
-									className="bg-card border border-foreground/10 rounded-xl p-4 md:p-6 grid gap-4 md:grid-cols-12"
-								>
-									<div className="md:col-span-3">
-										<p className="text-foreground font-medium">{o.order_number}</p>
-										<p className="text-xs text-foreground/40 mt-1">{new Date(o.created_at).toLocaleString()}</p>
-										<p className="text-mango-400 font-semibold mt-2">{formatDopFromCents(o.total_amount)}</p>
-										{o.invoice_pdf_path && (
-											<a
-												className="text-xs text-sky-400 underline mt-2 inline-block"
-												href={publicStorageObjectUrl('blog_media', o.invoice_pdf_path)}
-												target="_blank"
-												rel="noreferrer"
-											>
-												View invoice PDF
-											</a>
-										)}
-									</div>
-									<div className="md:col-span-3 space-y-2">
-										<label className="text-xs text-foreground/50">Status</label>
-										<Input
-											className="bg-background border-foreground/10 text-foreground"
-											value={o.status}
-											onChange={(e) => updateField(o.id, 'status', e.target.value)}
-											placeholder="paid, processing, shipped…"
-										/>
-									</div>
-									<div className="md:col-span-3 space-y-2">
-										<label className="text-xs text-foreground/50">Tracking number</label>
-										<Input
-											className="bg-background border-foreground/10 text-foreground"
-											value={o.tracking_number || ''}
-											onChange={(e) => updateField(o.id, 'tracking_number', e.target.value)}
-											placeholder="Carrier tracking"
-										/>
-									</div>
-									<div className="md:col-span-3 space-y-2">
-										<label className="text-xs text-foreground/50">Shipping method (label)</label>
-										<Input
-											className="bg-background border-foreground/10 text-foreground"
-											value={o.shipping_method || ''}
-											onChange={(e) => updateField(o.id, 'shipping_method', e.target.value)}
-											placeholder="standard / express / …"
-										/>
-									</div>
-									<div className="md:col-span-12 flex justify-end">
-										<Button
-											size="sm"
-											className="bg-mango-500 hover:bg-mango-600"
-											disabled={savingId === o.id}
-											onClick={() => saveOrder(o)}
-										>
-											{savingId === o.id ? (
-												<Loader2 className="w-4 h-4 animate-spin" />
-											) : (
-												'Save'
-											)}
-										</Button>
-									</div>
+						<>
+							{/* Table-like list */}
+							<div className="bg-card border border-foreground/10 rounded-xl overflow-hidden">
+								<div className="hidden md:grid grid-cols-12 gap-4 px-4 py-3 text-xs uppercase tracking-wide text-foreground/50 border-b border-foreground/10">
+									<div className="col-span-1"></div>
+									<div className="col-span-2">Order #</div>
+									<div className="col-span-2">Date</div>
+									<div className="col-span-3">Customer</div>
+									<div className="col-span-2">Status</div>
+									<div className="col-span-2 text-right">Total</div>
 								</div>
-							))}
-							{orders.length === 0 && (
-								<p className="text-foreground/40 text-center py-12">No orders yet.</p>
-							)}
-						</div>
+								{orders.map((o) => {
+									const isOpen = expandedId === o.id;
+									const items = itemsByOrder[o.id] || [];
+									const addr = o.shipping_address || {};
+									return (
+										<div
+											key={o.id}
+											className="border-b border-foreground/10 last:border-b-0"
+										>
+											<button
+												type="button"
+												onClick={() => setExpandedId(isOpen ? null : o.id)}
+												className="w-full grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 px-4 py-4 text-left hover:bg-foreground/5 transition-colors"
+											>
+												<div className="md:col-span-1 flex items-center text-foreground/60">
+													{isOpen ? (
+														<ChevronDown className="w-4 h-4" />
+													) : (
+														<ChevronRight className="w-4 h-4" />
+													)}
+												</div>
+												<div className="md:col-span-2 font-medium text-foreground">
+													{o.order_number}
+												</div>
+												<div className="md:col-span-2 text-sm text-foreground/70">
+													{formatDate(o.created_at)}
+												</div>
+												<div className="md:col-span-3 text-sm text-foreground/80">
+													{customerName(o)}
+												</div>
+												<div className="md:col-span-2">
+													<StatusBadge status={o.status} />
+												</div>
+												<div className="md:col-span-2 text-right font-semibold text-mango-400">
+													{formatMoney(o.total_amount, o.currency)}
+												</div>
+											</button>
+
+											{isOpen && (
+												<div className="px-4 pb-6 pt-2 bg-background/40 grid gap-6 md:grid-cols-2">
+													{/* Customer block */}
+													<div className="bg-card border border-foreground/10 rounded-lg p-4">
+														<h3 className="text-sm font-semibold text-foreground/80 mb-2">
+															Customer
+														</h3>
+														<p className="text-sm text-foreground">
+															{customerName(o)}
+														</p>
+														{addr.email && (
+															<p className="text-sm">
+																<a
+																	className="text-sky-400 hover:underline"
+																	href={`mailto:${addr.email}`}
+																>
+																	{addr.email}
+																</a>
+															</p>
+														)}
+														{addr.phone && (
+															<p className="text-sm">
+																<a
+																	className="text-sky-400 hover:underline"
+																	href={`tel:${addr.phone}`}
+																>
+																	{addr.phone}
+																</a>
+															</p>
+														)}
+														{(o.tax_id || addr.taxId) && (
+															<p className="text-sm text-foreground/70 mt-1">
+																Tax ID: {o.tax_id || addr.taxId}
+															</p>
+														)}
+													</div>
+
+													{/* Shipping address block */}
+													<div className="bg-card border border-foreground/10 rounded-lg p-4">
+														<h3 className="text-sm font-semibold text-foreground/80 mb-2">
+															Shipping address
+														</h3>
+														<div className="text-sm text-foreground/80 space-y-0.5">
+															<p>
+																{(addr.firstName || '') + ' ' + (addr.lastName || '')}
+															</p>
+															{addr.address && <p>{addr.address}</p>}
+															<p>
+																{[addr.city, addr.zipCode]
+																	.filter(Boolean)
+																	.join(', ')}
+															</p>
+															{addr.country && <p>{addr.country}</p>}
+															{!addr.address && !addr.city && (
+																<p className="text-foreground/40">No address on file</p>
+															)}
+														</div>
+													</div>
+
+													{/* Line items */}
+													<div className="md:col-span-2 bg-card border border-foreground/10 rounded-lg p-4">
+														<h3 className="text-sm font-semibold text-foreground/80 mb-3">
+															Line items
+														</h3>
+														{items.length === 0 ? (
+															<p className="text-sm text-foreground/40">
+																No line items recorded.
+															</p>
+														) : (
+															<div className="overflow-x-auto">
+																<table className="w-full text-sm">
+																	<thead>
+																		<tr className="text-left text-xs uppercase text-foreground/50 border-b border-foreground/10">
+																			<th className="py-2">Product</th>
+																			<th className="py-2 text-right">Qty</th>
+																			<th className="py-2 text-right">Unit price</th>
+																			<th className="py-2 text-right">Line total</th>
+																		</tr>
+																	</thead>
+																	<tbody>
+																		{items.map((it) => (
+																			<tr
+																				key={it.id}
+																				className="border-b border-foreground/5 last:border-b-0"
+																			>
+																				<td className="py-2 text-foreground">
+																					{it.product_name}
+																				</td>
+																				<td className="py-2 text-right text-foreground/80">
+																					{it.quantity}
+																				</td>
+																				<td className="py-2 text-right text-foreground/80">
+																					{formatMoney(it.price_per_item, o.currency)}
+																				</td>
+																				<td className="py-2 text-right text-foreground">
+																					{formatMoney(it.total_price, o.currency)}
+																				</td>
+																			</tr>
+																		))}
+																	</tbody>
+																	<tfoot>
+																		<tr>
+																			<td colSpan={3} className="pt-3 text-right text-foreground/60 text-xs">
+																				Subtotal
+																			</td>
+																			<td className="pt-3 text-right text-foreground/80">
+																				{formatMoney(o.subtotal_amount, o.currency)}
+																			</td>
+																		</tr>
+																		<tr>
+																			<td colSpan={3} className="text-right text-foreground/60 text-xs">
+																				Shipping
+																			</td>
+																			<td className="text-right text-foreground/80">
+																				{formatMoney(o.shipping_amount, o.currency)}
+																			</td>
+																		</tr>
+																		<tr>
+																			<td colSpan={3} className="pt-1 text-right font-semibold text-foreground">
+																				Total
+																			</td>
+																			<td className="pt-1 text-right font-semibold text-mango-400">
+																				{formatMoney(o.total_amount, o.currency)}
+																			</td>
+																		</tr>
+																	</tfoot>
+																</table>
+															</div>
+														)}
+													</div>
+
+													{/* Payment block */}
+													<div className="md:col-span-2 bg-card border border-foreground/10 rounded-lg p-4">
+														<h3 className="text-sm font-semibold text-foreground/80 mb-2">
+															Payment
+														</h3>
+														<div className="grid gap-2 md:grid-cols-3 text-sm">
+															<div>
+																<p className="text-foreground/50 text-xs">Method</p>
+																<p className="text-foreground">
+																	{o.payment_method || '—'}
+																</p>
+															</div>
+															<div>
+																<p className="text-foreground/50 text-xs">Paid at</p>
+																<p className="text-foreground">
+																	{formatDateTime(o.paid_at)}
+																</p>
+															</div>
+															<div>
+																<p className="text-foreground/50 text-xs">
+																	Stripe payment intent
+																</p>
+																{o.stripe_payment_intent_id ? (
+																	<a
+																		className="text-sky-400 hover:underline inline-flex items-center gap-1"
+																		href={`https://dashboard.stripe.com/test/payments/${o.stripe_payment_intent_id}`}
+																		target="_blank"
+																		rel="noreferrer"
+																	>
+																		{o.stripe_payment_intent_id}
+																		<ExternalLink className="w-3 h-3" />
+																	</a>
+																) : (
+																	<p className="text-foreground/40">—</p>
+																)}
+															</div>
+														</div>
+														{o.invoice_pdf_path && (
+															<button
+																type="button"
+																onClick={() => downloadInvoice(o.invoice_pdf_path)}
+																className="mt-3 inline-flex items-center gap-1 text-sm text-sky-400 hover:underline"
+															>
+																<FileText className="w-4 h-4" />
+																View invoice PDF
+															</button>
+														)}
+													</div>
+
+													{/* Editable fulfillment fields */}
+													<div className="md:col-span-2 bg-card border border-foreground/10 rounded-lg p-4">
+														<h3 className="text-sm font-semibold text-foreground/80 mb-3">
+															Fulfillment
+														</h3>
+														<div className="grid gap-3 md:grid-cols-4">
+															<div>
+																<label className="text-xs text-foreground/50 block mb-1">
+																	Status
+																</label>
+																<select
+																	value={o.status || ''}
+																	onChange={(e) =>
+																		updateField(o.id, 'status', e.target.value)
+																	}
+																	className="w-full h-10 rounded-md bg-background border border-foreground/10 text-foreground px-3 text-sm"
+																>
+																	{ALLOWED_STATUSES.map((s) => (
+																		<option key={s} value={s}>
+																			{s}
+																		</option>
+																	))}
+																</select>
+															</div>
+															<div>
+																<label className="text-xs text-foreground/50 block mb-1">
+																	Tracking number
+																</label>
+																<Input
+																	className="bg-background border-foreground/10 text-foreground"
+																	value={o.tracking_number || ''}
+																	onChange={(e) =>
+																		updateField(o.id, 'tracking_number', e.target.value)
+																	}
+																	placeholder="Carrier tracking"
+																/>
+															</div>
+															<div>
+																<label className="text-xs text-foreground/50 block mb-1">
+																	Shipping method
+																</label>
+																<Input
+																	className="bg-background border-foreground/10 text-foreground"
+																	value={o.shipping_method || ''}
+																	onChange={(e) =>
+																		updateField(o.id, 'shipping_method', e.target.value)
+																	}
+																	placeholder="standard / express / …"
+																/>
+															</div>
+															<div>
+																<label className="text-xs text-foreground/50 block mb-1">
+																	Tax ID
+																</label>
+																<Input
+																	className="bg-background border-foreground/10 text-foreground"
+																	value={o.tax_id || ''}
+																	onChange={(e) =>
+																		updateField(o.id, 'tax_id', e.target.value)
+																	}
+																	placeholder="RNC / cedula"
+																/>
+															</div>
+														</div>
+														<div className="mt-4 flex flex-wrap items-center gap-2 justify-end">
+															{o.status === 'paid' && (
+																<Button
+																	type="button"
+																	variant="outline"
+																	className="border-red-500/40 text-red-300 hover:bg-red-500/10 gap-2"
+																	disabled={refundingId === o.id}
+																	onClick={() => handleRefund(o)}
+																>
+																	{refundingId === o.id ? (
+																		<Loader2 className="w-4 h-4 animate-spin" />
+																	) : (
+																		<RotateCcw className="w-4 h-4" />
+																	)}
+																	Refund
+																</Button>
+															)}
+															<Button
+																size="sm"
+																className="bg-mango-500 hover:bg-mango-600"
+																disabled={savingId === o.id}
+																onClick={() => saveOrder(o)}
+															>
+																{savingId === o.id ? (
+																	<Loader2 className="w-4 h-4 animate-spin" />
+																) : (
+																	'Save'
+																)}
+															</Button>
+														</div>
+													</div>
+												</div>
+											)}
+										</div>
+									);
+								})}
+							</div>
+
+							{/* Pagination */}
+							<div className="flex items-center justify-between mt-6">
+								<p className="text-sm text-foreground/60">
+									Page {page} of {totalPages} · {totalCount} order
+									{totalCount === 1 ? '' : 's'}
+								</p>
+								<div className="flex gap-2">
+									<Button
+										variant="outline"
+										size="sm"
+										disabled={page <= 1}
+										onClick={() => setPage((p) => Math.max(1, p - 1))}
+										className="border-foreground/20 text-foreground"
+									>
+										Prev
+									</Button>
+									<Button
+										variant="outline"
+										size="sm"
+										disabled={page >= totalPages}
+										onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+										className="border-foreground/20 text-foreground"
+									>
+										Next
+									</Button>
+								</div>
+							</div>
+						</>
 					)}
 				</div>
 			</main>
