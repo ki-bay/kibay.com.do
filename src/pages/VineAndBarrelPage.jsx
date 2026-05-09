@@ -204,11 +204,11 @@ const VineAndBarrelPage = () => {
         
         {/* Hero Section */}
         <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
-          <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 z-0 bg-stone-900 flex items-center justify-center">
             <img
               src="/media/vino-produccion-ocoabay-vinedo.webp"
               alt="Aerial view of the Ocoa Bay vineyard at sunset — Caribbean wine grown in the Dominican Republic"
-              className="w-full h-full object-cover"
+              className="max-w-full max-h-full w-auto h-auto object-contain"
               fetchPriority="high"
               decoding="async"
             />
@@ -255,7 +255,7 @@ const VineAndBarrelPage = () => {
               <img
                 src="/media/kibay-vino-dominicano.webp"
                 alt="Visitors at Ocoa Bay's Casa Club overlooking the Caribbean — wine tasting experience in the Dominican Republic"
-                className="relative z-10 w-full h-[600px] object-cover rounded-2xl shadow-2xl transform transition-transform duration-700 hover:scale-[1.02]"
+                className="relative z-10 w-full h-auto rounded-2xl shadow-2xl transform transition-transform duration-700 hover:scale-[1.02]"
                 loading="lazy"
                 decoding="async"
               />
@@ -324,7 +324,7 @@ const VineAndBarrelPage = () => {
                 <img
                   src="/media/ocoabay-degustacion-vino-dominicano.webp"
                   alt="Guided Caribbean wine tasting at Ocoa Bay vineyard — Dominican Republic"
-                  className="w-full h-56 object-cover"
+                  className="w-full h-auto"
                   loading="lazy"
                   decoding="async"
                 />
@@ -361,7 +361,7 @@ const VineAndBarrelPage = () => {
                 <img
                   src="/media/vinedo-republica-dominicana-aerial.webp"
                   alt="Ocoa Bay full-day experience — Caribbean wine, pool and farm-to-table dining at the Casa Club"
-                  className="w-full h-56 object-cover"
+                  className="w-full h-auto"
                   loading="lazy"
                   decoding="async"
                 />
@@ -401,7 +401,7 @@ const VineAndBarrelPage = () => {
                 <img
                   src="/media/kibay-vino-ocoa-bay.webp"
                   alt="Casa Club at Ocoa Bay — Dominican wines on a dining table overlooking the Caribbean"
-                  className="w-full h-56 object-cover"
+                  className="w-full h-auto"
                   loading="lazy"
                   decoding="async"
                 />

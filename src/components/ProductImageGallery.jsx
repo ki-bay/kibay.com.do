@@ -45,7 +45,7 @@ const ProductImageGallery = forwardRef(({ images = [], title, ribbonText }, ref)
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="w-full h-full object-cover object-center"
+              className="w-full h-full object-contain object-center"
             />
           </AnimatePresence>
 
