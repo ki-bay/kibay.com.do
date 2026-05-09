@@ -73,16 +73,9 @@ const CheckoutForm = ({
 
 			if (confirmError) throw confirmError;
 
+			// Stripe webhook owns the orders.status='paid' flip. The client
+			// just navigates; the success page polls until the webhook lands.
 			if (paymentIntent && paymentIntent.status === 'succeeded') {
-				await supabase
-					.from('orders')
-					.update({
-						status: 'paid',
-						paid_at: new Date().toISOString(),
-						stripe_payment_intent_id: paymentIntent.id,
-					})
-					.eq('id', orderId);
-
 				onSuccess(orderId);
 			}
 		} catch (err) {
@@ -218,6 +211,41 @@ const CheckoutPage = () => {
 
 		setLoading(true);
 		setInitError(null);
+
+		// Re-validate inventory at checkout time. The cart enforces stock at
+		// add-time, but stock can drop between add and checkout (other buyers,
+		// admin adjustments). Bail if any tracked variant is now insufficient.
+		try {
+			const trackedIds = cartItems
+				.filter((item) => item.variant?.id && item.variant?.manage_inventory !== false)
+				.map((item) => item.variant.id);
+			if (trackedIds.length > 0) {
+				const { data: stockRows, error: stockErr } = await supabase
+					.from('product_variants')
+					.select('id, inventory_quantity, manage_inventory, title_es, title_en')
+					.in('id', trackedIds);
+				if (stockErr) throw new Error(stockErr.message);
+				const stockById = new Map((stockRows || []).map((r) => [r.id, r]));
+				for (const item of cartItems) {
+					const row = stockById.get(item.variant?.id);
+					if (!row || row.manage_inventory === false) continue;
+					const available = Number(row.inventory_quantity) || 0;
+					if (item.quantity > available) {
+						const name = row.title_es || row.title_en || item.product?.title || 'item';
+						setInitError(
+							`"${name}" only has ${available} in stock — please update your cart.`,
+						);
+						setLoading(false);
+						return;
+					}
+				}
+			}
+		} catch (stockCheckErr) {
+			console.error('Inventory recheck failed:', stockCheckErr);
+			setInitError('Unable to verify inventory. Please try again.');
+			setLoading(false);
+			return;
+		}
 
 		const orderNumber = `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
