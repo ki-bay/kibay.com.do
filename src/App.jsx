@@ -67,8 +67,9 @@ const AdminNewsletterPage = lazy(() => import('./pages/admin/AdminNewsletterPage
 const AdminShippingPage = lazy(() => import('./pages/admin/AdminShippingPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
-// Utilities
-const SitemapRenderer = lazy(() => import('./pages/SitemapRenderer'));
+// Sitemap is served as a static file at /sitemap.xml (built by
+// tools/generate-sitemap.js); the old SitemapRenderer SPA component is no
+// longer used.
 
 function HtmlLangSync() {
   const { i18n } = useTranslation();
@@ -129,8 +130,11 @@ function App() {
               <Route path="/blog/:id" element={<BlogPostDetailPage />} />
               <Route path="/unsubscribe/:email" element={<UnsubscribePage />} />
 
-              {/* Dynamic Sitemap */}
-              <Route path="/sitemap.xml" element={<SitemapRenderer />} />
+              {/* /sitemap.xml is served as a static file generated at build
+                  time by tools/generate-sitemap.js — Vite copies it from
+                  public/ into dist/, CF Pages serves it with the right
+                  application/xml content-type. The React route was a
+                  client-side SPA component and Googlebot couldn't read it. */}
 
               {/* Protected Routes */}
               <Route path="/account" element={<ProtectedRoute><UserProfilePage /></ProtectedRoute>} />
