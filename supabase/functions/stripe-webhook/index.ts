@@ -43,13 +43,12 @@ serve(async (req) => {
 		.from('webhook_events')
 		.insert({ event_id: event.id, event_type: event.type });
 	if (insertEventErr) {
-		// Postgres unique-violation code is 23505 → duplicate event_id → already processed.
 		const code = (insertEventErr as { code?: string }).code;
 		if (code === '23505') {
 			console.log(`Skipping duplicate Stripe event ${event.id}`);
 			return new Response(JSON.stringify({ received: true, duplicate: true }), { status: 200 });
 		}
-		// Any other DB error: don't fail the webhook (Stripe would retry forever); just log and proceed.
+		// Any other DB error: log and proceed (don't infinite-retry on app bugs).
 		console.error('webhook_events insert failed (proceeding anyway):', insertEventErr);
 	}
 
@@ -67,7 +66,6 @@ serve(async (req) => {
 		}
 	} catch (handlerErr) {
 		console.error(`Handler for ${event.type} threw:`, handlerErr);
-		// Still 200 so Stripe doesn't infinite-retry on application bugs.
 	}
 
 	return new Response(JSON.stringify({ received: true }), { status: 200 });
@@ -113,7 +111,7 @@ async function handlePaymentIntentSucceeded(
 		return;
 	}
 
-	// Generate invoice PDF (best-effort).
+	// Invoice PDF (best-effort).
 	try {
 		const { data: items } = await admin.from('order_items').select('*').eq('order_id', orderId);
 
@@ -153,6 +151,9 @@ async function handlePaymentIntentSucceeded(
 	} catch (pdfErr) {
 		console.error('Invoice generation failed', pdfErr);
 	}
+
+	// Confirmation email (best-effort).
+	await triggerOrderEmail(orderId, 'confirmation');
 }
 
 async function setOrderStatusFromIntent(
@@ -165,7 +166,6 @@ async function setOrderStatusFromIntent(
 		console.log(`${newStatus} event without order_id metadata — skipping`);
 		return;
 	}
-	// Only flip from 'awaiting_payment' — never overwrite paid/shipped orders.
 	const { error } = await admin
 		.from('orders')
 		.update({ status: newStatus, stripe_payment_intent_id: pi.id })
@@ -178,7 +178,6 @@ async function handleChargeRefunded(
 	admin: ReturnType<typeof createClient>,
 	charge: Stripe.Charge,
 ) {
-	// charge.payment_intent links back to our order.
 	const piId =
 		typeof charge.payment_intent === 'string'
 			? charge.payment_intent
@@ -187,11 +186,46 @@ async function handleChargeRefunded(
 		console.log('charge.refunded without payment_intent — skipping');
 		return;
 	}
-	// Mark refunded only if the order was previously paid.
+	const { data: order, error: fetchErr } = await admin
+		.from('orders')
+		.select('id')
+		.eq('stripe_payment_intent_id', piId)
+		.eq('status', 'paid')
+		.maybeSingle();
+	if (fetchErr) {
+		console.error(`Refund lookup failed for PI ${piId}:`, fetchErr);
+		return;
+	}
+	if (!order) return; // already refunded or never paid
+
 	const { error } = await admin
 		.from('orders')
 		.update({ status: 'refunded' })
-		.eq('stripe_payment_intent_id', piId)
+		.eq('id', order.id)
 		.eq('status', 'paid');
-	if (error) console.error(`Refund flip failed for PI ${piId}:`, error);
+	if (error) {
+		console.error(`Refund flip failed for order ${order.id}:`, error);
+		return;
+	}
+	await triggerOrderEmail(order.id, 'refund');
+}
+
+// Best-effort: invoke send-order-email; don't fail the webhook if it errors.
+async function triggerOrderEmail(orderId: string, type: 'confirmation' | 'tracking' | 'refund') {
+	try {
+		const resp = await fetch(`${supabaseUrl}/functions/v1/send-order-email`, {
+			method: 'POST',
+			headers: {
+				Authorization: `Bearer ${serviceKey}`,
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ order_id: orderId, type }),
+		});
+		if (!resp.ok) {
+			const text = await resp.text();
+			console.error(`send-order-email (${type}) failed`, resp.status, text);
+		}
+	} catch (e) {
+		console.error(`send-order-email (${type}) threw`, e);
+	}
 }

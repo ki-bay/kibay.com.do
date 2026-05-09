@@ -95,6 +95,7 @@ const AdminOrdersPage = () => {
 	const [error, setError] = useState(null);
 	const [savingId, setSavingId] = useState(null);
 	const [refundingId, setRefundingId] = useState(null);
+	const [emailingId, setEmailingId] = useState(null);
 	const [expandedId, setExpandedId] = useState(null);
 
 	// Filters
@@ -239,6 +240,22 @@ const AdminOrdersPage = () => {
 			toast.error(err.message || 'Failed to save order');
 		} finally {
 			setSavingId(null);
+		}
+	};
+
+	const sendEmail = async (order, type, label) => {
+		setEmailingId(`${order.id}:${type}`);
+		try {
+			const { data, error: e } = await supabase.functions.invoke('send-order-email', {
+				body: { order_id: order.id, type },
+			});
+			if (e) throw e;
+			if (data?.error) throw new Error(data.error);
+			toast.success(`${label} sent to ${order.shipping_address?.email || 'customer'}`);
+		} catch (err) {
+			toast.error(err.message || `Failed to send ${label.toLowerCase()}`);
+		} finally {
+			setEmailingId(null);
 		}
 	};
 
@@ -701,6 +718,36 @@ const AdminOrdersPage = () => {
 															</div>
 														</div>
 														<div className="mt-4 flex flex-wrap items-center gap-2 justify-end">
+															{['paid', 'processing', 'shipped', 'delivered'].includes(
+																o.status,
+															) && (
+																<Button
+																	type="button"
+																	variant="outline"
+																	className="border-foreground/20 text-foreground/80 hover:bg-foreground/5 gap-2"
+																	disabled={emailingId === `${o.id}:confirmation`}
+																	onClick={() => sendEmail(o, 'confirmation', 'Confirmation email')}
+																>
+																	{emailingId === `${o.id}:confirmation` ? (
+																		<Loader2 className="w-4 h-4 animate-spin" />
+																	) : null}
+																	Resend confirmation
+																</Button>
+															)}
+															{o.tracking_number && (
+																<Button
+																	type="button"
+																	variant="outline"
+																	className="border-foreground/20 text-foreground/80 hover:bg-foreground/5 gap-2"
+																	disabled={emailingId === `${o.id}:tracking`}
+																	onClick={() => sendEmail(o, 'tracking', 'Tracking email')}
+																>
+																	{emailingId === `${o.id}:tracking` ? (
+																		<Loader2 className="w-4 h-4 animate-spin" />
+																	) : null}
+																	Send tracking email
+																</Button>
+															)}
 															{o.status === 'paid' && (
 																<Button
 																	type="button"
