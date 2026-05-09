@@ -232,6 +232,7 @@ const AdminOrdersPage = () => {
 					tracking_number: order.tracking_number || null,
 					shipping_method: order.shipping_method || null,
 					tax_id: order.tax_id || null,
+					internal_notes: order.internal_notes ?? null,
 				})
 				.eq('id', order.id);
 			if (e) throw e;
@@ -714,6 +715,19 @@ const AdminOrdersPage = () => {
 																		updateField(o.id, 'tax_id', e.target.value)
 																	}
 																	placeholder="RNC / cedula"
+																/>
+															</div>
+															<div className="mt-4">
+																<label className="text-xs text-foreground/50 block mb-1">
+																	Internal notes (admin only)
+																</label>
+																<textarea
+																	className="w-full min-h-[64px] rounded-md bg-background border border-foreground/10 text-foreground p-3 text-sm"
+																	value={o.internal_notes || ''}
+																	onChange={(e) =>
+																		updateField(o.id, 'internal_notes', e.target.value)
+																	}
+																	placeholder="Private notes about this order — never sent to the customer"
 																/>
 															</div>
 														</div>

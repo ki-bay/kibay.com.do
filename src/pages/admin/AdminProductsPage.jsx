@@ -162,7 +162,23 @@ const AdminProductsPage = () => {
 												</td>
 												<td className="px-4 py-3 text-foreground/80">{s.count}</td>
 												<td className="px-4 py-3 text-foreground/80">
-													{s.tracksInventory ? s.totalStock : <span className="text-foreground/40 italic">untracked</span>}
+													{s.tracksInventory ? (
+														<span
+															className={
+																s.totalStock === 0
+																	? 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-500/15 text-red-400 text-xs font-medium'
+																	: s.totalStock < 10
+																	? 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 text-xs font-medium'
+																	: ''
+															}
+														>
+															{s.totalStock}
+															{s.totalStock === 0 && ' · sold out'}
+															{s.totalStock > 0 && s.totalStock < 10 && ' · low'}
+														</span>
+													) : (
+														<span className="text-foreground/40 italic">untracked</span>
+													)}
 												</td>
 												<td className="px-4 py-3 text-foreground/80">
 													{formatPrice(s.lowest?.price_usd_cents, '$')} / {formatPrice(s.lowest?.price_dop_cents, 'RD$')}
