@@ -193,6 +193,32 @@ function ProductDetailPage() {
           inStock: !isSoldOut
         }}
       />
+
+      <SchemaMarkup
+        type="BreadcrumbList"
+        data={{
+          items: [
+            { name: 'Home', url: '/' },
+            { name: 'Shop', url: '/shop' },
+            { name: displayTitle, url: `/product/${product.slug || product.id}` },
+          ],
+        }}
+      />
+
+      {product.additional_info?.length > 0 && (
+        <SchemaMarkup
+          type="FAQPage"
+          data={{
+            questions: product.additional_info
+              .slice()
+              .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+              .map((info) => ({
+                question: info.title,
+                answer: info.description,
+              })),
+          }}
+        />
+      )}
       
       <Navigation />
 

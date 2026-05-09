@@ -103,7 +103,22 @@ const SchemaMarkup = ({ type, data }) => {
         "itemCondition": "https://schema.org/NewCondition"
       }
     };
+  } else if (type === 'FAQPage') {
+    schemaData = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": (data?.questions || []).map((q) => ({
+        "@type": "Question",
+        "name": q.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": (q.answer || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+        }
+      }))
+    };
   }
+
+  if (!Object.keys(schemaData).length) return null;
 
   return (
     <Helmet>
