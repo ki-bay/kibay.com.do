@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { getProducts } from '@/api/EcommerceApi';
 import SEOHead from '@/components/SEOHead';
 import SchemaMarkup from '@/components/SchemaMarkup';
+import MediaImage from '@/components/MediaImage';
 import { mediaUrl } from '@/config/mediaCdn';
 
 const HomePage = () => {
@@ -139,7 +140,7 @@ const HomePage = () => {
               {/* Abstract shapes behind bottle */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px] sm:w-[400px] sm:h-[400px] bg-gradient-to-tr from-orange-500/20 to-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
 
-              <img
+              <MediaImage
                 src={mediaUrl('bc5a0b64ce661332da23e928299b7c41.jpg')}
                 alt={t('hero.imgAlt')}
                 width="650"

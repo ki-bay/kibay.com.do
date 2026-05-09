@@ -1,6 +1,5 @@
-/** Dev default for legacy Horizons marketing assets. Production: set VITE_MEDIA_CDN_BASE or use same-origin /public. */
-const DEV_DEFAULT_BASE =
-	'https://horizons-cdn.hostinger.com/786d721b-c0c7-4506-bee4-4ef9f4967a92';
+// Marketing images are self-hosted under /public/media (with .webp variants).
+// VITE_MEDIA_CDN_BASE remains an escape hatch for staging-style external CDNs.
 
 export function getMediaCdnBase() {
 	const explicit =
@@ -8,10 +7,7 @@ export function getMediaCdnBase() {
 	if (explicit != null && String(explicit).trim() !== '') {
 		return String(explicit).replace(/\/$/, '');
 	}
-	if (import.meta.env.PROD) {
-		return '';
-	}
-	return DEV_DEFAULT_BASE.replace(/\/$/, '');
+	return '';
 }
 
 /** @param {string} filename - file name only, e.g. "logo.png" */
@@ -19,9 +15,15 @@ export function mediaUrl(filename) {
 	const base = getMediaCdnBase();
 	const path = filename.replace(/^\//, '');
 	if (!base) {
-		return `/${path}`;
+		return `/media/${path}`;
 	}
 	return `${base}/${path}`;
+}
+
+/** WebP variant of a same-origin /media/ URL. Returns the input unchanged when no swap is possible. */
+export function mediaUrlWebp(url) {
+	if (!url || typeof url !== 'string') return url || '';
+	return url.replace(/\.(jpe?g|png)(\?.*)?$/i, '.webp$2');
 }
 
 /**
