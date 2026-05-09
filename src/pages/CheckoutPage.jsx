@@ -9,6 +9,7 @@ import { useAuth } from '@/contexts/SupabaseAuthContext';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import { supabase } from '@/lib/customSupabaseClient';
 import { computeShippingMajor } from '@/lib/shipping';
@@ -140,6 +141,15 @@ const CheckoutPage = () => {
 	const [initError, setInitError] = useState(null);
 	const [shippingMethod, setShippingMethod] = useState('standard');
 
+	// Coupon state.
+	// `appliedCoupon` is the validated coupon being applied to the current
+	// cart preview (validate_coupon RPC). It is re-confirmed atomically via
+	// redeem_coupon at order-INSERT time, which is the source of truth.
+	const [couponInput, setCouponInput] = useState('');
+	const [appliedCoupon, setAppliedCoupon] = useState(null); // { code, discountAmount, couponId }
+	const [couponError, setCouponError] = useState(null);
+	const [couponValidating, setCouponValidating] = useState(false);
+
 	const [shippingInfo, setShippingInfo] = useState({
 		firstName: '',
 		lastName: '',
@@ -165,10 +175,13 @@ const CheckoutPage = () => {
 		() => computeShippingMajor(subtotalMajor, shippingMethod, cartCurrency),
 		[subtotalMajor, shippingMethod, cartCurrency],
 	);
-	const totalMajor = subtotalMajor + shippingMajor;
-	const totalCents = Math.round(totalMajor * 100);
 	const subtotalCents = Math.round(subtotalMajor * 100);
 	const shippingCents = Math.round(shippingMajor * 100);
+	const discountCents = appliedCoupon ? Math.max(0, Number(appliedCoupon.discountAmount) || 0) : 0;
+	const discountMajor = discountCents / 100;
+	// Clamp at 0 in the (unlikely) case discount exceeds subtotal+shipping.
+	const totalCents = Math.max(0, subtotalCents + shippingCents - discountCents);
+	const totalMajor = totalCents / 100;
 
 	useEffect(() => {
 		if (cartItems.length === 0 && step === 'shipping') {
@@ -194,6 +207,50 @@ const CheckoutPage = () => {
 		setPendingOrderId(null);
 		setStep('shipping');
 	}, [pendingOrderId]);
+
+	const handleApplyCoupon = async () => {
+		const code = couponInput.trim().toUpperCase();
+		if (!code) {
+			setCouponError('Enter a coupon code.');
+			return;
+		}
+		setCouponValidating(true);
+		setCouponError(null);
+		try {
+			const { data, error } = await supabase.rpc('validate_coupon', {
+				p_code: code,
+				p_subtotal: subtotalCents,
+				p_currency: cartCurrency,
+			});
+			if (error) throw new Error(error.message);
+			// RPC returns a single row; supabase-js may surface as object or
+			// 1-element array depending on definition.
+			const row = Array.isArray(data) ? data[0] : data;
+			if (!row || !row.valid) {
+				setAppliedCoupon(null);
+				setCouponError(row?.error || 'Invalid coupon code.');
+				return;
+			}
+			setAppliedCoupon({
+				code,
+				discountAmount: Number(row.discount_amount) || 0,
+				couponId: row.coupon_id,
+			});
+			setCouponError(null);
+		} catch (err) {
+			console.error('validate_coupon failed:', err);
+			setAppliedCoupon(null);
+			setCouponError(err.message || 'Could not validate coupon.');
+		} finally {
+			setCouponValidating(false);
+		}
+	};
+
+	const handleRemoveCoupon = () => {
+		setAppliedCoupon(null);
+		setCouponError(null);
+		setCouponInput('');
+	};
 
 	const handleContinueToPayment = async () => {
 		if (!user) {
@@ -247,6 +304,44 @@ const CheckoutPage = () => {
 			return;
 		}
 
+		// Atomically redeem the coupon (if any) just before creating the order.
+		// We trust redeem_coupon's discount_amount over the preview because the
+		// subtotal might have shifted between Apply and Continue.
+		let finalDiscountCents = 0;
+		let finalCouponCode = null;
+		if (appliedCoupon) {
+			try {
+				const { data: redeemData, error: redeemError } = await supabase.rpc('redeem_coupon', {
+					p_code: appliedCoupon.code,
+					p_subtotal: subtotalCents,
+					p_currency: cartCurrency,
+				});
+				if (redeemError) throw new Error(redeemError.message);
+				const redeemRow = Array.isArray(redeemData) ? redeemData[0] : redeemData;
+				if (!redeemRow || !redeemRow.valid) {
+					// Race: coupon hit max_uses or otherwise became invalid.
+					setAppliedCoupon(null);
+					setCouponError(
+						redeemRow?.error || 'Coupon could no longer be applied. Please try again.',
+					);
+					setLoading(false);
+					return;
+				}
+				finalDiscountCents = Math.max(0, Number(redeemRow.discount_amount) || 0);
+				finalCouponCode = appliedCoupon.code;
+			} catch (redeemCatchErr) {
+				console.error('redeem_coupon failed:', redeemCatchErr);
+				setAppliedCoupon(null);
+				setCouponError(redeemCatchErr.message || 'Could not redeem coupon.');
+				setLoading(false);
+				return;
+			}
+		}
+
+		// Recompute totals using the authoritative discount from redeem_coupon.
+		const finalTotalCents = Math.max(0, subtotalCents + shippingCents - finalDiscountCents);
+		const finalTotalMajor = finalTotalCents / 100;
+
 		const orderNumber = `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
 		let createdOrderId = null;
@@ -257,9 +352,11 @@ const CheckoutPage = () => {
 					user_id: user.id,
 					order_number: orderNumber,
 					status: 'awaiting_payment',
-					total_amount: totalCents,
+					total_amount: finalTotalCents,
 					subtotal_amount: subtotalCents,
 					shipping_amount: shippingCents,
+					discount_amount: finalDiscountCents,
+					coupon_code: finalCouponCode,
 					currency: cartCurrency,
 					items_count: cartItems.length,
 					shipping_address: shippingInfo,
@@ -290,7 +387,7 @@ const CheckoutPage = () => {
 
 			const { data, error } = await supabase.functions.invoke('create-payment-intent', {
 				body: {
-					amount: totalMajor,
+					amount: finalTotalMajor,
 					currency: cartCurrency.toLowerCase(),
 					order_id: orderData.id,
 				},
@@ -483,6 +580,69 @@ const CheckoutPage = () => {
 								</div>
 
 								{step === 'shipping' && (
+									<div className="mt-6 pt-6 border-t border-foreground/10">
+										<label htmlFor="checkout-coupon" className="text-sm font-light text-foreground/80 block mb-2">
+											Coupon code
+										</label>
+										{appliedCoupon ? (
+											<div className="flex items-center justify-between bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3">
+												<div className="flex items-center gap-2 text-emerald-300 text-sm">
+													<CheckCircle className="w-4 h-4 flex-shrink-0" />
+													<span className="font-normal">{appliedCoupon.code}</span>
+													<span className="font-light text-foreground/70">
+														Saved {symbol}{(appliedCoupon.discountAmount / 100).toFixed(2)}
+													</span>
+												</div>
+												<button
+													type="button"
+													onClick={handleRemoveCoupon}
+													className="text-xs text-foreground/60 hover:text-foreground underline font-light"
+												>
+													Remove
+												</button>
+											</div>
+										) : (
+											<>
+												<div className="flex gap-2">
+													<Input
+														id="checkout-coupon"
+														name="coupon"
+														type="text"
+														value={couponInput}
+														onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+														onKeyDown={(e) => {
+															if (e.key === 'Enter') {
+																e.preventDefault();
+																handleApplyCoupon();
+															}
+														}}
+														placeholder="WELCOME10"
+														autoComplete="off"
+														className="flex-1 uppercase"
+													/>
+													<Button
+														type="button"
+														variant="outline"
+														onClick={handleApplyCoupon}
+														disabled={couponValidating || !couponInput.trim()}
+														className="border-foreground/20 text-foreground"
+													>
+														{couponValidating ? (
+															<Loader2 className="w-4 h-4 animate-spin" />
+														) : (
+															'Apply'
+														)}
+													</Button>
+												</div>
+												{couponError && (
+													<p className="text-xs text-red-400 mt-2 font-light">{couponError}</p>
+												)}
+											</>
+										)}
+									</div>
+								)}
+
+								{step === 'shipping' && (
 									<Button
 										type="button"
 										onClick={handleContinueToPayment}
@@ -593,6 +753,12 @@ const CheckoutPage = () => {
 										<span>{t('subtotal')}</span>
 										<span>{symbol}{subtotalMajor.toFixed(2)}</span>
 									</div>
+									{appliedCoupon && discountCents > 0 && (
+										<div className="flex justify-between text-emerald-400 font-light">
+											<span>Discount ({appliedCoupon.code})</span>
+											<span>-{symbol}{discountMajor.toFixed(2)}</span>
+										</div>
+									)}
 									<div className="flex justify-between text-foreground/60 font-light">
 										<span>{t('shipping')} ({t(shippingMethod)})</span>
 										<span>{symbol}{shippingMajor.toFixed(2)}</span>
