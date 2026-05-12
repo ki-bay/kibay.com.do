@@ -7,12 +7,147 @@ export interface EmailEnv {
 	EMAIL_LINK_SECRET: string;
 	SITE_URL: string;
 	WORKER_BASE_URL: string;
+	BREVO_WEBHOOK_SECRET?: string;
 }
 
 export interface BrevoSendInput {
 	subject: string;
 	htmlContent: string;
 }
+
+// ---------------------------------------------------------------------------
+// Generalized Brevo send helper. Used by the marketing campaign endpoint;
+// the older sendReviewEmail / sendResultsEmail kept their inline calls so we
+// don't risk regressing the running drive-pipeline.
+// ---------------------------------------------------------------------------
+export interface BrevoRecipient {
+	email: string;
+	name?: string;
+	params?: Record<string, string | number | boolean>;
+}
+
+export interface SendBrevoEmailInput {
+	to: BrevoRecipient[];
+	subject: string;
+	htmlContent: string;
+	fromName?: string;
+	fromEmail?: string;
+	replyTo?: { email: string; name?: string };
+	tags?: string[];
+	headers?: Record<string, string>;
+}
+
+export interface BrevoSendResult {
+	messageId?: string;
+	messageIds?: string[];
+}
+
+export async function sendBrevoEmail(
+	env: Pick<EmailEnv, 'BREVO_API_KEY' | 'REVIEW_EMAIL_FROM'>,
+	input: SendBrevoEmailInput,
+): Promise<BrevoSendResult> {
+	const defaultFromMatch = env.REVIEW_EMAIL_FROM.match(/^(.*)<(.+@.+)>\s*$/);
+	const defaultFromName = defaultFromMatch
+		? defaultFromMatch[1].trim().replace(/"/g, '')
+		: 'Kibay';
+	const defaultFromEmail = defaultFromMatch
+		? defaultFromMatch[2].trim()
+		: env.REVIEW_EMAIL_FROM.trim();
+
+	const body: Record<string, unknown> = {
+		sender: {
+			name: input.fromName || defaultFromName,
+			email: input.fromEmail || defaultFromEmail,
+		},
+		to: input.to.map((r) => {
+			const out: Record<string, unknown> = { email: r.email };
+			if (r.name) out.name = r.name;
+			if (r.params) out.params = r.params;
+			return out;
+		}),
+		subject: input.subject,
+		htmlContent: input.htmlContent,
+	};
+	if (input.replyTo) body.replyTo = input.replyTo;
+	if (input.tags && input.tags.length) body.tags = input.tags;
+	if (input.headers) body.headers = input.headers;
+
+	const r = await fetch('https://api.brevo.com/v3/smtp/email', {
+		method: 'POST',
+		headers: {
+			'api-key': env.BREVO_API_KEY,
+			'content-type': 'application/json',
+			accept: 'application/json',
+		},
+		body: JSON.stringify(body),
+	});
+	if (!r.ok) {
+		throw new Error(`Brevo send failed: ${r.status} ${await r.text()}`);
+	}
+	const j = (await r.json()) as { messageId?: string; messageIds?: string[] };
+	return { messageId: j.messageId, messageIds: j.messageIds };
+}
+
+// ---------------------------------------------------------------------------
+// HMAC-signed unsubscribe links. We embed these in marketing emails so any
+// recipient can self-suppress without an account. The HMAC prevents anyone
+// from suppressing arbitrary addresses by guessing URLs.
+// ---------------------------------------------------------------------------
+export async function signUnsubscribeUrl(
+	env: Pick<EmailEnv, 'EMAIL_LINK_SECRET' | 'WORKER_BASE_URL'>,
+	email: string,
+): Promise<string> {
+	// No expiry on unsubscribe links — they must keep working forever.
+	const payload = `unsub.${email.toLowerCase()}`;
+	const sig = await hmacHex(env.EMAIL_LINK_SECRET, payload);
+	const qs = new URLSearchParams({ email, sig });
+	return `${env.WORKER_BASE_URL}/unsubscribe?${qs.toString()}`;
+}
+
+export async function verifyUnsubscribeToken(
+	env: Pick<EmailEnv, 'EMAIL_LINK_SECRET'>,
+	email: string,
+	sig: string,
+): Promise<boolean> {
+	const expected = await hmacHex(env.EMAIL_LINK_SECRET, `unsub.${email.toLowerCase()}`);
+	if (expected.length !== sig.length) return false;
+	let m = 0;
+	for (let i = 0; i < expected.length; i++) {
+		m |= expected.charCodeAt(i) ^ sig.charCodeAt(i);
+	}
+	return m === 0;
+}
+
+export function unsubscribeResultPage(
+	success: boolean,
+	email: string,
+	message: string,
+): Response {
+	const color = success ? '#16a34a' : '#dc2626';
+	const heading = success ? "You're unsubscribed" : 'Unsubscribe failed';
+	const html = `<!doctype html><html><head><meta charset="utf-8"/><title>${heading} — Kibay</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<style>body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#f4f4f0;margin:0;padding:0;min-height:100vh;display:flex;align-items:center;justify-content:center;}
+.card{background:#fff;padding:48px 40px;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.08);max-width:480px;text-align:center;}
+h1{margin:0 0 12px;font-size:24px;color:${color};}
+.email{font-family:Menlo,monospace;font-size:13px;color:#555;background:#f6f6f2;padding:6px 10px;border-radius:6px;display:inline-block;margin:8px 0 16px;}
+p{margin:0;color:#666;line-height:1.5;}
+a{color:#888;font-size:13px;display:inline-block;margin-top:24px;}</style></head>
+<body><div class="card">
+<h1>${heading}</h1>
+<div class="email">${escapeHtml(email)}</div>
+<p>${escapeHtml(message)}</p>
+<a href="https://kibay.com.do/">Back to Kibay</a>
+</div></body></html>`;
+	return new Response(html, {
+		status: success ? 200 : 400,
+		headers: { 'content-type': 'text/html; charset=utf-8' },
+	});
+}
+
+// Export escapeHtml so other modules (e.g. the marketing endpoint that wraps
+// user-supplied HTML in a header/footer template) can sanitize fragments.
+export { escapeHtml };
 
 function b64url(input: ArrayBuffer | string): string {
 	const bytes =

@@ -25,4 +25,5 @@ LINKEDIN_ENABLED = "true"
 #   wrangler secret put SUPABASE_SERVICE_ROLE_KEY
 #   wrangler secret put ANTHROPIC_API_KEY
 #   wrangler secret put BREVO_API_KEY
-#   wrangler secret put EMAIL_LINK_SECRET    # 32+ bytes random
+#   wrangler secret put EMAIL_LINK_SECRET        # 32+ bytes random; signs approve/reject + unsubscribe links
+#   wrangler secret put BREVO_WEBHOOK_SECRET     # 32+ bytes random; verifies inbound /webhooks/brevo

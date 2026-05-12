@@ -1,5 +1,6 @@
 ## Pages
 - [- Kibay Admin](/blogeditor): No description available
+- [— Admin](/emailcomposer): No description available
 - [— Kibay](/checkout): No description available
 - [` : 'New Product'} — Admin](/adminproductform): No description available
 - [Account - Kibay Espumante](/userprofile): No description available
@@ -10,6 +11,8 @@
 - [Coupons — Admin](/admincoupons): No description available
 - [Create Account - Kibay Espumante](/register): No description available
 - [Customers — Admin](/admincustomers): No description available
+- [Email campaigns — Admin](/emailcampaigns): No description available
+- [Email marketing — Admin](/emaildashboard): No description available
 - [Enter Code - Kibay Espumante](/verifyotp): No description available
 - [KiBay Wine | Tropical Wine Crafted at Ocoa Bay](/kibaywineproduct): KiBay Wine: An authentic expression of Caribbean terroir. Tropical wine crafted at Ocoa Bay with innovative winemaking techniques.
 - [Login - Kibay Espumante](/login): No description available

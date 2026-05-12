@@ -62,6 +62,10 @@ const AdminCouponsPage = lazy(() => import('./pages/admin/AdminCouponsPage'));
 const AdminAnalyticsPage = lazy(() => import('./pages/admin/AdminAnalyticsPage'));
 const AdminNewsletterPage = lazy(() => import('./pages/admin/AdminNewsletterPage'));
 const AdminShippingPage = lazy(() => import('./pages/admin/AdminShippingPage'));
+const EmailDashboardPage = lazy(() => import('./pages/admin/email/EmailDashboardPage'));
+const EmailContactsPage = lazy(() => import('./pages/admin/email/EmailContactsPage'));
+const EmailCampaignsPage = lazy(() => import('./pages/admin/email/EmailCampaignsPage'));
+const EmailComposerPage = lazy(() => import('./pages/admin/email/EmailComposerPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 // Sitemap is served as a static file at /sitemap.xml (built by
@@ -152,6 +156,11 @@ function App() {
               <Route path="/admin/coupons" element={<ProtectedAdminRoute><AdminCouponsPage /></ProtectedAdminRoute>} />
               <Route path="/admin/analytics" element={<ProtectedAdminRoute><AdminAnalyticsPage /></ProtectedAdminRoute>} />
               <Route path="/admin/newsletter" element={<ProtectedAdminRoute><AdminNewsletterPage /></ProtectedAdminRoute>} />
+              <Route path="/admin/email" element={<ProtectedAdminRoute><EmailDashboardPage /></ProtectedAdminRoute>} />
+              <Route path="/admin/email/contacts" element={<ProtectedAdminRoute><EmailContactsPage /></ProtectedAdminRoute>} />
+              <Route path="/admin/email/campaigns" element={<ProtectedAdminRoute><EmailCampaignsPage /></ProtectedAdminRoute>} />
+              <Route path="/admin/email/campaigns/new" element={<ProtectedAdminRoute><EmailComposerPage /></ProtectedAdminRoute>} />
+              <Route path="/admin/email/campaigns/:id/edit" element={<ProtectedAdminRoute><EmailComposerPage /></ProtectedAdminRoute>} />
               <Route path="/admin/shipping" element={<ProtectedAdminRoute><AdminShippingPage /></ProtectedAdminRoute>} />
 
               {/* 404 catch-all — must stay LAST */}
