@@ -39,6 +39,36 @@ interface Env extends SupabaseEnv, EmailEnv, SocialEnv {
 	BREVO_WEBHOOK_SECRET?: string;
 }
 
+// CORS allowlist for endpoints called from the browser (admin SPA).
+// /webhooks/brevo, /unsubscribe, and the diagnostic /run-style endpoints
+// are not browser-called so they don't need CORS — only /email/send does.
+const ALLOWED_ORIGINS = new Set([
+	'https://kibay.com.do',
+	'https://www.kibay.com.do',
+	'http://localhost:5173',
+	'http://localhost:4173',
+]);
+
+function corsHeaders(req: Request): Record<string, string> {
+	const origin = req.headers.get('Origin') || '';
+	if (!ALLOWED_ORIGINS.has(origin)) return {};
+	return {
+		'Access-Control-Allow-Origin': origin,
+		'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+		'Access-Control-Allow-Headers': 'Authorization, Content-Type',
+		'Access-Control-Max-Age': '86400',
+		Vary: 'Origin',
+	};
+}
+
+function withCors(res: Response, req: Request): Response {
+	const ch = corsHeaders(req);
+	if (!Object.keys(ch).length) return res;
+	const headers = new Headers(res.headers);
+	for (const [k, v] of Object.entries(ch)) headers.set(k, v);
+	return new Response(res.body, { status: res.status, statusText: res.statusText, headers });
+}
+
 export default {
 	async scheduled(_event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
 		ctx.waitUntil(runPipeline(env));
@@ -46,6 +76,11 @@ export default {
 
 	async fetch(req: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
 		const url = new URL(req.url);
+
+		// CORS preflight for browser-called email endpoints.
+		if (req.method === 'OPTIONS' && url.pathname.startsWith('/email/')) {
+			return new Response(null, { status: 204, headers: corsHeaders(req) });
+		}
 
 		if (url.pathname === '/health') return new Response('ok');
 
@@ -155,14 +190,17 @@ h1{margin:0 0 12px;color:#16a34a;}
 
 		if (url.pathname === '/email/send' && req.method === 'POST') {
 			const auth = await verifyAdminAuth(env, req);
-			if (!auth.ok) return new Response(auth.body, { status: auth.status });
+			if (!auth.ok) return withCors(new Response(auth.body, { status: auth.status }), req);
 			try {
-				return await handleEmailSend(env, req, auth.email);
+				return withCors(await handleEmailSend(env, req, auth.email), req);
 			} catch (e) {
 				console.error('/email/send error:', e);
-				return new Response(
-					JSON.stringify({ ok: false, error: (e as Error).message }),
-					{ status: 500, headers: { 'content-type': 'application/json' } },
+				return withCors(
+					new Response(
+						JSON.stringify({ ok: false, error: (e as Error).message }),
+						{ status: 500, headers: { 'content-type': 'application/json' } },
+					),
+					req,
 				);
 			}
 		}
