@@ -1,0 +1,16 @@
+{
+  "name": "drive-pipeline",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "tail": "wrangler tail",
+    "secrets:list": "wrangler secret list"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250127.0",
+    "typescript": "^5.4.5",
+    "wrangler": "^3.114.0"
+  }
+}

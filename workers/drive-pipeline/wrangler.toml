@@ -1,0 +1,25 @@
+name = "kibay-drive-pipeline"
+main = "src/index.ts"
+compatibility_date = "2026-05-11"
+compatibility_flags = ["nodejs_compat"]
+
+[triggers]
+# Daily at 3:00 PM Dominican Republic time (AST = UTC-4, no DST) → 19:00 UTC.
+crons = ["0 19 * * *"]
+
+[vars]
+SUPABASE_URL = "https://bsnxwajuqkatrmgoqcnu.supabase.co"
+SUPABASE_STORAGE_BUCKET = "blog_media"
+SITE_URL = "https://kibay.com.do"
+ANTHROPIC_MODEL = "claude-haiku-4-5-20251001"
+WORKER_BASE_URL = "https://kibay-drive-pipeline.sweet-math-09d2.workers.dev"
+REVIEW_EMAIL_FROM = "Kibay <info@kibay.com.do>"
+REVIEW_EMAIL_TO = "info@kibay.com.do"
+
+# Secrets — set with:
+#   wrangler secret put GOOGLE_SERVICE_ACCOUNT_JSON < service-account.json
+#   wrangler secret put GOOGLE_DRIVE_FOLDER_ID
+#   wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+#   wrangler secret put ANTHROPIC_API_KEY
+#   wrangler secret put BREVO_API_KEY
+#   wrangler secret put EMAIL_LINK_SECRET    # 32+ bytes random
