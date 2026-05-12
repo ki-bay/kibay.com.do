@@ -17,7 +17,7 @@ REVIEW_EMAIL_FROM = "Kibay <info@kibay.com.do>"
 REVIEW_EMAIL_TO = "info@kibay.com.do"
 META_ENABLED = "true"
 META_IG_ENABLED = "true"
-LINKEDIN_ENABLED = "false"
+LINKEDIN_ENABLED = "true"
 
 # Secrets — set with:
 #   wrangler secret put GOOGLE_SERVICE_ACCOUNT_JSON < service-account.json

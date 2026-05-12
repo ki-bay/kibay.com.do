@@ -315,18 +315,120 @@ export async function postToLinkedIn(
 		return {
 			platform: 'li',
 			status: 'skipped',
-			error_msg: 'LINKEDIN_ENABLED=false (MDP pending)',
+			error_msg: 'LINKEDIN_ENABLED=false',
 		};
 	}
 	if (!env.LINKEDIN_ACCESS_TOKEN || !env.LINKEDIN_AUTHOR_URN) {
 		return { platform: 'li', status: 'skipped', error_msg: 'LinkedIn secrets missing' };
 	}
-	// Real implementation pending MDP approval. Skeleton:
-	// 1. POST /v2/assets?action=registerUpload to register image
-	// 2. PUT the binary to the returned upload URL
-	// 3. POST /v2/ugcPosts with the asset URN
-	void opts; // unused until enabled
-	return { platform: 'li', status: 'failed', error_msg: 'LinkedIn not yet implemented' };
+	if (!opts.imageUrls.length) {
+		return { platform: 'li', status: 'failed', error_msg: 'no images provided' };
+	}
+	const token = env.LINKEDIN_ACCESS_TOKEN;
+	const author = env.LINKEDIN_AUTHOR_URN;
+	const headers = {
+		Authorization: `Bearer ${token}`,
+		'X-Restli-Protocol-Version': '2.0.0',
+		'Content-Type': 'application/json',
+	};
+
+	try {
+		// 1. Register image upload — first image only for MVP (LinkedIn supports
+		//    multi-image but each needs its own upload + the UGC structure differs).
+		const regBody = {
+			registerUploadRequest: {
+				recipes: ['urn:li:digitalmediaRecipe:feedshare-image'],
+				owner: author,
+				serviceRelationships: [
+					{ relationshipType: 'OWNER', identifier: 'urn:li:userGeneratedContent' },
+				],
+			},
+		};
+		const regR = await fetch(
+			'https://api.linkedin.com/v2/assets?action=registerUpload',
+			{ method: 'POST', headers, body: JSON.stringify(regBody) },
+		);
+		const regJ = (await regR.json()) as {
+			value?: {
+				uploadMechanism?: Record<string, { uploadUrl?: string }>;
+				asset?: string;
+			};
+			message?: string;
+		};
+		if (!regJ.value?.asset) {
+			return {
+				platform: 'li',
+				status: 'failed',
+				error_msg: `registerUpload: ${regJ.message || JSON.stringify(regJ).slice(0, 200)}`,
+			};
+		}
+		const assetUrn = regJ.value.asset;
+		const uploadUrl =
+			regJ.value.uploadMechanism?.['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest']
+				?.uploadUrl;
+		if (!uploadUrl) {
+			return { platform: 'li', status: 'failed', error_msg: 'no uploadUrl returned' };
+		}
+
+		// 2. Fetch image bytes from our Supabase Storage URL, then PUT to LinkedIn upload URL.
+		const imgR = await fetch(opts.imageUrls[0]);
+		if (!imgR.ok) {
+			return { platform: 'li', status: 'failed', error_msg: `image fetch failed: ${imgR.status}` };
+		}
+		const imgBytes = await imgR.arrayBuffer();
+		const upR = await fetch(uploadUrl, {
+			method: 'PUT',
+			headers: { Authorization: `Bearer ${token}` },
+			body: imgBytes,
+		});
+		if (!upR.ok) {
+			return {
+				platform: 'li',
+				status: 'failed',
+				error_msg: `upload PUT: ${upR.status} ${(await upR.text()).slice(0, 200)}`,
+			};
+		}
+
+		// 3. Create the UGC post referencing the asset.
+		const captionWithLink = `${opts.caption.trim()}\n\nRead more: ${opts.linkUrl}`;
+		const postBody = {
+			author,
+			lifecycleState: 'PUBLISHED',
+			specificContent: {
+				'com.linkedin.ugc.ShareContent': {
+					shareCommentary: { text: captionWithLink },
+					shareMediaCategory: 'IMAGE',
+					media: [
+						{
+							status: 'READY',
+							media: assetUrn,
+						},
+					],
+				},
+			},
+			visibility: {
+				'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC',
+			},
+		};
+		const ugcR = await fetch('https://api.linkedin.com/v2/ugcPosts', {
+			method: 'POST',
+			headers,
+			body: JSON.stringify(postBody),
+		});
+		if (!ugcR.ok) {
+			return {
+				platform: 'li',
+				status: 'failed',
+				error_msg: `ugcPosts: ${ugcR.status} ${(await ugcR.text()).slice(0, 200)}`,
+			};
+		}
+		const ugcJ = (await ugcR.json()) as { id?: string };
+		// Also check the response header for the post id
+		const postId = ugcJ.id || ugcR.headers.get('x-restli-id') || '';
+		return { platform: 'li', status: 'posted', platform_post_id: postId };
+	} catch (e: unknown) {
+		return { platform: 'li', status: 'failed', error_msg: (e as Error)?.message || String(e) };
+	}
 }
 
 export async function crossPostAll(

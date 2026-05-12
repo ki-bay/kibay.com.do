@@ -28,6 +28,8 @@ interface Env extends SupabaseEnv, EmailEnv, SocialEnv {
 	GOOGLE_DRIVE_FOLDER_ID: string;
 	ANTHROPIC_API_KEY: string;
 	ANTHROPIC_MODEL: string;
+	LINKEDIN_CLIENT_ID?: string;
+	LINKEDIN_CLIENT_SECRET?: string;
 }
 
 export default {
@@ -45,6 +47,95 @@ export default {
 		}
 		if (url.pathname === '/reject' && req.method === 'GET') {
 			return handleAction(req, env, ctx, 'reject');
+		}
+
+		// LinkedIn OAuth helper — one-time use to mint a 60-day access token for
+		// posting on behalf of the developer's personal profile. After running this
+		// the user copies LINKEDIN_ACCESS_TOKEN + LINKEDIN_AUTHOR_URN into .env.local,
+		// and we push them to Worker secrets. No protect token because LinkedIn
+		// itself does the auth via the OAuth flow.
+		if (url.pathname === '/auth/linkedin/start' && req.method === 'GET') {
+			const clientId = env.LINKEDIN_CLIENT_ID || '';
+			if (!clientId) return new Response('LINKEDIN_CLIENT_ID not set', { status: 500 });
+			const redirectUri = `${env.WORKER_BASE_URL}/auth/linkedin/callback`;
+			const state = crypto.randomUUID();
+			const scope = 'openid profile email w_member_social';
+			const auth = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${encodeURIComponent(
+				clientId,
+			)}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&state=${state}`;
+			return Response.redirect(auth, 302);
+		}
+
+		if (url.pathname === '/auth/linkedin/callback' && req.method === 'GET') {
+			const code = url.searchParams.get('code');
+			const err = url.searchParams.get('error');
+			if (err) {
+				return new Response(`OAuth error: ${err} — ${url.searchParams.get('error_description') || ''}`, {
+					status: 400,
+				});
+			}
+			if (!code) return new Response('missing code', { status: 400 });
+			const clientId = env.LINKEDIN_CLIENT_ID || '';
+			const clientSecret = env.LINKEDIN_CLIENT_SECRET || '';
+			const redirectUri = `${env.WORKER_BASE_URL}/auth/linkedin/callback`;
+			// Exchange code for access token
+			const tokenR = await fetch('https://www.linkedin.com/oauth/v2/accessToken', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				body: new URLSearchParams({
+					grant_type: 'authorization_code',
+					code,
+					redirect_uri: redirectUri,
+					client_id: clientId,
+					client_secret: clientSecret,
+				}),
+			});
+			const tokenJ = (await tokenR.json()) as {
+				access_token?: string;
+				expires_in?: number;
+				scope?: string;
+				error?: string;
+				error_description?: string;
+			};
+			if (!tokenJ.access_token) {
+				return new Response(
+					`Token exchange failed: ${tokenJ.error} — ${tokenJ.error_description || ''}`,
+					{ status: 400 },
+				);
+			}
+			// Fetch the user URN via OpenID userinfo
+			const userR = await fetch('https://api.linkedin.com/v2/userinfo', {
+				headers: { Authorization: `Bearer ${tokenJ.access_token}` },
+			});
+			const userJ = (await userR.json()) as { sub?: string; name?: string; email?: string };
+			if (!userJ.sub) {
+				return new Response(`userinfo failed: ${JSON.stringify(userJ)}`, { status: 400 });
+			}
+			const authorUrn = `urn:li:person:${userJ.sub}`;
+			const expiresDays = Math.round((tokenJ.expires_in || 0) / 86400);
+
+			const html = `<!doctype html><html><head><meta charset="utf-8"><title>LinkedIn OAuth complete</title>
+<style>body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#f4f4f0;margin:0;padding:40px;color:#1a1a1a;}
+.card{max-width:680px;margin:0 auto;background:#fff;padding:32px;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+h1{margin:0 0 12px;color:#16a34a;}
+.field{margin:20px 0;}
+.field label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#666;margin-bottom:6px;}
+.field textarea{width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-family:Menlo,monospace;font-size:13px;background:#fafafa;}
+.meta{font-size:13px;color:#666;margin-top:24px;padding-top:16px;border-top:1px solid #eee;}</style></head>
+<body><div class="card">
+<h1>✅ LinkedIn OAuth complete</h1>
+<p>Copy these two values into <code>.env.local</code> (replacing any existing values), save, and tell Claude "linkedin done":</p>
+<div class="field"><label>LINKEDIN_ACCESS_TOKEN</label>
+<textarea rows="4" onclick="this.select()">${tokenJ.access_token}</textarea></div>
+<div class="field"><label>LINKEDIN_AUTHOR_URN</label>
+<textarea rows="1" onclick="this.select()">${authorUrn}</textarea></div>
+<div class="meta">
+<b>Authenticated as:</b> ${userJ.name || '(no name)'} &lt;${userJ.email || '(no email)'}&gt;<br>
+<b>Token scope:</b> ${tokenJ.scope || '(none)'}<br>
+<b>Token expires in:</b> ~${expiresDays} days (LinkedIn tokens last ~60 days; we'll set a calendar reminder).
+</div>
+</div></body></html>`;
+			return new Response(html, { headers: { 'content-type': 'text/html; charset=utf-8' } });
 		}
 
 		// Resend the review email for an existing post (used when the pipeline ran out of
