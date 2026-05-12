@@ -2,33 +2,30 @@ import { supabase } from '@/lib/customSupabaseClient';
 
 export const subscribeToNewsletter = async ({ firstName, email, source, tags = [] }) => {
   try {
-    // 1. Validate Email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailRegex.test(email)) {
       throw new Error('Please enter a valid email address.');
     }
 
-    // 2. Prepare data
-    const subscriberData = {
-      email,
-      first_name: firstName,
-      source,
-      tags: JSON.stringify(tags),
-    };
-
-    // 3. Insert into newsletter_subscribers table
-    // We use upsert to handle potential duplicates (if email is unique) or just insert
-    const { error: insertError } = await supabase
+    // Plain INSERT (not upsert). The DB has a trigger that mirrors new rows
+    // into email_contacts (so marketing campaigns can reach them) using
+    // SECURITY DEFINER — the SPA doesn't have to touch email_contacts.
+    // Duplicate (23505) means the email is already subscribed: treat as success.
+    const { error } = await supabase
       .from('newsletter_subscribers')
-      .upsert(subscriberData, { onConflict: 'email' });
+      .insert({
+        email,
+        first_name: firstName || null,
+        source,
+        tags: JSON.stringify(tags),
+      });
 
-    if (insertError) {
-      console.error('Newsletter insert error:', insertError);
+    if (error && error.code !== '23505') {
+      console.error('newsletter_subscribers insert error:', error);
       throw new Error('Could not subscribe. Please try again.');
     }
 
-    // 4. If user is logged in, also update their user_preferences (optional but requested)
-    // We try to get current session silently
+    // If user is signed in, also flag the preference for them.
     const { data: { session } } = await supabase.auth.getSession();
     if (session?.user) {
       await supabase.from('user_preferences').upsert(

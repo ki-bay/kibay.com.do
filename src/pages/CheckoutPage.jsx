@@ -631,7 +631,7 @@ const CheckoutPage = () => {
 																handleApplyCoupon();
 															}
 														}}
-														placeholder="WELCOME10"
+														placeholder=""
 														autoComplete="off"
 														className="flex-1 uppercase"
 													/>
