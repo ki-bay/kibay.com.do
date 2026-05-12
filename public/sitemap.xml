@@ -135,4 +135,58 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://kibay.com.do/shipping-returns" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://kibay.com.do/shipping-returns" />
   </url>
+  <url>
+    <loc>https://kibay.com.do/product/kibay-sparkling</loc>
+    <lastmod>2026-04-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://kibay.com.do/product/kibay-sparkling" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://kibay.com.do/product/kibay-sparkling" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kibay.com.do/product/kibay-sparkling" />
+  </url>
+  <url>
+    <loc>https://kibay.com.do/product/kibay-wine</loc>
+    <lastmod>2026-04-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://kibay.com.do/product/kibay-wine" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://kibay.com.do/product/kibay-wine" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kibay.com.do/product/kibay-wine" />
+  </url>
+  <url>
+    <loc>https://kibay.com.do/product/rose</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://kibay.com.do/product/rose" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://kibay.com.do/product/rose" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kibay.com.do/product/rose" />
+  </url>
+  <url>
+    <loc>https://kibay.com.do/product/french-colombard</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://kibay.com.do/product/french-colombard" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://kibay.com.do/product/french-colombard" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kibay.com.do/product/french-colombard" />
+  </url>
+  <url>
+    <loc>https://kibay.com.do/product/ocoa-bay-complete-experience</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://kibay.com.do/product/ocoa-bay-complete-experience" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://kibay.com.do/product/ocoa-bay-complete-experience" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kibay.com.do/product/ocoa-bay-complete-experience" />
+  </url>
+  <url>
+    <loc>https://kibay.com.do/product/ocoa-bay-wine-tour</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://kibay.com.do/product/ocoa-bay-wine-tour" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://kibay.com.do/product/ocoa-bay-wine-tour" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kibay.com.do/product/ocoa-bay-wine-tour" />
+  </url>
 </urlset>

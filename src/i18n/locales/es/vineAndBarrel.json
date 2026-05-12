@@ -87,31 +87,40 @@
   },
   "tasting": {
     "heading": "Notas de Cata",
-    "subheading": "Explora los perfiles de nuestras añadas más celebradas.",
+    "subheading": "Explora los perfiles de nuestros cuatro vinos elaborados en Bahía de Ocoa.",
     "labelAroma": "Aroma",
     "labelFlavor": "Sabor",
-    "labelFinish": "Final",
+    "labelFinish": "Cuerpo y final",
+    "outOfStockLabel": "Agotado",
     "wines": [
       {
-        "name": "Pinot Noir",
-        "year": "2019",
-        "aroma": "Frambuesa, violeta, tierra",
-        "flavor": "Cereza roja, hongo, clavo",
-        "finish": "Sedoso, taninos delicados"
-      },
-      {
-        "name": "Chardonnay",
-        "year": "2020",
-        "aroma": "Manzana verde, cítricos, tostado",
-        "flavor": "Pera, crema de limón, mantequilla",
-        "finish": "Acidez fresca, textura cremosa"
-      },
-      {
         "name": "Rosé",
-        "year": "2021",
-        "aroma": "Fresa, pétalo de rosa",
-        "flavor": "Sandía, melocotón, mineral",
-        "finish": "Seco, refrescante, limpio"
+        "year": "2026",
+        "aroma": "Aromas frescos de uva con sutiles notas florales.",
+        "flavor": "Perfil limpio y elegante con notas de frutos rojos; equilibrio entre dulzura natural y acidez fresca.",
+        "finish": "Ligero a medio cuerpo, textura suave y final refrescante."
+      },
+      {
+        "name": "Kibay",
+        "year": "2026",
+        "aroma": "Ramillete tropical de mango maduro y cítricos de chinola.",
+        "flavor": "Fusión vibrante de frutos exóticos: mango maduro y chinola con un punto de acidez.",
+        "finish": "Textura suave y final brillante; ligero a medio cuerpo."
+      },
+      {
+        "name": "French Colombard",
+        "year": "2026",
+        "aroma": "Aromas frescos y frutales: manzana, cítricos y notas florales.",
+        "flavor": "Brillante y crujiente, con alta acidez; manzana verde, pera, cítricos y un toque tropical.",
+        "finish": "Ligero a medio cuerpo, refrescante por su acidez."
+      },
+      {
+        "name": "Red Wine",
+        "year": "2026",
+        "outOfStock": true,
+        "aroma": "Uvas maduras, fondo terroso y un toque suave de especias.",
+        "flavor": "Frutos de uva madura con notas sutiles de especias; estructura equilibrada.",
+        "finish": "Medio cuerpo, taninos suaves y acidez refrescante."
       }
     ]
   },

@@ -468,14 +468,19 @@ const VineAndBarrelPage = () => {
               variants={staggerContainer}
               initial="initial"
               whileInView="whileInView"
-              className="grid md:grid-cols-3 gap-8"
+              className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8"
             >
               {(Array.isArray(tastingWines) ? tastingWines : []).map((wine, i) => (
                 <m.div
                   key={i}
                   variants={fadeInUp}
-                  className="bg-stone-50 p-10 rounded-2xl shadow-lg border border-stone-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group"
+                  className={`bg-stone-50 p-8 rounded-2xl shadow-lg border border-stone-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group relative ${wine.outOfStock ? 'opacity-90' : ''}`}
                 >
+                  {wine.outOfStock && (
+                    <span className="absolute top-4 right-4 inline-block text-[10px] uppercase tracking-widest font-medium text-stone-600 bg-stone-200 px-2 py-1 rounded-full">
+                      {t('tasting.outOfStockLabel')}
+                    </span>
+                  )}
                   <div className="w-12 h-12 bg-[#D4A574]/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-[#D4A574] transition-colors duration-300">
                     <Wine className="text-[#D4A574] group-hover:text-foreground transition-colors" />
                   </div>

@@ -87,31 +87,40 @@
   },
   "tasting": {
     "heading": "Tasting Notes",
-    "subheading": "Explore the intricate profiles of our most celebrated vintages.",
+    "subheading": "Explore the four wines we craft at Bahía de Ocoa.",
     "labelAroma": "Aroma",
     "labelFlavor": "Flavor",
-    "labelFinish": "Finish",
+    "labelFinish": "Body & finish",
+    "outOfStockLabel": "Out of stock",
     "wines": [
       {
-        "name": "Pinot Noir",
-        "year": "2019",
-        "aroma": "Raspberry, Violet, Earth",
-        "flavor": "Red Cherry, Mushroom, Clove",
-        "finish": "Silky, delicate tannins"
-      },
-      {
-        "name": "Chardonnay",
-        "year": "2020",
-        "aroma": "Green Apple, Citrus, Toast",
-        "flavor": "Pear, Lemon Curd, Butter",
-        "finish": "Crisp acidity, creamy texture"
-      },
-      {
         "name": "Rosé",
-        "year": "2021",
-        "aroma": "Strawberry, Rose Petal",
-        "flavor": "Watermelon, Peach, Mineral",
-        "finish": "Dry, refreshing, clean"
+        "year": "2026",
+        "aroma": "Bouquet of fresh grape aromas with subtle floral undertones.",
+        "flavor": "Clean, elegant profile with berry notes; balanced natural sweetness and crisp acidity.",
+        "finish": "Light to medium-bodied, smooth texture, refreshing finish."
+      },
+      {
+        "name": "Kibay",
+        "year": "2026",
+        "aroma": "Tropical bouquet of ripe mango and zesty chinola citrus.",
+        "flavor": "Vibrant fusion of exotic flavors: ripe mango and passion fruit with a touch of acidity.",
+        "finish": "Smooth texture and bright finish; light to medium-bodied."
+      },
+      {
+        "name": "French Colombard",
+        "year": "2026",
+        "aroma": "Fresh, fruity aromas — apple, citrus, floral notes.",
+        "flavor": "Bright and crisp with high acidity; green apple, pear, citrus, and a tropical touch.",
+        "finish": "Light to medium-bodied, refreshing due to high acidity."
+      },
+      {
+        "name": "Red Wine",
+        "year": "2026",
+        "outOfStock": true,
+        "aroma": "Ripe grapes, earthy undertones, a gentle hint of spice.",
+        "flavor": "Ripe grape flavors with subtle spice notes; balanced structure.",
+        "finish": "Medium-bodied with soft tannins and refreshing acidity."
       }
     ]
   },
