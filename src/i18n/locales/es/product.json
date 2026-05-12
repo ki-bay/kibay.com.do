@@ -17,5 +17,18 @@
     "body": "Envío estándar a toda la República Dominicana. Envío gratuito en pedidos sobre RD$5,000."
   },
   "details": "Detalles del producto",
-  "additionalInfo": "Información adicional"
+  "additionalInfo": "Información adicional",
+  "hero": {
+    "cta": "Pedir ahora"
+  },
+  "tasting": {
+    "heading": "Notas de Cata",
+    "aroma": "Aroma",
+    "flavor": "Sabor",
+    "finish": "Final",
+    "body": "Cuerpo"
+  },
+  "specs": {
+    "heading": "Características"
+  }
 }

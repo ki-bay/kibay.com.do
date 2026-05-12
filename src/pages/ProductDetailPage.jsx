@@ -8,7 +8,10 @@ import { useCart } from '@/hooks/useCart';
 import { useToast } from '@/components/ui/use-toast';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
-import { Loader2, ArrowLeft, CheckCircle, Minus, Plus, AlertCircle, ShoppingBag } from 'lucide-react';
+import {
+  Loader2, ArrowLeft, CheckCircle, Minus, Plus, AlertCircle,
+  ShoppingBag, ArrowDown, Sun, Wine, Sparkles, Leaf,
+} from 'lucide-react';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import SEOHead from '@/components/SEOHead';
 import SchemaMarkup from '@/components/SchemaMarkup';
@@ -19,11 +22,50 @@ import RelatedProducts from '@/components/RelatedProducts';
 
 const placeholderImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjVmNWY0Ii8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2E4YTJhMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K";
 
+// Pick a metadata value by language using the _es / _en suffix convention.
+function pickLocalized(obj, baseKey, lang) {
+  if (!obj) return undefined;
+  const suffix = lang === 'en' ? '_en' : '_es';
+  const fallback = lang === 'en' ? '_es' : '_en';
+  return obj[`${baseKey}${suffix}`] ?? obj[`${baseKey}${fallback}`] ?? obj[baseKey];
+}
+
+// Split a hero title into lead + accent for the editorial treatment.
+// Honors metadata.title_accent_{es,en} first, then a " — " em-dash split,
+// otherwise returns the full title as the lead with no accent.
+function splitHeroTitle(title, metadata, lang) {
+  const accentOverride = pickLocalized(metadata, 'title_accent', lang);
+  if (accentOverride && title?.toLowerCase().endsWith(String(accentOverride).toLowerCase())) {
+    const lead = title.slice(0, title.length - accentOverride.length).trim();
+    return { lead: lead || title, accent: accentOverride };
+  }
+  if (accentOverride) {
+    return { lead: title, accent: accentOverride };
+  }
+  if (typeof title === 'string' && title.includes(' — ')) {
+    const [lead, ...rest] = title.split(' — ');
+    return { lead, accent: rest.join(' — ') };
+  }
+  return { lead: title, accent: '' };
+}
+
+// Strip basic HTML and pull the first paragraph for a hero lead fallback.
+function firstParagraph(html) {
+  if (!html) return '';
+  const match = html.match(/<p[^>]*>([\s\S]*?)<\/p>/i);
+  const raw = match ? match[1] : html;
+  return raw.replace(/<[^>]+>/g, '').trim();
+}
+
+// Tasting cards icon roster — index by order of keys we render.
+const TASTING_ICONS = [Sun, Wine, Sparkles, Leaf];
+
 function ProductDetailPage() {
   const { slug, id } = useParams();
   const productKey = slug || id;
   const navigate = useNavigate();
   const { t, i18n } = useTranslation('product');
+  const lang = (i18n.resolvedLanguage || i18n.language || 'es').slice(0, 2) === 'en' ? 'en' : 'es';
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -59,10 +101,15 @@ function ProductDetailPage() {
 
   const handleQuantityChange = useCallback((amount) => {
     setQuantity(prevQuantity => {
-        const newQuantity = prevQuantity + amount;
-        if (newQuantity < 1) return 1;
-        return newQuantity;
+      const newQuantity = prevQuantity + amount;
+      if (newQuantity < 1) return 1;
+      return newQuantity;
     });
+  }, []);
+
+  const scrollToBuy = useCallback(() => {
+    const el = document.getElementById('buy');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, []);
 
   useEffect(() => {
@@ -70,21 +117,19 @@ function ProductDetailPage() {
       try {
         setLoading(true);
         setError(null);
-        
-        // Fetch product details by slug (or UUID, for backward-compat)
+
         const fetchedProduct = await getProduct(productKey);
 
         try {
-          // Fetch real-time quantities
           const quantitiesResponse = await getProductQuantities({
             product_ids: [fetchedProduct.id]
           });
 
           const variantQuantityMap = new Map();
           if (quantitiesResponse && quantitiesResponse.variants) {
-             quantitiesResponse.variants.forEach(variant => {
-               variantQuantityMap.set(variant.id, variant.inventory_quantity);
-             });
+            quantitiesResponse.variants.forEach(variant => {
+              variantQuantityMap.set(variant.id, variant.inventory_quantity);
+            });
           }
 
           const productWithQuantities = {
@@ -97,13 +142,11 @@ function ProductDetailPage() {
 
           setProduct(productWithQuantities);
 
-          // Select first variant by default
           if (productWithQuantities.variants && productWithQuantities.variants.length > 0) {
             setSelectedVariant(productWithQuantities.variants[0]);
           }
         } catch (quantityError) {
           console.error("Quantity fetch error:", quantityError);
-          // Still set product without quantities if that sub-fetch fails
           setProduct(fetchedProduct);
           if (fetchedProduct.variants && fetchedProduct.variants.length > 0) {
             setSelectedVariant(fetchedProduct.variants[0]);
@@ -125,6 +168,82 @@ function ProductDetailPage() {
   const displayTitle = product?.title || '';
   const displaySubtitle = product?.subtitle || '';
   const displayDescription = product?.description || '';
+  const metadata = product?.metadata || {};
+
+  // Hero-level derived values (memoized so we don't recompute on every render).
+  const hero = useMemo(() => {
+    if (!product) return null;
+    const { lead, accent } = splitHeroTitle(product.title, metadata, lang);
+    const eyebrow = pickLocalized(metadata, 'eyebrow', lang) || product.subtitle || '';
+    const leadCopy = pickLocalized(metadata, 'lead', lang) || firstParagraph(product.description);
+    const heroImage = product.images?.[0]?.url || product.image || product.thumbnail_url || placeholderImage;
+    return { lead, accent, eyebrow, leadCopy, heroImage };
+  }, [product, metadata, lang]);
+
+  // Tasting block (only renders if metadata.tasting is an object).
+  const tastingEntries = useMemo(() => {
+    const t = metadata.tasting;
+    if (!t || typeof t !== 'object') return [];
+    // Preferred ordering — anything else not in the list comes after, in declared order.
+    const preferred = ['aroma', 'flavor', 'finish', 'body', 'palate'];
+    const baseKeys = new Set(
+      Object.keys(t).map(k => k.replace(/_(es|en)$/, ''))
+    );
+    const ordered = [
+      ...preferred.filter(k => baseKeys.has(k)),
+      ...Array.from(baseKeys).filter(k => !preferred.includes(k)),
+    ];
+    return ordered
+      .map(key => {
+        const value = pickLocalized(t, key, lang);
+        if (!value) return null;
+        return { key, value };
+      })
+      .filter(Boolean);
+  }, [metadata, lang]);
+
+  // Specs block — supports `specs: [{label_es, label_en, value_es, value_en}]`
+  // or the known-keys shape `{origin, vintage, varietal, abv, volume}`.
+  const specsEntries = useMemo(() => {
+    const s = metadata.specs;
+    if (!s) return [];
+    if (Array.isArray(s)) {
+      return s
+        .map((row) => {
+          const label = pickLocalized(row, 'label', lang) || row.label || '';
+          const value = pickLocalized(row, 'value', lang) || row.value || '';
+          if (!label || !value) return null;
+          return { label, value };
+        })
+        .filter(Boolean);
+    }
+    if (typeof s === 'object') {
+      const knownKeys = ['origin', 'vintage', 'varietal', 'abv', 'volume', 'category', 'format', 'ingredients', 'shelf_life'];
+      const labels = {
+        origin: lang === 'en' ? 'Origin' : 'Origen',
+        vintage: lang === 'en' ? 'Vintage' : 'Añada',
+        varietal: lang === 'en' ? 'Varietal' : 'Variedad',
+        abv: lang === 'en' ? 'Alcohol' : 'Alcohol',
+        volume: lang === 'en' ? 'Volume' : 'Formato',
+        category: lang === 'en' ? 'Category' : 'Categoría',
+        format: lang === 'en' ? 'Format' : 'Formato',
+        ingredients: lang === 'en' ? 'Ingredients' : 'Ingredientes',
+        shelf_life: lang === 'en' ? 'Shelf life' : 'Vida útil',
+      };
+      return knownKeys
+        .filter(k => s[k] != null && s[k] !== '')
+        .map(k => {
+          let raw = s[k];
+          // Value can be a string OR an object with _es/_en suffix.
+          let value = raw;
+          if (typeof raw === 'object') {
+            value = pickLocalized(raw, '', lang) || raw[`${lang}`] || raw.value || '';
+          }
+          return { label: labels[k] || k, value: String(value) };
+        });
+    }
+    return [];
+  }, [metadata, lang]);
 
   if (loading) {
     return (
@@ -162,27 +281,31 @@ function ProductDetailPage() {
   const canAddToCart = !isStockManaged || quantity <= availableStock;
   const isSoldOut = isStockManaged && availableStock <= 0;
 
-  // SEO Image - Use the first image
   const seoImage = product.images?.[0];
-
-  // SEO derived from the (now-bilingual) DB content
   const seoTitle = `${displayTitle} | Kibay`;
   const seoDescription = displaySubtitle || displayDescription.replace(/<[^>]+>/g, '').slice(0, 160);
   const newsletterTags = product.slug === 'kibay-sparkling' ? ['Sparkling Can Interest'] : [];
-
   const productUrl = `${window.location.origin}/product/${product.slug || product.id}`;
-  
+
+  const tastingLabelKey = {
+    aroma: 'tasting.aroma',
+    flavor: 'tasting.flavor',
+    palate: 'tasting.flavor',
+    finish: 'tasting.finish',
+    body: 'tasting.body',
+  };
+
   return (
     <>
       <SEOHead
-        title={seoTitle} // Title already includes pipe and suffix
+        title={seoTitle}
         description={seoDescription}
         image={seoImage?.url}
         url={productUrl}
         type="product"
         canonicalUrl={productUrl}
       />
-      
+
       <SchemaMarkup
         type="Product"
         data={{
@@ -229,140 +352,307 @@ function ProductDetailPage() {
           }}
         />
       )}
-      
+
       <Navigation />
 
-      <main id="main" role="main" className="min-h-screen bg-stone-50 pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <Link to="/shop" className="inline-flex items-center gap-2 text-stone-500 hover:text-[#D4A574] transition-colors mb-8 group">
-            <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-            {t('backToShop')}
-          </Link>
+      <main id="main" role="main" className="bg-stone-50 min-h-screen">
+        {/* ---------------------------------------------------------------- */}
+        {/* Hero — editorial, brand-rich                                     */}
+        {/* ---------------------------------------------------------------- */}
+        <section className="relative pt-32 pb-16 lg:pb-24 overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <Link to="/shop" className="inline-flex items-center gap-2 text-stone-500 hover:text-[#D4A574] transition-colors mb-10 group">
+              <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+              {t('backToShop')}
+            </Link>
 
-          <div className="grid lg:grid-cols-2 gap-12 xl:gap-20 mb-20">
-            {/* Image Gallery */}
-            <m.div 
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              className="flex justify-center lg:justify-start"
-            >
-              <ProductImageGallery 
-                images={product.images}
-                title={displayTitle}
-                ribbonText={product.ribbon_text}
-                ref={productImgRef}
-              />
-            </m.div>
-
-            {/* Product Details */}
-            <m.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="flex flex-col pt-4"
-            >
-              <h1 className="text-4xl md:text-5xl font-serif text-stone-900 mb-4 leading-tight">{displayTitle}</h1>
-              <p className="text-xl text-stone-500 font-light mb-8 leading-relaxed">{displaySubtitle}</p>
-
-              <div className="flex items-baseline gap-4 mb-8 pb-8 border-b border-stone-100">
-                <span className="text-3xl font-medium text-[#D4A574]">{price}</span>
-                {selectedVariant?.sale_price_in_cents && (
-                  <span className="text-xl text-stone-400 line-through decoration-stone-300">{originalPrice}</span>
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+              <m.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="space-y-7"
+              >
+                {hero?.eyebrow && (
+                  <span className="inline-block text-[#D4A574] font-medium tracking-widest uppercase text-sm">
+                    {hero.eyebrow}
+                  </span>
                 )}
-              </div>
+                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-light font-serif text-stone-900 leading-[1.05]">
+                  {hero?.accent ? (
+                    <>
+                      {hero.lead} <br />
+                      <span className="text-[#D4A574]">{hero.accent}</span>
+                    </>
+                  ) : (
+                    hero?.lead
+                  )}
+                </h1>
 
-              {/* Variants */}
-              {product.variants.length > 1 && (
-                <div className="mb-8">
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-stone-900 mb-4">{t('selectVariant')}</h3>
-                  <div className="flex flex-wrap gap-3">
-                    {product.variants.map(variant => (
-                      <button
-                        key={variant.id}
-                        onClick={() => setSelectedVariant(variant)}
-                        className={`px-6 py-3 rounded-full border transition-all duration-300 text-sm font-medium ${
-                          selectedVariant?.id === variant.id
-                            ? 'bg-card text-foreground border-border shadow-md'
-                            : 'bg-white text-stone-600 border-stone-200 hover:border-[#D4A574] hover:text-[#D4A574]'
-                        }`}
-                      >
-                        {variant.title}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
+                {displaySubtitle && (
+                  <h2 className="text-xl md:text-2xl text-stone-600 font-light leading-relaxed">
+                    {displaySubtitle}
+                  </h2>
+                )}
 
-              {/* Add to Cart Actions */}
-              <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <div className="flex items-center bg-white border border-stone-200 rounded-full p-1 w-fit shadow-sm">
-                  <button 
-                    onClick={() => handleQuantityChange(-1)} 
-                    disabled={quantity <= 1 || isSoldOut}
-                    className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-stone-100 text-stone-600 transition-colors disabled:opacity-50"
+                {hero?.leadCopy && (
+                  <p className="text-lg text-stone-600 max-w-xl font-light leading-relaxed">
+                    {hero.leadCopy}
+                  </p>
+                )}
+
+                <div className="pt-2">
+                  <Button
+                    onClick={scrollToBuy}
+                    className="bg-[#D4A574] hover:bg-[#c29462] text-white px-8 py-7 text-lg rounded-full font-normal shadow-[0_0_24px_rgba(212,165,116,0.3)] transition-all hover:scale-105"
                   >
-                    <Minus size={16} />
-                  </button>
-                  <span className="w-12 text-center text-lg font-medium text-stone-900">{quantity}</span>
-                  <button 
-                    onClick={() => handleQuantityChange(1)} 
-                    disabled={isSoldOut}
-                    className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-stone-100 text-stone-600 transition-colors disabled:opacity-50"
-                  >
-                    <Plus size={16} />
-                  </button>
+                    {t('hero.cta')} <ArrowDown className="ml-2 w-5 h-5" />
+                  </Button>
                 </div>
+              </m.div>
 
-                <Button
-                  onClick={handleAddToCart}
-                  disabled={!canAddToCart || isSoldOut || !product.purchasable}
-                  className="flex-1 bg-[#D4A574] hover:bg-[#c29462] text-white rounded-full py-7 text-lg shadow-lg shadow-[#D4A574]/20 transition-all duration-300 disabled:bg-stone-200 disabled:text-stone-400 disabled:shadow-none disabled:cursor-not-allowed"
-                >
-                  <ShoppingBag className="mr-2 h-5 w-5" />
-                  {isSoldOut ? t('outOfStock') : t('addToCart')}
-                </Button>
-              </div>
-
-              {/* Stock Warning */}
-              {isStockManaged && product.purchasable && !isSoldOut && (
-                 <div className="mb-8">
-                   {canAddToCart ? (
-                     <p className="text-sm text-stone-500 flex items-center gap-2">
-                       <CheckCircle size={14} className="text-green-500" /> {t('inStock')}
-                       {availableStock < 10 && <span className="text-[#D4A574]">({availableStock})</span>}
-                     </p>
-                   ) : (
-                     <p className="text-sm text-red-500 flex items-center gap-2">
-                       <AlertCircle size={14} /> {t('lowStock')} ({availableStock})
-                     </p>
-                   )}
-                 </div>
-              )}
-
-              {/* Description */}
-              <div className="prose prose-stone prose-lg max-w-none text-stone-600 leading-relaxed font-light mb-12">
-                <div dangerouslySetInnerHTML={{ __html: displayDescription }} />
-              </div>
-
-              {/* Additional Info Accordion style or list */}
-              {product.additional_info?.length > 0 && (
-                <div className="space-y-6 border-t border-stone-100 pt-8">
-                  {product.additional_info
-                    .sort((a, b) => a.order - b.order)
-                    .map((info) => (
-                      <div key={info.id}>
-                        <h3 className="text-lg font-serif text-stone-900 mb-2">{info.title}</h3>
-                        <div className="text-stone-500 leading-relaxed" dangerouslySetInnerHTML={{ __html: info.description || '' }} />
-                      </div>
-                    ))}
+              <m.div
+                initial={{ opacity: 0, x: 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.15 }}
+                className="relative flex justify-center lg:justify-end"
+              >
+                <div className="relative">
+                  <div className="absolute inset-0 bg-[#D4A574]/30 rounded-full blur-[110px] opacity-60" aria-hidden="true" />
+                  <img
+                    src={hero?.heroImage}
+                    alt={displayTitle}
+                    className="relative z-10 max-h-[560px] w-auto object-contain drop-shadow-2xl rounded-lg"
+                    loading="eager"
+                    decoding="async"
+                  />
                 </div>
-              )}
-            </m.div>
+              </m.div>
+            </div>
           </div>
+        </section>
 
-          {/* Customer Reviews */}
+        {/* ---------------------------------------------------------------- */}
+        {/* Tasting Notes — only if metadata.tasting exists                  */}
+        {/* ---------------------------------------------------------------- */}
+        {tastingEntries.length > 0 && (
+          <section className="py-20 bg-white border-t border-stone-100">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <m.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="text-center mb-14"
+              >
+                <h2 className="text-4xl md:text-5xl font-serif text-stone-900 mb-4">
+                  {t('tasting.heading')}
+                </h2>
+                <div className="w-16 h-px bg-[#D4A574] mx-auto" />
+              </m.div>
+
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {tastingEntries.map((entry, i) => {
+                  const Icon = TASTING_ICONS[i % TASTING_ICONS.length];
+                  const labelKey = tastingLabelKey[entry.key];
+                  const label = labelKey
+                    ? t(labelKey)
+                    : entry.key.charAt(0).toUpperCase() + entry.key.slice(1);
+                  return (
+                    <m.div
+                      key={entry.key}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.08 }}
+                      className="bg-stone-50 p-8 rounded-2xl border border-stone-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+                    >
+                      <div className="w-12 h-12 bg-[#D4A574]/10 rounded-full flex items-center justify-center mb-5">
+                        <Icon className="w-5 h-5 text-[#D4A574]" />
+                      </div>
+                      <span className="block text-xs uppercase text-stone-500 tracking-widest mb-2">
+                        {label}
+                      </span>
+                      <p className="text-stone-700 font-medium leading-relaxed">
+                        {entry.value}
+                      </p>
+                    </m.div>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ---------------------------------------------------------------- */}
+        {/* Specs panel — only if metadata.specs exists                      */}
+        {/* ---------------------------------------------------------------- */}
+        {specsEntries.length > 0 && (
+          <section className="py-20 bg-stone-50 border-t border-stone-100">
+            <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h2 className="text-2xl md:text-3xl font-serif text-stone-900 mb-10 text-center">
+                {t('specs.heading')}
+              </h2>
+              <div className="grid gap-1">
+                {specsEntries.map((row, idx) => (
+                  <m.div
+                    key={`${row.label}-${idx}`}
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.04 }}
+                    className="flex justify-between items-center gap-6 py-4 border-b border-stone-200 last:border-0"
+                  >
+                    <span className="text-stone-500 font-light uppercase tracking-wide text-xs sm:text-sm">
+                      {row.label}
+                    </span>
+                    <span className="text-stone-900 font-medium text-right text-sm sm:text-base">
+                      {row.value}
+                    </span>
+                  </m.div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ---------------------------------------------------------------- */}
+        {/* Commerce — gallery + buy box                                     */}
+        {/* ---------------------------------------------------------------- */}
+        <section id="buy" className="py-20 bg-white border-t border-stone-100 scroll-mt-24">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-12 xl:gap-20">
+              <m.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="flex justify-center lg:justify-start"
+              >
+                <ProductImageGallery
+                  images={product.images}
+                  title={displayTitle}
+                  ribbonText={product.ribbon_text}
+                  ref={productImgRef}
+                />
+              </m.div>
+
+              <m.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="flex flex-col pt-4"
+              >
+                <h3 className="text-3xl md:text-4xl font-serif text-stone-900 mb-3 leading-tight font-light">
+                  {displayTitle}
+                </h3>
+                {displaySubtitle && (
+                  <p className="text-lg text-stone-500 font-light mb-8 leading-relaxed">
+                    {displaySubtitle}
+                  </p>
+                )}
+
+                <div className="flex items-baseline gap-4 mb-8 pb-8 border-b border-stone-100">
+                  <span className="text-3xl font-light text-[#D4A574]">{price}</span>
+                  {selectedVariant?.sale_price_in_cents && (
+                    <span className="text-xl text-stone-400 line-through decoration-stone-300">{originalPrice}</span>
+                  )}
+                </div>
+
+                {product.variants.length > 1 && (
+                  <div className="mb-8">
+                    <h4 className="text-xs font-medium uppercase tracking-widest text-stone-500 mb-4">{t('selectVariant')}</h4>
+                    <div className="flex flex-wrap gap-3">
+                      {product.variants.map(variant => (
+                        <button
+                          key={variant.id}
+                          onClick={() => setSelectedVariant(variant)}
+                          className={`px-6 py-3 rounded-full border transition-all duration-300 text-sm font-medium ${
+                            selectedVariant?.id === variant.id
+                              ? 'bg-card text-foreground border-border shadow-md'
+                              : 'bg-white text-stone-600 border-stone-200 hover:border-[#D4A574] hover:text-[#D4A574]'
+                          }`}
+                        >
+                          {variant.title}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex flex-col sm:flex-row gap-4 mb-8">
+                  <div className="flex items-center bg-white border border-stone-200 rounded-full p-1 w-fit shadow-sm">
+                    <button
+                      onClick={() => handleQuantityChange(-1)}
+                      disabled={quantity <= 1 || isSoldOut}
+                      aria-label={t('decrease')}
+                      className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-stone-100 text-stone-600 transition-colors disabled:opacity-50"
+                    >
+                      <Minus size={16} />
+                    </button>
+                    <span className="w-12 text-center text-lg font-medium text-stone-900">{quantity}</span>
+                    <button
+                      onClick={() => handleQuantityChange(1)}
+                      disabled={isSoldOut}
+                      aria-label={t('increase')}
+                      className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-stone-100 text-stone-600 transition-colors disabled:opacity-50"
+                    >
+                      <Plus size={16} />
+                    </button>
+                  </div>
+
+                  <Button
+                    onClick={handleAddToCart}
+                    disabled={!canAddToCart || isSoldOut || !product.purchasable}
+                    className="flex-1 bg-[#D4A574] hover:bg-[#c29462] text-white rounded-full py-7 text-lg shadow-lg shadow-[#D4A574]/20 transition-all duration-300 disabled:bg-stone-200 disabled:text-stone-400 disabled:shadow-none disabled:cursor-not-allowed"
+                  >
+                    <ShoppingBag className="mr-2 h-5 w-5" />
+                    {isSoldOut ? t('outOfStock') : t('addToCart')}
+                  </Button>
+                </div>
+
+                {isStockManaged && product.purchasable && !isSoldOut && (
+                  <div className="mb-8">
+                    {canAddToCart ? (
+                      <p className="text-sm text-stone-500 flex items-center gap-2">
+                        <CheckCircle size={14} className="text-green-500" /> {t('inStock')}
+                        {availableStock < 10 && <span className="text-[#D4A574]">({availableStock})</span>}
+                      </p>
+                    ) : (
+                      <p className="text-sm text-red-500 flex items-center gap-2">
+                        <AlertCircle size={14} /> {t('lowStock')} ({availableStock})
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {/* Softer, smaller description treatment now that hero carries the lead */}
+                <div className="prose prose-stone prose-base max-w-none text-stone-500 leading-relaxed font-light mb-10">
+                  <div dangerouslySetInnerHTML={{ __html: displayDescription }} />
+                </div>
+
+                {product.additional_info?.length > 0 && (
+                  <div className="space-y-6 border-t border-stone-100 pt-8">
+                    {product.additional_info
+                      .sort((a, b) => a.order - b.order)
+                      .map((info) => (
+                        <div key={info.id}>
+                          <h4 className="text-lg font-serif text-stone-900 mb-2">{info.title}</h4>
+                          <div className="text-stone-500 leading-relaxed font-light" dangerouslySetInnerHTML={{ __html: info.description || '' }} />
+                        </div>
+                      ))}
+                  </div>
+                )}
+              </m.div>
+            </div>
+          </div>
+        </section>
+
+        {/* ---------------------------------------------------------------- */}
+        {/* Reviews / Related / Newsletter — preserved from original         */}
+        {/* ---------------------------------------------------------------- */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-20">
           <div className="mb-20">
             <ProductReviews
               productId={product.id}
@@ -370,25 +660,22 @@ function ProductDetailPage() {
             />
           </div>
 
-          {/* Related products */}
           <RelatedProducts excludeId={product.id} />
 
-
-          {/* Newsletter Signup Mid-Page */}
-          <div className="mb-20 bg-stone-100 rounded-3xl p-8 md:p-12">
+          <div className="mt-20 bg-stone-100 rounded-3xl p-8 md:p-12">
             <div className="max-w-3xl mx-auto text-center">
-               <NewsletterSignup
-                 headline={i18n.t('shop:newsletterHeadline')}
-                 fields={{ firstName: true, email: true }}
-                 buttonText={i18n.t('shop:newsletterButton')}
-                 source="Product Page Interest"
-                 tags={newsletterTags}
-               />
+              <NewsletterSignup
+                headline={i18n.t('shop:newsletterHeadline')}
+                fields={{ firstName: true, email: true }}
+                buttonText={i18n.t('shop:newsletterButton')}
+                source="Product Page Interest"
+                tags={newsletterTags}
+              />
             </div>
           </div>
-
         </div>
       </main>
+
       <Footer />
     </>
   );

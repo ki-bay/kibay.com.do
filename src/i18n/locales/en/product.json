@@ -17,5 +17,18 @@
     "body": "Standard shipping across the Dominican Republic. Free shipping on orders over RD$5,000."
   },
   "details": "Product details",
-  "additionalInfo": "Additional information"
+  "additionalInfo": "Additional information",
+  "hero": {
+    "cta": "Order now"
+  },
+  "tasting": {
+    "heading": "Tasting Notes",
+    "aroma": "Aroma",
+    "flavor": "Flavor",
+    "finish": "Finish",
+    "body": "Body"
+  },
+  "specs": {
+    "heading": "Details"
+  }
 }
