@@ -50,8 +50,9 @@ const SchemaMarkup = ({ type, data }) => {
       "logo": `${window.location.origin}/logo.png`,
       "sameAs": [
         "https://www.facebook.com/profile.php?id=61589761255222",
-        "https://www.instagram.com/kibay",
-        "https://www.tiktok.com/@kibay"
+        "https://www.instagram.com/kibaywine",
+        "https://www.tiktok.com/@kibaywine",
+        "https://www.linkedin.com/company/116054911"
       ],
       "contactPoint": {
         "@type": "ContactPoint",

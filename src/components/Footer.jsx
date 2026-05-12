@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { mediaUrl } from '@/config/mediaCdn';
-import { Instagram, Facebook, Mail, MapPin, Phone } from 'lucide-react';
+import { Instagram, Facebook, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
 import NewsletterSignup from './NewsletterSignup';
 import LanguageSwitcher from './LanguageSwitcher';
 import ThemeToggle from './ThemeToggle';
@@ -129,6 +129,9 @@ const Footer = () => {
                   </a>
                   <a href="https://www.tiktok.com/@kibaywine" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-foreground/5 hover:bg-[#D4A574] hover:text-foreground text-foreground/70 flex items-center justify-center transition-all duration-300" aria-label="TikTok">
                     <TikTokIcon className="w-4 h-4" />
+                  </a>
+                  <a href="https://www.linkedin.com/company/116054911" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-foreground/5 hover:bg-[#D4A574] hover:text-foreground text-foreground/70 flex items-center justify-center transition-all duration-300" aria-label="LinkedIn">
+                    <Linkedin className="w-4 h-4" />
                   </a>
                 </div>
               </div>
