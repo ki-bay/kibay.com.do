@@ -127,24 +127,24 @@
   "pairings": {
     "heading": "Maridajes Perfectos",
     "subheading": "Eleva tu experiencia gastronómica con nuestras recomendaciones.",
-    "featureImgAlt": "Maridaje de vino y queso",
-    "featureWine": "Gran Reserva Merlot",
-    "featureServe": "Servir a 16-18 °C",
+    "featureImgAlt": "Maridaje del Kibay tropical",
+    "featureWine": "Kibay — vino tropical de mango y chinola",
+    "featureServe": "Servir a 8-10 °C",
     "items": [
       {
-        "dish": "Gouda y Cheddar Añejos",
-        "desc": "Los sabores intensos y a nuez de los quesos añejos cortan los taninos.",
+        "dish": "Ceviche y mariscos frescos",
+        "desc": "La acidez crujiente y las notas tropicales del Kibay realzan los sabores del marisco crudo y los cítricos del ceviche.",
+        "icon": "🦐"
+      },
+      {
+        "dish": "Quesos frescos o de cabra",
+        "desc": "Los quesos suaves y cremosos contrastan con la fruta del vino y limpian el paladar entre cada bocado.",
         "icon": "🧀"
       },
       {
-        "dish": "Costillar de Cordero al Horno",
-        "desc": "El cordero con costra de hierbas realza las notas terrosas del vino.",
-        "icon": "🍖"
-      },
-      {
-        "dish": "Trufas de Chocolate Oscuro",
-        "desc": "El chocolate amargo potencia el perfil frutal del vino.",
-        "icon": "🍫"
+        "dish": "Ensaladas tropicales con mango",
+        "desc": "Aguacate, mango y vinagretas cítricas conversan con los aromas del vino y completan la experiencia caribeña.",
+        "icon": "🥭"
       }
     ]
   },

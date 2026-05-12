@@ -126,25 +126,25 @@
   },
   "pairings": {
     "heading": "Perfect Pairings",
-    "subheading": "Elevate your dining experience with our expert recommendations.",
-    "featureImgAlt": "Wine and Cheese Pairing",
-    "featureWine": "Grand Reserve Merlot",
-    "featureServe": "Best served at 16-18°C",
+    "subheading": "Elevate your dining experience with our recommendations.",
+    "featureImgAlt": "Kibay tropical wine pairing",
+    "featureWine": "Kibay — tropical wine of mango and passion fruit",
+    "featureServe": "Serve at 8-10°C",
     "items": [
       {
-        "dish": "Aged Gouda & Cheddar",
-        "desc": "The sharp, nutty flavors of aged cheese cut through the tannins.",
+        "dish": "Fresh ceviche and seafood",
+        "desc": "Kibay's crisp acidity and tropical notes lift raw seafood flavors and the citrus brightness of ceviche.",
+        "icon": "🦐"
+      },
+      {
+        "dish": "Fresh or goat cheese",
+        "desc": "Soft, creamy cheeses contrast the wine's fruit and cleanse the palate between bites.",
         "icon": "🧀"
       },
       {
-        "dish": "Roasted Lamb Rack",
-        "desc": "Herb-crusted lamb complements the earthy notes of the wine.",
-        "icon": "🍖"
-      },
-      {
-        "dish": "Dark Chocolate Truffles",
-        "desc": "Bitter chocolate enhances the fruit-forward profile.",
-        "icon": "🍫"
+        "dish": "Tropical mango salads",
+        "desc": "Avocado, mango, and citrus-vinaigrette salads echo the wine and complete the Caribbean experience.",
+        "icon": "🥭"
       }
     ]
   },
