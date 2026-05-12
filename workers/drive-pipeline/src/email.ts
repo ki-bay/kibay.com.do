@@ -9,6 +9,11 @@ export interface EmailEnv {
 	WORKER_BASE_URL: string;
 }
 
+export interface BrevoSendInput {
+	subject: string;
+	htmlContent: string;
+}
+
 function b64url(input: ArrayBuffer | string): string {
 	const bytes =
 		typeof input === 'string' ? new TextEncoder().encode(input) : new Uint8Array(input);
@@ -69,6 +74,7 @@ interface ReviewEmailInput {
 	titleEs: string;
 	slug: string;
 	imageUrl: string;
+	galleryUrls?: string[];
 	bodyExcerptEn: string;
 	bodyExcerptEs: string;
 	driveFilename: string;
@@ -92,6 +98,17 @@ export async function sendReviewEmail(env: EmailEnv, post: ReviewEmailInput): Pr
   </td></tr>
   <tr><td style="padding:8px 28px;">
     <img src="${escapeHtml(post.imageUrl)}" alt="${escapeHtml(post.titleEn)}" width="544" style="display:block;width:100%;max-width:544px;height:auto;border-radius:8px;" />
+    ${
+		post.galleryUrls && post.galleryUrls.length > 1
+			? `<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">${post.galleryUrls
+					.slice(1, 5)
+					.map(
+						(u) =>
+							`<img src="${escapeHtml(u)}" alt="" width="120" style="width:23%;max-width:120px;height:auto;border-radius:6px;object-fit:cover;" />`,
+					)
+					.join('')}</div><div style="font-size:11px;color:#999;margin-top:4px;text-align:center;">+${post.galleryUrls.length - 1} more in gallery</div>`
+			: ''
+	}
   </td></tr>
   <tr><td style="padding:16px 28px 4px;">
     <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#999;margin-bottom:4px;">English excerpt</div>
@@ -139,6 +156,79 @@ export async function sendReviewEmail(env: EmailEnv, post: ReviewEmailInput): Pr
 		}),
 	});
 	if (!r.ok) throw new Error(`Brevo send failed: ${r.status} ${await r.text()}`);
+}
+
+export interface CrossPostResultRow {
+	platform: 'fb' | 'ig' | 'li';
+	status: 'posted' | 'failed' | 'skipped';
+	platform_post_id?: string;
+	error_msg?: string;
+}
+
+export async function sendResultsEmail(
+	env: EmailEnv,
+	post: { titleEn: string; slug: string },
+	results: CrossPostResultRow[],
+): Promise<void> {
+	const platformLabel = (p: string): string =>
+		({ fb: 'Facebook', ig: 'Instagram', li: 'LinkedIn' } as Record<string, string>)[p] || p;
+	const statusIcon = (s: string): string =>
+		s === 'posted' ? '✅' : s === 'skipped' ? '⏸' : '❌';
+	const detail = (r: CrossPostResultRow): string => {
+		if (r.status === 'posted' && r.platform_post_id) {
+			if (r.platform === 'fb') return `<a href="https://www.facebook.com/${r.platform_post_id}">view post</a>`;
+			if (r.platform === 'ig') return `<a href="https://www.instagram.com/p/${r.platform_post_id}">view post</a>`;
+			return `id: ${escapeHtml(r.platform_post_id)}`;
+		}
+		return r.error_msg ? escapeHtml(r.error_msg) : '';
+	};
+
+	const rowsHtml = results
+		.map(
+			(r) =>
+				`<tr><td style="padding:8px 12px;">${statusIcon(r.status)} ${platformLabel(r.platform)}</td><td style="padding:8px 12px;color:#666;">${r.status}</td><td style="padding:8px 12px;font-size:13px;color:#888;">${detail(r)}</td></tr>`,
+		)
+		.join('');
+
+	const postUrl = `${env.SITE_URL}/blog/${post.slug}`;
+	const html = `<!doctype html><html><body style="margin:0;padding:0;background:#f4f4f0;font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:#1a1a1a;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding:24px 0;"><tr><td align="center">
+<table role="presentation" width="600" style="max-width:600px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06);">
+  <tr><td style="padding:24px 28px 8px;">
+    <div style="font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:#999;">Kibay — cross-post results</div>
+    <h1 style="margin:8px 0 4px;font-size:20px;">${escapeHtml(post.titleEn)}</h1>
+    <a href="${postUrl}" style="font-size:13px;color:#888;">${escapeHtml(post.slug)}</a>
+  </td></tr>
+  <tr><td style="padding:12px 28px;">
+    <table role="presentation" width="100%" style="border-collapse:collapse;border:1px solid #eee;border-radius:8px;overflow:hidden;">${rowsHtml}</table>
+  </td></tr>
+  <tr><td style="padding:12px 28px 24px;font-size:12px;color:#999;">Skipped platforms have feature flags off (LinkedIn waits on MDP approval). Failed posts are retryable; we'll wire that in a later phase.</td></tr>
+</table>
+</td></tr></table></body></html>`;
+
+	const fromMatch = env.REVIEW_EMAIL_FROM.match(/^(.*)<(.+@.+)>\s*$/);
+	const sender = fromMatch
+		? { name: fromMatch[1].trim().replace(/"/g, ''), email: fromMatch[2].trim() }
+		: { email: env.REVIEW_EMAIL_FROM.trim() };
+
+	const successes = results.filter((r) => r.status === 'posted').length;
+	const subject = `[Kibay] Cross-post results: ${successes}/${results.length} posted — ${post.titleEn}`;
+
+	const r = await fetch('https://api.brevo.com/v3/smtp/email', {
+		method: 'POST',
+		headers: {
+			'api-key': env.BREVO_API_KEY,
+			'content-type': 'application/json',
+			accept: 'application/json',
+		},
+		body: JSON.stringify({
+			sender,
+			to: [{ email: env.REVIEW_EMAIL_TO }],
+			subject,
+			htmlContent: html,
+		}),
+	});
+	if (!r.ok) throw new Error(`Brevo send (results) failed: ${r.status} ${await r.text()}`);
 }
 
 export function actionResultPage(action: 'approve' | 'reject', success: boolean, message: string): Response {

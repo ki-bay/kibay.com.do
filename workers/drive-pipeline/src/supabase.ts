@@ -127,3 +127,67 @@ export async function markProcessedStatus(
 	});
 	if (!r.ok) throw new Error(`processed_drive_files patch failed: ${r.status} ${await r.text()}`);
 }
+
+export interface BlogPostForCrossPost {
+	id: string;
+	title: string;
+	slug: string;
+	featured_image_url: string;
+	auto_draft_meta: {
+		social?: { facebook?: string; instagram?: string; linkedin?: string };
+		gallery_urls?: string[];
+	} | null;
+}
+
+export async function getBlogPostForCrossPost(
+	env: SupabaseEnv,
+	id: string,
+): Promise<BlogPostForCrossPost | null> {
+	const url = `${env.SUPABASE_URL}/rest/v1/blog_posts?id=eq.${encodeURIComponent(
+		id,
+	)}&select=id,title,slug,featured_image_url,auto_draft_meta&limit=1`;
+	const r = await fetch(url, { headers: authHeaders(env) });
+	if (!r.ok) return null;
+	const rows = (await r.json()) as BlogPostForCrossPost[];
+	return rows[0] ?? null;
+}
+
+export async function enqueueCrossPostJobs(
+	env: SupabaseEnv,
+	blogPostId: string,
+	platforms: string[],
+): Promise<void> {
+	const url = `${env.SUPABASE_URL}/rest/v1/cross_post_jobs`;
+	const rows = platforms.map((p) => ({
+		blog_post_id: blogPostId,
+		platform: p,
+		status: 'pending',
+	}));
+	const r = await fetch(url, {
+		method: 'POST',
+		headers: {
+			...authHeaders(env),
+			'Content-Type': 'application/json',
+			Prefer: 'resolution=merge-duplicates',
+		},
+		body: JSON.stringify(rows),
+	});
+	if (!r.ok) throw new Error(`cross_post_jobs insert failed: ${r.status} ${await r.text()}`);
+}
+
+export async function updateCrossPostJob(
+	env: SupabaseEnv,
+	blogPostId: string,
+	platform: string,
+	fields: { status: string; platform_post_id?: string | null; error_msg?: string | null },
+): Promise<void> {
+	const url = `${env.SUPABASE_URL}/rest/v1/cross_post_jobs?blog_post_id=eq.${encodeURIComponent(
+		blogPostId,
+	)}&platform=eq.${encodeURIComponent(platform)}`;
+	const r = await fetch(url, {
+		method: 'PATCH',
+		headers: { ...authHeaders(env), 'Content-Type': 'application/json' },
+		body: JSON.stringify({ ...fields, attempted_at: new Date().toISOString() }),
+	});
+	if (!r.ok) throw new Error(`cross_post_jobs patch failed: ${r.status} ${await r.text()}`);
+}
