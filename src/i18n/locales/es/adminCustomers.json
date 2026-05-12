@@ -1,0 +1,47 @@
+{
+  "seoTitle": "Clientes — Admin",
+  "backToDashboard": "Panel de admin",
+  "header": {
+    "title": "Clientes",
+    "subtitlePrefix": "Todos los que están en",
+    "subtitleSuffix": "— ve quién compra, con qué frecuencia y cuánto.",
+    "refresh": "Actualizar"
+  },
+  "kpis": {
+    "totalCustomers": "Total de clientes",
+    "payingCustomers": "Con pedidos pagados",
+    "lifetimeRevenue": "Ingresos totales (DOP)"
+  },
+  "search": {
+    "placeholder": "Buscar por email o nombre…"
+  },
+  "table": {
+    "name": "Nombre",
+    "email": "Email",
+    "signedUp": "Registrado",
+    "orders": "Pedidos",
+    "totalSpent": "Total gastado",
+    "lastOrder": "Último pedido",
+    "role": "Rol",
+    "actions": "Acciones",
+    "mixedCurrencies": "{{value}} (mixto)",
+    "viewOrders": "Ver pedidos"
+  },
+  "roles": {
+    "admin": "admin",
+    "customer": "cliente"
+  },
+  "empty": {
+    "noMatch": "Ningún cliente coincide con \"{{search}}\".",
+    "noCustomers": "Aún no hay clientes."
+  },
+  "pagination": {
+    "summary": "Página {{page}} de {{totalPages}} · {{count}} cliente",
+    "summary_plural": "Página {{page}} de {{totalPages}} · {{count}} clientes",
+    "prev": "Anterior",
+    "next": "Siguiente"
+  },
+  "toast": {
+    "loadFailed": "Error al cargar los clientes"
+  }
+}

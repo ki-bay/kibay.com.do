@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -16,6 +17,7 @@ const toMajor = (cents) =>
 const toCents = (major) => Math.round((Number(major) || 0) * 100);
 
 const AdminShippingPage = () => {
+	const { t } = useTranslation('adminShipping');
 	const [rows, setRows] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [saving, setSaving] = useState(false);
@@ -72,10 +74,10 @@ const AdminShippingPage = () => {
 			const results = await Promise.all(updates);
 			const firstErr = results.find((r) => r.error);
 			if (firstErr) throw firstErr.error;
-			toast.success('Shipping rates updated');
+			toast.success(t('toast.updated'));
 			await load();
 		} catch (err) {
-			toast.error(err.message || 'Failed to save shipping rates');
+			toast.error(err.message || t('toast.saveFailed'));
 		} finally {
 			setSaving(false);
 		}
@@ -84,7 +86,7 @@ const AdminShippingPage = () => {
 	return (
 		<>
 			<Helmet>
-				<title>Shipping rates — Admin</title>
+				<title>{t('seoTitle')}</title>
 			</Helmet>
 			<Navigation />
 			<main id="main" role="main" className="min-h-screen bg-background pt-32 pb-20 px-4 sm:px-6 lg:px-8">
@@ -94,23 +96,21 @@ const AdminShippingPage = () => {
 							to="/dashboard/blog"
 							className="inline-flex items-center gap-1 text-sm text-foreground/60 hover:text-foreground mb-4"
 						>
-							<ArrowLeft className="w-4 h-4" /> Back to dashboard
+							<ArrowLeft className="w-4 h-4" /> {t('back')}
 						</Link>
-						<h1 className="text-3xl sm:text-4xl font-light text-foreground">Shipping rates</h1>
+						<h1 className="text-3xl sm:text-4xl font-light text-foreground">{t('header.title')}</h1>
 						<p className="text-foreground/60 mt-2 font-light">
-							Per-currency tiers used at checkout. Amounts are in major units (e.g.
-							RD$200 not 20000 cents). Saving updates the live{' '}
-							<code className="text-xs">shipping_rates</code> table — checkout
-							refetches on every page load.
+							{t('header.subtitlePrefix')}{' '}
+							<code className="text-xs">shipping_rates</code> {t('header.subtitleSuffix')}
 						</p>
 					</div>
 
 					{loading ? (
 						<div className="flex items-center gap-2 text-foreground/60">
-							<Loader2 className="w-4 h-4 animate-spin" /> Loading…
+							<Loader2 className="w-4 h-4 animate-spin" /> {t('loading')}
 						</div>
 					) : rows.length === 0 ? (
-						<p className="text-foreground/60">No shipping rate rows found.</p>
+						<p className="text-foreground/60">{t('empty')}</p>
 					) : (
 						<div className="space-y-6">
 							{rows.map((r) => {
@@ -123,16 +123,16 @@ const AdminShippingPage = () => {
 									>
 										<div className="flex items-center justify-between mb-4">
 											<h2 className="text-xl font-semibold text-foreground">
-												{r.currency} ({sym})
+												{t('currencyHeading', { currency: r.currency, symbol: sym })}
 											</h2>
 											<span className="text-xs text-foreground/40">
-												updated {new Date(r.updated_at).toLocaleString()}
+												{t('updatedAt', { date: new Date(r.updated_at).toLocaleString() })}
 											</span>
 										</div>
 										<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 											<div>
 												<label className="text-xs text-foreground/50 block mb-1">
-													Free over ({sym})
+													{t('fields.freeOver', { symbol: sym })}
 												</label>
 												<Input
 													className="bg-background border-foreground/10 text-foreground"
@@ -143,12 +143,12 @@ const AdminShippingPage = () => {
 													onChange={(e) => onChange(r.currency, 'free_over', e.target.value)}
 												/>
 												<p className="text-xs text-foreground/40 mt-1">
-													Subtotal at or above this threshold ships free.
+													{t('fields.freeOverHint')}
 												</p>
 											</div>
 											<div>
 												<label className="text-xs text-foreground/50 block mb-1">
-													Standard ({sym})
+													{t('fields.standard', { symbol: sym })}
 												</label>
 												<Input
 													className="bg-background border-foreground/10 text-foreground"
@@ -161,7 +161,7 @@ const AdminShippingPage = () => {
 											</div>
 											<div>
 												<label className="text-xs text-foreground/50 block mb-1">
-													Express ({sym})
+													{t('fields.express', { symbol: sym })}
 												</label>
 												<Input
 													className="bg-background border-foreground/10 text-foreground"
@@ -185,10 +185,10 @@ const AdminShippingPage = () => {
 								>
 									{saving ? (
 										<>
-											<Loader2 className="w-4 h-4 mr-2 animate-spin" /> Saving…
+											<Loader2 className="w-4 h-4 mr-2 animate-spin" /> {t('actions.saving')}
 										</>
 									) : (
-										'Save shipping rates'
+										t('actions.save')
 									)}
 								</Button>
 							</div>

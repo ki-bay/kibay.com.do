@@ -1,0 +1,151 @@
+{
+  "seo": {
+    "title": "Wine Tours at Ocoa Bay — Caribbean Vineyard Experience | Kibay",
+    "description": "Visit Ocoa Bay, one of the few working vineyards in the Caribbean. Guided tastings of Dominican wines, electric-cart vineyard tours, Casa Club organic dining and pool. Reserve your wine tour in the Dominican Republic.",
+    "keywords": "Ocoa Bay wine tour, Caribbean vineyard tour, wine tasting Dominican Republic, Dominican vineyard, Casa Club Ocoa Bay, vino dominicano experiencia, wine tour Caribbean"
+  },
+  "modal": {
+    "heading": "Book a Private Tasting",
+    "successTitle": "Thank You!",
+    "successBody": "Your booking request has been sent. Our concierge will contact you shortly to confirm the details.",
+    "close": "Close",
+    "name": "Name",
+    "phone": "Phone",
+    "email": "Email",
+    "date": "Preferred Date",
+    "guests": "Guests",
+    "guestSuffix": "Guests",
+    "guestsPlus": "9+ Guests",
+    "requests": "Special Requests",
+    "requestsPlaceholder": "Dietary restrictions, special occasion...",
+    "submit": "Confirm Booking Request",
+    "processing": "Processing...",
+    "toastSuccessTitle": "Request Received",
+    "toastSuccessBody": "We'll confirm your tasting tour shortly.",
+    "toastErrorTitle": "Submission Failed",
+    "toastErrorBody": "Please try again later."
+  },
+  "hero": {
+    "imgAlt": "Aerial view of the Ocoa Bay vineyard at sunset — Caribbean wine grown in the Dominican Republic",
+    "eyebrow": "Caribbean Vineyard · Dominican Republic",
+    "title": "Visit Ocoa Bay",
+    "tagline": "\"Caribbean wine, organic dining, and the ocean breeze of Bahía de Ocoa.\"",
+    "cta": "See the experiences",
+    "scroll": "Scroll"
+  },
+  "about": {
+    "imgAlt": "Visitors at Ocoa Bay's Casa Club overlooking the Caribbean — wine tasting experience in the Dominican Republic",
+    "location": "Bahía de Ocoa · Azua, DO",
+    "heading": "A Caribbean winery",
+    "headingAccent": "where Kibay is born",
+    "p1": "Ocoa Bay is one of the few working vineyards in the Caribbean — a coastal estate in the Dominican Republic where organic grapes, mango and passion fruit are grown side by side under the same Atlantic sun. The same land you see on the bottle is the land you walk through on the tour.",
+    "p2": "Spend the day. Taste the wines. Eat lunch at the Casa Club. Swim in the pool overlooking the bay. It's the slow side of the Caribbean — and the truest way to understand what makes Dominican wine its own thing.",
+    "stats": {
+      "duration": "90 min",
+      "durationLabel": "Tour + tasting",
+      "days": "Sat–Sun",
+      "daysLabel": "Open weekends",
+      "distance": "~2hrs",
+      "distanceLabel": "From Santo Domingo"
+    }
+  },
+  "experiences": {
+    "eyebrow": "Caribbean Wine Experiences",
+    "heading": "Reserve your day at Ocoa Bay",
+    "subheading": "Three ways to spend a Saturday or Sunday at the Caribbean's vineyard. Buy your spot through the Kibay shop, then confirm your date directly with the estate.",
+    "buyOnKibay": "Buy on Kibay",
+    "bookAtOcoa": "Book a date at ocoabay.com",
+    "reserveAtOcoa": "Reserve at ocoabay.com",
+    "perPerson": "/ person · + taxes",
+    "tour": {
+      "imgAlt": "Guided Caribbean wine tasting at Ocoa Bay vineyard — Dominican Republic",
+      "title": "Wine Tour",
+      "schedule": "90 minutes · Sat & Sun",
+      "body": "Guided tasting of Ocoa Wines and other organic products from the estate, plus an electric-cart tour of the vineyards and winery overlooking Bahía de Ocoa.",
+      "price": "US$65"
+    },
+    "complete": {
+      "imgAlt": "Ocoa Bay full-day experience — Caribbean wine, pool and farm-to-table dining at the Casa Club",
+      "badge": "Most popular",
+      "title": "Complete Experience",
+      "schedule": "Full day · 11am – 6:30pm",
+      "body": "Wine tour and tasting · welcome toast at Casa Club · 3-course farm-to-table organic menu · pool and grounds access until 6:30pm.",
+      "price": "US$145"
+    },
+    "casaClub": {
+      "imgAlt": "Casa Club at Ocoa Bay — Dominican wines on a dining table overlooking the Caribbean",
+      "title": "Casa Club",
+      "schedule": "By reservation · à la carte",
+      "body": "Farm-to-table dining with à la carte minimum consumption. Pool and Casa Club access from 11:00 AM to 6:30 PM. Perfect if you've already toured the vineyard or want a quieter day on the bay.",
+      "price": "À la carte",
+      "priceSuffix": "/ por consumo",
+      "note": "Reservations handled directly by Ocoa Bay."
+    },
+    "footnote1": "Taxes: 18% ITBIS + 10% by law. Open Saturdays and Sundays only (and holidays). Some product and wine availability varies seasonally.",
+    "footnote2Prefix": "Group bookings welcome — message ",
+    "footnote2Or": " or call "
+  },
+  "tasting": {
+    "heading": "Tasting Notes",
+    "subheading": "Explore the intricate profiles of our most celebrated vintages.",
+    "labelAroma": "Aroma",
+    "labelFlavor": "Flavor",
+    "labelFinish": "Finish",
+    "wines": [
+      {
+        "name": "Pinot Noir",
+        "year": "2019",
+        "aroma": "Raspberry, Violet, Earth",
+        "flavor": "Red Cherry, Mushroom, Clove",
+        "finish": "Silky, delicate tannins"
+      },
+      {
+        "name": "Chardonnay",
+        "year": "2020",
+        "aroma": "Green Apple, Citrus, Toast",
+        "flavor": "Pear, Lemon Curd, Butter",
+        "finish": "Crisp acidity, creamy texture"
+      },
+      {
+        "name": "Rosé",
+        "year": "2021",
+        "aroma": "Strawberry, Rose Petal",
+        "flavor": "Watermelon, Peach, Mineral",
+        "finish": "Dry, refreshing, clean"
+      }
+    ]
+  },
+  "pairings": {
+    "heading": "Perfect Pairings",
+    "subheading": "Elevate your dining experience with our expert recommendations.",
+    "featureImgAlt": "Wine and Cheese Pairing",
+    "featureWine": "Grand Reserve Merlot",
+    "featureServe": "Best served at 16-18°C",
+    "items": [
+      {
+        "dish": "Aged Gouda & Cheddar",
+        "desc": "The sharp, nutty flavors of aged cheese cut through the tannins.",
+        "icon": "🧀"
+      },
+      {
+        "dish": "Roasted Lamb Rack",
+        "desc": "Herb-crusted lamb complements the earthy notes of the wine.",
+        "icon": "🍖"
+      },
+      {
+        "dish": "Dark Chocolate Truffles",
+        "desc": "Bitter chocolate enhances the fruit-forward profile.",
+        "icon": "🍫"
+      }
+    ]
+  },
+  "booking": {
+    "heading": "Reserve your visit",
+    "body": "Pick the experience that fits your day, then confirm your date with the Ocoa Bay reservations team. The Caribbean's working vineyard is two hours from Santo Domingo.",
+    "infoDays": "Saturdays & Sundays",
+    "infoDining": "Casa Club farm-to-table",
+    "infoLocation": "Bahía de Ocoa, Azua",
+    "ctaPrimary": "See the experiences",
+    "ctaSecondary": "Reservation form"
+  }
+}

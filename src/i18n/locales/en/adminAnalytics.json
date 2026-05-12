@@ -1,0 +1,85 @@
+{
+  "seoTitle": "Analytics — Admin",
+  "header": {
+    "title": "Analytics",
+    "subtitle": "Sales overview and shop performance.",
+    "refresh": "Refresh"
+  },
+  "period": {
+    "7d": "7d",
+    "30d": "30d",
+    "90d": "90d",
+    "all": "All time",
+    "previous": "previous",
+    "prev": "prev {{label}}"
+  },
+  "change": {
+    "new": "new"
+  },
+  "kpis": {
+    "totalRevenue": "Total revenue",
+    "revenueSubtitleUsd": "+ {{usd}} USD",
+    "revenueSubtitleDop": "DOP, paid+ statuses",
+    "revenueFootnote": "USD shown separately, no FX conversion.",
+    "orders": "Orders",
+    "ordersSubtitle": "All statuses in period",
+    "paidOrders": "Paid orders",
+    "conversion": "Conversion: {{value}}%",
+    "aov": "Average order value",
+    "aovSubtitleUsd": "{{usd}} USD avg",
+    "aovSubtitleDop": "DOP only"
+  },
+  "revenueChart": {
+    "title": "Revenue over time",
+    "subtitleDay": "DOP only · daily buckets",
+    "subtitleWeek": "DOP only · weekly buckets",
+    "subtitleMonth": "DOP only · monthly buckets",
+    "empty": "No paid revenue in this period.",
+    "tooltipLabel": "Revenue"
+  },
+  "topProducts": {
+    "title": "Top 5 products",
+    "subtitle": "Revenue from paid+ orders (DOP)",
+    "empty": "No product sales in this period.",
+    "unknownProduct": "Unknown product",
+    "tooltipLabel": "Revenue"
+  },
+  "statusBreakdown": {
+    "title": "Order status breakdown",
+    "subtitle": "All orders in period, by status",
+    "empty": "No orders in this period."
+  },
+  "topCustomers": {
+    "title": "Top 5 customers",
+    "subtitle": "By total spent on paid+ orders",
+    "empty": "No paying customers in this period.",
+    "customer": "Customer",
+    "orders": "Orders",
+    "totalSpent": "Total spent"
+  },
+  "recentPaid": {
+    "title": "Recent paid orders",
+    "viewAll": "View all",
+    "subtitle": "Latest 5 paid+ orders in period",
+    "empty": "No paid orders in this period.",
+    "order": "Order",
+    "customer": "Customer",
+    "total": "Total",
+    "paid": "Paid"
+  },
+  "status": {
+    "awaiting_payment": "Awaiting payment",
+    "paid": "Paid",
+    "processing": "Processing",
+    "shipped": "Shipped",
+    "delivered": "Delivered",
+    "canceled": "Canceled",
+    "failed": "Failed",
+    "refunded": "Refunded",
+    "disputed": "Disputed",
+    "unknown": "Unknown"
+  },
+  "toast": {
+    "loadFailed": "Failed to load analytics"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "seo": {
+    "title": "Acceso al Blog - Kibay"
+  },
+  "header": {
+    "h1": "Administración del Blog",
+    "subtitle": "Ingresa tus credenciales para acceder al panel"
+  },
+  "form": {
+    "emailLabel": "Correo Electrónico",
+    "emailPlaceholder": "admin@kibay.com.do",
+    "passwordLabel": "Contraseña",
+    "passwordPlaceholder": "••••••••",
+    "forgot": "¿Olvidaste tu contraseña?",
+    "submit": "Acceder al Panel"
+  },
+  "toast": {
+    "missingTitle": "Faltan campos",
+    "missingDescription": "Por favor ingresa correo y contraseña.",
+    "forgotTitle": "Contacta al Administrador",
+    "forgotDescription": "Por favor contacta al administrador del sistema para restablecer tus credenciales del blog."
+  },
+  "footer": {
+    "authorized": "Solo personal autorizado.",
+    "logged": "Todos los accesos quedan registrados."
+  }
+}

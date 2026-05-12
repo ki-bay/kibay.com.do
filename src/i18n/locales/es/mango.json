@@ -1,0 +1,36 @@
+{
+  "seo": {
+    "title": "Mango — El Rey de las Frutas | Kibay Espumante",
+    "description": "Conoce el mango orgánico que da cuerpo y carácter a Kibay Espumante: beneficios, vitaminas e historia de la fruta más caribeña del trópico."
+  },
+  "hero": {
+    "imgAlt": "Mangos maduros y jugosos",
+    "title": "El Dorado",
+    "titleAccent": "Mango",
+    "tagline": "Dulce, jugoso y lleno de sol — descubre por qué elegimos este tesoro tropical para Kibay."
+  },
+  "characteristics": {
+    "heading": "Características",
+    "body": "Dulce, jugoso y aromático; de color anaranjado, con una textura suave y fibrosa. Su perfil de sabor exuberante lo convierte en la base perfecta para un espumante refrescante, con un dulzor natural equilibrado por una acidez sutil."
+  },
+  "origins": {
+    "heading": "Origen e Historia",
+    "body": "El mango tiene una historia milenaria en el sur de Asia y es la fruta nacional de la India. Lleva más de 4,000 años cultivándose y cruzó medio mundo hasta llegar al Caribe, donde encontró en nuestro clima tropical su segunda casa."
+  },
+  "benefits": {
+    "heading": "Pura Energía de la Naturaleza",
+    "health": {
+      "title": "Beneficios para la Salud",
+      "body": "El mango es rico en antioxidantes, ayuda a la digestión, refuerza el sistema inmune y cuida la salud de la vista. Sus enzimas naturales facilitan la descomposición de proteínas — un aliado para tu cuerpo."
+    },
+    "vitamins": {
+      "title": "Vitaminas y Nutrientes",
+      "body": "Alto contenido de vitamina C, vitamina A y fibra. Una sola porción aporta un impulso real a tu nutrición diaria mientras satisface tu antojo dulce de forma natural."
+    }
+  },
+  "cta": {
+    "heading": "Vive el Sabor del Mango de Verdad",
+    "body": "¿Lista para probar la magia? Descubre hoy Kibay Espumante con mango.",
+    "button": "Comprar Ahora"
+  }
+}

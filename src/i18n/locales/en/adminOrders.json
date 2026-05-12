@@ -1,0 +1,99 @@
+{
+  "seoTitle": "Orders — Admin",
+  "header": {
+    "title": "Order management",
+    "subtitle": "Search, filter, and fulfill orders. Filters apply to the revenue KPI.",
+    "refresh": "Refresh"
+  },
+  "kpis": {
+    "paidOrders": "Paid orders (filtered)",
+    "revenue": "Revenue from paid (filtered)",
+    "revenueFootnote": "Mixed currency totals shown as raw cents in USD format."
+  },
+  "filters": {
+    "search": "Search",
+    "searchPlaceholder": "Order number or customer email…",
+    "status": "Status",
+    "allStatuses": "All statuses",
+    "from": "From",
+    "to": "To",
+    "clear": "Clear filters"
+  },
+  "status": {
+    "awaiting_payment": "awaiting payment",
+    "paid": "paid",
+    "processing": "processing",
+    "shipped": "shipped",
+    "delivered": "delivered",
+    "canceled": "canceled",
+    "failed": "failed",
+    "refunded": "refunded",
+    "disputed": "disputed"
+  },
+  "table": {
+    "orderNumber": "Order #",
+    "date": "Date",
+    "customer": "Customer",
+    "status": "Status",
+    "total": "Total"
+  },
+  "empty": "No orders match these filters",
+  "details": {
+    "customer": "Customer",
+    "shippingAddress": "Shipping address",
+    "noAddress": "No address on file",
+    "taxId": "Tax ID: {{value}}",
+    "lineItems": "Line items",
+    "noLineItems": "No line items recorded.",
+    "product": "Product",
+    "qty": "Qty",
+    "unitPrice": "Unit price",
+    "lineTotal": "Line total",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "total": "Total",
+    "payment": "Payment",
+    "method": "Method",
+    "paidAt": "Paid at",
+    "stripePI": "Stripe payment intent",
+    "viewInvoice": "View invoice PDF",
+    "fulfillment": "Fulfillment",
+    "statusLabel": "Status",
+    "trackingNumber": "Tracking number",
+    "trackingPlaceholder": "Carrier tracking",
+    "shippingMethod": "Shipping method",
+    "shippingMethodPlaceholder": "standard / express / …",
+    "taxIdLabel": "Tax ID",
+    "taxIdPlaceholder": "RNC / cedula",
+    "internalNotes": "Internal notes (admin only)",
+    "internalNotesPlaceholder": "Private notes about this order — never sent to the customer"
+  },
+  "actions": {
+    "resendConfirmation": "Resend confirmation",
+    "sendTracking": "Send tracking email",
+    "refund": "Refund",
+    "save": "Save"
+  },
+  "pagination": {
+    "summary": "Page {{page}} of {{totalPages}} · {{count}} order",
+    "summary_plural": "Page {{page}} of {{totalPages}} · {{count}} orders",
+    "prev": "Prev",
+    "next": "Next"
+  },
+  "toast": {
+    "updated": "Order updated",
+    "saveFailed": "Failed to save order",
+    "loadFailed": "Failed to load orders",
+    "emailSent": "{{label}} sent to {{recipient}}",
+    "emailFallbackRecipient": "customer",
+    "emailFailed": "Failed to send {{label}}",
+    "refundConfirm": "Refund order {{orderNumber}}? This will issue a refund via Stripe and cannot be undone.",
+    "refundInitiated": "Refund initiated",
+    "refundFailed": "Refund failed",
+    "invoiceFailed": "Could not generate invoice link"
+  },
+  "emailLabels": {
+    "confirmation": "Confirmation email",
+    "tracking": "Tracking email"
+  }
+}

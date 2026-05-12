@@ -1,0 +1,24 @@
+{
+  "seo": {
+    "title": "Iniciar Sesión - Kibay Espumante"
+  },
+  "header": {
+    "h1": "Bienvenido de Nuevo",
+    "subtitle": "Ingresa tu correo para recibir un código de acceso seguro.",
+    "subtitleLine2": "No necesitas contraseña."
+  },
+  "form": {
+    "emailLabel": "Correo Electrónico",
+    "emailPlaceholder": "tu@ejemplo.com",
+    "sending": "Enviando código...",
+    "submit": "Enviar Código de Acceso"
+  },
+  "toast": {
+    "invalidEmailTitle": "Correo no válido",
+    "invalidEmailDescription": "Por favor ingresa un correo electrónico válido."
+  },
+  "footer": {
+    "newToKibay": "¿Nuevo en Kibay?",
+    "createAccount": "Crear una cuenta"
+  }
+}

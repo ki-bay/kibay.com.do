@@ -1,0 +1,13 @@
+{
+  "seo": {
+    "title": "Página no encontrada — Kibay"
+  },
+  "label": "404",
+  "h1": "Esta página no existe",
+  "body": "Puede que el enlace esté roto o que la página haya sido movida. Prueba la tienda, el blog, o vuelve al inicio.",
+  "actions": {
+    "home": "Ir al inicio",
+    "shop": "Ver vinos",
+    "blog": "Leer el blog"
+  }
+}

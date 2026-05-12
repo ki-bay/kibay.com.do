@@ -1,0 +1,35 @@
+{
+  "seo": {
+    "title": "Reporte de Diagnóstico del Sistema | Kibay",
+    "description": "Chequeo de salud de la base de datos y reporte de diagnóstico."
+  },
+  "header": {
+    "h1": "Reporte de Diagnóstico de la Base de Datos"
+  },
+  "states": {
+    "running": "Ejecutando chequeos de salud...",
+    "failedTitle": "Diagnóstico Fallido"
+  },
+  "status": {
+    "healthy": "Saludable",
+    "failed": "Fallido",
+    "warning": "Advertencia",
+    "connectedDetail": "Conexión exitosa a Supabase y sesión de autenticación verificada.",
+    "rpcUnavailable": "La función RPC get_db_diagnostic no está disponible o no devolvió datos."
+  },
+  "overview": {
+    "heading": "Resumen del Estado del Sistema",
+    "generatedAt": "Generado el",
+    "connectionStatus": "Estado de Conexión"
+  },
+  "schema": {
+    "heading": "Inventario de Esquemas y Tablas",
+    "columnName": "Nombre de Columna",
+    "dataType": "Tipo de Dato",
+    "noTables": "No se encontraron tablas en el esquema público.",
+    "unavailable": "Información de esquema no disponible."
+  },
+  "raw": {
+    "heading": "Exportación JSON"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "seo": {
+    "title": "Mango - The King of Fruits | Kibay Sparkling",
+    "description": "Discover the health benefits, vitamins, and rich history of Mango, the key ingredient in Kibay's premium organic sparkling wine."
+  },
+  "hero": {
+    "imgAlt": "Delicious ripe mangoes",
+    "title": "The Golden",
+    "titleAccent": "Mango",
+    "tagline": "Sweet, juicy, and packed with sunshine—discover why we chose this tropical treasure for Kibay."
+  },
+  "characteristics": {
+    "heading": "Characteristics",
+    "body": "Sweet, juicy, and fragrant; typically orange in color with a smooth, fibrous texture. The mango's lush flavor profile makes it the perfect base for a refreshing sparkling wine, offering a natural sweetness balanced by subtle acidity."
+  },
+  "origins": {
+    "heading": "Origins & History",
+    "body": "Mangoes have a rich history in South Asia and are considered the national fruit of India. They have been cultivated for over 4,000 years and have traveled across the globe to the Caribbean, where they thrive in our tropical climate."
+  },
+  "benefits": {
+    "heading": "Nature's Powerhouse",
+    "health": {
+      "title": "Health Benefits",
+      "body": "Mangoes are rich in antioxidants, improve digestion, boost immunity, and support eye health. Their natural enzymes aid in breaking down proteins, making them excellent for digestion."
+    },
+    "vitamins": {
+      "title": "Vitamins & Nutrients",
+      "body": "High in Vitamin C, Vitamin A, and dietary fiber. A single serving provides a significant boost to your daily nutritional needs while satisfying your sweet tooth naturally."
+    }
+  },
+  "cta": {
+    "heading": "Experience the Taste of Real Mango",
+    "body": "Ready to taste the magic? Try our Kibay Mango Sparkling Wine today.",
+    "button": "Shop Now"
+  }
+}

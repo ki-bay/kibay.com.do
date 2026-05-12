@@ -1,0 +1,13 @@
+{
+  "seo": {
+    "title": "Page not found — Kibay"
+  },
+  "label": "404",
+  "h1": "This page doesn't exist",
+  "body": "The link may be broken, or the page may have been moved. Try the shop, the blog, or head back to the home page.",
+  "actions": {
+    "home": "Go home",
+    "shop": "Shop wines",
+    "blog": "Read the blog"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "seoTitle": "Productos — Admin",
+  "header": {
+    "title": "Productos",
+    "subtitle": "Gestiona el catálogo nativo. Contenido bilingüe ES/EN, precios USD + DOP, inventario real.",
+    "refresh": "Actualizar",
+    "newProduct": "Nuevo producto"
+  },
+  "status": {
+    "draft": "borrador",
+    "published": "publicado",
+    "archived": "archivado"
+  },
+  "purchasable": {
+    "notPurchasable": "no comprable"
+  },
+  "stock": {
+    "soldOut": "agotado",
+    "low": "bajo",
+    "untracked": "sin rastreo"
+  },
+  "table": {
+    "titleEs": "Título (ES)",
+    "slug": "Slug",
+    "status": "Estado",
+    "variants": "Variantes",
+    "stock": "Stock",
+    "price": "Precio (USD / DOP)",
+    "actions": "Acciones",
+    "missing": "— falta —",
+    "thumbnailAlt": "Miniatura del producto"
+  },
+  "empty": {
+    "noProducts": "Aún no hay productos.",
+    "createFirst": "Crear el primer producto"
+  },
+  "toast": {
+    "loadFailed": "Error al cargar los productos",
+    "deleteConfirm": "¿Eliminar \"{{name}}\"? Esta acción no se puede deshacer.",
+    "deleted": "Producto eliminado",
+    "deleteFailed": "Error al eliminar"
+  }
+}

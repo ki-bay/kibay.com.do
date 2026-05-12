@@ -1,0 +1,151 @@
+{
+  "seo": {
+    "title": "Tours de Vino en Ocoa Bay — Viñedo Caribeño | Kibay",
+    "description": "Visita Ocoa Bay, uno de los pocos viñedos en producción del Caribe. Degustación guiada de vinos dominicanos, recorrido en carrito eléctrico, almuerzo orgánico y piscina en la Casa Club. Reserva tu tour de vino en la República Dominicana.",
+    "keywords": "tour viñedo Ocoa Bay, viñedo caribeño, cata de vinos República Dominicana, viñedo dominicano, Casa Club Ocoa Bay, vino dominicano experiencia, tour de vino Caribe"
+  },
+  "modal": {
+    "heading": "Reserva una Cata Privada",
+    "successTitle": "¡Gracias!",
+    "successBody": "Hemos recibido tu solicitud de reserva. Nuestro concierge te contactará pronto para confirmar los detalles.",
+    "close": "Cerrar",
+    "name": "Nombre",
+    "phone": "Teléfono",
+    "email": "Correo",
+    "date": "Fecha Preferida",
+    "guests": "Invitados",
+    "guestSuffix": "Invitados",
+    "guestsPlus": "9+ Invitados",
+    "requests": "Solicitudes Especiales",
+    "requestsPlaceholder": "Restricciones alimenticias, ocasión especial...",
+    "submit": "Confirmar Reserva",
+    "processing": "Procesando...",
+    "toastSuccessTitle": "Solicitud Recibida",
+    "toastSuccessBody": "Confirmaremos tu cata muy pronto.",
+    "toastErrorTitle": "No se pudo enviar",
+    "toastErrorBody": "Por favor intenta de nuevo más tarde."
+  },
+  "hero": {
+    "imgAlt": "Vista aérea del viñedo de Ocoa Bay al atardecer — vino caribeño cultivado en la República Dominicana",
+    "eyebrow": "Viñedo Caribeño · República Dominicana",
+    "title": "Visita Ocoa Bay",
+    "tagline": "\"Vino caribeño, cocina orgánica y la brisa del mar en Bahía de Ocoa.\"",
+    "cta": "Ver las experiencias",
+    "scroll": "Desliza"
+  },
+  "about": {
+    "imgAlt": "Visitantes en la Casa Club de Ocoa Bay con vista al Caribe — experiencia de cata de vinos en la República Dominicana",
+    "location": "Bahía de Ocoa · Azua, RD",
+    "heading": "Un viñedo caribeño",
+    "headingAccent": "donde nace Kibay",
+    "p1": "Ocoa Bay es uno de los pocos viñedos en producción del Caribe — una finca costera en la República Dominicana donde la uva orgánica, el mango y la chinola crecen lado a lado bajo el mismo sol atlántico. La tierra que ves en la botella es la misma que recorres en el tour.",
+    "p2": "Pasa el día. Prueba los vinos. Almuerza en la Casa Club. Báñate en la piscina con vista a la bahía. Es el lado tranquilo del Caribe — y la forma más honesta de entender por qué el vino dominicano tiene su propio carácter.",
+    "stats": {
+      "duration": "90 min",
+      "durationLabel": "Tour + cata",
+      "days": "Sáb–Dom",
+      "daysLabel": "Abierto fines de semana",
+      "distance": "~2 hrs",
+      "distanceLabel": "Desde Santo Domingo"
+    }
+  },
+  "experiences": {
+    "eyebrow": "Experiencias de Vino Caribeño",
+    "heading": "Reserva tu día en Ocoa Bay",
+    "subheading": "Tres formas de pasar un sábado o domingo en el viñedo del Caribe. Compra tu cupo en la tienda Kibay y confirma tu fecha directamente con la finca.",
+    "buyOnKibay": "Comprar en Kibay",
+    "bookAtOcoa": "Reserva tu fecha en ocoabay.com",
+    "reserveAtOcoa": "Reserva en ocoabay.com",
+    "perPerson": "/ persona · + impuestos",
+    "tour": {
+      "imgAlt": "Cata guiada de vino caribeño en el viñedo Ocoa Bay — República Dominicana",
+      "title": "Tour de Vino",
+      "schedule": "90 minutos · Sáb y Dom",
+      "body": "Cata guiada de los vinos Ocoa y otros productos orgánicos de la finca, más un recorrido en carrito eléctrico por los viñedos y la bodega, con vista a la Bahía de Ocoa.",
+      "price": "US$65"
+    },
+    "complete": {
+      "imgAlt": "Experiencia de día completo en Ocoa Bay — vino caribeño, piscina y cocina del campo a la mesa en la Casa Club",
+      "badge": "Más popular",
+      "title": "Experiencia Completa",
+      "schedule": "Día completo · 11am – 6:30pm",
+      "body": "Tour y cata · brindis de bienvenida en la Casa Club · menú orgánico de 3 tiempos del campo a la mesa · acceso a la piscina y a la finca hasta las 6:30pm.",
+      "price": "US$145"
+    },
+    "casaClub": {
+      "imgAlt": "Casa Club en Ocoa Bay — vinos dominicanos en la mesa con vista al Caribe",
+      "title": "Casa Club",
+      "schedule": "Con reserva · a la carta",
+      "body": "Cocina del campo a la mesa con consumo mínimo a la carta. Acceso a la piscina y la Casa Club de 11:00 AM a 6:30 PM. Perfecto si ya hiciste el tour o si buscas un día más tranquilo en la bahía.",
+      "price": "A la carta",
+      "priceSuffix": "/ por consumo",
+      "note": "Las reservas las maneja directamente Ocoa Bay."
+    },
+    "footnote1": "Impuestos: 18 % ITBIS + 10 % por ley. Abierto solo sábados y domingos (y feriados). La disponibilidad de algunos productos y vinos varía por temporada.",
+    "footnote2Prefix": "Reservas de grupo bienvenidas — escribe a ",
+    "footnote2Or": " o llama al "
+  },
+  "tasting": {
+    "heading": "Notas de Cata",
+    "subheading": "Explora los perfiles de nuestras añadas más celebradas.",
+    "labelAroma": "Aroma",
+    "labelFlavor": "Sabor",
+    "labelFinish": "Final",
+    "wines": [
+      {
+        "name": "Pinot Noir",
+        "year": "2019",
+        "aroma": "Frambuesa, violeta, tierra",
+        "flavor": "Cereza roja, hongo, clavo",
+        "finish": "Sedoso, taninos delicados"
+      },
+      {
+        "name": "Chardonnay",
+        "year": "2020",
+        "aroma": "Manzana verde, cítricos, tostado",
+        "flavor": "Pera, crema de limón, mantequilla",
+        "finish": "Acidez fresca, textura cremosa"
+      },
+      {
+        "name": "Rosé",
+        "year": "2021",
+        "aroma": "Fresa, pétalo de rosa",
+        "flavor": "Sandía, melocotón, mineral",
+        "finish": "Seco, refrescante, limpio"
+      }
+    ]
+  },
+  "pairings": {
+    "heading": "Maridajes Perfectos",
+    "subheading": "Eleva tu experiencia gastronómica con nuestras recomendaciones.",
+    "featureImgAlt": "Maridaje de vino y queso",
+    "featureWine": "Gran Reserva Merlot",
+    "featureServe": "Servir a 16-18 °C",
+    "items": [
+      {
+        "dish": "Gouda y Cheddar Añejos",
+        "desc": "Los sabores intensos y a nuez de los quesos añejos cortan los taninos.",
+        "icon": "🧀"
+      },
+      {
+        "dish": "Costillar de Cordero al Horno",
+        "desc": "El cordero con costra de hierbas realza las notas terrosas del vino.",
+        "icon": "🍖"
+      },
+      {
+        "dish": "Trufas de Chocolate Oscuro",
+        "desc": "El chocolate amargo potencia el perfil frutal del vino.",
+        "icon": "🍫"
+      }
+    ]
+  },
+  "booking": {
+    "heading": "Reserva tu Visita",
+    "body": "Elige la experiencia que mejor se adapte a tu día y luego confirma la fecha con el equipo de reservas de Ocoa Bay. El viñedo del Caribe está a dos horas de Santo Domingo.",
+    "infoDays": "Sábados y Domingos",
+    "infoDining": "Casa Club del campo a la mesa",
+    "infoLocation": "Bahía de Ocoa, Azua",
+    "ctaPrimary": "Ver las experiencias",
+    "ctaSecondary": "Formulario de reserva"
+  }
+}

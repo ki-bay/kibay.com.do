@@ -1,0 +1,87 @@
+{
+  "seo": {
+    "title": "Kibay Espumante | Vino espumante orgánico de la República Dominicana",
+    "description": "Kibay Espumante: un vino espumante orgánico premium elaborado con mango y chinola. Fermentado, no saborizado. Vino auténtico, refrescantemente vivo."
+  },
+  "hero": {
+    "eyebrow": "El nuevo estándar caribeño",
+    "h1Lead": "Kibay",
+    "h1Accent": "Espumante",
+    "subtitle": "Vino espumante orgánico con mango y chinola",
+    "body": "Fermentado, no saborizado. Vino auténtico, refrescantemente vivo. Una expresión sofisticada del terroir dominicano elaborada para el disfrute moderno.",
+    "cta": "Descubre el vino",
+    "imgAlt": "Lata de Kibay Espumante"
+  },
+  "what": {
+    "heading": "Un espumante de verdad",
+    "body": "Kibay Espumante es vino auténtico, logrado mediante fermentación natural. No mezclamos jugo con alcohol: fermentamos mango y chinola orgánicos premium de Ocoa Bay para crear un espumante complejo y estructurado que conserva el alma genuina de sus ingredientes.",
+    "isTitle": "Lo que sí es",
+    "isItems": [
+      "Vino espumante fermentado naturalmente",
+      "Elaborado con fruta 100 % orgánica",
+      "Resultado de un trabajo enológico cuidadoso",
+      "Complejo, seco y refrescante"
+    ],
+    "notTitle": "Lo que no es",
+    "notItems": [
+      "No es un wine cooler ni un spritzer",
+      "No es un cóctel cargado de azúcar",
+      "No tiene saborizantes artificiales",
+      "No es un refresco con alcohol"
+    ]
+  },
+  "origin": {
+    "eyebrow": "Ocoa Bay, República Dominicana",
+    "heading": "Desde la República Dominicana",
+    "body1": "Nacido en el microclima único de Ocoa Bay, donde las montañas se encuentran con el mar Caribe. Esta región seca y soleada produce mangos y chinolas con sabores concentrados y aromas excepcionales, esenciales para una enología de alta calidad.",
+    "body2": "Nuestra producción ocurre íntegramente en la isla, apoyando la agricultura local y reduciendo nuestra huella de carbono.",
+    "quote": "\"De la misma bodega que Kibay Wine — por Ocoa Bay\"",
+    "imgAlt": "Paisaje del viñedo",
+    "imgTitle": "Bodega Ocoa Bay",
+    "imgSubtitle": "El primer viñedo del Caribe"
+  },
+  "flavor": {
+    "heading": "Saborea el terroir",
+    "intro": "Un perfil sofisticado que equilibra la dulzura natural de la fruta tropical con la acidez crujiente de un espumante bien elaborado.",
+    "aromaTitle": "Aroma",
+    "aromaBody": "Elegante y expresivo, abre con notas claras de mango maduro y toques florales tropicales, sostenidas por una fresca ralladura cítrica.",
+    "palateTitle": "Boca",
+    "palateBody": "Refrescante y equilibrado. La chinola aporta una acidez viva que baila en la lengua, perfectamente contrapesada por un cuerpo redondo y frutal que nunca empalaga.",
+    "finishTitle": "Final",
+    "finishBody": "Limpio, crujiente y persistente. Deja un agradable recuerdo tropical que invita a otro sorbo sin cubrir el paladar de azúcar."
+  },
+  "philosophy": {
+    "heading": "Elaborado con intención",
+    "body1": "Creemos que los mejores sabores vienen de la naturaleza, no de un laboratorio. Por eso, Kibay Espumante se elabora sin azúcares artificiales, saborizantes químicos ni aditivos sintéticos.",
+    "body2": "Nuestra filosofía es simple: respetar los ingredientes. Al utilizar métodos de fermentación orgánica, preservamos la integridad de la fruta y la tierra de la que proviene. Es una forma más limpia y auténtica de disfrutar el espumante.",
+    "imgAlt": "Mango y chinola frescos en primer plano, ingredientes clave de Kibay Espumante",
+    "badgePercent": "100 %",
+    "badgeLabel": "Natural"
+  },
+  "enjoy": {
+    "heading": "Listo para cualquier momento",
+    "intro": "Versátil para una copa, casual para la lata.",
+    "items": [
+      { "title": "Frío en copa", "desc": "Sírvelo en una copa flauta para apreciar las burbujas finas y el color dorado." },
+      { "title": "Directo de la lata", "desc": "Disfruta la experiencia premium en cualquier lugar, sin necesidad de cristalería." },
+      { "title": "En la playa", "desc": "El compañero perfecto del atardecer. Refrescante, tropical e irrompible." },
+      { "title": "Maridaje a la mesa", "desc": "Su acidez atraviesa los platos intensos; marida muy bien con mariscos o picante." }
+    ]
+  },
+  "specs": {
+    "heading": "Especificaciones del producto",
+    "items": [
+      { "label": "Categoría", "value": "Vino espumante orgánico" },
+      { "label": "Origen", "value": "Ocoa Bay, República Dominicana" },
+      { "label": "Formato", "value": "Lata de aluminio 250 ml (reciclable)" },
+      { "label": "Ingredientes", "value": "Mango y chinola fermentados" },
+      { "label": "Alcohol", "value": "6 % ABV" },
+      { "label": "Vida útil", "value": "Mejor consumido en los 18 meses siguientes" }
+    ]
+  },
+  "closing": {
+    "heading": "Vino sin ceremonia",
+    "body": "Hemos despojado la pretensión para revelar lo que importa: una elaboración excepcional, un origen auténtico y el puro placer del Caribe. Esta es la cultura moderna del vino.",
+    "cta": "Comprar Kibay Espumante"
+  }
+}

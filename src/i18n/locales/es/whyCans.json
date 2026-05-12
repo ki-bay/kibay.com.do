@@ -1,0 +1,82 @@
+{
+  "seo": {
+    "title": "¿Por qué latas de aluminio? — Kibay Espumante | Empaque Premium",
+    "description": "Frescura, sostenibilidad y calidad: descubre por qué Kibay Espumante elige la lata de aluminio para llevar el vino caribeño a tu momento, sin perder un grado de carácter."
+  },
+  "hero": {
+    "title": "¿Por qué",
+    "titleAccent": "latas de aluminio",
+    "titleSuffix": "?",
+    "tagline": "Calidad premium con la comodidad de hoy. Te contamos por qué la lata de aluminio es el futuro del buen vino."
+  },
+  "preservation": {
+    "heading": "Conservación Premium",
+    "body": "La luz y el oxígeno son los peores enemigos del vino. Hasta la exposición mínima degrada sabores delicados, aromas y color. La lata de aluminio crea una barrera impenetrable que el vidrio simplemente no logra.",
+    "imgAlt": "Mango tropical fresco que muestra los ingredientes orgánicos premium",
+    "light": {
+      "title": "Protección Total Contra la Luz",
+      "body": "A diferencia de las botellas de vidrio, que dejan pasar los rayos UV y dañan los compuestos del vino, la lata bloquea la luz al 100%. Tu Kibay Espumante sabe exactamente como debe — fresco, vibrante y perfectamente conservado."
+    },
+    "seal": {
+      "title": "Sellado Hermético",
+      "body": "Nuestra tecnología de enlatado crea una barrera absoluta contra el oxígeno. Cero oxidación, y la efervescencia y los sabores tropicales se mantienen intactos desde el llenado hasta tu primer sorbo."
+    }
+  },
+  "freshness": {
+    "heading": "Frescura y Porción Perfecta",
+    "iconAlt": "Frescura y porciones",
+    "body": "El formato de 250 ml está pensado para el disfrute moderno del vino — perfecto para una persona o para compartir entre dos. Se acabaron las botellas a medio abrir perdiendo burbujas en la nevera.",
+    "imgAlt": "Chinola vibrante que resalta los sabores exóticos del trópico",
+    "singleServe": {
+      "title": "Porción Justa",
+      "body": "Cada lata trae la cantidad exacta de espumante. Ya sea un momento solo de pausa o compartido con alguien, no hay desperdicio ni compromiso con la calidad."
+    },
+    "peak": {
+      "title": "Siempre en su Punto",
+      "body": "A diferencia de las botellas, que pierden carácter una vez abiertas, cada lata de Kibay Espumante se disfruta en su mejor momento. El primer trago sabe igual que el último — perfectamente burbujeante, perfectamente fresco."
+    }
+  },
+  "sustainability": {
+    "heading": "La Sostenibilidad Importa",
+    "subheading": "La calidad premium no debería costarle al planeta. Nuestras latas de aluminio son un compromiso real con la responsabilidad ambiental.",
+    "recyclable": {
+      "title": "Infinitamente Reciclable",
+      "body": "El aluminio se recicla sin fin y sin perder calidad. Más del 75 % del aluminio jamás producido sigue en uso hoy."
+    },
+    "carbon": {
+      "title": "Menor Huella de Carbono",
+      "body": "Las latas pesan menos que el vidrio, así que requieren menos combustible para transportarse. Eso reduce significativamente nuestras emisiones por unidad."
+    },
+    "fast": {
+      "title": "Reciclaje Rápido",
+      "body": "Una lata de aluminio puede reciclarse y volver al estante en apenas 60 días — mucho más rápido que el vidrio."
+    }
+  },
+  "convenience": {
+    "heading": "Comodidad sin Sacrificar Calidad",
+    "subheading": "El buen vino debería adaptarse a tu vida, no complicarla. Kibay Espumante en lata lleva la sofisticación a cualquier ocasión.",
+    "beach": {
+      "title": "Lista para Playa y Piscina",
+      "body": "Sin vidrio, sin preocupaciones. Disfruta un espumante premium en la piscina, en la playa o en el bote, con total tranquilidad."
+    },
+    "portable": {
+      "title": "Liviana y Portátil",
+      "body": "Perfecta para picnics, conciertos, caminatas o viajes. Lleva el buen vino a donde quieras, sin el peso ni la fragilidad del vidrio."
+    },
+    "chill": {
+      "title": "Se Enfría Rápido",
+      "body": "El aluminio conduce la temperatura 50 veces más rápido que el vidrio. Enfría tu Kibay en minutos, no en horas — ideal para celebraciones improvisadas."
+    },
+    "noTool": {
+      "title": "Sin Sacacorchos",
+      "body": "Fácil de abrir, fácil de disfrutar. Comodidad moderna con calidad de siempre. Sin herramientas, sin complicaciones — solo buen vino."
+    }
+  },
+  "credibility": {
+    "heading": "Respaldado por la Excelencia de Ocoa Bay",
+    "subheading": "Elegir la lata no es solo práctico — es reflejo de nuestro compromiso con la innovación, sin perder el respeto por la tradición.",
+    "p1": "En la bodega Ocoa Bay llevamos años perfeccionando nuestro proceso de fermentación orgánica. Cuando llegó el momento de envasar Kibay Espumante, investigamos a fondo cuál era el formato que mejor preservaba la calidad del vino.",
+    "p2": "La respuesta fue clara: la lata de aluminio ofrece protección superior, sostenibilidad y comodidad, sin renunciar al carácter premium que nuestros clientes esperan. No es un compromiso — es una mejora.",
+    "p3": "Estamos orgullosos de ir al frente del movimiento del vino en lata, demostrando que la calidad premium y la comodidad moderna pueden convivir hermosamente."
+  }
+}

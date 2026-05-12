@@ -1,0 +1,18 @@
+{
+  "seoTitle": "Logs del sistema | Admin",
+  "heading": "Logs de automatización",
+  "subheading": "Monitorea las ejecuciones de edge functions y eventos de webhooks.",
+  "filterPlaceholder": "Filtrar logs...",
+  "exportCsv": "Exportar CSV",
+  "table": {
+    "timestamp": "Fecha y hora",
+    "function": "Función",
+    "action": "Acción",
+    "status": "Estado",
+    "empty": "No se encontraron logs"
+  },
+  "status": {
+    "success": "ÉXITO",
+    "error": "ERROR"
+  }
+}

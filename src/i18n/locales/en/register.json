@@ -1,0 +1,25 @@
+{
+  "seo": {
+    "title": "Create Account - Kibay Espumante"
+  },
+  "header": {
+    "h1": "Create Account",
+    "subtitle": "Join the Kibay community"
+  },
+  "form": {
+    "fullNameLabel": "Full Name",
+    "fullNamePlaceholder": "John Doe",
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "you@example.com",
+    "sending": "Sending Code...",
+    "submit": "Send Login Code"
+  },
+  "toast": {
+    "missingTitle": "Missing Information",
+    "missingDescription": "Please fill in all fields."
+  },
+  "footer": {
+    "haveAccount": "Already have an account?",
+    "logIn": "Log in"
+  }
+}

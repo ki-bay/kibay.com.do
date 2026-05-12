@@ -1,0 +1,43 @@
+{
+  "seoTitle": "Products — Admin",
+  "header": {
+    "title": "Products",
+    "subtitle": "Manage the native catalog. Bilingual ES/EN copy, USD + DOP prices, real inventory.",
+    "refresh": "Refresh",
+    "newProduct": "New Product"
+  },
+  "status": {
+    "draft": "draft",
+    "published": "published",
+    "archived": "archived"
+  },
+  "purchasable": {
+    "notPurchasable": "not purchasable"
+  },
+  "stock": {
+    "soldOut": "sold out",
+    "low": "low",
+    "untracked": "untracked"
+  },
+  "table": {
+    "titleEs": "Title (ES)",
+    "slug": "Slug",
+    "status": "Status",
+    "variants": "Variants",
+    "stock": "Stock",
+    "price": "Price (USD / DOP)",
+    "actions": "Actions",
+    "missing": "— missing —",
+    "thumbnailAlt": "Product thumbnail"
+  },
+  "empty": {
+    "noProducts": "No products yet.",
+    "createFirst": "Create the first product"
+  },
+  "toast": {
+    "loadFailed": "Failed to load products",
+    "deleteConfirm": "Delete \"{{name}}\"? This cannot be undone.",
+    "deleted": "Product deleted",
+    "deleteFailed": "Delete failed"
+  }
+}

@@ -17,6 +17,7 @@ import {
 	BarChart3,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import {
 	ResponsiveContainer,
 	AreaChart,
@@ -51,10 +52,10 @@ const STATUS_COLORS = {
 };
 
 const PERIOD_OPTIONS = [
-	{ key: '7d', label: '7d', days: 7 },
-	{ key: '30d', label: '30d', days: 30 },
-	{ key: '90d', label: '90d', days: 90 },
-	{ key: 'all', label: 'All time', days: null },
+	{ key: '7d', days: 7 },
+	{ key: '30d', days: 30 },
+	{ key: '90d', days: 90 },
+	{ key: 'all', days: null },
 ];
 
 // ---------- helpers ----------
@@ -136,7 +137,7 @@ const pctChange = (current, previous) => {
 	};
 };
 
-const ChangePill = ({ change, prevLabel }) => {
+const ChangePill = ({ change, prevLabel, t }) => {
 	const Icon =
 		change.dir === 'up' ? TrendingUp : change.dir === 'down' ? TrendingDown : Minus;
 	const cls =
@@ -147,7 +148,7 @@ const ChangePill = ({ change, prevLabel }) => {
 			: 'text-foreground/50';
 	const text =
 		change.value == null
-			? 'new'
+			? t('change.new')
 			: `${change.value >= 0 ? '+' : ''}${change.value.toFixed(1)}%`;
 	return (
 		<span className={`inline-flex items-center gap-1 text-xs ${cls}`}>
@@ -197,13 +198,14 @@ const bucketLabel = (key, granularity) => {
 	return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 };
 
-// Pretty-print status label.
+// Pretty-print status label (fallback when no translation exists).
 const formatStatusLabel = (s) =>
 	(s || '').replace(/_/g, ' ').replace(/^\w/, (c) => c.toUpperCase());
 
 // ---------- component ----------
 
 const AdminAnalyticsPage = () => {
+	const { t } = useTranslation('adminAnalytics');
 	const [period, setPeriod] = useState('30d');
 	const [loading, setLoading] = useState(true);
 	const [refreshing, setRefreshing] = useState(false);
@@ -341,13 +343,13 @@ const AdminAnalyticsPage = () => {
 			setRecentPaid(recent);
 		} catch (e) {
 			console.error(e);
-			setError(e.message || 'Failed to load analytics');
-			toast.error(e.message || 'Failed to load analytics');
+			setError(e.message || t('toast.loadFailed'));
+			toast.error(e.message || t('toast.loadFailed'));
 		} finally {
 			setLoading(false);
 			setRefreshing(false);
 		}
-	}, [bounds]);
+	}, [bounds, t]);
 
 	useEffect(() => {
 		setLoading(true);
@@ -446,16 +448,18 @@ const AdminAnalyticsPage = () => {
 		return Array.from(map.entries())
 			.map(([status, count]) => ({
 				status,
-				label: formatStatusLabel(status),
+				label: t(`status.${status}`, formatStatusLabel(status)),
 				count,
 				color: STATUS_COLORS[status] || '#71717a',
 			}))
 			.sort((a, b) => b.count - a.count);
-	}, [currentOrders]);
+	}, [currentOrders, t]);
 
 	const periodOpt = PERIOD_OPTIONS.find((p) => p.key === period);
 	const prevLabel =
-		period === 'all' ? 'previous' : `prev ${periodOpt ? periodOpt.label : ''}`;
+		period === 'all'
+			? t('period.previous')
+			: t('period.prev', { label: periodOpt ? t(`period.${periodOpt.key}`) : '' });
 
 	// ---------- render helpers ----------
 
@@ -469,7 +473,7 @@ const AdminAnalyticsPage = () => {
 			{subtitle ? (
 				<p className="text-xs text-foreground/50">{subtitle}</p>
 			) : null}
-			{change ? <ChangePill change={change} prevLabel={prevLabel} /> : null}
+			{change ? <ChangePill change={change} prevLabel={prevLabel} t={t} /> : null}
 			{footnote ? <p className="text-[11px] text-foreground/40 mt-1">{footnote}</p> : null}
 		</div>
 	);
@@ -477,7 +481,7 @@ const AdminAnalyticsPage = () => {
 	return (
 		<>
 			<Helmet>
-				<title>Analytics — Admin</title>
+				<title>{t('seoTitle')}</title>
 			</Helmet>
 			<Navigation />
 			<main id="main" role="main" className="min-h-screen bg-background pt-28 pb-20 px-4">
@@ -487,10 +491,10 @@ const AdminAnalyticsPage = () => {
 						<div>
 							<h1 className="text-3xl font-bold text-foreground flex items-center gap-2">
 								<BarChart3 className="w-7 h-7 text-mango-400" />
-								Analytics
+								{t('header.title')}
 							</h1>
 							<p className="text-foreground/60 mt-1">
-								Sales overview and shop performance.
+								{t('header.subtitle')}
 							</p>
 						</div>
 						<div className="flex items-center gap-2">
@@ -506,7 +510,7 @@ const AdminAnalyticsPage = () => {
 												: 'text-foreground/70 hover:text-foreground'
 										}`}
 									>
-										{p.label}
+										{t(`period.${p.key}`)}
 									</button>
 								))}
 							</div>
@@ -522,7 +526,7 @@ const AdminAnalyticsPage = () => {
 								) : (
 									<RefreshCw className="w-4 h-4" />
 								)}
-								Refresh
+								{t('header.refresh')}
 							</Button>
 						</div>
 					</div>
@@ -543,42 +547,42 @@ const AdminAnalyticsPage = () => {
 							<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
 								<KpiCard
 									icon={DollarSign}
-									label="Total revenue"
+									label={t('kpis.totalRevenue')}
 									value={formatDOP(kpis.revenue.dop)}
 									subtitle={
 										kpis.revenue.usd > 0
-											? `+ ${formatUSD(kpis.revenue.usd)} USD`
-											: 'DOP, paid+ statuses'
+											? t('kpis.revenueSubtitleUsd', { usd: formatUSD(kpis.revenue.usd) })
+											: t('kpis.revenueSubtitleDop')
 									}
 									change={kpis.revenue.change}
 									footnote={
 										kpis.revenue.usd > 0
-											? 'USD shown separately, no FX conversion.'
+											? t('kpis.revenueFootnote')
 											: null
 									}
 								/>
 								<KpiCard
 									icon={ShoppingBag}
-									label="Orders"
+									label={t('kpis.orders')}
 									value={kpis.orders.count.toLocaleString()}
-									subtitle="All statuses in period"
+									subtitle={t('kpis.ordersSubtitle')}
 									change={kpis.orders.change}
 								/>
 								<KpiCard
 									icon={CheckCircle2}
-									label="Paid orders"
+									label={t('kpis.paidOrders')}
 									value={kpis.paid.count.toLocaleString()}
-									subtitle={`Conversion: ${kpis.paid.conversion.toFixed(1)}%`}
+									subtitle={t('kpis.conversion', { value: kpis.paid.conversion.toFixed(1) })}
 									change={kpis.paid.change}
 								/>
 								<KpiCard
 									icon={TrendingUp}
-									label="Average order value"
+									label={t('kpis.aov')}
 									value={formatDOP(kpis.aov.value)}
 									subtitle={
 										kpis.aov.usd > 0
-											? `${formatUSD(kpis.aov.usd)} USD avg`
-											: 'DOP only'
+											? t('kpis.aovSubtitleUsd', { usd: formatUSD(kpis.aov.usd) })
+											: t('kpis.aovSubtitleDop')
 									}
 									change={kpis.aov.change}
 								/>
@@ -589,22 +593,20 @@ const AdminAnalyticsPage = () => {
 								<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
 									<div>
 										<h2 className="text-lg font-semibold text-foreground">
-											Revenue over time
+											{t('revenueChart.title')}
 										</h2>
 										<p className="text-xs text-foreground/50">
-											DOP only ·{' '}
 											{bucketGranularity(period) === 'day'
-												? 'daily'
+												? t('revenueChart.subtitleDay')
 												: bucketGranularity(period) === 'week'
-												? 'weekly'
-												: 'monthly'}{' '}
-											buckets
+												? t('revenueChart.subtitleWeek')
+												: t('revenueChart.subtitleMonth')}
 										</p>
 									</div>
 								</div>
 								{revenueSeries.length === 0 ? (
 									<p className="text-foreground/40 text-center py-12 text-sm">
-										No paid revenue in this period.
+										{t('revenueChart.empty')}
 									</p>
 								) : (
 									<div className="w-full h-72">
@@ -638,7 +640,7 @@ const AdminAnalyticsPage = () => {
 															minimumFractionDigits: 2,
 															maximumFractionDigits: 2,
 														})}`,
-														'Revenue',
+														t('revenueChart.tooltipLabel'),
 													]}
 													contentStyle={{
 														background: '#1c1917',
@@ -665,14 +667,14 @@ const AdminAnalyticsPage = () => {
 								{/* Top products */}
 								<section className="bg-card border border-foreground/10 rounded-xl p-5">
 									<h2 className="text-lg font-semibold text-foreground mb-1">
-										Top 5 products
+										{t('topProducts.title')}
 									</h2>
 									<p className="text-xs text-foreground/50 mb-4">
-										Revenue from paid+ orders (DOP)
+										{t('topProducts.subtitle')}
 									</p>
 									{topProducts.length === 0 ? (
 										<p className="text-foreground/40 text-center py-8 text-sm">
-											No product sales in this period.
+											{t('topProducts.empty')}
 										</p>
 									) : (
 										<div className="w-full h-72">
@@ -708,7 +710,7 @@ const AdminAnalyticsPage = () => {
 																minimumFractionDigits: 2,
 																maximumFractionDigits: 2,
 															})}`,
-															'Revenue',
+															t('topProducts.tooltipLabel'),
 														]}
 														contentStyle={{
 															background: '#1c1917',
@@ -732,14 +734,14 @@ const AdminAnalyticsPage = () => {
 								{/* Status breakdown */}
 								<section className="bg-card border border-foreground/10 rounded-xl p-5">
 									<h2 className="text-lg font-semibold text-foreground mb-1">
-										Order status breakdown
+										{t('statusBreakdown.title')}
 									</h2>
 									<p className="text-xs text-foreground/50 mb-4">
-										All orders in period, by status
+										{t('statusBreakdown.subtitle')}
 									</p>
 									{statusBreakdown.length === 0 ? (
 										<p className="text-foreground/40 text-center py-8 text-sm">
-											No orders in this period.
+											{t('statusBreakdown.empty')}
 										</p>
 									) : (
 										<div className="w-full h-72">
@@ -785,23 +787,23 @@ const AdminAnalyticsPage = () => {
 								{/* Top customers */}
 								<section className="bg-card border border-foreground/10 rounded-xl p-5">
 									<h2 className="text-lg font-semibold text-foreground mb-1">
-										Top 5 customers
+										{t('topCustomers.title')}
 									</h2>
 									<p className="text-xs text-foreground/50 mb-4">
-										By total spent on paid+ orders
+										{t('topCustomers.subtitle')}
 									</p>
 									{topCustomers.length === 0 ? (
 										<p className="text-foreground/40 text-center py-8 text-sm">
-											No paying customers in this period.
+											{t('topCustomers.empty')}
 										</p>
 									) : (
 										<div className="overflow-x-auto -mx-2">
 											<table className="w-full text-sm">
 												<thead>
 													<tr className="text-left text-xs uppercase text-foreground/50 border-b border-foreground/10">
-														<th className="px-2 py-2">Customer</th>
-														<th className="px-2 py-2 text-right">Orders</th>
-														<th className="px-2 py-2 text-right">Total spent</th>
+														<th className="px-2 py-2">{t('topCustomers.customer')}</th>
+														<th className="px-2 py-2 text-right">{t('topCustomers.orders')}</th>
+														<th className="px-2 py-2 text-right">{t('topCustomers.totalSpent')}</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -836,31 +838,31 @@ const AdminAnalyticsPage = () => {
 								<section className="bg-card border border-foreground/10 rounded-xl p-5">
 									<div className="flex items-center justify-between mb-1">
 										<h2 className="text-lg font-semibold text-foreground">
-											Recent paid orders
+											{t('recentPaid.title')}
 										</h2>
 										<Link
 											to="/admin/orders"
 											className="text-xs text-mango-400 hover:underline"
 										>
-											View all
+											{t('recentPaid.viewAll')}
 										</Link>
 									</div>
 									<p className="text-xs text-foreground/50 mb-4">
-										Latest 5 paid+ orders in period
+										{t('recentPaid.subtitle')}
 									</p>
 									{recentPaid.length === 0 ? (
 										<p className="text-foreground/40 text-center py-8 text-sm">
-											No paid orders in this period.
+											{t('recentPaid.empty')}
 										</p>
 									) : (
 										<div className="overflow-x-auto -mx-2">
 											<table className="w-full text-sm">
 												<thead>
 													<tr className="text-left text-xs uppercase text-foreground/50 border-b border-foreground/10">
-														<th className="px-2 py-2">Order</th>
-														<th className="px-2 py-2">Customer</th>
-														<th className="px-2 py-2 text-right">Total</th>
-														<th className="px-2 py-2 text-right">Paid</th>
+														<th className="px-2 py-2">{t('recentPaid.order')}</th>
+														<th className="px-2 py-2">{t('recentPaid.customer')}</th>
+														<th className="px-2 py-2 text-right">{t('recentPaid.total')}</th>
+														<th className="px-2 py-2 text-right">{t('recentPaid.paid')}</th>
 													</tr>
 												</thead>
 												<tbody>

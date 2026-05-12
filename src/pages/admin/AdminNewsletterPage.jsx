@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
@@ -56,6 +57,7 @@ const csvEscape = (val) => {
 };
 
 const AdminNewsletterPage = () => {
+	const { t } = useTranslation('adminNewsletter');
 	const [rows, setRows] = useState([]);
 	const [totalCount, setTotalCount] = useState(0);
 	const [page, setPage] = useState(0);
@@ -168,13 +170,13 @@ const AdminNewsletterPage = () => {
 			setRows(data || []);
 			setTotalCount(count || 0);
 		} catch (err) {
-			setError(err.message || 'Failed to load subscribers');
+			setError(err.message || t('toast.loadFailed'));
 			setRows([]);
 			setTotalCount(0);
 		} finally {
 			setLoading(false);
 		}
-	}, [page, applyFilters]);
+	}, [page, applyFilters, t]);
 
 	useEffect(() => {
 		loadKpis();
@@ -196,10 +198,10 @@ const AdminNewsletterPage = () => {
 
 	const handleUnsubscribe = async (row) => {
 		if (isUnsubscribed(row)) {
-			toast.info('Already unsubscribed.');
+			toast.info(t('toast.alreadyUnsubscribed'));
 			return;
 		}
-		if (!confirm(`Mark ${row.email} as unsubscribed?`)) return;
+		if (!confirm(t('confirm.unsubscribe', { email: row.email }))) return;
 		setActingId(row.id);
 		try {
 			// Preserve any existing tag info by appending; otherwise just set the marker.
@@ -217,17 +219,17 @@ const AdminNewsletterPage = () => {
 				.update({ tags: nextTags, updated_at: new Date().toISOString() })
 				.eq('id', row.id);
 			if (e) throw e;
-			toast.success('Subscriber unsubscribed.');
+			toast.success(t('toast.unsubscribed'));
 			await Promise.all([loadKpis(), loadPage()]);
 		} catch (err) {
-			toast.error(err.message || 'Failed to unsubscribe.');
+			toast.error(err.message || t('toast.unsubscribeFailed'));
 		} finally {
 			setActingId(null);
 		}
 	};
 
 	const handleDelete = async (row) => {
-		if (!confirm(`Permanently delete ${row.email}? This cannot be undone.`)) return;
+		if (!confirm(t('confirm.delete', { email: row.email }))) return;
 		setActingId(row.id);
 		try {
 			const { error: e } = await supabase
@@ -235,10 +237,10 @@ const AdminNewsletterPage = () => {
 				.delete()
 				.eq('id', row.id);
 			if (e) throw e;
-			toast.success('Subscriber deleted.');
+			toast.success(t('toast.deleted'));
 			await Promise.all([loadKpis(), loadPage()]);
 		} catch (err) {
-			toast.error(err.message || 'Failed to delete subscriber.');
+			toast.error(err.message || t('toast.deleteFailed'));
 		} finally {
 			setActingId(null);
 		}
@@ -270,7 +272,7 @@ const AdminNewsletterPage = () => {
 			}
 
 			if (all.length === 0) {
-				toast.info('No subscribers in current filter to export.');
+				toast.info(t('toast.noneToExport'));
 				return;
 			}
 
@@ -302,9 +304,9 @@ const AdminNewsletterPage = () => {
 			a.click();
 			document.body.removeChild(a);
 			URL.revokeObjectURL(url);
-			toast.success(`Exported ${all.length} subscriber${all.length === 1 ? '' : 's'}.`);
+			toast.success(t(all.length === 1 ? 'toast.exported' : 'toast.exportedPlural', { count: all.length }));
 		} catch (err) {
-			toast.error(err.message || 'Export failed.');
+			toast.error(err.message || t('toast.exportFailed'));
 		} finally {
 			setExporting(false);
 		}
@@ -313,7 +315,7 @@ const AdminNewsletterPage = () => {
 	return (
 		<>
 			<Helmet>
-				<title>Newsletter — Admin</title>
+				<title>{t('seoTitle')}</title>
 			</Helmet>
 			<Navigation />
 			<main id="main" role="main" className="min-h-screen bg-background pt-32 pb-20 px-4 sm:px-6 lg:px-8">
@@ -324,13 +326,13 @@ const AdminNewsletterPage = () => {
 								to="/dashboard/blog"
 								className="inline-flex items-center gap-1 text-xs uppercase tracking-widest text-foreground/60 hover:text-foreground mb-3"
 							>
-								<ArrowLeft className="w-3 h-3" /> Admin dashboard
+								<ArrowLeft className="w-3 h-3" /> {t('backToDashboard')}
 							</Link>
 							<h1 className="text-3xl sm:text-4xl font-light text-foreground flex items-center gap-3">
-								<Mail className="w-8 h-8 text-mango-500" /> Newsletter
+								<Mail className="w-8 h-8 text-mango-500" /> {t('heading')}
 							</h1>
 							<p className="text-foreground/60 mt-2 font-light">
-								Subscribers in <code className="text-xs">public.newsletter_subscribers</code> — search, export, or remove.
+								{t('subheadingPrefix')} <code className="text-xs">public.newsletter_subscribers</code>{t('subheadingSuffix')}
 							</p>
 						</div>
 						<div className="flex gap-3">
@@ -339,7 +341,7 @@ const AdminNewsletterPage = () => {
 								variant="ghost"
 								className="border border-foreground/10 text-foreground"
 							>
-								<RefreshCw className="w-4 h-4 mr-2" /> Refresh
+								<RefreshCw className="w-4 h-4 mr-2" /> {t('buttons.refresh')}
 							</Button>
 							<Button
 								onClick={handleExportCsv}
@@ -351,7 +353,7 @@ const AdminNewsletterPage = () => {
 								) : (
 									<Download className="w-4 h-4 mr-2" />
 								)}
-								Download CSV
+								{t('buttons.downloadCsv')}
 							</Button>
 						</div>
 					</div>
@@ -359,25 +361,25 @@ const AdminNewsletterPage = () => {
 					{/* KPIs */}
 					<div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
 						<div className="rounded-2xl border border-foreground/10 bg-card/40 backdrop-blur-sm p-5">
-							<div className="text-xs uppercase tracking-widest text-foreground/50">Total</div>
+							<div className="text-xs uppercase tracking-widest text-foreground/50">{t('kpis.total')}</div>
 							<div className="mt-2 text-3xl font-light text-foreground">
 								{kpisLoading ? <Loader2 className="w-5 h-5 animate-spin text-foreground/40" /> : kpis.total}
 							</div>
 						</div>
 						<div className="rounded-2xl border border-foreground/10 bg-card/40 backdrop-blur-sm p-5">
-							<div className="text-xs uppercase tracking-widest text-foreground/50">Active</div>
+							<div className="text-xs uppercase tracking-widest text-foreground/50">{t('kpis.active')}</div>
 							<div className="mt-2 text-3xl font-light text-foreground">
 								{kpisLoading ? <Loader2 className="w-5 h-5 animate-spin text-foreground/40" /> : kpis.active}
 							</div>
 						</div>
 						<div className="rounded-2xl border border-foreground/10 bg-card/40 backdrop-blur-sm p-5">
-							<div className="text-xs uppercase tracking-widest text-foreground/50">Unsubscribed</div>
+							<div className="text-xs uppercase tracking-widest text-foreground/50">{t('kpis.unsubscribed')}</div>
 							<div className="mt-2 text-3xl font-light text-foreground">
 								{kpisLoading ? <Loader2 className="w-5 h-5 animate-spin text-foreground/40" /> : kpis.unsubscribed}
 							</div>
 						</div>
 						<div className="rounded-2xl border border-foreground/10 bg-card/40 backdrop-blur-sm p-5">
-							<div className="text-xs uppercase tracking-widest text-foreground/50">Last 30 days</div>
+							<div className="text-xs uppercase tracking-widest text-foreground/50">{t('kpis.last30d')}</div>
 							<div className="mt-2 text-3xl font-light text-foreground">
 								{kpisLoading ? <Loader2 className="w-5 h-5 animate-spin text-foreground/40" /> : kpis.last30d}
 							</div>
@@ -392,15 +394,15 @@ const AdminNewsletterPage = () => {
 								type="text"
 								value={search}
 								onChange={(e) => setSearch(e.target.value)}
-								placeholder="Search by email…"
+								placeholder={t('search.placeholder')}
 								className="w-full pl-9 pr-3 py-2 rounded-md bg-card border border-foreground/10 text-foreground placeholder:text-foreground/40 text-sm focus:outline-none focus:ring-2 focus:ring-mango-500/40"
 							/>
 						</div>
 						<div className="flex rounded-md border border-foreground/10 bg-card overflow-hidden">
 							{[
-								{ key: 'all', label: 'All' },
-								{ key: 'active', label: 'Active' },
-								{ key: 'unsubscribed', label: 'Unsubscribed' },
+								{ key: 'all', label: t('filters.all') },
+								{ key: 'active', label: t('filters.active') },
+								{ key: 'unsubscribed', label: t('filters.unsubscribed') },
 							].map((opt) => (
 								<button
 									key={opt.key}
@@ -434,8 +436,8 @@ const AdminNewsletterPage = () => {
 							<Inbox className="w-10 h-10 mx-auto text-foreground/30 mb-3" />
 							<p className="text-foreground/60">
 								{debouncedSearch
-									? `No subscribers match “${debouncedSearch}”.`
-									: 'No subscribers yet.'}
+									? t('empty.noResults', { query: debouncedSearch })
+									: t('empty.none')}
 							</p>
 						</div>
 					) : (
@@ -444,11 +446,11 @@ const AdminNewsletterPage = () => {
 								<table className="w-full text-sm text-left">
 									<thead className="bg-card text-foreground/60 uppercase text-xs tracking-wider">
 										<tr>
-											<th className="px-4 py-3">Email</th>
-											<th className="px-4 py-3">Subscribed</th>
-											<th className="px-4 py-3">Source</th>
-											<th className="px-4 py-3">Status</th>
-											<th className="px-4 py-3 text-right">Actions</th>
+											<th className="px-4 py-3">{t('table.email')}</th>
+											<th className="px-4 py-3">{t('table.subscribed')}</th>
+											<th className="px-4 py-3">{t('table.source')}</th>
+											<th className="px-4 py-3">{t('table.status')}</th>
+											<th className="px-4 py-3 text-right">{t('table.actions')}</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -486,7 +488,7 @@ const AdminNewsletterPage = () => {
 																	: 'bg-mango-500/15 text-mango-300 border-mango-500/40'
 															}`}
 														>
-															{unsub ? 'unsubscribed' : 'active'}
+															{unsub ? t('status.unsubscribed') : t('status.active')}
 														</span>
 													</td>
 													<td className="px-4 py-3">
@@ -503,7 +505,7 @@ const AdminNewsletterPage = () => {
 																) : (
 																	<UserX className="w-3 h-3 mr-1" aria-hidden="true" />
 																)}
-																Unsubscribe
+																{t('buttons.unsubscribe')}
 															</Button>
 															<Button
 																size="sm"
@@ -517,7 +519,7 @@ const AdminNewsletterPage = () => {
 																) : (
 																	<Trash2 className="w-3 h-3 mr-1" aria-hidden="true" />
 																)}
-																Delete
+																{t('buttons.delete')}
 															</Button>
 														</div>
 													</td>
@@ -531,7 +533,7 @@ const AdminNewsletterPage = () => {
 							{/* Pagination */}
 							<div className="flex items-center justify-between mt-6">
 								<div className="text-xs text-foreground/60">
-									Page {page + 1} of {totalPages} · {totalCount} subscriber{totalCount === 1 ? '' : 's'}
+									{t(totalCount === 1 ? 'pagination.summary' : 'pagination.summaryPlural', { page: page + 1, total: totalPages, count: totalCount })}
 								</div>
 								<div className="flex gap-2">
 									<Button
@@ -541,7 +543,7 @@ const AdminNewsletterPage = () => {
 										disabled={page === 0}
 										className="border border-foreground/10 text-foreground"
 									>
-										<ChevronLeft className="w-4 h-4 mr-1" /> Prev
+										<ChevronLeft className="w-4 h-4 mr-1" /> {t('buttons.prev')}
 									</Button>
 									<Button
 										variant="ghost"
@@ -550,7 +552,7 @@ const AdminNewsletterPage = () => {
 										disabled={page + 1 >= totalPages}
 										className="border border-foreground/10 text-foreground"
 									>
-										Next <ChevronRight className="w-4 h-4 ml-1" />
+										{t('buttons.next')} <ChevronRight className="w-4 h-4 ml-1" />
 									</Button>
 								</div>
 							</div>

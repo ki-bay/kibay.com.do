@@ -1,0 +1,36 @@
+{
+  "seo": {
+    "title": "Passion Fruit (Chinola) | Kibay Sparkling",
+    "description": "Explore the exotic world of Passion Fruit (Chinola). Learn about its health benefits, nutrients, and why it's the soul of Kibay's sparkling wine."
+  },
+  "hero": {
+    "imgAlt": "Vibrant passion fruit (Chinola)",
+    "title": "Exotic",
+    "titleAccent": "Passion Fruit",
+    "tagline": "Known locally as \"Chinola,\" this tangy treasure is the heartbeat of Caribbean flavor."
+  },
+  "characteristics": {
+    "heading": "Characteristics",
+    "body": "Tart, aromatic, and juicy; typically has a wrinkled purple or yellow rind. The unmistakable scent of passion fruit fills the air as soon as you cut it open, revealing golden, seed-filled pulp that bursts with flavor."
+  },
+  "origins": {
+    "heading": "Origins & History",
+    "body": "Passion fruit is native to South America and is widely used in tropical cuisines. In the Dominican Republic, \"Chinola\" is more than a fruit—it's a staple ingredient for juices, desserts, and now, our premium sparkling wine."
+  },
+  "benefits": {
+    "heading": "Vibrant Health",
+    "health": {
+      "title": "Health Benefits",
+      "body": "Passion fruit is known for its high antioxidant content, helps improve digestion, and supports heart health. Its seeds are also a great source of fiber."
+    },
+    "vitamins": {
+      "title": "Vitamins & Nutrients",
+      "body": "Rich in Vitamin C, Vitamin A, and dietary fiber. It provides an immune-boosting punch of nutrition in every serving, making it as healthy as it is delicious."
+    }
+  },
+  "cta": {
+    "heading": "Taste the Passion",
+    "body": "Experience the bold, refreshing zest of Chinola in our sparkling wine.",
+    "button": "Shop Now"
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "seoTitle": "Newsletter — Admin",
+  "backToDashboard": "Panel admin",
+  "heading": "Newsletter",
+  "subheadingPrefix": "Suscriptores en",
+  "subheadingSuffix": " — buscar, exportar o eliminar.",
+  "buttons": {
+    "refresh": "Actualizar",
+    "downloadCsv": "Descargar CSV",
+    "prev": "Anterior",
+    "next": "Siguiente",
+    "unsubscribe": "Dar de baja",
+    "delete": "Eliminar"
+  },
+  "kpis": {
+    "total": "Total",
+    "active": "Activos",
+    "unsubscribed": "Dados de baja",
+    "last30d": "Últimos 30 días"
+  },
+  "search": {
+    "placeholder": "Buscar por email…"
+  },
+  "filters": {
+    "all": "Todos",
+    "active": "Activos",
+    "unsubscribed": "Dados de baja"
+  },
+  "table": {
+    "email": "Email",
+    "subscribed": "Suscrito",
+    "source": "Fuente",
+    "status": "Estado",
+    "actions": "Acciones"
+  },
+  "status": {
+    "active": "activo",
+    "unsubscribed": "dado de baja"
+  },
+  "empty": {
+    "noResults": "Ningún suscriptor coincide con «{{query}}».",
+    "none": "Aún no hay suscriptores."
+  },
+  "pagination": {
+    "summary": "Página {{page}} de {{total}} · {{count}} suscriptor",
+    "summaryPlural": "Página {{page}} de {{total}} · {{count}} suscriptores"
+  },
+  "confirm": {
+    "unsubscribe": "¿Marcar {{email}} como dado de baja?",
+    "delete": "¿Eliminar {{email}} de forma permanente? Esta acción no se puede deshacer."
+  },
+  "toast": {
+    "alreadyUnsubscribed": "Ya está dado de baja.",
+    "unsubscribed": "Suscriptor dado de baja.",
+    "unsubscribeFailed": "Error al dar de baja.",
+    "deleted": "Suscriptor eliminado.",
+    "deleteFailed": "Error al eliminar el suscriptor.",
+    "noneToExport": "No hay suscriptores en el filtro actual para exportar.",
+    "exported": "Se exportó {{count}} suscriptor.",
+    "exportedPlural": "Se exportaron {{count}} suscriptores.",
+    "exportFailed": "La exportación falló.",
+    "loadFailed": "Error al cargar los suscriptores"
+  }
+}

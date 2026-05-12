@@ -1,0 +1,100 @@
+{
+  "seoTitleEdit": "Edit {{name}} — Admin",
+  "seoTitleNew": "New Product — Admin",
+  "back": "Back to products",
+  "headingEdit": "Edit Product",
+  "headingNew": "New Product",
+  "subtitle": "All bilingual fields require both ES and EN. Currency conventions: ES UI sees DOP, EN UI sees USD.",
+  "actions": {
+    "saveChanges": "Save changes",
+    "createProduct": "Create product"
+  },
+  "sections": {
+    "basics": "Basics",
+    "descriptions": "Description (HTML)",
+    "images": "Images",
+    "variants": "Variants & Inventory",
+    "collections": "Collections",
+    "additionalInfo": "Additional Info Sections"
+  },
+  "fields": {
+    "titleEs": "Title (ES) *",
+    "titleEsPlaceholder": "Kibay Espumante Lata",
+    "titleEn": "Title (EN) *",
+    "titleEnPlaceholder": "Kibay Sparkling Can",
+    "slug": "Slug *",
+    "slugHint": "URL-friendly identifier. Auto-derived from ES title.",
+    "slugPlaceholder": "kibay-sparkling",
+    "status": "Status",
+    "subtitleEs": "Subtitle (ES)",
+    "subtitleEn": "Subtitle (EN)",
+    "ribbonEs": "Ribbon (ES)",
+    "ribbonEsPlaceholder": "Espumante",
+    "ribbonEn": "Ribbon (EN)",
+    "ribbonEnPlaceholder": "Sparkling",
+    "sortOrder": "Sort order",
+    "sortOrderHint": "Lower numbers display first.",
+    "purchasable": "Purchasable",
+    "purchasableLabel": "Customers can add this to cart",
+    "descriptionEs": "Description (ES)",
+    "descriptionEn": "Description (EN)",
+    "thumbnailUrl": "Thumbnail URL",
+    "thumbnailUrlHint": "Used in lists and cards. The first uploaded image is set automatically.",
+    "imageUrl": "Image URL",
+    "altText": "Alt text",
+    "sku": "SKU",
+    "priceUsd": "Price USD (cents)",
+    "priceUsdHint": "$8.00 = 800",
+    "salePriceUsd": "Sale USD (cents)",
+    "priceDop": "Price DOP (cents)",
+    "priceDopHint": "RD$500 = 50000",
+    "salePriceDop": "Sale DOP (cents)",
+    "inventory": "Inventory",
+    "trackInventory": "Track inventory",
+    "trackInventoryLabel": "Auto-decrement on paid",
+    "weight": "Weight (g)",
+    "infoTitleEs": "Title (ES)",
+    "infoTitleEn": "Title (EN)",
+    "infoDescEs": "Description (ES) — HTML",
+    "infoDescEn": "Description (EN) — HTML"
+  },
+  "status": {
+    "draft": "draft",
+    "published": "published",
+    "archived": "archived"
+  },
+  "images": {
+    "upload": "Upload",
+    "addUrl": "Add URL",
+    "noImages": "No images yet."
+  },
+  "variants": {
+    "add": "Add variant",
+    "remove": "Remove"
+  },
+  "collections": {
+    "none": "No collections defined."
+  },
+  "additionalInfo": {
+    "add": "Add section",
+    "empty": "FAQ-style sections like \"Storage\", \"Allergens\", \"Returns\".",
+    "remove": "Remove section"
+  },
+  "toast": {
+    "productNotFound": "Product not found",
+    "fileTooLarge": "File too large",
+    "fileTooLargeDesc": "Max 10MB.",
+    "imageUploaded": "Image uploaded",
+    "uploadFailed": "Upload failed",
+    "cannotSave": "Cannot save",
+    "saved": "Saved",
+    "saveFailed": "Save failed"
+  },
+  "validation": {
+    "slugRequired": "Slug is required.",
+    "titleEsRequired": "Title (ES) is required.",
+    "titleEnRequired": "Title (EN) is required.",
+    "atLeastOneVariant": "At least one variant is required.",
+    "variantPricesRequired": "Each variant needs both USD and DOP prices."
+  }
+}

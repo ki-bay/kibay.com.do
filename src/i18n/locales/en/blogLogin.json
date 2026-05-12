@@ -1,0 +1,27 @@
+{
+  "seo": {
+    "title": "Blog Admin Login - Kibay"
+  },
+  "header": {
+    "h1": "Blog Administration",
+    "subtitle": "Enter your credentials to access the dashboard"
+  },
+  "form": {
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "admin@kibay.com.do",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "••••••••",
+    "forgot": "Forgot password?",
+    "submit": "Access Dashboard"
+  },
+  "toast": {
+    "missingTitle": "Missing fields",
+    "missingDescription": "Please enter both email and password.",
+    "forgotTitle": "Contact Administrator",
+    "forgotDescription": "Please contact system administration to reset your blog credentials."
+  },
+  "footer": {
+    "authorized": "Authorized personnel only.",
+    "logged": "All access attempts are logged."
+  }
+}

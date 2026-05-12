@@ -16,6 +16,7 @@ import {
 	RotateCcw,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
 const ALLOWED_STATUSES = [
 	'awaiting_payment',
@@ -79,16 +80,17 @@ const customerName = (order) => {
 	return name || '—';
 };
 
-const StatusBadge = ({ status }) => {
+const StatusBadge = ({ status, t }) => {
 	const cls = STATUS_BADGE[status] || 'bg-stone-700/40 text-stone-300 border-stone-600';
 	return (
 		<span className={`inline-block text-xs font-medium px-2 py-1 rounded border ${cls}`}>
-			{status || '—'}
+			{status ? t(`status.${status}`, status) : '—'}
 		</span>
 	);
 };
 
 const AdminOrdersPage = () => {
+	const { t } = useTranslation('adminOrders');
 	const [orders, setOrders] = useState([]);
 	const [itemsByOrder, setItemsByOrder] = useState({});
 	const [loading, setLoading] = useState(true);
@@ -206,11 +208,11 @@ const AdminOrdersPage = () => {
 				setFilteredPaidCount(cnt);
 			}
 		} catch (err) {
-			setError(err.message || 'Failed to load orders');
+			setError(err.message || t('toast.loadFailed'));
 		} finally {
 			setLoading(false);
 		}
-	}, [page, buildBaseQuery]);
+	}, [page, buildBaseQuery, t]);
 
 	useEffect(() => {
 		load();
@@ -236,9 +238,9 @@ const AdminOrdersPage = () => {
 				})
 				.eq('id', order.id);
 			if (e) throw e;
-			toast.success('Order updated');
+			toast.success(t('toast.updated'));
 		} catch (err) {
-			toast.error(err.message || 'Failed to save order');
+			toast.error(err.message || t('toast.saveFailed'));
 		} finally {
 			setSavingId(null);
 		}
@@ -252,20 +254,21 @@ const AdminOrdersPage = () => {
 			});
 			if (e) throw e;
 			if (data?.error) throw new Error(data.error);
-			toast.success(`${label} sent to ${order.shipping_address?.email || 'customer'}`);
+			toast.success(
+				t('toast.emailSent', {
+					label,
+					recipient: order.shipping_address?.email || t('toast.emailFallbackRecipient'),
+				})
+			);
 		} catch (err) {
-			toast.error(err.message || `Failed to send ${label.toLowerCase()}`);
+			toast.error(err.message || t('toast.emailFailed', { label: label.toLowerCase() }));
 		} finally {
 			setEmailingId(null);
 		}
 	};
 
 	const handleRefund = async (order) => {
-		if (
-			!window.confirm(
-				`Refund order ${order.order_number}? This will issue a refund via Stripe and cannot be undone.`
-			)
-		)
+		if (!window.confirm(t('toast.refundConfirm', { orderNumber: order.order_number })))
 			return;
 		setRefundingId(order.id);
 		try {
@@ -274,10 +277,10 @@ const AdminOrdersPage = () => {
 			});
 			if (e) throw e;
 			if (data?.error) throw new Error(data.error);
-			toast.success('Refund initiated');
+			toast.success(t('toast.refundInitiated'));
 			await load();
 		} catch (err) {
-			toast.error(err.message || 'Refund failed');
+			toast.error(err.message || t('toast.refundFailed'));
 		} finally {
 			setRefundingId(null);
 		}
@@ -291,7 +294,7 @@ const AdminOrdersPage = () => {
 			if (e) throw e;
 			window.open(data.signedUrl, '_blank', 'noopener,noreferrer');
 		} catch (err) {
-			toast.error(err.message || 'Could not generate invoice link');
+			toast.error(err.message || t('toast.invoiceFailed'));
 		}
 	};
 
@@ -314,16 +317,16 @@ const AdminOrdersPage = () => {
 	return (
 		<>
 			<Helmet>
-				<title>Orders — Admin</title>
+				<title>{t('seoTitle')}</title>
 			</Helmet>
 			<Navigation />
 			<main id="main" role="main" className="min-h-screen bg-background pt-28 pb-20 px-4">
 				<div className="max-w-7xl mx-auto">
 					<div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-8">
 						<div>
-							<h1 className="text-3xl font-bold text-foreground">Order management</h1>
+							<h1 className="text-3xl font-bold text-foreground">{t('header.title')}</h1>
 							<p className="text-foreground/60 mt-1">
-								Search, filter, and fulfill orders. Filters apply to the revenue KPI.
+								{t('header.subtitle')}
 							</p>
 						</div>
 						<Button
@@ -332,21 +335,21 @@ const AdminOrdersPage = () => {
 							className="border-foreground/20 text-foreground gap-2"
 						>
 							<RefreshCw className="w-4 h-4" />
-							Refresh
+							{t('header.refresh')}
 						</Button>
 					</div>
 
 					{/* KPIs */}
 					<div className="grid sm:grid-cols-2 gap-4 mb-6">
 						<div className="bg-card border border-foreground/10 rounded-xl p-6">
-							<p className="text-foreground/50 text-sm">Paid orders (filtered)</p>
+							<p className="text-foreground/50 text-sm">{t('kpis.paidOrders')}</p>
 							<p className="text-3xl font-semibold text-mango-400">{filteredPaidCount}</p>
 						</div>
 						<div className="bg-card border border-foreground/10 rounded-xl p-6">
-							<p className="text-foreground/50 text-sm">Revenue from paid (filtered)</p>
+							<p className="text-foreground/50 text-sm">{t('kpis.revenue')}</p>
 							<p className="text-3xl font-semibold text-foreground">{revenueDisplay}</p>
 							<p className="text-xs text-foreground/40 mt-1">
-								Mixed currency totals shown as raw cents in USD format.
+								{t('kpis.revenueFootnote')}
 							</p>
 						</div>
 					</div>
@@ -354,34 +357,34 @@ const AdminOrdersPage = () => {
 					{/* Filters */}
 					<div className="bg-card border border-foreground/10 rounded-xl p-4 mb-6 grid gap-3 md:grid-cols-12">
 						<div className="md:col-span-5">
-							<label className="text-xs text-foreground/50 block mb-1">Search</label>
+							<label className="text-xs text-foreground/50 block mb-1">{t('filters.search')}</label>
 							<div className="relative">
 								<Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-foreground/40" />
 								<Input
 									className="bg-background border-foreground/10 text-foreground pl-9"
-									placeholder="Order number or customer email…"
+									placeholder={t('filters.searchPlaceholder')}
 									value={searchInput}
 									onChange={(e) => setSearchInput(e.target.value)}
 								/>
 							</div>
 						</div>
 						<div className="md:col-span-3">
-							<label className="text-xs text-foreground/50 block mb-1">Status</label>
+							<label className="text-xs text-foreground/50 block mb-1">{t('filters.status')}</label>
 							<select
 								value={statusFilter}
 								onChange={(e) => setStatusFilter(e.target.value)}
 								className="w-full h-10 rounded-md bg-background border border-foreground/10 text-foreground px-3 text-sm"
 							>
-								<option value="all">All statuses</option>
+								<option value="all">{t('filters.allStatuses')}</option>
 								{ALLOWED_STATUSES.map((s) => (
 									<option key={s} value={s}>
-										{s}
+										{t(`status.${s}`, s)}
 									</option>
 								))}
 							</select>
 						</div>
 						<div className="md:col-span-2">
-							<label className="text-xs text-foreground/50 block mb-1">From</label>
+							<label className="text-xs text-foreground/50 block mb-1">{t('filters.from')}</label>
 							<Input
 								type="date"
 								className="bg-background border-foreground/10 text-foreground"
@@ -390,7 +393,7 @@ const AdminOrdersPage = () => {
 							/>
 						</div>
 						<div className="md:col-span-2">
-							<label className="text-xs text-foreground/50 block mb-1">To</label>
+							<label className="text-xs text-foreground/50 block mb-1">{t('filters.to')}</label>
 							<Input
 								type="date"
 								className="bg-background border-foreground/10 text-foreground"
@@ -405,7 +408,7 @@ const AdminOrdersPage = () => {
 								onClick={clearFilters}
 								className="text-foreground/70 hover:text-foreground"
 							>
-								Clear filters
+								{t('filters.clear')}
 							</Button>
 						</div>
 					</div>
@@ -422,7 +425,7 @@ const AdminOrdersPage = () => {
 						</div>
 					) : orders.length === 0 ? (
 						<p className="text-foreground/40 text-center py-12">
-							No orders match these filters
+							{t('empty')}
 						</p>
 					) : (
 						<>
@@ -430,11 +433,11 @@ const AdminOrdersPage = () => {
 							<div className="bg-card border border-foreground/10 rounded-xl overflow-hidden">
 								<div className="hidden md:grid grid-cols-12 gap-4 px-4 py-3 text-xs uppercase tracking-wide text-foreground/50 border-b border-foreground/10">
 									<div className="col-span-1"></div>
-									<div className="col-span-2">Order #</div>
-									<div className="col-span-2">Date</div>
-									<div className="col-span-3">Customer</div>
-									<div className="col-span-2">Status</div>
-									<div className="col-span-2 text-right">Total</div>
+									<div className="col-span-2">{t('table.orderNumber')}</div>
+									<div className="col-span-2">{t('table.date')}</div>
+									<div className="col-span-3">{t('table.customer')}</div>
+									<div className="col-span-2">{t('table.status')}</div>
+									<div className="col-span-2 text-right">{t('table.total')}</div>
 								</div>
 								{orders.map((o) => {
 									const isOpen = expandedId === o.id;
@@ -467,7 +470,7 @@ const AdminOrdersPage = () => {
 													{customerName(o)}
 												</div>
 												<div className="md:col-span-2">
-													<StatusBadge status={o.status} />
+													<StatusBadge status={o.status} t={t} />
 												</div>
 												<div className="md:col-span-2 text-right font-semibold text-mango-400">
 													{formatMoney(o.total_amount, o.currency)}
@@ -479,7 +482,7 @@ const AdminOrdersPage = () => {
 													{/* Customer block */}
 													<div className="bg-card border border-foreground/10 rounded-lg p-4">
 														<h3 className="text-sm font-semibold text-foreground/80 mb-2">
-															Customer
+															{t('details.customer')}
 														</h3>
 														<p className="text-sm text-foreground">
 															{customerName(o)}
@@ -506,7 +509,7 @@ const AdminOrdersPage = () => {
 														)}
 														{(o.tax_id || addr.taxId) && (
 															<p className="text-sm text-foreground/70 mt-1">
-																Tax ID: {o.tax_id || addr.taxId}
+																{t('details.taxId', { value: o.tax_id || addr.taxId })}
 															</p>
 														)}
 													</div>
@@ -514,7 +517,7 @@ const AdminOrdersPage = () => {
 													{/* Shipping address block */}
 													<div className="bg-card border border-foreground/10 rounded-lg p-4">
 														<h3 className="text-sm font-semibold text-foreground/80 mb-2">
-															Shipping address
+															{t('details.shippingAddress')}
 														</h3>
 														<div className="text-sm text-foreground/80 space-y-0.5">
 															<p>
@@ -528,7 +531,7 @@ const AdminOrdersPage = () => {
 															</p>
 															{addr.country && <p>{addr.country}</p>}
 															{!addr.address && !addr.city && (
-																<p className="text-foreground/40">No address on file</p>
+																<p className="text-foreground/40">{t('details.noAddress')}</p>
 															)}
 														</div>
 													</div>
@@ -536,21 +539,21 @@ const AdminOrdersPage = () => {
 													{/* Line items */}
 													<div className="md:col-span-2 bg-card border border-foreground/10 rounded-lg p-4">
 														<h3 className="text-sm font-semibold text-foreground/80 mb-3">
-															Line items
+															{t('details.lineItems')}
 														</h3>
 														{items.length === 0 ? (
 															<p className="text-sm text-foreground/40">
-																No line items recorded.
+																{t('details.noLineItems')}
 															</p>
 														) : (
 															<div className="overflow-x-auto">
 																<table className="w-full text-sm">
 																	<thead>
 																		<tr className="text-left text-xs uppercase text-foreground/50 border-b border-foreground/10">
-																			<th className="py-2">Product</th>
-																			<th className="py-2 text-right">Qty</th>
-																			<th className="py-2 text-right">Unit price</th>
-																			<th className="py-2 text-right">Line total</th>
+																			<th className="py-2">{t('details.product')}</th>
+																			<th className="py-2 text-right">{t('details.qty')}</th>
+																			<th className="py-2 text-right">{t('details.unitPrice')}</th>
+																			<th className="py-2 text-right">{t('details.lineTotal')}</th>
 																		</tr>
 																	</thead>
 																	<tbody>
@@ -577,7 +580,7 @@ const AdminOrdersPage = () => {
 																	<tfoot>
 																		<tr>
 																			<td colSpan={3} className="pt-3 text-right text-foreground/60 text-xs">
-																				Subtotal
+																				{t('details.subtotal')}
 																			</td>
 																			<td className="pt-3 text-right text-foreground/80">
 																				{formatMoney(o.subtotal_amount, o.currency)}
@@ -585,7 +588,7 @@ const AdminOrdersPage = () => {
 																		</tr>
 																		<tr>
 																			<td colSpan={3} className="text-right text-foreground/60 text-xs">
-																				Shipping
+																				{t('details.shipping')}
 																			</td>
 																			<td className="text-right text-foreground/80">
 																				{formatMoney(o.shipping_amount, o.currency)}
@@ -593,7 +596,7 @@ const AdminOrdersPage = () => {
 																		</tr>
 																		<tr>
 																			<td colSpan={3} className="pt-1 text-right font-semibold text-foreground">
-																				Total
+																				{t('details.total')}
 																			</td>
 																			<td className="pt-1 text-right font-semibold text-mango-400">
 																				{formatMoney(o.total_amount, o.currency)}
@@ -608,24 +611,24 @@ const AdminOrdersPage = () => {
 													{/* Payment block */}
 													<div className="md:col-span-2 bg-card border border-foreground/10 rounded-lg p-4">
 														<h3 className="text-sm font-semibold text-foreground/80 mb-2">
-															Payment
+															{t('details.payment')}
 														</h3>
 														<div className="grid gap-2 md:grid-cols-3 text-sm">
 															<div>
-																<p className="text-foreground/50 text-xs">Method</p>
+																<p className="text-foreground/50 text-xs">{t('details.method')}</p>
 																<p className="text-foreground">
 																	{o.payment_method || '—'}
 																</p>
 															</div>
 															<div>
-																<p className="text-foreground/50 text-xs">Paid at</p>
+																<p className="text-foreground/50 text-xs">{t('details.paidAt')}</p>
 																<p className="text-foreground">
 																	{formatDateTime(o.paid_at)}
 																</p>
 															</div>
 															<div>
 																<p className="text-foreground/50 text-xs">
-																	Stripe payment intent
+																	{t('details.stripePI')}
 																</p>
 																{o.stripe_payment_intent_id ? (
 																	<a
@@ -649,7 +652,7 @@ const AdminOrdersPage = () => {
 																className="mt-3 inline-flex items-center gap-1 text-sm text-sky-400 hover:underline"
 															>
 																<FileText className="w-4 h-4" />
-																View invoice PDF
+																{t('details.viewInvoice')}
 															</button>
 														)}
 													</div>
@@ -657,12 +660,12 @@ const AdminOrdersPage = () => {
 													{/* Editable fulfillment fields */}
 													<div className="md:col-span-2 bg-card border border-foreground/10 rounded-lg p-4">
 														<h3 className="text-sm font-semibold text-foreground/80 mb-3">
-															Fulfillment
+															{t('details.fulfillment')}
 														</h3>
 														<div className="grid gap-3 md:grid-cols-4">
 															<div>
 																<label className="text-xs text-foreground/50 block mb-1">
-																	Status
+																	{t('details.statusLabel')}
 																</label>
 																<select
 																	value={o.status || ''}
@@ -673,14 +676,14 @@ const AdminOrdersPage = () => {
 																>
 																	{ALLOWED_STATUSES.map((s) => (
 																		<option key={s} value={s}>
-																			{s}
+																			{t(`status.${s}`, s)}
 																		</option>
 																	))}
 																</select>
 															</div>
 															<div>
 																<label className="text-xs text-foreground/50 block mb-1">
-																	Tracking number
+																	{t('details.trackingNumber')}
 																</label>
 																<Input
 																	className="bg-background border-foreground/10 text-foreground"
@@ -688,12 +691,12 @@ const AdminOrdersPage = () => {
 																	onChange={(e) =>
 																		updateField(o.id, 'tracking_number', e.target.value)
 																	}
-																	placeholder="Carrier tracking"
+																	placeholder={t('details.trackingPlaceholder')}
 																/>
 															</div>
 															<div>
 																<label className="text-xs text-foreground/50 block mb-1">
-																	Shipping method
+																	{t('details.shippingMethod')}
 																</label>
 																<Input
 																	className="bg-background border-foreground/10 text-foreground"
@@ -701,12 +704,12 @@ const AdminOrdersPage = () => {
 																	onChange={(e) =>
 																		updateField(o.id, 'shipping_method', e.target.value)
 																	}
-																	placeholder="standard / express / …"
+																	placeholder={t('details.shippingMethodPlaceholder')}
 																/>
 															</div>
 															<div>
 																<label className="text-xs text-foreground/50 block mb-1">
-																	Tax ID
+																	{t('details.taxIdLabel')}
 																</label>
 																<Input
 																	className="bg-background border-foreground/10 text-foreground"
@@ -714,12 +717,12 @@ const AdminOrdersPage = () => {
 																	onChange={(e) =>
 																		updateField(o.id, 'tax_id', e.target.value)
 																	}
-																	placeholder="RNC / cedula"
+																	placeholder={t('details.taxIdPlaceholder')}
 																/>
 															</div>
 															<div className="mt-4">
 																<label className="text-xs text-foreground/50 block mb-1">
-																	Internal notes (admin only)
+																	{t('details.internalNotes')}
 																</label>
 																<textarea
 																	className="w-full min-h-[64px] rounded-md bg-background border border-foreground/10 text-foreground p-3 text-sm"
@@ -727,7 +730,7 @@ const AdminOrdersPage = () => {
 																	onChange={(e) =>
 																		updateField(o.id, 'internal_notes', e.target.value)
 																	}
-																	placeholder="Private notes about this order — never sent to the customer"
+																	placeholder={t('details.internalNotesPlaceholder')}
 																/>
 															</div>
 														</div>
@@ -740,12 +743,12 @@ const AdminOrdersPage = () => {
 																	variant="outline"
 																	className="border-foreground/20 text-foreground/80 hover:bg-foreground/5 gap-2"
 																	disabled={emailingId === `${o.id}:confirmation`}
-																	onClick={() => sendEmail(o, 'confirmation', 'Confirmation email')}
+																	onClick={() => sendEmail(o, 'confirmation', t('emailLabels.confirmation'))}
 																>
 																	{emailingId === `${o.id}:confirmation` ? (
 																		<Loader2 className="w-4 h-4 animate-spin" />
 																	) : null}
-																	Resend confirmation
+																	{t('actions.resendConfirmation')}
 																</Button>
 															)}
 															{o.tracking_number && (
@@ -754,12 +757,12 @@ const AdminOrdersPage = () => {
 																	variant="outline"
 																	className="border-foreground/20 text-foreground/80 hover:bg-foreground/5 gap-2"
 																	disabled={emailingId === `${o.id}:tracking`}
-																	onClick={() => sendEmail(o, 'tracking', 'Tracking email')}
+																	onClick={() => sendEmail(o, 'tracking', t('emailLabels.tracking'))}
 																>
 																	{emailingId === `${o.id}:tracking` ? (
 																		<Loader2 className="w-4 h-4 animate-spin" />
 																	) : null}
-																	Send tracking email
+																	{t('actions.sendTracking')}
 																</Button>
 															)}
 															{o.status === 'paid' && (
@@ -775,7 +778,7 @@ const AdminOrdersPage = () => {
 																	) : (
 																		<RotateCcw className="w-4 h-4" />
 																	)}
-																	Refund
+																	{t('actions.refund')}
 																</Button>
 															)}
 															<Button
@@ -787,7 +790,7 @@ const AdminOrdersPage = () => {
 																{savingId === o.id ? (
 																	<Loader2 className="w-4 h-4 animate-spin" />
 																) : (
-																	'Save'
+																	t('actions.save')
 																)}
 															</Button>
 														</div>
@@ -802,8 +805,7 @@ const AdminOrdersPage = () => {
 							{/* Pagination */}
 							<div className="flex items-center justify-between mt-6">
 								<p className="text-sm text-foreground/60">
-									Page {page} of {totalPages} · {totalCount} order
-									{totalCount === 1 ? '' : 's'}
+									{t('pagination.summary', { page, totalPages, count: totalCount })}
 								</p>
 								<div className="flex gap-2">
 									<Button
@@ -813,7 +815,7 @@ const AdminOrdersPage = () => {
 										onClick={() => setPage((p) => Math.max(1, p - 1))}
 										className="border-foreground/20 text-foreground"
 									>
-										Prev
+										{t('pagination.prev')}
 									</Button>
 									<Button
 										variant="outline"
@@ -822,7 +824,7 @@ const AdminOrdersPage = () => {
 										onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
 										className="border-foreground/20 text-foreground"
 									>
-										Next
+										{t('pagination.next')}
 									</Button>
 								</div>
 							</div>

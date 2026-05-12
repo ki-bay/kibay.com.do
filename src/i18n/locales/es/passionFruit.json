@@ -1,0 +1,36 @@
+{
+  "seo": {
+    "title": "Maracuyá (Chinola) | Kibay Espumante",
+    "description": "La chinola dominicana es el alma de Kibay Espumante. Conoce su sabor, sus beneficios y por qué define el carácter caribeño de nuestro vino."
+  },
+  "hero": {
+    "imgAlt": "Chinola vibrante (maracuyá)",
+    "title": "Exótica",
+    "titleAccent": "Chinola",
+    "tagline": "Aquí la llamamos \"chinola\" — y es el latido del sabor caribeño."
+  },
+  "characteristics": {
+    "heading": "Características",
+    "body": "Ácida, aromática y jugosa; con una cáscara arrugada morada o amarilla. Basta cortarla para que su perfume inconfundible llene el aire, revelando una pulpa dorada llena de semillas que estalla en sabor."
+  },
+  "origins": {
+    "heading": "Origen e Historia",
+    "body": "La chinola es originaria de Sudamérica y se usa por todo el trópico. En la República Dominicana, la chinola no es solo una fruta — es ingrediente clave de jugos, postres y, ahora, de nuestro espumante premium."
+  },
+  "benefits": {
+    "heading": "Salud Vibrante",
+    "health": {
+      "title": "Beneficios para la Salud",
+      "body": "La chinola es conocida por su alto contenido de antioxidantes, ayuda a la digestión y cuida la salud del corazón. Sus semillas, además, son una excelente fuente de fibra."
+    },
+    "vitamins": {
+      "title": "Vitaminas y Nutrientes",
+      "body": "Rica en vitamina C, vitamina A y fibra. Ofrece un golpe natural de nutrición en cada porción — tan saludable como deliciosa."
+    }
+  },
+  "cta": {
+    "heading": "Prueba la Pasión",
+    "body": "Vive el sabor audaz y refrescante de la chinola en nuestro espumante.",
+    "button": "Comprar Ahora"
+  }
+}

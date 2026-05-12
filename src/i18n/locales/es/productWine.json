@@ -1,0 +1,63 @@
+{
+  "seo": {
+    "title": "KiBay Wine | Vino tropical elaborado en Ocoa Bay",
+    "description": "KiBay Wine: una expresión auténtica del terroir caribeño. Vino tropical elaborado en Ocoa Bay con técnicas enológicas innovadoras."
+  },
+  "hero": {
+    "eyebrow": "Vino caribeño auténtico",
+    "h1Lead": "KiBay",
+    "h1Accent": "Wine",
+    "subtitle": "Vino tropical elaborado en Ocoa Bay",
+    "body": "Una expresión del terroir caribeño y de una enología innovadora. Suave, aromático y profundamente arraigado en la tierra de la República Dominicana.",
+    "cta": "Explora la colección",
+    "imgAlt": "Botella de KiBay Wine"
+  },
+  "origin": {
+    "heading": "Arraigado en su lugar",
+    "intro": "KiBay Wine no solo se hace en el Caribe; es del Caribe. Captura la esencia de Ocoa Bay: la salinidad del aire marino, la mineralidad del suelo y la intensidad del sol tropical.",
+    "imgAlt": "Viñedo de Ocoa Bay",
+    "subheading": "Un terroir único",
+    "body1": "La región de Ocoa Bay ofrece un microclima único para la viticultura. La combinación de clima seco, frescas brisas marinas y suelos ricos en piedra caliza crea condiciones que permiten a nuestras frutas desarrollar perfiles de sabor complejos como en ningún otro lugar del mundo.",
+    "body2": "Nuestros enólogos aprovechan estos dones naturales empleando prácticas agrícolas sostenibles que honran la tierra y aseguran la longevidad de nuestro ecosistema."
+  },
+  "flavor": {
+    "heading": "Un sabor del Caribe",
+    "aromaTitle": "Expresión aromática",
+    "aromaBody": "La nariz recibe un intenso ramo de frutas tropicales: mango maduro, chinola y sutiles notas de azahar. Es fragante sin ser perfumado, invitando a quien lo bebe.",
+    "bodyTitle": "Cuerpo y estructura",
+    "bodyBody": "Ligero, suave y refrescante. KiBay Wine presenta una estructura delicada que resalta la pureza de la fruta por encima de taninos densos o roble. Cierra limpio, con un toque persistente de mineralidad.",
+    "essenceHeading": "La esencia de KiBay",
+    "essenceQuote": "\"El espíritu de Ocoa Bay\"",
+    "essenceBody": "KiBay Wine captura la energía relajada y a la vez vibrante del estilo de vida dominicano. Es un vino que se siente en casa tanto en una cena formal como en una reunión frente al mar. Representa la armonía entre la tierra, el mar y la fruta."
+  },
+  "enjoy": {
+    "heading": "Momentos para saborear",
+    "intro": "Diseñado para acompañar el clima y la cocina del Caribe.",
+    "items": [
+      { "title": "Sírvelo frío", "text": "Se disfruta mejor entre 8 y 10 °C para acentuar su acidez refrescante." },
+      { "title": "Maridaje perfecto", "text": "Acompaña mariscos frescos, ceviche, quesos suaves y ensaladas ligeras." },
+      { "title": "Ritual del atardecer", "text": "El compañero ideal para la hora dorada, reflejando la calidez del sol." }
+    ]
+  },
+  "relationship": {
+    "heading": "Dos expresiones, un mismo origen",
+    "body": "Al igual que nuestro Espumante, KiBay Wine nace de la misma dedicación a la calidad orgánica y al origen local. Mientras el Espumante celebra la efervescencia y la fiesta, KiBay Wine ofrece una experiencia tranquila y contemplativa de nuestro terroir. Juntos, representan todo el espectro del potencial de Ocoa Bay.",
+    "ctaSparkling": "Descubre el Espumante",
+    "ctaShop": "Comprar todos los vinos"
+  },
+  "specs": {
+    "heading": "Especificaciones del producto",
+    "items": [
+      { "label": "Categoría", "value": "Vino orgánico" },
+      { "label": "Origen", "value": "Ocoa Bay, República Dominicana" },
+      { "label": "Formato", "value": "Botella de vidrio 750 ml (reciclable)" },
+      { "label": "Ingredientes", "value": "Mango y chinola fermentados" },
+      { "label": "Alcohol", "value": "8 % ABV" },
+      { "label": "Vida útil", "value": "Mejor consumido en los 36 meses siguientes" }
+    ]
+  },
+  "closing": {
+    "heading": "Herencia e innovación",
+    "body": "KiBay Wine se sitúa en la intersección entre la herencia agrícola dominicana y la enología moderna. Es nuestra invitación al mundo para saborear el Caribe de una manera nueva y sofisticada."
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "seo": {
+    "title": "Kibay Sparkling – Organic Mango & Passion Fruit Sparkling Wine",
+    "description": "Organic Dominican sparkling wine fermented with mango & passion fruit. Crafted by Ocoa Bay winery. Refreshing, natural, and unique."
+  },
+  "product": {
+    "name": "Kibay Sparkling - 750ml Bottle",
+    "description": "An elegant 750ml bottle of our signature organic sparkling wine. Ideal for sharing, celebrations, and special moments."
+  },
+  "details": {
+    "category": "Sparkling Wine",
+    "origin": "Dominican Republic",
+    "format": "750ml Glass Bottle",
+    "ingredients": "Organic mango, passion fruit, natural fermentation",
+    "style": "Dry Sparkling Wine",
+    "alcohol": "11.5%",
+    "shelfLife": "2 years",
+    "labels": {
+      "category": "Category",
+      "origin": "Origin",
+      "format": "Format",
+      "ingredients": "Ingredients",
+      "style": "Style",
+      "alcohol": "Alcohol %",
+      "shelfLife": "Shelf life"
+    }
+  },
+  "gallery": {
+    "altBase": "Kibay Sparkling 750ml premium organic sparkling wine bottle"
+  },
+  "hero": {
+    "eyebrow": "Premium Collection",
+    "h1": "Kibay Sparkling – Organic Sparkling Wine with Mango & Passion Fruit",
+    "intro": "The full experience. Our 750ml bottle is designed for the table, bringing the elegance of Dominican winemaking to your gatherings."
+  },
+  "crafted": {
+    "heading": "Crafted in the Dominican Republic",
+    "body": "An expression of terroir unlike any other. We cultivate our grapes and tropical fruits in the unique microclimate of Ocoa Bay, resulting in a sparkling wine that is both sophisticated and wildly natural."
+  },
+  "process": {
+    "heading": "Fermentation & Wine Process",
+    "body": "Patience defines our process. The secondary fermentation occurs naturally, integrating the delicate aromas of mango and passion fruit into the structure of the wine itself, not just as a flavoring."
+  },
+  "organic": {
+    "heading": "Organic Ingredients & Natural Profile",
+    "body": "We believe that great wine starts in the vineyard. Our organic farming practices ensure that every bottle is free from harmful chemicals, preserving the health of our soil and the purity of your glass."
+  },
+  "tasting": {
+    "heading": "Tasting Notes",
+    "noseLabel": "Nose:",
+    "nose": "Elegant floral notes layered with ripe tropical fruit and a hint of fresh yeast.",
+    "palateLabel": "Palate:",
+    "palate": "Balanced and round. The passion fruit provides a zesty backbone to the lush mango body.",
+    "finishLabel": "Finish:",
+    "finish": "Sophisticated and dry, inviting another sip."
+  },
+  "enjoy": {
+    "heading": "How to Enjoy Kibay",
+    "body1": "Best served chilled between 6-8°C in a flute or white wine glass.",
+    "body2": "A stunning centerpiece for celebrations. Excellent with spicy Caribbean dishes, Asian fusion cuisine, or simply as a toast to life's special moments."
+  },
+  "winery": {
+    "heading": "Winery Credibility",
+    "tagline": "From the same winery as Kibay Wine — by Ocoa Bay",
+    "imgAlt": "Ocoa Bay winery Dominican vineyard organic farming",
+    "caption": "Sustainable Viticulture in the Heart of the Caribbean"
+  }
+}

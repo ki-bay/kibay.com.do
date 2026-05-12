@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { m } from 'framer-motion';
 import { Helmet } from 'react-helmet';
 import { Lock, Mail, Loader2, ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,6 +12,7 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 
 const BlogLoginPage = () => {
+  const { t } = useTranslation('blogLogin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -23,8 +25,8 @@ const BlogLoginPage = () => {
     if (!email || !password) {
       toast({
         variant: "destructive",
-        title: "Missing fields",
-        description: "Please enter both email and password.",
+        title: t('toast.missingTitle'),
+        description: t('toast.missingDescription'),
       });
       return;
     }
@@ -46,15 +48,15 @@ const BlogLoginPage = () => {
 
   const handleForgotPassword = () => {
     toast({
-        title: "Contact Administrator",
-        description: "Please contact system administration to reset your blog credentials.",
+        title: t('toast.forgotTitle'),
+        description: t('toast.forgotDescription'),
     })
   }
 
   return (
     <>
       <Helmet>
-        <title>Blog Admin Login - Kibay</title>
+        <title>{t('seo.title')}</title>
       </Helmet>
       
       <Navigation />
@@ -71,18 +73,18 @@ const BlogLoginPage = () => {
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-mango-500/10 mb-4 border border-mango-500/20">
                 <Lock className="w-8 h-8 text-mango-500" />
               </div>
-              <h1 className="text-2xl font-bold text-foreground mb-2">Blog Administration</h1>
-              <p className="text-foreground/60">Enter your credentials to access the dashboard</p>
+              <h1 className="text-2xl font-bold text-foreground mb-2">{t('header.h1')}</h1>
+              <p className="text-foreground/60">{t('header.subtitle')}</p>
             </div>
 
             <form onSubmit={handleLogin} className="space-y-6">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground/80">Email Address</label>
+                <label className="text-sm font-medium text-foreground/80">{t('form.emailLabel')}</label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-foreground/40" />
-                  <Input 
-                    type="email" 
-                    placeholder="admin@kibay.com.do" 
+                  <Input
+                    type="email"
+                    placeholder={t('form.emailPlaceholder')}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="pl-10 bg-background border-foreground/10 text-foreground placeholder:text-foreground/20 focus:border-mango-500"
@@ -92,20 +94,20 @@ const BlogLoginPage = () => {
 
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                   <label className="text-sm font-medium text-foreground/80">Password</label>
-                   <button 
+                   <label className="text-sm font-medium text-foreground/80">{t('form.passwordLabel')}</label>
+                   <button
                      type="button"
                      onClick={handleForgotPassword}
                      className="text-xs text-mango-500 hover:text-mango-400"
                    >
-                     Forgot password?
+                     {t('form.forgot')}
                    </button>
                 </div>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-foreground/40" />
-                  <Input 
-                    type="password" 
-                    placeholder="••••••••" 
+                  <Input
+                    type="password"
+                    placeholder={t('form.passwordPlaceholder')}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="pl-10 bg-background border-foreground/10 text-foreground placeholder:text-foreground/20 focus:border-mango-500"
@@ -122,7 +124,7 @@ const BlogLoginPage = () => {
                   <Loader2 className="w-5 h-5 animate-spin" />
                 ) : (
                   <span className="flex items-center gap-2">
-                    Access Dashboard <ArrowRight className="w-4 h-4" />
+                    {t('form.submit')} <ArrowRight className="w-4 h-4" />
                   </span>
                 )}
               </Button>
@@ -130,7 +132,7 @@ const BlogLoginPage = () => {
             
             <div className="mt-8 pt-6 border-t border-foreground/10 text-center">
               <p className="text-sm text-foreground/40">
-                Authorized personnel only. <br/>All access attempts are logged.
+                {t('footer.authorized')} <br/>{t('footer.logged')}
               </p>
             </div>
           </m.div>

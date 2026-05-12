@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react'
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { supabase } from '@/lib/customSupabaseClient';
@@ -94,13 +95,13 @@ const localInputToIso = (s) => {
 	return d.toISOString();
 };
 
-const renderTypeCell = (c) => {
+const renderTypeCell = (c, t) => {
 	if (c.discount_type === 'percent') {
-		return `Percent ${c.discount_value}%`;
+		return t('table.typePercent', { value: c.discount_value });
 	}
 	const sym = symbolFor(c.currency);
 	const v = (Number(c.discount_value) || 0) / 100;
-	return `Fixed ${sym}${v.toFixed(2)}`;
+	return t('table.typeFixed', { symbol: sym, value: v.toFixed(2) });
 };
 
 const renderMinOrder = (c) => {
@@ -115,10 +116,10 @@ const renderUses = (c) => {
 	return `${used}/${cap}`;
 };
 
-const renderWindow = (c) => {
+const renderWindow = (c, t) => {
 	const s = formatDateTime(c.starts_at);
 	const e = formatDateTime(c.ends_at);
-	if (!s && !e) return 'no limit';
+	if (!s && !e) return t('table.noLimit');
 	return `${s || '—'} → ${e || '—'}`;
 };
 
@@ -154,6 +155,7 @@ const couponToForm = (c) => ({
 });
 
 const AdminCouponsPage = () => {
+	const { t } = useTranslation('adminCoupons');
 	const [coupons, setCoupons] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
@@ -199,12 +201,12 @@ const AdminCouponsPage = () => {
 			if (e) throw e;
 			setCoupons(data || []);
 		} catch (err) {
-			setError(err.message || 'Failed to load coupons');
+			setError(err.message || t('toast.loadFailed'));
 			setCoupons([]);
 		} finally {
 			setLoading(false);
 		}
-	}, [debouncedSearch, activeFilter]);
+	}, [debouncedSearch, activeFilter, t]);
 
 	useEffect(() => {
 		loadCoupons();
@@ -226,35 +228,35 @@ const AdminCouponsPage = () => {
 		const errs = {};
 		const code = (form.code || '').trim();
 		if (!code) {
-			errs.code = 'Code is required.';
+			errs.code = t('validation.codeRequired');
 		} else if (!CODE_REGEX.test(code)) {
-			errs.code = '3–32 chars, letters/numbers/_/- only.';
+			errs.code = t('validation.codeFormat');
 		}
 
 		if (form.discount_type === 'percent') {
 			const n = Number(form.discount_value);
 			if (!Number.isFinite(n) || !Number.isInteger(n) || n < 1 || n > 100) {
-				errs.discount_value = 'Percent must be an integer 1–100.';
+				errs.discount_value = t('validation.percentRange');
 			}
 		} else if (form.discount_type === 'fixed') {
 			const cents = majorStringToCents(form.discount_value);
 			if (cents == null || Number.isNaN(cents) || cents <= 0) {
-				errs.discount_value = 'Fixed amount must be greater than 0.';
+				errs.discount_value = t('validation.fixedAmount');
 			}
-			if (!form.currency) errs.currency = 'Currency is required for fixed coupons.';
+			if (!form.currency) errs.currency = t('validation.currencyRequired');
 		}
 
 		if (form.min_order_amount !== '' && form.min_order_amount != null) {
 			const cents = majorStringToCents(form.min_order_amount);
 			if (cents == null || Number.isNaN(cents) || cents < 0) {
-				errs.min_order_amount = 'Must be 0 or greater.';
+				errs.min_order_amount = t('validation.minOrderRange');
 			}
 		}
 
 		if (form.max_uses !== '' && form.max_uses != null) {
 			const n = Number(form.max_uses);
 			if (!Number.isFinite(n) || !Number.isInteger(n) || n < 1) {
-				errs.max_uses = 'Must be a positive integer (or leave blank).';
+				errs.max_uses = t('validation.maxUsesPositive');
 			}
 		}
 
@@ -262,7 +264,7 @@ const AdminCouponsPage = () => {
 			const s = new Date(form.starts_at).getTime();
 			const e = new Date(form.ends_at).getTime();
 			if (Number.isFinite(s) && Number.isFinite(e) && e <= s) {
-				errs.ends_at = 'End date must be after start date.';
+				errs.ends_at = t('validation.endAfterStart');
 			}
 		}
 
@@ -310,13 +312,13 @@ const AdminCouponsPage = () => {
 				resp = await supabase.from('coupons').insert(payload).select().single();
 			}
 			if (resp.error) throw resp.error;
-			toast.success(form.id ? 'Coupon updated' : 'Coupon created');
+			toast.success(form.id ? t('toast.updated') : t('toast.created'));
 			setDialogOpen(false);
 			loadCoupons();
 		} catch (err) {
-			const msg = err?.message || 'Failed to save coupon';
+			const msg = err?.message || t('toast.saveFailed');
 			if (msg.toLowerCase().includes('duplicate') || err?.code === '23505') {
-				setFormErrors((prev) => ({ ...prev, code: 'A coupon with that code already exists.' }));
+				setFormErrors((prev) => ({ ...prev, code: t('validation.codeDuplicate') }));
 			}
 			toast.error(msg);
 		} finally {
@@ -326,15 +328,15 @@ const AdminCouponsPage = () => {
 
 	const handleDelete = async (c) => {
 		// eslint-disable-next-line no-alert
-		if (!window.confirm(`Delete coupon ${c.code}? This cannot be undone.`)) return;
+		if (!window.confirm(t('toast.deleteConfirm', { code: c.code }))) return;
 		setDeletingId(c.id);
 		try {
 			const { error: e } = await supabase.from('coupons').delete().eq('id', c.id);
 			if (e) throw e;
-			toast.success(`Coupon ${c.code} deleted`);
+			toast.success(t('toast.deleted', { code: c.code }));
 			setCoupons((prev) => prev.filter((x) => x.id !== c.id));
 		} catch (err) {
-			toast.error(err.message || 'Failed to delete coupon');
+			toast.error(err.message || t('toast.deleteFailed'));
 		} finally {
 			setDeletingId(null);
 		}
@@ -348,11 +350,11 @@ const AdminCouponsPage = () => {
 		try {
 			const { error: e } = await supabase.from('coupons').update({ active: next }).eq('id', c.id);
 			if (e) throw e;
-			toast.success(`${c.code} ${next ? 'activated' : 'deactivated'}`);
+			toast.success(next ? t('toast.activated', { code: c.code }) : t('toast.deactivated', { code: c.code }));
 		} catch (err) {
 			// Revert.
 			setCoupons((prev) => prev.map((x) => (x.id === c.id ? { ...x, active: !next } : x)));
-			toast.error(err.message || 'Failed to update coupon');
+			toast.error(err.message || t('toast.toggleFailed'));
 		} finally {
 			setTogglingId(null);
 		}
@@ -364,7 +366,7 @@ const AdminCouponsPage = () => {
 	return (
 		<>
 			<Helmet>
-				<title>Coupons — Admin</title>
+				<title>{t('seoTitle')}</title>
 			</Helmet>
 			<Navigation />
 			<main id="main" role="main" className="min-h-screen bg-background pt-32 pb-20 px-4 sm:px-6 lg:px-8">
@@ -375,13 +377,13 @@ const AdminCouponsPage = () => {
 								to="/dashboard/blog"
 								className="inline-flex items-center gap-1 text-xs uppercase tracking-widest text-foreground/60 hover:text-foreground mb-3"
 							>
-								<ArrowLeft className="w-3 h-3" /> Admin dashboard
+								<ArrowLeft className="w-3 h-3" /> {t('backToDashboard')}
 							</Link>
 							<h1 className="text-3xl sm:text-4xl font-light text-foreground flex items-center gap-3">
-								<Ticket className="w-8 h-8 text-mango-500" /> Coupons
+								<Ticket className="w-8 h-8 text-mango-500" /> {t('header.title')}
 							</h1>
 							<p className="text-foreground/60 mt-2 font-light">
-								Discount codes from <code className="text-xs">public.coupons</code> — create, search, toggle, and edit redemption rules.
+								{t('header.subtitlePrefix')} <code className="text-xs">public.coupons</code> {t('header.subtitleSuffix')}
 							</p>
 						</div>
 						<div className="flex gap-3">
@@ -390,13 +392,13 @@ const AdminCouponsPage = () => {
 								variant="ghost"
 								className="border border-foreground/10 text-foreground"
 							>
-								<RefreshCw className="w-4 h-4 mr-2" /> Refresh
+								<RefreshCw className="w-4 h-4 mr-2" /> {t('header.refresh')}
 							</Button>
 							<Button
 								onClick={openCreate}
 								className="bg-mango-500 hover:bg-mango-600 text-stone-900"
 							>
-								<Plus className="w-4 h-4 mr-2" /> New coupon
+								<Plus className="w-4 h-4 mr-2" /> {t('header.newCoupon')}
 							</Button>
 						</div>
 					</div>
@@ -409,7 +411,7 @@ const AdminCouponsPage = () => {
 								type="text"
 								value={search}
 								onChange={(e) => setSearch(e.target.value)}
-								placeholder="Search by code…"
+								placeholder={t('search.placeholder')}
 								className="w-full pl-9 pr-3 py-2 rounded-md bg-card border border-foreground/10 text-foreground placeholder:text-foreground/40 text-sm focus:outline-none focus:ring-2 focus:ring-mango-500/40"
 							/>
 						</div>
@@ -419,13 +421,13 @@ const AdminCouponsPage = () => {
 									key={opt}
 									type="button"
 									onClick={() => setActiveFilter(opt)}
-									className={`px-4 py-2 capitalize transition-colors ${
+									className={`px-4 py-2 transition-colors ${
 										activeFilter === opt
 											? 'bg-mango-500 text-stone-900 font-medium'
 											: 'text-foreground/70 hover:text-foreground hover:bg-foreground/5'
 									}`}
 								>
-									{opt}
+									{t(`filters.${opt}`)}
 								</button>
 							))}
 						</div>
@@ -447,10 +449,10 @@ const AdminCouponsPage = () => {
 							<Ticket className="w-10 h-10 mx-auto text-foreground/30 mb-3" />
 							<p className="text-foreground/60">
 								{debouncedSearch
-									? `No coupons match “${debouncedSearch}”.`
+									? t('empty.noMatch', { search: debouncedSearch })
 									: activeFilter !== 'all'
-									? `No ${activeFilter} coupons.`
-									: 'No coupons yet — create your first discount code.'}
+									? t('empty.noneActive', { filter: t(`filters.${activeFilter}`).toLowerCase() })
+									: t('empty.noCoupons')}
 							</p>
 						</div>
 					) : (
@@ -459,14 +461,14 @@ const AdminCouponsPage = () => {
 								<table className="w-full text-sm text-left">
 									<thead className="bg-card text-foreground/60 uppercase text-xs tracking-wider">
 										<tr>
-											<th className="px-4 py-3">Code</th>
-											<th className="px-4 py-3">Type</th>
-											<th className="px-4 py-3">Min order</th>
-											<th className="px-4 py-3">Uses</th>
-											<th className="px-4 py-3">Window</th>
-											<th className="px-4 py-3">Active</th>
-											<th className="px-4 py-3">Created</th>
-											<th className="px-4 py-3 text-right">Actions</th>
+											<th className="px-4 py-3">{t('table.code')}</th>
+											<th className="px-4 py-3">{t('table.type')}</th>
+											<th className="px-4 py-3">{t('table.minOrder')}</th>
+											<th className="px-4 py-3">{t('table.uses')}</th>
+											<th className="px-4 py-3">{t('table.window')}</th>
+											<th className="px-4 py-3">{t('table.active')}</th>
+											<th className="px-4 py-3">{t('table.created')}</th>
+											<th className="px-4 py-3 text-right">{t('table.actions')}</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -483,17 +485,17 @@ const AdminCouponsPage = () => {
 														</div>
 													)}
 												</td>
-												<td className="px-4 py-3 text-foreground/80">{renderTypeCell(c)}</td>
+												<td className="px-4 py-3 text-foreground/80">{renderTypeCell(c, t)}</td>
 												<td className="px-4 py-3 text-foreground/80">{renderMinOrder(c)}</td>
 												<td className="px-4 py-3 text-foreground/80">{renderUses(c)}</td>
-												<td className="px-4 py-3 text-foreground/70 text-xs">{renderWindow(c)}</td>
+												<td className="px-4 py-3 text-foreground/70 text-xs">{renderWindow(c, t)}</td>
 												<td className="px-4 py-3">
 													<button
 														type="button"
 														onClick={() => handleToggleActive(c)}
 														disabled={togglingId === c.id}
 														aria-pressed={!!c.active}
-														aria-label={`Toggle ${c.code} active`}
+														aria-label={t('table.toggleAria', { code: c.code })}
 														className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs border transition-colors ${
 															c.active
 																? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/40 hover:bg-emerald-500/25'
@@ -507,7 +509,7 @@ const AdminCouponsPage = () => {
 														) : (
 															<XIcon className="w-3 h-3" aria-hidden="true" />
 														)}
-														{c.active ? 'Active' : 'Inactive'}
+														{c.active ? t('table.activeBadge') : t('table.inactiveBadge')}
 													</button>
 												</td>
 												<td className="px-4 py-3 text-foreground/70">{formatDate(c.created_at)}</td>
@@ -519,7 +521,7 @@ const AdminCouponsPage = () => {
 															onClick={() => openEdit(c)}
 															className="text-foreground/80 hover:text-foreground border border-foreground/10"
 														>
-															<Pencil className="w-3 h-3 mr-1" aria-hidden="true" /> Edit
+															<Pencil className="w-3 h-3 mr-1" aria-hidden="true" /> {t('table.edit')}
 														</Button>
 														<Button
 															size="sm"
@@ -533,7 +535,7 @@ const AdminCouponsPage = () => {
 															) : (
 																<Trash2 className="w-3 h-3 mr-1" aria-hidden="true" />
 															)}
-															Delete
+															{t('table.delete')}
 														</Button>
 													</div>
 												</td>
@@ -544,7 +546,7 @@ const AdminCouponsPage = () => {
 							</div>
 
 							<div className="text-xs text-foreground/60 mt-4">
-								{totalCount} coupon{totalCount === 1 ? '' : 's'} · {activeCount} active
+								{t('summary', { count: totalCount, active: activeCount })}
 							</div>
 						</>
 					)}
@@ -555,25 +557,25 @@ const AdminCouponsPage = () => {
 			<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
 				<DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
 					<DialogHeader>
-						<DialogTitle>{form.id ? 'Edit coupon' : 'New coupon'}</DialogTitle>
+						<DialogTitle>{form.id ? t('dialog.titleEdit') : t('dialog.titleNew')}</DialogTitle>
 						<DialogDescription>
 							{form.id
-								? 'Update the discount code below. Changes take effect immediately.'
-								: 'Discount codes are stored UPPERCASE. Set a redemption limit and window if needed.'}
+								? t('dialog.descriptionEdit')
+								: t('dialog.descriptionNew')}
 						</DialogDescription>
 					</DialogHeader>
 
 					<form onSubmit={handleSubmit} className="space-y-5">
 						{/* Code */}
 						<div>
-							<label className="block text-xs uppercase tracking-widest text-foreground/60 mb-1">Code *</label>
+							<label className="block text-xs uppercase tracking-widest text-foreground/60 mb-1">{t('dialog.code')}</label>
 							<input
 								type="text"
 								value={form.code}
 								onChange={(e) =>
 									setForm((f) => ({ ...f, code: e.target.value.toUpperCase() }))
 								}
-								placeholder="SUMMER25"
+								placeholder={t('dialog.codePlaceholder')}
 								maxLength={32}
 								className="w-full px-3 py-2 rounded-md bg-card border border-foreground/10 text-foreground placeholder:text-foreground/40 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-mango-500/40"
 							/>
@@ -584,23 +586,23 @@ const AdminCouponsPage = () => {
 
 						{/* Description */}
 						<div>
-							<label className="block text-xs uppercase tracking-widest text-foreground/60 mb-1">Description</label>
+							<label className="block text-xs uppercase tracking-widest text-foreground/60 mb-1">{t('dialog.description')}</label>
 							<input
 								type="text"
 								value={form.description}
 								onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-								placeholder="Internal note (optional)"
+								placeholder={t('dialog.descriptionPlaceholder')}
 								className="w-full px-3 py-2 rounded-md bg-card border border-foreground/10 text-foreground placeholder:text-foreground/40 text-sm focus:outline-none focus:ring-2 focus:ring-mango-500/40"
 							/>
 						</div>
 
 						{/* Discount type */}
 						<div>
-							<label className="block text-xs uppercase tracking-widest text-foreground/60 mb-2">Discount type</label>
+							<label className="block text-xs uppercase tracking-widest text-foreground/60 mb-2">{t('dialog.discountType')}</label>
 							<div className="flex gap-3">
 								{[
-									{ v: 'percent', label: 'Percent (%)' },
-									{ v: 'fixed', label: 'Fixed amount' },
+									{ v: 'percent', label: t('dialog.percent') },
+									{ v: 'fixed', label: t('dialog.fixed') },
 								].map((opt) => (
 									<label
 										key={opt.v}
@@ -633,7 +635,7 @@ const AdminCouponsPage = () => {
 						{/* Discount value (depends on type) */}
 						{form.discount_type === 'percent' ? (
 							<div>
-								<label className="block text-xs uppercase tracking-widest text-foreground/60 mb-1">Percent off *</label>
+								<label className="block text-xs uppercase tracking-widest text-foreground/60 mb-1">{t('dialog.percentOff')}</label>
 								<div className="relative max-w-[10rem]">
 									<input
 										type="number"
@@ -655,7 +657,7 @@ const AdminCouponsPage = () => {
 						) : (
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 								<div>
-									<label className="block text-xs uppercase tracking-widest text-foreground/60 mb-1">Amount off *</label>
+									<label className="block text-xs uppercase tracking-widest text-foreground/60 mb-1">{t('dialog.amountOff')}</label>
 									<div className="relative">
 										<span className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/50 text-sm">
 											{symbolFor(form.currency)}
@@ -668,7 +670,7 @@ const AdminCouponsPage = () => {
 											onChange={(e) =>
 												setForm((f) => ({ ...f, discount_value: e.target.value }))
 											}
-											placeholder="5.00"
+											placeholder={t('dialog.amountPlaceholder')}
 											className="w-full pl-12 pr-3 py-2 rounded-md bg-card border border-foreground/10 text-foreground placeholder:text-foreground/40 text-sm focus:outline-none focus:ring-2 focus:ring-mango-500/40"
 										/>
 									</div>
@@ -677,7 +679,7 @@ const AdminCouponsPage = () => {
 									)}
 								</div>
 								<div>
-									<label className="block text-xs uppercase tracking-widest text-foreground/60 mb-1">Currency *</label>
+									<label className="block text-xs uppercase tracking-widest text-foreground/60 mb-1">{t('dialog.currency')}</label>
 									<select
 										value={form.currency}
 										onChange={(e) => setForm((f) => ({ ...f, currency: e.target.value }))}
@@ -696,7 +698,7 @@ const AdminCouponsPage = () => {
 						{/* Min order + max uses */}
 						<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 							<div>
-								<label className="block text-xs uppercase tracking-widest text-foreground/60 mb-1">Min order amount</label>
+								<label className="block text-xs uppercase tracking-widest text-foreground/60 mb-1">{t('dialog.minOrder')}</label>
 								<div className="relative">
 									<span className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/50 text-sm">
 										{form.discount_type === 'fixed' ? symbolFor(form.currency) : 'RD$'}
@@ -709,7 +711,7 @@ const AdminCouponsPage = () => {
 										onChange={(e) =>
 											setForm((f) => ({ ...f, min_order_amount: e.target.value }))
 										}
-										placeholder="Optional"
+										placeholder={t('dialog.minOrderPlaceholder')}
 										className="w-full pl-12 pr-3 py-2 rounded-md bg-card border border-foreground/10 text-foreground placeholder:text-foreground/40 text-sm focus:outline-none focus:ring-2 focus:ring-mango-500/40"
 									/>
 								</div>
@@ -718,14 +720,14 @@ const AdminCouponsPage = () => {
 								)}
 							</div>
 							<div>
-								<label className="block text-xs uppercase tracking-widest text-foreground/60 mb-1">Max uses</label>
+								<label className="block text-xs uppercase tracking-widest text-foreground/60 mb-1">{t('dialog.maxUses')}</label>
 								<input
 									type="number"
 									min="1"
 									step="1"
 									value={form.max_uses}
 									onChange={(e) => setForm((f) => ({ ...f, max_uses: e.target.value }))}
-									placeholder="Unlimited"
+									placeholder={t('dialog.maxUsesPlaceholder')}
 									className="w-full px-3 py-2 rounded-md bg-card border border-foreground/10 text-foreground placeholder:text-foreground/40 text-sm focus:outline-none focus:ring-2 focus:ring-mango-500/40"
 								/>
 								{formErrors.max_uses && (
@@ -737,7 +739,7 @@ const AdminCouponsPage = () => {
 						{/* Window */}
 						<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 							<div>
-								<label className="block text-xs uppercase tracking-widest text-foreground/60 mb-1">Starts at</label>
+								<label className="block text-xs uppercase tracking-widest text-foreground/60 mb-1">{t('dialog.startsAt')}</label>
 								<input
 									type="datetime-local"
 									value={form.starts_at}
@@ -746,7 +748,7 @@ const AdminCouponsPage = () => {
 								/>
 							</div>
 							<div>
-								<label className="block text-xs uppercase tracking-widest text-foreground/60 mb-1">Ends at</label>
+								<label className="block text-xs uppercase tracking-widest text-foreground/60 mb-1">{t('dialog.endsAt')}</label>
 								<input
 									type="datetime-local"
 									value={form.ends_at}
@@ -768,10 +770,10 @@ const AdminCouponsPage = () => {
 									onChange={(e) => setForm((f) => ({ ...f, active: e.target.checked }))}
 									className="h-4 w-4 rounded border-foreground/20 bg-card text-mango-500 focus:ring-mango-500/40"
 								/>
-								<span className="text-sm text-foreground">Active</span>
+								<span className="text-sm text-foreground">{t('dialog.active')}</span>
 							</label>
 							<p className="text-xs text-foreground/50 mt-1">
-								Inactive coupons cannot be redeemed at checkout.
+								{t('dialog.activeHint')}
 							</p>
 						</div>
 
@@ -783,7 +785,7 @@ const AdminCouponsPage = () => {
 								disabled={saving}
 								className="border border-foreground/10"
 							>
-								Cancel
+								{t('dialog.cancel')}
 							</Button>
 							<Button
 								type="submit"
@@ -791,7 +793,7 @@ const AdminCouponsPage = () => {
 								className="bg-mango-500 hover:bg-mango-600 text-stone-900"
 							>
 								{saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-								{form.id ? 'Save changes' : 'Create coupon'}
+								{form.id ? t('dialog.save') : t('dialog.create')}
 							</Button>
 						</DialogFooter>
 					</form>

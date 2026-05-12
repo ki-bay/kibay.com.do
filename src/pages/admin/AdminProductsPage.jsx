@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { supabase } from '@/lib/customSupabaseClient';
@@ -20,6 +21,7 @@ const formatPrice = (cents, symbol) => {
 };
 
 const AdminProductsPage = () => {
+	const { t } = useTranslation('adminProducts');
 	const [products, setProducts] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
@@ -40,24 +42,24 @@ const AdminProductsPage = () => {
 			if (e) throw e;
 			setProducts(data || []);
 		} catch (err) {
-			setError(err.message || 'Failed to load products');
+			setError(err.message || t('toast.loadFailed'));
 		} finally {
 			setLoading(false);
 		}
-	}, []);
+	}, [t]);
 
 	useEffect(() => { load(); }, [load]);
 
 	const handleDelete = async (product) => {
-		if (!window.confirm(`Delete "${product.title_es || product.slug}"? This cannot be undone.`)) return;
+		if (!window.confirm(t('toast.deleteConfirm', { name: product.title_es || product.slug }))) return;
 		setDeletingId(product.id);
 		try {
 			const { error: e } = await supabase.from('products').delete().eq('id', product.id);
 			if (e) throw e;
-			toast({ title: 'Product deleted', description: product.slug });
+			toast({ title: t('toast.deleted'), description: product.slug });
 			setProducts((prev) => prev.filter((p) => p.id !== product.id));
 		} catch (err) {
-			toast({ variant: 'destructive', title: 'Delete failed', description: err.message });
+			toast({ variant: 'destructive', title: t('toast.deleteFailed'), description: err.message });
 		} finally {
 			setDeletingId(null);
 		}
@@ -76,25 +78,25 @@ const AdminProductsPage = () => {
 	return (
 		<>
 			<Helmet>
-				<title>Products — Admin</title>
+				<title>{t('seoTitle')}</title>
 			</Helmet>
 			<Navigation />
 			<main id="main" role="main" className="min-h-screen bg-background pt-32 pb-20 px-4 sm:px-6 lg:px-8">
 				<div className="max-w-7xl mx-auto">
 					<div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
 						<div>
-							<h1 className="text-3xl sm:text-4xl font-light text-foreground">Products</h1>
+							<h1 className="text-3xl sm:text-4xl font-light text-foreground">{t('header.title')}</h1>
 							<p className="text-foreground/60 mt-2 font-light">
-								Manage the native catalog. Bilingual ES/EN copy, USD + DOP prices, real inventory.
+								{t('header.subtitle')}
 							</p>
 						</div>
 						<div className="flex gap-3">
 							<Button onClick={load} variant="ghost" className="border border-foreground/10 text-foreground">
-								<RefreshCw className="w-4 h-4 mr-2" /> Refresh
+								<RefreshCw className="w-4 h-4 mr-2" /> {t('header.refresh')}
 							</Button>
 							<Link to="/admin/products/new">
 								<Button className="bg-mango-500 hover:bg-mango-600 text-foreground">
-									<Plus className="w-4 h-4 mr-2" /> New Product
+									<Plus className="w-4 h-4 mr-2" /> {t('header.newProduct')}
 								</Button>
 							</Link>
 						</div>
@@ -113,10 +115,10 @@ const AdminProductsPage = () => {
 						</div>
 					) : products.length === 0 ? (
 						<div className="text-center py-20 border border-dashed border-foreground/10 rounded-2xl">
-							<p className="text-foreground/60">No products yet.</p>
+							<p className="text-foreground/60">{t('empty.noProducts')}</p>
 							<Link to="/admin/products/new">
 								<Button className="mt-4 bg-mango-500 hover:bg-mango-600 text-foreground">
-									<Plus className="w-4 h-4 mr-2" /> Create the first product
+									<Plus className="w-4 h-4 mr-2" /> {t('empty.createFirst')}
 								</Button>
 							</Link>
 						</div>
@@ -126,13 +128,13 @@ const AdminProductsPage = () => {
 								<thead className="bg-card text-foreground/60 uppercase text-xs tracking-wider">
 									<tr>
 										<th className="px-4 py-3"> </th>
-										<th className="px-4 py-3">Title (ES)</th>
-										<th className="px-4 py-3">Slug</th>
-										<th className="px-4 py-3">Status</th>
-										<th className="px-4 py-3">Variants</th>
-										<th className="px-4 py-3">Stock</th>
-										<th className="px-4 py-3">Price (USD / DOP)</th>
-										<th className="px-4 py-3 text-right">Actions</th>
+										<th className="px-4 py-3">{t('table.titleEs')}</th>
+										<th className="px-4 py-3">{t('table.slug')}</th>
+										<th className="px-4 py-3">{t('table.status')}</th>
+										<th className="px-4 py-3">{t('table.variants')}</th>
+										<th className="px-4 py-3">{t('table.stock')}</th>
+										<th className="px-4 py-3">{t('table.price')}</th>
+										<th className="px-4 py-3 text-right">{t('table.actions')}</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -142,22 +144,22 @@ const AdminProductsPage = () => {
 											<tr key={p.id} className="border-t border-foreground/5 hover:bg-foreground/5 transition-colors">
 												<td className="px-4 py-3">
 													{p.thumbnail_url ? (
-														<img src={p.thumbnail_url} alt="Product thumbnail" width="48" height="48" loading="lazy" decoding="async" className="w-12 h-12 rounded-md object-cover bg-background" />
+														<img src={p.thumbnail_url} alt={t('table.thumbnailAlt')} width="48" height="48" loading="lazy" decoding="async" className="w-12 h-12 rounded-md object-cover bg-background" />
 													) : (
 														<div className="w-12 h-12 rounded-md bg-background border border-foreground/5" />
 													)}
 												</td>
 												<td className="px-4 py-3 text-foreground">
-													<div className="font-normal">{p.title_es || <span className="text-foreground/40 italic">— missing —</span>}</div>
+													<div className="font-normal">{p.title_es || <span className="text-foreground/40 italic">{t('table.missing')}</span>}</div>
 													<div className="text-foreground/40 text-xs">{p.title_en}</div>
 												</td>
 												<td className="px-4 py-3 text-foreground/70 font-mono text-xs">{p.slug}</td>
 												<td className="px-4 py-3">
 													<span className={`inline-flex items-center px-2 py-1 rounded-full text-xs border ${STATUS_STYLES[p.status] || STATUS_STYLES.draft}`}>
-														{p.status}
+														{t(`status.${p.status}`, p.status)}
 													</span>
 													{!p.purchasable && (
-														<span className="ml-2 text-xs text-foreground/40">not purchasable</span>
+														<span className="ml-2 text-xs text-foreground/40">{t('purchasable.notPurchasable')}</span>
 													)}
 												</td>
 												<td className="px-4 py-3 text-foreground/80">{s.count}</td>
@@ -173,11 +175,11 @@ const AdminProductsPage = () => {
 															}
 														>
 															{s.totalStock}
-															{s.totalStock === 0 && ' · sold out'}
-															{s.totalStock > 0 && s.totalStock < 10 && ' · low'}
+															{s.totalStock === 0 && ` · ${t('stock.soldOut')}`}
+															{s.totalStock > 0 && s.totalStock < 10 && ` · ${t('stock.low')}`}
 														</span>
 													) : (
-														<span className="text-foreground/40 italic">untracked</span>
+														<span className="text-foreground/40 italic">{t('stock.untracked')}</span>
 													)}
 												</td>
 												<td className="px-4 py-3 text-foreground/80">

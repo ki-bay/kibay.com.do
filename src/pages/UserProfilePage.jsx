@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { m } from 'framer-motion';
 import { User, LogOut, Save, Loader2, Mail, Clock, Settings, Package, LayoutDashboard } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { supabase } from '@/lib/customSupabaseClient';
 import { Button } from '@/components/ui/button';
@@ -13,6 +14,7 @@ import OrderHistoryPanel from '@/components/OrderHistoryPanel';
 import { cn } from '@/lib/utils';
 
 const UserProfilePage = () => {
+  const { t } = useTranslation('profile');
   const { user, signOut } = useAuth();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('profile');
@@ -73,7 +75,7 @@ const UserProfilePage = () => {
       console.error('Error fetching profile:', error);
       toast({
         variant: "destructive",
-        title: "Error loading profile",
+        title: t('toast.errorLoadTitle'),
         description: error.message
       });
     } finally {
@@ -121,13 +123,13 @@ const UserProfilePage = () => {
       }
 
       toast({
-        title: "Profile updated",
-        description: "Your changes have been saved successfully.",
+        title: t('toast.updatedTitle'),
+        description: t('toast.updatedDescription'),
       });
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Update failed",
+        title: t('toast.updateFailedTitle'),
         description: error.message
       });
     } finally {
@@ -146,7 +148,7 @@ const UserProfilePage = () => {
   return (
     <>
       <Helmet>
-        <title>Account - Kibay Espumante</title>
+        <title>{t('seo.title')}</title>
       </Helmet>
       <Navigation />
       <main id="main" role="main" className="min-h-screen bg-background pt-28 pb-16 px-4 sm:px-6 lg:px-8">
@@ -163,7 +165,7 @@ const UserProfilePage = () => {
                   {profile.full_name ? profile.full_name.charAt(0).toUpperCase() : <User />}
                 </div>
                 <div>
-                  <h1 className="text-2xl font-light text-foreground">{profile.full_name || 'User'}</h1>
+                  <h1 className="text-2xl font-light text-foreground">{profile.full_name || t('header.defaultName')}</h1>
                   <p className="text-foreground/80 flex items-center gap-2 font-light text-sm">
                     <Mail className="w-4 h-4" /> {profile.email}
                   </p>
@@ -175,7 +177,7 @@ const UserProfilePage = () => {
                 className="border-foreground/20 text-foreground hover:bg-foreground/10 hover:text-foreground font-normal"
               >
                 <LogOut className="w-4 h-4 mr-2" />
-                Sign Out
+                {t('header.signOut')}
               </Button>
             </div>
 
@@ -194,7 +196,7 @@ const UserProfilePage = () => {
                   )}
                 >
                   <Settings className="w-4 h-4" />
-                  Profile Settings
+                  {t('tabs.profile')}
                 </button>
                 <button 
                   onClick={() => setActiveTab('orders')}
@@ -206,26 +208,26 @@ const UserProfilePage = () => {
                   )}
                 >
                   <Clock className="w-4 h-4" />
-                  Order History
+                  {t('tabs.orders')}
                 </button>
                 {isAdminUser && (
                   <>
                     <div className="pt-2 mt-2 border-t border-foreground/10 text-[10px] uppercase tracking-wider text-foreground/40 px-2">
-                      Admin
+                      {t('tabs.adminLabel')}
                     </div>
                     <Link
                       to="/admin/orders"
                       className="w-full text-left px-4 py-3 rounded-lg transition-all font-light flex items-center gap-3 text-foreground/60 hover:bg-foreground/5 hover:text-foreground"
                     >
                       <Package className="w-4 h-4" />
-                      Shop orders
+                      {t('tabs.shopOrders')}
                     </Link>
                     <Link
                       to="/dashboard/blog"
                       className="w-full text-left px-4 py-3 rounded-lg transition-all font-light flex items-center gap-3 text-foreground/60 hover:bg-foreground/5 hover:text-foreground"
                     >
                       <LayoutDashboard className="w-4 h-4" />
-                      Blog dashboard
+                      {t('tabs.blogDashboard')}
                     </Link>
                   </>
                 )}
@@ -240,10 +242,10 @@ const UserProfilePage = () => {
                     className="space-y-8 max-w-xl"
                   >
                     <div className="space-y-6">
-                      <h2 className="text-xl font-normal text-foreground">Personal Information</h2>
+                      <h2 className="text-xl font-normal text-foreground">{t('personal.heading')}</h2>
                       <div className="space-y-4">
                         <div className="space-y-2">
-                          <label className="text-sm font-light text-foreground/80">Full Name</label>
+                          <label className="text-sm font-light text-foreground/80">{t('personal.fullNameLabel')}</label>
                           <input
                             type="text"
                             value={profile.full_name}
@@ -253,7 +255,7 @@ const UserProfilePage = () => {
                         </div>
                         
                         <div className="space-y-2">
-                          <label className="text-sm font-light text-foreground/80">Email</label>
+                          <label className="text-sm font-light text-foreground/80">{t('personal.emailLabel')}</label>
                           <input
                             type="text"
                             value={profile.email}
@@ -265,7 +267,7 @@ const UserProfilePage = () => {
                     </div>
 
                     <div className="border-t border-foreground/10 pt-8 space-y-6">
-                      <h2 className="text-xl font-normal text-foreground">Preferences</h2>
+                      <h2 className="text-xl font-normal text-foreground">{t('preferences.heading')}</h2>
                       <label className="flex items-center gap-3 cursor-pointer group">
                         <div className="relative">
                           <input
@@ -277,7 +279,7 @@ const UserProfilePage = () => {
                           <div className="w-10 h-6 bg-slate-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-foreground after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-mango-500"></div>
                         </div>
                         <span className="text-foreground/80 group-hover:text-foreground transition-colors font-light">
-                          Subscribe to newsletter for updates and offers
+                          {t('preferences.newsletter')}
                         </span>
                       </label>
                     </div>
@@ -291,12 +293,12 @@ const UserProfilePage = () => {
                         {isSaving ? (
                           <>
                             <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                            Saving...
+                            {t('actions.saving')}
                           </>
                         ) : (
                           <>
                             <Save className="w-4 h-4 mr-2" />
-                            Save Changes
+                            {t('actions.save')}
                           </>
                         )}
                       </Button>

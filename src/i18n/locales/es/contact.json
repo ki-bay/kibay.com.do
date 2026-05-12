@@ -1,0 +1,75 @@
+{
+  "seo": {
+    "title": "Contacta a Kibay | Hablemos",
+    "description": "¿Tienes preguntas sobre los vinos Kibay? Contáctanos para consultas, alianzas o soporte."
+  },
+  "hero": {
+    "h1Part1": "¿Preguntas sobre",
+    "h1Brand": "Kibay?",
+    "subtitle": "Nos encantaría saber de ti. Sea que tengas preguntas sobre nuestros productos, necesites ayuda con un pedido, o simplemente quieras saludar."
+  },
+  "options": {
+    "general": {
+      "title": "Consultas Generales",
+      "description": "¿Preguntas sobre nuestra marca o productos?"
+    },
+    "orders": {
+      "title": "Pedidos y Envíos",
+      "description": "Sigue o modifica tu pedido actual."
+    },
+    "sales": {
+      "title": "Ventas y Alianzas",
+      "description": "Oportunidades de mayoreo y colaboraciones."
+    },
+    "phone": {
+      "title": "Llámanos",
+      "description": "Lun-Vie de 9am a 6pm AST."
+    }
+  },
+  "form": {
+    "heading": "Envíanos un mensaje",
+    "nameLabel": "Nombre",
+    "namePlaceholder": "Tu nombre",
+    "emailLabel": "Correo",
+    "emailPlaceholder": "tu@ejemplo.com",
+    "topicLabel": "Tema",
+    "topics": {
+      "order": "Consulta de Pedido",
+      "partnership": "Ventas / Alianzas",
+      "event": "Evento / Cata",
+      "other": "Otro"
+    },
+    "messageLabel": "Mensaje",
+    "messagePlaceholder": "¿En qué te podemos ayudar?",
+    "sending": "Enviando...",
+    "submit": "Enviar Mensaje",
+    "privacy": "Solo usamos tu información para responder a tu solicitud. Lee nuestra <privacy>Política de Privacidad</privacy>."
+  },
+  "success": {
+    "title": "¡Mensaje Enviado!",
+    "body": "¡Gracias! Tu mensaje fue enviado. Te responderemos en 24–48 horas.",
+    "again": "Enviar otro mensaje"
+  },
+  "toast": {
+    "sentTitle": "Mensaje Enviado",
+    "sentDescription": "Te responderemos en 24–48 horas.",
+    "failedTitle": "Error al enviar",
+    "failedDescription": "Escríbenos directo a info@kibay.com.do."
+  },
+  "visit": {
+    "heading": "Visítanos",
+    "imgAlt": "Paisaje del viñedo de Ocoa Bay",
+    "addressLine1": "Encuentra tu camino a Ocoa Bay, Bahía de Ocoa.",
+    "addressLine2": "Conoce el viñedo donde nace Kibay.",
+    "directions": "Abrir direcciones en Google Maps"
+  },
+  "hours": {
+    "heading": "Horario del Viñedo",
+    "weekdays": "Lunes - Viernes",
+    "weekdaysTime": "9:00 AM - 5:00 PM",
+    "saturday": "Sábado",
+    "saturdayTime": "10:00 AM - 6:00 PM",
+    "sunday": "Domingo",
+    "closed": "Cerrado"
+  }
+}

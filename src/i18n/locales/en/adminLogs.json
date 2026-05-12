@@ -1,0 +1,18 @@
+{
+  "seoTitle": "System Logs | Admin",
+  "heading": "Automation Logs",
+  "subheading": "Monitor edge function executions and webhook events.",
+  "filterPlaceholder": "Filter logs...",
+  "exportCsv": "Export CSV",
+  "table": {
+    "timestamp": "Timestamp",
+    "function": "Function",
+    "action": "Action",
+    "status": "Status",
+    "empty": "No logs found"
+  },
+  "status": {
+    "success": "SUCCESS",
+    "error": "ERROR"
+  }
+}

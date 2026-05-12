@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader2, ArrowLeft, Save, Trash2, Plus, Image as ImageIcon, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { useTranslation } from 'react-i18next';
 
 const STATUSES = ['draft', 'published', 'archived'];
 
@@ -56,6 +57,7 @@ const Textarea = (props) => (
 );
 
 const AdminProductFormPage = () => {
+	const { t } = useTranslation('adminProductForm');
 	const navigate = useNavigate();
 	const { id } = useParams();
 	const isEditing = Boolean(id);
@@ -112,7 +114,7 @@ const AdminProductFormPage = () => {
 					supabase.from('product_additional_info').select('*').eq('product_id', id).order('sort_order'),
 				]);
 				if (pe) throw pe;
-				if (!p) throw new Error('Product not found');
+				if (!p) throw new Error(t('toast.productNotFound'));
 				setForm({
 					slug: p.slug,
 					title_es: p.title_es || '',
@@ -161,7 +163,7 @@ const AdminProductFormPage = () => {
 				setLoading(false);
 			}
 		})();
-	}, [id, isEditing]);
+	}, [id, isEditing, t]);
 
 	const setField = (k) => (e) => {
 		const v = e?.target?.type === 'checkbox' ? e.target.checked : e?.target?.value ?? e;
@@ -196,7 +198,7 @@ const AdminProductFormPage = () => {
 		const file = e.target.files?.[0];
 		if (!file) return;
 		if (file.size > 10 * 1024 * 1024) {
-			toast({ variant: 'destructive', title: 'File too large', description: 'Max 10MB.' });
+			toast({ variant: 'destructive', title: t('toast.fileTooLarge'), description: t('toast.fileTooLargeDesc') });
 			return;
 		}
 		setUploading(true);
@@ -209,9 +211,9 @@ const AdminProductFormPage = () => {
 			const url = data.publicUrl;
 			setImages((prev) => [...prev, { id: null, url, alt_text: form.title_es, sort_order: prev.length }]);
 			if (!form.thumbnail_url) setForm((prev) => ({ ...prev, thumbnail_url: url }));
-			toast({ title: 'Image uploaded' });
+			toast({ title: t('toast.imageUploaded') });
 		} catch (err) {
-			toast({ variant: 'destructive', title: 'Upload failed', description: err.message });
+			toast({ variant: 'destructive', title: t('toast.uploadFailed'), description: err.message });
 		} finally {
 			setUploading(false);
 			if (fileInputRef.current) fileInputRef.current.value = '';
@@ -227,12 +229,12 @@ const AdminProductFormPage = () => {
 	};
 
 	const validate = () => {
-		if (!form.slug) return 'Slug is required.';
-		if (!form.title_es) return 'Title (ES) is required.';
-		if (!form.title_en) return 'Title (EN) is required.';
-		if (variants.length === 0) return 'At least one variant is required.';
+		if (!form.slug) return t('validation.slugRequired');
+		if (!form.title_es) return t('validation.titleEsRequired');
+		if (!form.title_en) return t('validation.titleEnRequired');
+		if (variants.length === 0) return t('validation.atLeastOneVariant');
 		for (const v of variants) {
-			if (v.price_usd_cents == null || v.price_dop_cents == null) return 'Each variant needs both USD and DOP prices.';
+			if (v.price_usd_cents == null || v.price_dop_cents == null) return t('validation.variantPricesRequired');
 		}
 		return null;
 	};
@@ -240,7 +242,7 @@ const AdminProductFormPage = () => {
 	const handleSave = useCallback(async () => {
 		const errMsg = validate();
 		if (errMsg) {
-			toast({ variant: 'destructive', title: 'Cannot save', description: errMsg });
+			toast({ variant: 'destructive', title: t('toast.cannotSave'), description: errMsg });
 			return;
 		}
 		setSaving(true);
@@ -346,15 +348,15 @@ const AdminProductFormPage = () => {
 				if (iaiErr) throw iaiErr;
 			}
 
-			toast({ title: 'Saved', description: form.slug });
+			toast({ title: t('toast.saved'), description: form.slug });
 			navigate(`/admin/products/${productId}/edit`, { replace: true });
 		} catch (err) {
 			setError(err.message);
-			toast({ variant: 'destructive', title: 'Save failed', description: err.message });
+			toast({ variant: 'destructive', title: t('toast.saveFailed'), description: err.message });
 		} finally {
 			setSaving(false);
 		}
-	}, [form, variants, images, collectionIds, additionalInfo, id, isEditing, navigate, toast]);
+	}, [form, variants, images, collectionIds, additionalInfo, id, isEditing, navigate, toast, t]);
 
 	if (loading) {
 		return (
@@ -370,24 +372,24 @@ const AdminProductFormPage = () => {
 	return (
 		<>
 			<Helmet>
-				<title>{isEditing ? `Edit ${form.title_es || form.slug}` : 'New Product'} — Admin</title>
+				<title>{isEditing ? t('seoTitleEdit', { name: form.title_es || form.slug }) : t('seoTitleNew')}</title>
 			</Helmet>
 			<Navigation />
 			<main id="main" role="main" className="min-h-screen bg-background pt-32 pb-20 px-4 sm:px-6 lg:px-8">
 				<div className="max-w-5xl mx-auto">
 					<div className="flex items-center justify-between mb-8">
 						<Link to="/admin/products" className="inline-flex items-center text-foreground/60 hover:text-foreground text-sm">
-							<ArrowLeft className="w-4 h-4 mr-2" /> Back to products
+							<ArrowLeft className="w-4 h-4 mr-2" /> {t('back')}
 						</Link>
 						<Button onClick={handleSave} disabled={saving} className="bg-mango-500 hover:bg-mango-600 text-foreground">
 							{saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
-							{isEditing ? 'Save changes' : 'Create product'}
+							{isEditing ? t('actions.saveChanges') : t('actions.createProduct')}
 						</Button>
 					</div>
 
-					<h1 className="text-3xl font-light text-foreground mb-2">{isEditing ? 'Edit Product' : 'New Product'}</h1>
+					<h1 className="text-3xl font-light text-foreground mb-2">{isEditing ? t('headingEdit') : t('headingNew')}</h1>
 					<p className="text-foreground/50 text-sm mb-8 font-light">
-						All bilingual fields require both ES and EN. Currency conventions: ES UI sees DOP, EN UI sees USD.
+						{t('subtitle')}
 					</p>
 
 					{error && (
@@ -400,41 +402,41 @@ const AdminProductFormPage = () => {
 					<div className="space-y-8">
 						{/* Basic */}
 						<section className="rounded-2xl bg-card/40 border border-foreground/10 p-6 space-y-4">
-							<h2 className="text-lg text-foreground font-normal">Basics</h2>
+							<h2 className="text-lg text-foreground font-normal">{t('sections.basics')}</h2>
 							<div className="grid sm:grid-cols-2 gap-4">
-								<Field label="Title (ES) *">
-									<Input value={form.title_es} onChange={onTitleEsChange} placeholder="Kibay Espumante Lata" />
+								<Field label={t('fields.titleEs')}>
+									<Input value={form.title_es} onChange={onTitleEsChange} placeholder={t('fields.titleEsPlaceholder')} />
 								</Field>
-								<Field label="Title (EN) *">
-									<Input value={form.title_en} onChange={setField('title_en')} placeholder="Kibay Sparkling Can" />
+								<Field label={t('fields.titleEn')}>
+									<Input value={form.title_en} onChange={setField('title_en')} placeholder={t('fields.titleEnPlaceholder')} />
 								</Field>
-								<Field label="Slug *" hint="URL-friendly identifier. Auto-derived from ES title.">
-									<Input value={form.slug} onChange={(e) => setForm((p) => ({ ...p, slug: slugify(e.target.value) }))} placeholder="kibay-sparkling" />
+								<Field label={t('fields.slug')} hint={t('fields.slugHint')}>
+									<Input value={form.slug} onChange={(e) => setForm((p) => ({ ...p, slug: slugify(e.target.value) }))} placeholder={t('fields.slugPlaceholder')} />
 								</Field>
-								<Field label="Status">
+								<Field label={t('fields.status')}>
 									<select value={form.status} onChange={setField('status')} className="w-full rounded-md bg-background border border-foreground/10 text-foreground px-3 py-2 text-sm">
-										{STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
+										{STATUSES.map((s) => <option key={s} value={s}>{t(`status.${s}`, s)}</option>)}
 									</select>
 								</Field>
-								<Field label="Subtitle (ES)">
+								<Field label={t('fields.subtitleEs')}>
 									<Input value={form.subtitle_es} onChange={setField('subtitle_es')} />
 								</Field>
-								<Field label="Subtitle (EN)">
+								<Field label={t('fields.subtitleEn')}>
 									<Input value={form.subtitle_en} onChange={setField('subtitle_en')} />
 								</Field>
-								<Field label="Ribbon (ES)">
-									<Input value={form.ribbon_text_es} onChange={setField('ribbon_text_es')} placeholder="Espumante" />
+								<Field label={t('fields.ribbonEs')}>
+									<Input value={form.ribbon_text_es} onChange={setField('ribbon_text_es')} placeholder={t('fields.ribbonEsPlaceholder')} />
 								</Field>
-								<Field label="Ribbon (EN)">
-									<Input value={form.ribbon_text_en} onChange={setField('ribbon_text_en')} placeholder="Sparkling" />
+								<Field label={t('fields.ribbonEn')}>
+									<Input value={form.ribbon_text_en} onChange={setField('ribbon_text_en')} placeholder={t('fields.ribbonEnPlaceholder')} />
 								</Field>
-								<Field label="Sort order" hint="Lower numbers display first.">
+								<Field label={t('fields.sortOrder')} hint={t('fields.sortOrderHint')}>
 									<Input type="number" value={form.sort_order} onChange={setField('sort_order')} />
 								</Field>
-								<Field label="Purchasable">
+								<Field label={t('fields.purchasable')}>
 									<label className="flex items-center gap-2 text-foreground/80 text-sm">
 										<input type="checkbox" checked={form.purchasable} onChange={setField('purchasable')} />
-										Customers can add this to cart
+										{t('fields.purchasableLabel')}
 									</label>
 								</Field>
 							</div>
@@ -442,12 +444,12 @@ const AdminProductFormPage = () => {
 
 						{/* Descriptions */}
 						<section className="rounded-2xl bg-card/40 border border-foreground/10 p-6 space-y-4">
-							<h2 className="text-lg text-foreground font-normal">Description (HTML)</h2>
+							<h2 className="text-lg text-foreground font-normal">{t('sections.descriptions')}</h2>
 							<div className="grid lg:grid-cols-2 gap-4">
-								<Field label="Description (ES)">
+								<Field label={t('fields.descriptionEs')}>
 									<Textarea rows={10} value={form.description_es} onChange={setField('description_es')} />
 								</Field>
-								<Field label="Description (EN)">
+								<Field label={t('fields.descriptionEn')}>
 									<Textarea rows={10} value={form.description_en} onChange={setField('description_en')} />
 								</Field>
 							</div>
@@ -456,23 +458,23 @@ const AdminProductFormPage = () => {
 						{/* Images */}
 						<section className="rounded-2xl bg-card/40 border border-foreground/10 p-6 space-y-4">
 							<div className="flex items-center justify-between">
-								<h2 className="text-lg text-foreground font-normal">Images</h2>
+								<h2 className="text-lg text-foreground font-normal">{t('sections.images')}</h2>
 								<div className="flex gap-2">
 									<input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
 									<Button type="button" onClick={() => fileInputRef.current?.click()} disabled={uploading} variant="ghost" className="border border-foreground/10 text-foreground">
 										{uploading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <ImageIcon className="w-4 h-4 mr-2" />}
-										Upload
+										{t('images.upload')}
 									</Button>
 									<Button type="button" onClick={addImage} variant="ghost" className="border border-foreground/10 text-foreground">
-										<Plus className="w-4 h-4 mr-2" /> Add URL
+										<Plus className="w-4 h-4 mr-2" /> {t('images.addUrl')}
 									</Button>
 								</div>
 							</div>
-							<Field label="Thumbnail URL" hint="Used in lists and cards. The first uploaded image is set automatically.">
+							<Field label={t('fields.thumbnailUrl')} hint={t('fields.thumbnailUrlHint')}>
 								<Input value={form.thumbnail_url} onChange={setField('thumbnail_url')} placeholder="https://..." />
 							</Field>
 							{images.length === 0 ? (
-								<p className="text-foreground/40 text-sm italic">No images yet.</p>
+								<p className="text-foreground/40 text-sm italic">{t('images.noImages')}</p>
 							) : (
 								<div className="space-y-3">
 									{images.map((im, i) => (
@@ -483,8 +485,8 @@ const AdminProductFormPage = () => {
 												<div className="col-span-2 w-full h-20 rounded-md bg-background border border-foreground/5" />
 											)}
 											<div className="col-span-7">
-												<Input value={im.url} onChange={(e) => updateImage(i, { url: e.target.value })} placeholder="Image URL" />
-												<Input className="mt-2" value={im.alt_text} onChange={(e) => updateImage(i, { alt_text: e.target.value })} placeholder="Alt text" />
+												<Input value={im.url} onChange={(e) => updateImage(i, { url: e.target.value })} placeholder={t('fields.imageUrl')} />
+												<Input className="mt-2" value={im.alt_text} onChange={(e) => updateImage(i, { alt_text: e.target.value })} placeholder={t('fields.altText')} />
 											</div>
 											<div className="col-span-2">
 												<Input type="number" value={im.sort_order} onChange={(e) => updateImage(i, { sort_order: e.target.value })} />
@@ -503,48 +505,48 @@ const AdminProductFormPage = () => {
 						{/* Variants */}
 						<section className="rounded-2xl bg-card/40 border border-foreground/10 p-6 space-y-4">
 							<div className="flex items-center justify-between">
-								<h2 className="text-lg text-foreground font-normal">Variants & Inventory</h2>
+								<h2 className="text-lg text-foreground font-normal">{t('sections.variants')}</h2>
 								<Button type="button" onClick={addVariant} variant="ghost" className="border border-foreground/10 text-foreground">
-									<Plus className="w-4 h-4 mr-2" /> Add variant
+									<Plus className="w-4 h-4 mr-2" /> {t('variants.add')}
 								</Button>
 							</div>
 							{variants.map((v, i) => (
 								<div key={i} className="rounded-xl bg-background/60 border border-foreground/5 p-4 space-y-3">
 									<div className="grid sm:grid-cols-3 gap-3">
-										<Field label="Title (ES)"><Input value={v.title_es} onChange={(e) => updateVariant(i, { title_es: e.target.value })} /></Field>
-										<Field label="Title (EN)"><Input value={v.title_en} onChange={(e) => updateVariant(i, { title_en: e.target.value })} /></Field>
-										<Field label="SKU"><Input value={v.sku} onChange={(e) => updateVariant(i, { sku: e.target.value })} /></Field>
+										<Field label={t('fields.titleEs').replace(' *', '')}><Input value={v.title_es} onChange={(e) => updateVariant(i, { title_es: e.target.value })} /></Field>
+										<Field label={t('fields.titleEn').replace(' *', '')}><Input value={v.title_en} onChange={(e) => updateVariant(i, { title_en: e.target.value })} /></Field>
+										<Field label={t('fields.sku')}><Input value={v.sku} onChange={(e) => updateVariant(i, { sku: e.target.value })} /></Field>
 									</div>
 									<div className="grid sm:grid-cols-4 gap-3">
-										<Field label="Price USD (cents)" hint="$8.00 = 800">
+										<Field label={t('fields.priceUsd')} hint={t('fields.priceUsdHint')}>
 											<Input type="number" value={v.price_usd_cents} onChange={(e) => updateVariant(i, { price_usd_cents: e.target.value })} />
 										</Field>
-										<Field label="Sale USD (cents)">
+										<Field label={t('fields.salePriceUsd')}>
 											<Input type="number" value={v.sale_price_usd_cents ?? ''} onChange={(e) => updateVariant(i, { sale_price_usd_cents: e.target.value })} />
 										</Field>
-										<Field label="Price DOP (cents)" hint="RD$500 = 50000">
+										<Field label={t('fields.priceDop')} hint={t('fields.priceDopHint')}>
 											<Input type="number" value={v.price_dop_cents} onChange={(e) => updateVariant(i, { price_dop_cents: e.target.value })} />
 										</Field>
-										<Field label="Sale DOP (cents)">
+										<Field label={t('fields.salePriceDop')}>
 											<Input type="number" value={v.sale_price_dop_cents ?? ''} onChange={(e) => updateVariant(i, { sale_price_dop_cents: e.target.value })} />
 										</Field>
 									</div>
 									<div className="grid sm:grid-cols-4 gap-3 items-end">
-										<Field label="Inventory">
+										<Field label={t('fields.inventory')}>
 											<Input type="number" value={v.inventory_quantity} onChange={(e) => updateVariant(i, { inventory_quantity: e.target.value })} />
 										</Field>
-										<Field label="Track inventory">
+										<Field label={t('fields.trackInventory')}>
 											<label className="flex items-center gap-2 text-foreground/80 text-sm h-9">
 												<input type="checkbox" checked={v.manage_inventory} onChange={(e) => updateVariant(i, { manage_inventory: e.target.checked })} />
-												Auto-decrement on paid
+												{t('fields.trackInventoryLabel')}
 											</label>
 										</Field>
-										<Field label="Weight (g)">
+										<Field label={t('fields.weight')}>
 											<Input type="number" value={v.weight_grams ?? ''} onChange={(e) => updateVariant(i, { weight_grams: e.target.value })} />
 										</Field>
 										<div className="text-right">
 											<Button type="button" size="sm" variant="ghost" onClick={() => removeVariant(i)} className="text-red-400" disabled={variants.length === 1}>
-												<Trash2 className="w-4 h-4 mr-2" /> Remove
+												<Trash2 className="w-4 h-4 mr-2" /> {t('variants.remove')}
 											</Button>
 										</div>
 									</div>
@@ -554,9 +556,9 @@ const AdminProductFormPage = () => {
 
 						{/* Collections */}
 						<section className="rounded-2xl bg-card/40 border border-foreground/10 p-6 space-y-4">
-							<h2 className="text-lg text-foreground font-normal">Collections</h2>
+							<h2 className="text-lg text-foreground font-normal">{t('sections.collections')}</h2>
 							{allCollections.length === 0 ? (
-								<p className="text-foreground/40 text-sm italic">No collections defined.</p>
+								<p className="text-foreground/40 text-sm italic">{t('collections.none')}</p>
 							) : (
 								<div className="grid sm:grid-cols-2 gap-2">
 									{allCollections.map((c) => (
@@ -572,27 +574,27 @@ const AdminProductFormPage = () => {
 						{/* Additional info */}
 						<section className="rounded-2xl bg-card/40 border border-foreground/10 p-6 space-y-4">
 							<div className="flex items-center justify-between">
-								<h2 className="text-lg text-foreground font-normal">Additional Info Sections</h2>
+								<h2 className="text-lg text-foreground font-normal">{t('sections.additionalInfo')}</h2>
 								<Button type="button" onClick={addInfo} variant="ghost" className="border border-foreground/10 text-foreground">
-									<Plus className="w-4 h-4 mr-2" /> Add section
+									<Plus className="w-4 h-4 mr-2" /> {t('additionalInfo.add')}
 								</Button>
 							</div>
 							{additionalInfo.length === 0 ? (
-								<p className="text-foreground/40 text-sm italic">FAQ-style sections like "Storage", "Allergens", "Returns".</p>
+								<p className="text-foreground/40 text-sm italic">{t('additionalInfo.empty')}</p>
 							) : (
 								additionalInfo.map((ai, i) => (
 									<div key={i} className="rounded-xl bg-background/60 border border-foreground/5 p-4 space-y-3">
 										<div className="grid sm:grid-cols-2 gap-3">
-											<Field label="Title (ES)"><Input value={ai.title_es} onChange={(e) => updateInfo(i, { title_es: e.target.value })} /></Field>
-											<Field label="Title (EN)"><Input value={ai.title_en} onChange={(e) => updateInfo(i, { title_en: e.target.value })} /></Field>
+											<Field label={t('fields.infoTitleEs')}><Input value={ai.title_es} onChange={(e) => updateInfo(i, { title_es: e.target.value })} /></Field>
+											<Field label={t('fields.infoTitleEn')}><Input value={ai.title_en} onChange={(e) => updateInfo(i, { title_en: e.target.value })} /></Field>
 										</div>
 										<div className="grid lg:grid-cols-2 gap-3">
-											<Field label="Description (ES) — HTML"><Textarea rows={5} value={ai.description_es} onChange={(e) => updateInfo(i, { description_es: e.target.value })} /></Field>
-											<Field label="Description (EN) — HTML"><Textarea rows={5} value={ai.description_en} onChange={(e) => updateInfo(i, { description_en: e.target.value })} /></Field>
+											<Field label={t('fields.infoDescEs')}><Textarea rows={5} value={ai.description_es} onChange={(e) => updateInfo(i, { description_es: e.target.value })} /></Field>
+											<Field label={t('fields.infoDescEn')}><Textarea rows={5} value={ai.description_en} onChange={(e) => updateInfo(i, { description_en: e.target.value })} /></Field>
 										</div>
 										<div className="flex justify-end">
 											<Button type="button" size="sm" variant="ghost" onClick={() => removeInfo(i)} className="text-red-400">
-												<Trash2 className="w-4 h-4 mr-2" /> Remove section
+												<Trash2 className="w-4 h-4 mr-2" /> {t('additionalInfo.remove')}
 											</Button>
 										</div>
 									</div>
@@ -604,7 +606,7 @@ const AdminProductFormPage = () => {
 					<div className="mt-10 flex justify-end">
 						<Button onClick={handleSave} disabled={saving} className="bg-mango-500 hover:bg-mango-600 text-foreground">
 							{saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
-							{isEditing ? 'Save changes' : 'Create product'}
+							{isEditing ? t('actions.saveChanges') : t('actions.createProduct')}
 						</Button>
 					</div>
 				</div>

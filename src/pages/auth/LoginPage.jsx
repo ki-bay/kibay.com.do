@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet';
 import { m } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { Mail, ArrowRight, Loader2, ShieldCheck, AlertCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { Button } from '@/components/ui/button';
 import Navigation from '@/components/Navigation';
@@ -11,11 +12,12 @@ import { useToast } from '@/components/ui/use-toast';
 import OtpModal from '@/components/OtpModal';
 
 const LoginPage = () => {
+  const { t } = useTranslation('login');
   const [email, setEmail] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+
   const { sendOtp, verifyOtp, loading, authError, user } = useAuth();
-  
+
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -30,8 +32,8 @@ const LoginPage = () => {
     if (!email || !email.includes('@')) {
       toast({
         variant: "destructive",
-        title: "Invalid Email",
-        description: "Please enter a valid email address.",
+        title: t('toast.invalidEmailTitle'),
+        description: t('toast.invalidEmailDescription'),
       });
       return;
     }
@@ -60,7 +62,7 @@ const LoginPage = () => {
   return (
     <>
       <Helmet>
-        <title>Login - Kibay Espumante</title>
+        <title>{t('seo.title')}</title>
       </Helmet>
       <Navigation />
 
@@ -77,23 +79,23 @@ const LoginPage = () => {
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-mango-500/10 mb-4 border border-mango-500/20">
               <ShieldCheck className="w-7 h-7 text-mango-500" />
             </div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">Welcome Back</h1>
+            <h1 className="text-3xl font-bold text-foreground mb-2">{t('header.h1')}</h1>
             <p className="text-foreground/60">
-              Enter your email to receive a secure login code. <br/>
-              No password required.
+              {t('header.subtitle')} <br/>
+              {t('header.subtitleLine2')}
             </p>
           </div>
 
           <form onSubmit={handleSendCode} className="space-y-6 relative z-10">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground/80 ml-1">Email Address</label>
+              <label className="text-sm font-medium text-foreground/80 ml-1">{t('form.emailLabel')}</label>
               <div className="relative group">
                 <Mail className="absolute left-3 top-3.5 h-5 w-5 text-foreground/40 group-focus-within:text-mango-500 transition-colors" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
+                  placeholder={t('form.emailPlaceholder')}
                   className="w-full bg-background/50 border border-foreground/10 rounded-xl py-3 pl-10 pr-4 text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-mango-500 focus:ring-1 focus:ring-mango-500 transition-all shadow-inner"
                   disabled={loading && !isModalOpen}
                 />
@@ -108,11 +110,11 @@ const LoginPage = () => {
               {loading && !isModalOpen ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                  Sending Code...
+                  {t('form.sending')}
                 </>
               ) : (
                 <>
-                  Send Login Code <ArrowRight className="ml-2 w-5 h-5" />
+                  {t('form.submit')} <ArrowRight className="ml-2 w-5 h-5" />
                 </>
               )}
             </Button>
@@ -130,12 +132,12 @@ const LoginPage = () => {
           )}
 
           <div className="mt-8 pt-6 border-t border-foreground/5 text-center text-foreground/60 text-sm">
-            <p className="mb-2">New to Kibay?</p>
-            <Link 
-              to="/register" 
+            <p className="mb-2">{t('footer.newToKibay')}</p>
+            <Link
+              to="/register"
               className="text-mango-400 hover:text-mango-300 font-medium inline-flex items-center gap-1 hover:underline"
             >
-              Create an account
+              {t('footer.createAccount')}
             </Link>
           </div>
         </m.div>

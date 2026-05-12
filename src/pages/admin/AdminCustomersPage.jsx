@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { supabase } from '@/lib/customSupabaseClient';
@@ -47,6 +48,7 @@ const formatMoney = (cents, currency) => {
 };
 
 const AdminCustomersPage = () => {
+	const { t } = useTranslation('adminCustomers');
 	const [users, setUsers] = useState([]);
 	const [aggregates, setAggregates] = useState({}); // { user_id: { count, totalsByCurrency, lastOrderAt } }
 	const [totalCount, setTotalCount] = useState(0);
@@ -175,14 +177,14 @@ const AdminCustomersPage = () => {
 				setAggregates(agg);
 			}
 		} catch (err) {
-			setError(err.message || 'Failed to load customers');
+			setError(err.message || t('toast.loadFailed'));
 			setUsers([]);
 			setAggregates({});
 			setTotalCount(0);
 		} finally {
 			setLoading(false);
 		}
-	}, [page, debouncedSearch]);
+	}, [page, debouncedSearch, t]);
 
 	useEffect(() => {
 		loadKpis();
@@ -206,7 +208,7 @@ const AdminCustomersPage = () => {
 			return formatMoney(a.totalsByCurrency[c], c);
 		}
 		const dop = a.totalsByCurrency.DOP || 0;
-		return `${formatMoney(dop, 'DOP')} (mixed)`;
+		return t('table.mixedCurrencies', { value: formatMoney(dop, 'DOP') });
 	};
 
 	const handleRefresh = () => {
@@ -217,7 +219,7 @@ const AdminCustomersPage = () => {
 	return (
 		<>
 			<Helmet>
-				<title>Customers — Admin</title>
+				<title>{t('seoTitle')}</title>
 			</Helmet>
 			<Navigation />
 			<main id="main" role="main" className="min-h-screen bg-background pt-32 pb-20 px-4 sm:px-6 lg:px-8">
@@ -228,13 +230,13 @@ const AdminCustomersPage = () => {
 								to="/dashboard/blog"
 								className="inline-flex items-center gap-1 text-xs uppercase tracking-widest text-foreground/60 hover:text-foreground mb-3"
 							>
-								<ArrowLeft className="w-3 h-3" /> Admin dashboard
+								<ArrowLeft className="w-3 h-3" /> {t('backToDashboard')}
 							</Link>
 							<h1 className="text-3xl sm:text-4xl font-light text-foreground flex items-center gap-3">
-								<UsersIcon className="w-8 h-8 text-mango-500" /> Customers
+								<UsersIcon className="w-8 h-8 text-mango-500" /> {t('header.title')}
 							</h1>
 							<p className="text-foreground/60 mt-2 font-light">
-								Everyone in <code className="text-xs">public.users</code> — see who's buying, how often, and how much.
+								{t('header.subtitlePrefix')} <code className="text-xs">public.users</code> {t('header.subtitleSuffix')}
 							</p>
 						</div>
 						<div className="flex gap-3">
@@ -243,7 +245,7 @@ const AdminCustomersPage = () => {
 								variant="ghost"
 								className="border border-foreground/10 text-foreground"
 							>
-								<RefreshCw className="w-4 h-4 mr-2" /> Refresh
+								<RefreshCw className="w-4 h-4 mr-2" /> {t('header.refresh')}
 							</Button>
 						</div>
 					</div>
@@ -251,19 +253,19 @@ const AdminCustomersPage = () => {
 					{/* KPIs */}
 					<div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
 						<div className="rounded-2xl border border-foreground/10 bg-card/40 backdrop-blur-sm p-5">
-							<div className="text-xs uppercase tracking-widest text-foreground/50">Total customers</div>
+							<div className="text-xs uppercase tracking-widest text-foreground/50">{t('kpis.totalCustomers')}</div>
 							<div className="mt-2 text-3xl font-light text-foreground">
 								{kpisLoading ? <Loader2 className="w-5 h-5 animate-spin text-foreground/40" /> : kpis.totalCustomers}
 							</div>
 						</div>
 						<div className="rounded-2xl border border-foreground/10 bg-card/40 backdrop-blur-sm p-5">
-							<div className="text-xs uppercase tracking-widest text-foreground/50">With paid orders</div>
+							<div className="text-xs uppercase tracking-widest text-foreground/50">{t('kpis.payingCustomers')}</div>
 							<div className="mt-2 text-3xl font-light text-foreground">
 								{kpisLoading ? <Loader2 className="w-5 h-5 animate-spin text-foreground/40" /> : kpis.payingCustomers}
 							</div>
 						</div>
 						<div className="rounded-2xl border border-foreground/10 bg-card/40 backdrop-blur-sm p-5">
-							<div className="text-xs uppercase tracking-widest text-foreground/50">Lifetime revenue (DOP)</div>
+							<div className="text-xs uppercase tracking-widest text-foreground/50">{t('kpis.lifetimeRevenue')}</div>
 							<div className="mt-2 text-3xl font-light text-foreground">
 								{kpisLoading ? (
 									<Loader2 className="w-5 h-5 animate-spin text-foreground/40" />
@@ -282,7 +284,7 @@ const AdminCustomersPage = () => {
 								type="text"
 								value={search}
 								onChange={(e) => setSearch(e.target.value)}
-								placeholder="Search by email or name…"
+								placeholder={t('search.placeholder')}
 								className="w-full pl-9 pr-3 py-2 rounded-md bg-card border border-foreground/10 text-foreground placeholder:text-foreground/40 text-sm focus:outline-none focus:ring-2 focus:ring-mango-500/40"
 							/>
 						</div>
@@ -303,7 +305,9 @@ const AdminCustomersPage = () => {
 						<div className="text-center py-20 border border-dashed border-foreground/10 rounded-2xl">
 							<UsersIcon className="w-10 h-10 mx-auto text-foreground/30 mb-3" />
 							<p className="text-foreground/60">
-								{debouncedSearch ? `No customers match “${debouncedSearch}”.` : 'No customers yet.'}
+								{debouncedSearch
+									? t('empty.noMatch', { search: debouncedSearch })
+									: t('empty.noCustomers')}
 							</p>
 						</div>
 					) : (
@@ -312,14 +316,14 @@ const AdminCustomersPage = () => {
 								<table className="w-full text-sm text-left">
 									<thead className="bg-card text-foreground/60 uppercase text-xs tracking-wider">
 										<tr>
-											<th className="px-4 py-3">Name</th>
-											<th className="px-4 py-3">Email</th>
-											<th className="px-4 py-3">Signed up</th>
-											<th className="px-4 py-3">Orders</th>
-											<th className="px-4 py-3">Total spent</th>
-											<th className="px-4 py-3">Last order</th>
-											<th className="px-4 py-3">Role</th>
-											<th className="px-4 py-3 text-right">Actions</th>
+											<th className="px-4 py-3">{t('table.name')}</th>
+											<th className="px-4 py-3">{t('table.email')}</th>
+											<th className="px-4 py-3">{t('table.signedUp')}</th>
+											<th className="px-4 py-3">{t('table.orders')}</th>
+											<th className="px-4 py-3">{t('table.totalSpent')}</th>
+											<th className="px-4 py-3">{t('table.lastOrder')}</th>
+											<th className="px-4 py-3">{t('table.role')}</th>
+											<th className="px-4 py-3 text-right">{t('table.actions')}</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -357,7 +361,7 @@ const AdminCustomersPage = () => {
 																ROLE_STYLES[u.role] || ROLE_STYLES.customer
 															}`}
 														>
-															{u.role || 'customer'}
+															{t(`roles.${u.role || 'customer'}`, u.role || 'customer')}
 														</span>
 													</td>
 													<td className="px-4 py-3">
@@ -369,7 +373,7 @@ const AdminCustomersPage = () => {
 																		variant="ghost"
 																		className="text-foreground/80 hover:text-foreground border border-foreground/10"
 																	>
-																		<Receipt className="w-3 h-3 mr-1" aria-hidden="true" /> View orders
+																		<Receipt className="w-3 h-3 mr-1" aria-hidden="true" /> {t('table.viewOrders')}
 																	</Button>
 																</Link>
 															)}
@@ -385,7 +389,7 @@ const AdminCustomersPage = () => {
 							{/* Pagination */}
 							<div className="flex items-center justify-between mt-6">
 								<div className="text-xs text-foreground/60">
-									Page {page + 1} of {totalPages} · {totalCount} customer{totalCount === 1 ? '' : 's'}
+									{t('pagination.summary', { page: page + 1, totalPages, count: totalCount })}
 								</div>
 								<div className="flex gap-2">
 									<Button
@@ -395,7 +399,7 @@ const AdminCustomersPage = () => {
 										disabled={page === 0}
 										className="border border-foreground/10 text-foreground"
 									>
-										<ChevronLeft className="w-4 h-4 mr-1" /> Prev
+										<ChevronLeft className="w-4 h-4 mr-1" /> {t('pagination.prev')}
 									</Button>
 									<Button
 										variant="ghost"
@@ -404,7 +408,7 @@ const AdminCustomersPage = () => {
 										disabled={page + 1 >= totalPages}
 										className="border border-foreground/10 text-foreground"
 									>
-										Next <ChevronRight className="w-4 h-4 ml-1" />
+										{t('pagination.next')} <ChevronRight className="w-4 h-4 ml-1" />
 									</Button>
 								</div>
 							</div>

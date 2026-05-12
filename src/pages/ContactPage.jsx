@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { m } from 'framer-motion';
 import { Mail, Phone, MapPin, Send, Loader2, ArrowRight, MessageSquare, ShoppingBag, Briefcase, HelpCircle } from 'lucide-react';
+import { useTranslation, Trans } from 'react-i18next';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -10,6 +11,7 @@ import SEOHead from '@/components/SEOHead';
 import { mediaUrl } from '@/config/mediaCdn';
 
 const ContactPage = () => {
+  const { t } = useTranslation('contact');
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
@@ -22,28 +24,28 @@ const ContactPage = () => {
 
   const contactOptions = [
     {
-      title: 'General Inquiries',
+      title: t('options.general.title'),
       email: 'info@kibay.com.do',
       icon: HelpCircle,
-      description: 'Questions about our brand or products?'
+      description: t('options.general.description')
     },
     {
-      title: 'Orders & Deliveries',
+      title: t('options.orders.title'),
       email: 'orders@kibay.com.do',
       icon: ShoppingBag,
-      description: 'Track or modify your existing order.'
+      description: t('options.orders.description')
     },
     {
-      title: 'Sales & Partnerships',
+      title: t('options.sales.title'),
       email: 'sales@kibay.com.do',
       icon: Briefcase,
-      description: 'Wholesale and collaboration opportunities.'
+      description: t('options.sales.description')
     },
     {
-      title: 'Call Us',
+      title: t('options.phone.title'),
       phone: '+1 (849) 876-6563',
       icon: Phone,
-      description: 'Mon-Fri from 9am to 6pm AST.',
+      description: t('options.phone.description'),
       isPhone: true
     }
   ];
@@ -70,16 +72,16 @@ const ContactPage = () => {
       setIsSuccess(true);
       setFormData({ name: '', email: '', topic: 'Order', message: '' });
       toast({
-        title: "Message Sent",
-        description: "We'll get back to you within 24–48 hours.",
+        title: t('toast.sentTitle'),
+        description: t('toast.sentDescription'),
         className: "bg-mango-500 text-foreground border-none"
       });
     } catch (error) {
       console.error('Error sending message:', error);
       toast({
         variant: "destructive",
-        title: "Failed to send",
-        description: "Please email info@kibay.com.do directly."
+        title: t('toast.failedTitle'),
+        description: t('toast.failedDescription')
       });
     } finally {
       setIsSubmitting(false);
@@ -88,9 +90,9 @@ const ContactPage = () => {
 
   return (
     <>
-      <SEOHead 
-        title="Contact Kibay | Get in Touch"
-        description="Have questions about Kibay wines? Contact us for inquiries, partnerships, or customer support."
+      <SEOHead
+        title={t('seo.title')}
+        description={t('seo.description')}
       />
       
       <Navigation />
@@ -106,10 +108,10 @@ const ContactPage = () => {
             className="max-w-3xl mx-auto"
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-foreground mb-6">
-              Questions about <span className="bg-gradient-to-r from-mango-400 to-mango-600 bg-clip-text text-transparent font-normal">Kibay?</span>
+              {t('hero.h1Part1')} <span className="bg-gradient-to-r from-mango-400 to-mango-600 bg-clip-text text-transparent font-normal">{t('hero.h1Brand')}</span>
             </h1>
             <p className="text-xl text-foreground/80 font-light leading-relaxed">
-              We'd love to hear from you. Whether you have questions about our products, need help with an order, or just want to say hello.
+              {t('hero.subtitle')}
             </p>
           </m.div>
         </section>
@@ -154,7 +156,7 @@ const ContactPage = () => {
             >
               <div className="flex items-center gap-3 mb-8">
                 <MessageSquare className="w-6 h-6 text-mango-500" />
-                <h2 className="text-2xl font-normal text-foreground">Send us a message</h2>
+                <h2 className="text-2xl font-normal text-foreground">{t('form.heading')}</h2>
               </div>
 
               {isSuccess ? (
@@ -162,23 +164,23 @@ const ContactPage = () => {
                   <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Send className="w-8 h-8 text-green-500" />
                   </div>
-                  <h3 className="text-xl font-normal text-foreground mb-2">Message Sent!</h3>
+                  <h3 className="text-xl font-normal text-foreground mb-2">{t('success.title')}</h3>
                   <p className="text-foreground/70 font-light mb-6">
-                    Thank you! Your message has been sent. We'll get back to you within 24–48 hours.
+                    {t('success.body')}
                   </p>
-                  <Button 
+                  <Button
                     onClick={() => setIsSuccess(false)}
                     variant="outline"
                     className="border-foreground/20 text-foreground hover:bg-foreground/10 font-normal"
                   >
-                    Send another message
+                    {t('success.again')}
                   </Button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid sm:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label htmlFor="name" className="text-sm text-foreground/80 font-light">Name <span className="text-mango-500">*</span></label>
+                      <label htmlFor="name" className="text-sm text-foreground/80 font-light">{t('form.nameLabel')} <span className="text-mango-500">*</span></label>
                       <input
                         type="text"
                         id="name"
@@ -187,11 +189,11 @@ const ContactPage = () => {
                         value={formData.name}
                         onChange={handleInputChange}
                         className="w-full bg-background/50 border border-foreground/10 rounded-lg px-4 py-3 text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-mango-500 focus:ring-1 focus:ring-mango-500 font-light transition-all"
-                        placeholder="Your name"
+                        placeholder={t('form.namePlaceholder')}
                       />
                     </div>
                     <div className="space-y-2">
-                      <label htmlFor="email" className="text-sm text-foreground/80 font-light">Email <span className="text-mango-500">*</span></label>
+                      <label htmlFor="email" className="text-sm text-foreground/80 font-light">{t('form.emailLabel')} <span className="text-mango-500">*</span></label>
                       <input
                         type="email"
                         id="email"
@@ -200,13 +202,13 @@ const ContactPage = () => {
                         value={formData.email}
                         onChange={handleInputChange}
                         className="w-full bg-background/50 border border-foreground/10 rounded-lg px-4 py-3 text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-mango-500 focus:ring-1 focus:ring-mango-500 font-light transition-all"
-                        placeholder="you@example.com"
+                        placeholder={t('form.emailPlaceholder')}
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="topic" className="text-sm text-foreground/80 font-light">Topic <span className="text-mango-500">*</span></label>
+                    <label htmlFor="topic" className="text-sm text-foreground/80 font-light">{t('form.topicLabel')} <span className="text-mango-500">*</span></label>
                     <div className="relative">
                       <select
                         id="topic"
@@ -216,10 +218,10 @@ const ContactPage = () => {
                         onChange={handleInputChange}
                         className="w-full bg-background/50 border border-foreground/10 rounded-lg px-4 py-3 text-foreground focus:outline-none focus:border-mango-500 focus:ring-1 focus:ring-mango-500 font-light appearance-none cursor-pointer transition-all"
                       >
-                        <option value="Order" className="bg-card text-foreground">Order Inquiry</option>
-                        <option value="Sales / Partnership" className="bg-card text-foreground">Sales / Partnership</option>
-                        <option value="Event / Tasting" className="bg-card text-foreground">Event / Tasting</option>
-                        <option value="Other" className="bg-card text-foreground">Other</option>
+                        <option value="Order" className="bg-card text-foreground">{t('form.topics.order')}</option>
+                        <option value="Sales / Partnership" className="bg-card text-foreground">{t('form.topics.partnership')}</option>
+                        <option value="Event / Tasting" className="bg-card text-foreground">{t('form.topics.event')}</option>
+                        <option value="Other" className="bg-card text-foreground">{t('form.topics.other')}</option>
                       </select>
                       <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
                         <svg className="w-4 h-4 text-foreground/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
@@ -228,7 +230,7 @@ const ContactPage = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="message" className="text-sm text-foreground/80 font-light">Message <span className="text-mango-500">*</span></label>
+                    <label htmlFor="message" className="text-sm text-foreground/80 font-light">{t('form.messageLabel')} <span className="text-mango-500">*</span></label>
                     <textarea
                       id="message"
                       name="message"
@@ -237,7 +239,7 @@ const ContactPage = () => {
                       value={formData.message}
                       onChange={handleInputChange}
                       className="w-full bg-background/50 border border-foreground/10 rounded-lg px-4 py-3 text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-mango-500 focus:ring-1 focus:ring-mango-500 font-light transition-all resize-none"
-                      placeholder="How can we help you?"
+                      placeholder={t('form.messagePlaceholder')}
                     ></textarea>
                   </div>
 
@@ -249,18 +251,22 @@ const ContactPage = () => {
                     {isSubmitting ? (
                       <>
                         <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                        Sending...
+                        {t('form.sending')}
                       </>
                     ) : (
                       <>
-                        Send Message
+                        {t('form.submit')}
                         <ArrowRight className="w-5 h-5 ml-2" />
                       </>
                     )}
                   </Button>
-                  
+
                   <p className="text-xs text-foreground/40 text-center font-light">
-                    We only use your information to respond to your request. See our <a href="/privacy" className="underline hover:text-mango-400">Privacy Policy</a>.
+                    <Trans
+                      i18nKey="form.privacy"
+                      t={t}
+                      components={{ privacy: <a href="/privacy" className="underline hover:text-mango-400" /> }}
+                    />
                   </p>
                 </form>
               )}
@@ -275,9 +281,9 @@ const ContactPage = () => {
             >
               <div className="relative h-[400px] w-full rounded-2xl overflow-hidden shadow-2xl border border-foreground/10 group">
                 <div className="absolute inset-0 bg-card/20 z-10 pointer-events-none group-hover:bg-transparent transition-colors duration-500"></div>
-                <img 
-                  src={mediaUrl('0658d94f57d843a069f9c7fa06b062bb.webp')} 
-                  alt="Ocoa Bay Vineyard Landscape" 
+                <img
+                  src={mediaUrl('0658d94f57d843a069f9c7fa06b062bb.webp')}
+                  alt={t('visit.imgAlt')}
                   className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
@@ -287,24 +293,24 @@ const ContactPage = () => {
                     <div className="w-10 h-10 bg-mango-500 rounded-full flex items-center justify-center shadow-lg shadow-mango-500/30">
                       <MapPin className="w-5 h-5 text-foreground" />
                     </div>
-                    <h2 className="text-2xl font-normal text-foreground">Visit us</h2>
+                    <h2 className="text-2xl font-normal text-foreground">{t('visit.heading')}</h2>
                   </div>
-                  
+
                   <p className="text-lg text-foreground/90 font-light mb-6 leading-relaxed">
-                    Find your way to Ocoa Bay, Bahía de Ocoa. <br/>
-                    <span className="text-foreground/60 text-sm">Experience the vineyard where Kibay is born.</span>
+                    {t('visit.addressLine1')} <br/>
+                    <span className="text-foreground/60 text-sm">{t('visit.addressLine2')}</span>
                   </p>
-                  
-                  <Button 
+
+                  <Button
                     asChild
                     className="w-full sm:w-auto bg-white text-slate-900 hover:bg-mango-50 hover:text-mango-600 font-normal shadow-lg transition-all"
                   >
-                    <a 
-                      href="https://google.com/maps/dir//OcoaBay+Bahia+de+Ocoa,+Km+6+1%2F2+Hatillo+Azua+71003/@18.3592763,-70.5683895,12z/data=!4m5!4m4!1m0!1m2!1m1!1s0x8ebaaf384184036d:0xe505ffa3f926eef1" 
-                      target="_blank" 
+                    <a
+                      href="https://google.com/maps/dir//OcoaBay+Bahia+de+Ocoa,+Km+6+1%2F2+Hatillo+Azua+71003/@18.3592763,-70.5683895,12z/data=!4m5!4m4!1m0!1m2!1m1!1s0x8ebaaf384184036d:0xe505ffa3f926eef1"
+                      target="_blank"
                       rel="noopener noreferrer"
                     >
-                      Open directions in Google Maps
+                      {t('visit.directions')}
                       <ArrowRight className="ml-2 w-4 h-4" />
                     </a>
                   </Button>
@@ -312,19 +318,19 @@ const ContactPage = () => {
               </div>
               
               <div className="bg-card/50 rounded-2xl p-8 border border-foreground/5">
-                <h3 className="text-lg font-normal text-foreground mb-4">Vineyard Hours</h3>
+                <h3 className="text-lg font-normal text-foreground mb-4">{t('hours.heading')}</h3>
                 <div className="space-y-3 text-foreground/70 font-light">
                   <div className="flex justify-between border-b border-foreground/5 pb-2">
-                    <span>Monday - Friday</span>
-                    <span className="text-foreground">9:00 AM - 5:00 PM</span>
+                    <span>{t('hours.weekdays')}</span>
+                    <span className="text-foreground">{t('hours.weekdaysTime')}</span>
                   </div>
                   <div className="flex justify-between border-b border-foreground/5 pb-2">
-                    <span>Saturday</span>
-                    <span className="text-foreground">10:00 AM - 6:00 PM</span>
+                    <span>{t('hours.saturday')}</span>
+                    <span className="text-foreground">{t('hours.saturdayTime')}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Sunday</span>
-                    <span className="text-foreground">Closed</span>
+                    <span>{t('hours.sunday')}</span>
+                    <span className="text-foreground">{t('hours.closed')}</span>
                   </div>
                 </div>
               </div>

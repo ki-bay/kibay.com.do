@@ -1,0 +1,54 @@
+{
+  "heading": "Panel del blog",
+  "subheading": "Administra tus publicaciones, crea contenido nuevo y monitorea su estado.",
+  "buttons": {
+    "shopOrders": "Pedidos de la tienda",
+    "createNew": "Crear nueva publicación",
+    "cancel": "Cancelar",
+    "delete": "Eliminar"
+  },
+  "tabs": {
+    "overview": "Resumen de publicaciones",
+    "seo": "Auditoría SEO"
+  },
+  "search": {
+    "placeholder": "Buscar publicaciones..."
+  },
+  "table": {
+    "title": "Título",
+    "status": "Estado",
+    "socialStatus": "Estado en redes",
+    "date": "Fecha",
+    "actions": "Acciones",
+    "empty": "No se encontraron publicaciones."
+  },
+  "status": {
+    "published": "Publicado",
+    "draft": "Borrador"
+  },
+  "actions": {
+    "retrySocial": "Reintentar publicación en redes vía Make.com",
+    "edit": "Editar",
+    "unpublish": "Despublicar",
+    "publish": "Publicar"
+  },
+  "delete": {
+    "title": "¿Estás seguro?",
+    "description": "Esta acción no se puede deshacer. Se eliminará permanentemente la publicación y sus métricas."
+  },
+  "toast": {
+    "error": "Error",
+    "loadFailed": "No se pudieron cargar las publicaciones.",
+    "statusUpdated": "Estado actualizado",
+    "publishedSuccess": "Publicación publicada con éxito.",
+    "unpublishedSuccess": "Publicación despublicada con éxito.",
+    "updateFailed": "Error al actualizar el estado.",
+    "socialTriggered": "Flujo social activado",
+    "socialTriggeredDesc": "Make.com está procesando el contenido para Instagram, TikTok y Facebook.",
+    "socialFailed": "Error al publicar",
+    "socialFailedDesc": "No se pudo activar el flujo de redes sociales.",
+    "deleted": "Eliminado",
+    "deletedDesc": "La publicación se eliminó permanentemente.",
+    "deleteFailed": "Error al eliminar la publicación."
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "seo": {
+    "title": "System Diagnostic Report | Kibay",
+    "description": "Database health check and diagnostic report."
+  },
+  "header": {
+    "h1": "Database Diagnostic Report"
+  },
+  "states": {
+    "running": "Running comprehensive health checks...",
+    "failedTitle": "Diagnostic Failed"
+  },
+  "status": {
+    "healthy": "Healthy",
+    "failed": "Failed",
+    "warning": "Warning",
+    "connectedDetail": "Successfully connected to Supabase and verified auth session.",
+    "rpcUnavailable": "RPC function get_db_diagnostic not available or returned no data."
+  },
+  "overview": {
+    "heading": "System Status Overview",
+    "generatedAt": "Generated At",
+    "connectionStatus": "Connection Status"
+  },
+  "schema": {
+    "heading": "Schema & Tables Inventory",
+    "columnName": "Column Name",
+    "dataType": "Data Type",
+    "noTables": "No tables found in the public schema.",
+    "unavailable": "Schema information unavailable."
+  },
+  "raw": {
+    "heading": "Raw JSON Export"
+  }
+}

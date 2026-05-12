@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { m, AnimatePresence } from 'framer-motion';
 import { 
@@ -43,6 +44,7 @@ import Navigation from '@/components/Navigation';
 import BlogSeoAudit from '@/pages/blog/BlogSeoAudit';
 
 const BlogAdminDashboard = () => {
+  const { t } = useTranslation('adminBlog');
   const [posts, setPosts] = useState([]);
   const [socialStats, setSocialStats] = useState({});
   const [loading, setLoading] = useState(true);
@@ -75,8 +77,8 @@ const BlogAdminDashboard = () => {
       console.error('Error fetching posts:', error);
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Could not load blog posts.",
+        title: t('toast.error'),
+        description: t('toast.loadFailed'),
       });
     } finally {
       setLoading(false);
@@ -120,8 +122,8 @@ const BlogAdminDashboard = () => {
       ));
 
       toast({
-        title: "Status Updated",
-        description: `Post ${newStatus ? 'published' : 'unpublished'} successfully.`,
+        title: t('toast.statusUpdated'),
+        description: newStatus ? t('toast.publishedSuccess') : t('toast.unpublishedSuccess'),
       });
 
       if (newStatus) {
@@ -131,8 +133,8 @@ const BlogAdminDashboard = () => {
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Failed to update status.",
+        title: t('toast.error'),
+        description: t('toast.updateFailed'),
       });
     }
   };
@@ -164,15 +166,15 @@ const BlogAdminDashboard = () => {
         }));
 
         toast({
-            title: "Social Workflow Triggered",
-            description: "Content is being processed by Make.com for Instagram, TikTok, and Facebook.",
+            title: t('toast.socialTriggered'),
+            description: t('toast.socialTriggeredDesc'),
         });
     } catch (err) {
         console.error("Social trigger failed:", err);
         toast({
             variant: "destructive",
-            title: "Posting Failed",
-            description: "Could not trigger social media workflow.",
+            title: t('toast.socialFailed'),
+            description: t('toast.socialFailedDesc'),
         });
     } finally {
         setTriggeringSocial(null);
@@ -192,14 +194,14 @@ const BlogAdminDashboard = () => {
 
       setPosts(posts.filter(post => post.id !== postToDelete));
       toast({
-        title: "Deleted",
-        description: "Post has been removed permanently.",
+        title: t('toast.deleted'),
+        description: t('toast.deletedDesc'),
       });
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Failed to delete post.",
+        title: t('toast.error'),
+        description: t('toast.deleteFailed'),
       });
     } finally {
       setPostToDelete(null);
@@ -224,19 +226,19 @@ const BlogAdminDashboard = () => {
       <main id="main" role="main" className="max-w-7xl mx-auto px-4 pt-28">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
           <div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">Blog Dashboard</h1>
-            <p className="text-foreground/60">Manage your blog posts, create new content, and track status.</p>
+            <h1 className="text-3xl font-bold text-foreground mb-2">{t('heading')}</h1>
+            <p className="text-foreground/60">{t('subheading')}</p>
           </div>
           
           <div className="flex flex-wrap gap-3">
             <Link to="/admin/orders">
               <Button variant="outline" className="border-foreground/20 text-foreground gap-2">
-                <Package className="w-4 h-4" /> Shop orders
+                <Package className="w-4 h-4" /> {t('buttons.shopOrders')}
               </Button>
             </Link>
             <Link to="/admin/blog/create">
               <Button className="bg-mango-500 hover:bg-mango-600 text-foreground gap-2">
-                <Plus className="w-4 h-4" /> Create New Post
+                <Plus className="w-4 h-4" /> {t('buttons.createNew')}
               </Button>
             </Link>
           </div>
@@ -244,8 +246,8 @@ const BlogAdminDashboard = () => {
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <TabsList className="bg-card border border-foreground/10">
-                <TabsTrigger value="overview">Posts Overview</TabsTrigger>
-                <TabsTrigger value="seo">SEO Audit</TabsTrigger>
+                <TabsTrigger value="overview">{t('tabs.overview')}</TabsTrigger>
+                <TabsTrigger value="seo">{t('tabs.seo')}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview">
@@ -255,7 +257,7 @@ const BlogAdminDashboard = () => {
                     <Search className="absolute left-3 top-3 h-5 w-5 text-foreground/40" />
                     <input
                     type="text"
-                    placeholder="Search posts..."
+                    placeholder={t('search.placeholder')}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full bg-background/50 border border-foreground/10 rounded-lg py-2.5 pl-10 pr-4 text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-mango-500 transition-colors"
@@ -271,18 +273,18 @@ const BlogAdminDashboard = () => {
                     </div>
                 ) : filteredPosts.length === 0 ? (
                     <div className="p-12 text-center text-foreground/40">
-                    <p>No posts found.</p>
+                    <p>{t('table.empty')}</p>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
                         <tr className="border-b border-foreground/10 bg-background/30">
-                            <th className="p-4 text-xs font-medium uppercase tracking-wider text-foreground/60 w-[35%]">Title</th>
-                            <th className="p-4 text-xs font-medium uppercase tracking-wider text-foreground/60">Status</th>
-                            <th className="p-4 text-xs font-medium uppercase tracking-wider text-foreground/60 text-center">Social Status</th>
-                            <th className="p-4 text-xs font-medium uppercase tracking-wider text-foreground/60">Date</th>
-                            <th className="p-4 text-xs font-medium uppercase tracking-wider text-foreground/60 text-right">Actions</th>
+                            <th className="p-4 text-xs font-medium uppercase tracking-wider text-foreground/60 w-[35%]">{t('table.title')}</th>
+                            <th className="p-4 text-xs font-medium uppercase tracking-wider text-foreground/60">{t('table.status')}</th>
+                            <th className="p-4 text-xs font-medium uppercase tracking-wider text-foreground/60 text-center">{t('table.socialStatus')}</th>
+                            <th className="p-4 text-xs font-medium uppercase tracking-wider text-foreground/60">{t('table.date')}</th>
+                            <th className="p-4 text-xs font-medium uppercase tracking-wider text-foreground/60 text-right">{t('table.actions')}</th>
                         </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
@@ -307,7 +309,7 @@ const BlogAdminDashboard = () => {
                                         ? 'bg-green-500/10 text-green-400 border border-green-500/20' 
                                         : 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20'
                                     }`}>
-                                        {post.published ? 'Published' : 'Draft'}
+                                        {post.published ? t('status.published') : t('status.draft')}
                                     </span>
                                     </td>
                                     <td className="p-4">
@@ -341,7 +343,7 @@ const BlogAdminDashboard = () => {
                                                 className="h-8 w-8 p-0 text-foreground/60 hover:text-foreground"
                                                 onClick={() => handleTriggerSocial(post)}
                                                 disabled={triggeringSocial === post.id}
-                                                title="Retry Social Posting via Make.com"
+                                                title={t('actions.retrySocial')}
                                             >
                                                 {triggeringSocial === post.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
                                             </Button>
@@ -352,7 +354,7 @@ const BlogAdminDashboard = () => {
                                         size="sm"
                                         className="h-8 w-8 p-0 text-foreground/60 hover:text-foreground"
                                         onClick={() => navigate(`/admin/blog/${post.id}/edit`)}
-                                        title="Edit"
+                                        title={t('actions.edit')}
                                         >
                                         <Edit className="w-4 h-4" />
                                         </Button>
@@ -362,7 +364,7 @@ const BlogAdminDashboard = () => {
                                         size="sm"
                                         className={`h-8 w-8 p-0 ${post.published ? 'text-green-400 hover:text-green-300' : 'text-yellow-400 hover:text-yellow-300'}`}
                                         onClick={() => handleTogglePublish(post)}
-                                        title={post.published ? "Unpublish" : "Publish"}
+                                        title={post.published ? t('actions.unpublish') : t('actions.publish')}
                                         >
                                         {post.published ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                                         </Button>
@@ -378,7 +380,7 @@ const BlogAdminDashboard = () => {
                                             className="text-red-400 focus:text-red-400 focus:bg-red-500/10 cursor-pointer"
                                             onClick={() => setPostToDelete(post.id)}
                                             >
-                                            <Trash2 className="w-4 h-4 mr-2" /> Delete
+                                            <Trash2 className="w-4 h-4 mr-2" /> {t('buttons.delete')}
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>
                                         </DropdownMenu>
@@ -404,18 +406,18 @@ const BlogAdminDashboard = () => {
       <AlertDialog open={!!postToDelete} onOpenChange={() => setPostToDelete(null)}>
         <AlertDialogContent className="bg-card border-foreground/10 text-foreground">
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogTitle>{t('delete.title')}</AlertDialogTitle>
             <AlertDialogDescription className="text-foreground/60">
-              This action cannot be undone. This will permanently delete the blog post and its analytics.
+              {t('delete.description')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="bg-transparent border-foreground/10 text-foreground hover:bg-foreground/5 hover:text-foreground">Cancel</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogCancel className="bg-transparent border-foreground/10 text-foreground hover:bg-foreground/5 hover:text-foreground">{t('buttons.cancel')}</AlertDialogCancel>
+            <AlertDialogAction
               onClick={handleDelete}
               className="bg-red-500 hover:bg-red-600 text-foreground border-0"
             >
-              Delete
+              {t('buttons.delete')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

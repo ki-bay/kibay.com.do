@@ -1,0 +1,99 @@
+{
+  "seoTitle": "Pedidos — Admin",
+  "header": {
+    "title": "Gestión de pedidos",
+    "subtitle": "Busca, filtra y procesa pedidos. Los filtros aplican al KPI de ingresos.",
+    "refresh": "Actualizar"
+  },
+  "kpis": {
+    "paidOrders": "Pedidos pagados (filtrados)",
+    "revenue": "Ingresos de pagados (filtrados)",
+    "revenueFootnote": "Los totales con monedas mixtas se muestran como centavos en formato USD."
+  },
+  "filters": {
+    "search": "Buscar",
+    "searchPlaceholder": "Número de pedido o email del cliente…",
+    "status": "Estado",
+    "allStatuses": "Todos los estados",
+    "from": "Desde",
+    "to": "Hasta",
+    "clear": "Limpiar filtros"
+  },
+  "status": {
+    "awaiting_payment": "esperando pago",
+    "paid": "pagado",
+    "processing": "procesando",
+    "shipped": "enviado",
+    "delivered": "entregado",
+    "canceled": "cancelado",
+    "failed": "fallido",
+    "refunded": "reembolsado",
+    "disputed": "disputado"
+  },
+  "table": {
+    "orderNumber": "Pedido #",
+    "date": "Fecha",
+    "customer": "Cliente",
+    "status": "Estado",
+    "total": "Total"
+  },
+  "empty": "Ningún pedido coincide con estos filtros",
+  "details": {
+    "customer": "Cliente",
+    "shippingAddress": "Dirección de envío",
+    "noAddress": "Sin dirección registrada",
+    "taxId": "RNC/Cédula: {{value}}",
+    "lineItems": "Artículos",
+    "noLineItems": "No hay artículos registrados.",
+    "product": "Producto",
+    "qty": "Cant.",
+    "unitPrice": "Precio unitario",
+    "lineTotal": "Total línea",
+    "subtotal": "Subtotal",
+    "shipping": "Envío",
+    "total": "Total",
+    "payment": "Pago",
+    "method": "Método",
+    "paidAt": "Pagado el",
+    "stripePI": "Intent de pago de Stripe",
+    "viewInvoice": "Ver factura PDF",
+    "fulfillment": "Cumplimiento",
+    "statusLabel": "Estado",
+    "trackingNumber": "Número de rastreo",
+    "trackingPlaceholder": "Tracking del courier",
+    "shippingMethod": "Método de envío",
+    "shippingMethodPlaceholder": "estándar / exprés / …",
+    "taxIdLabel": "RNC/Cédula",
+    "taxIdPlaceholder": "RNC / cédula",
+    "internalNotes": "Notas internas (solo admin)",
+    "internalNotesPlaceholder": "Notas privadas sobre este pedido — nunca se envían al cliente"
+  },
+  "actions": {
+    "resendConfirmation": "Reenviar confirmación",
+    "sendTracking": "Enviar email de rastreo",
+    "refund": "Reembolsar",
+    "save": "Guardar"
+  },
+  "pagination": {
+    "summary": "Página {{page}} de {{totalPages}} · {{count}} pedido",
+    "summary_plural": "Página {{page}} de {{totalPages}} · {{count}} pedidos",
+    "prev": "Anterior",
+    "next": "Siguiente"
+  },
+  "toast": {
+    "updated": "Pedido actualizado",
+    "saveFailed": "Error al guardar el pedido",
+    "loadFailed": "Error al cargar los pedidos",
+    "emailSent": "{{label}} enviado a {{recipient}}",
+    "emailFallbackRecipient": "el cliente",
+    "emailFailed": "Error al enviar {{label}}",
+    "refundConfirm": "¿Reembolsar el pedido {{orderNumber}}? Esto procesará un reembolso vía Stripe y no se puede deshacer.",
+    "refundInitiated": "Reembolso iniciado",
+    "refundFailed": "Reembolso fallido",
+    "invoiceFailed": "No se pudo generar el enlace a la factura"
+  },
+  "emailLabels": {
+    "confirmation": "Email de confirmación",
+    "tracking": "Email de rastreo"
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "seoTitle": "Coupons — Admin",
+  "backToDashboard": "Admin dashboard",
+  "header": {
+    "title": "Coupons",
+    "subtitlePrefix": "Discount codes from",
+    "subtitleSuffix": "— create, search, toggle, and edit redemption rules.",
+    "refresh": "Refresh",
+    "newCoupon": "New coupon"
+  },
+  "search": {
+    "placeholder": "Search by code…"
+  },
+  "filters": {
+    "all": "All",
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "table": {
+    "code": "Code",
+    "type": "Type",
+    "minOrder": "Min order",
+    "uses": "Uses",
+    "window": "Window",
+    "active": "Active",
+    "created": "Created",
+    "actions": "Actions",
+    "noLimit": "no limit",
+    "typePercent": "Percent {{value}}%",
+    "typeFixed": "Fixed {{symbol}}{{value}}",
+    "activeBadge": "Active",
+    "inactiveBadge": "Inactive",
+    "edit": "Edit",
+    "delete": "Delete",
+    "toggleAria": "Toggle {{code}} active"
+  },
+  "empty": {
+    "noMatch": "No coupons match \"{{search}}\".",
+    "noneActive": "No {{filter}} coupons.",
+    "noCoupons": "No coupons yet — create your first discount code."
+  },
+  "summary": "{{count}} coupon · {{active}} active",
+  "summary_plural": "{{count}} coupons · {{active}} active",
+  "dialog": {
+    "titleNew": "New coupon",
+    "titleEdit": "Edit coupon",
+    "descriptionNew": "Discount codes are stored UPPERCASE. Set a redemption limit and window if needed.",
+    "descriptionEdit": "Update the discount code below. Changes take effect immediately.",
+    "code": "Code *",
+    "codePlaceholder": "SUMMER25",
+    "description": "Description",
+    "descriptionPlaceholder": "Internal note (optional)",
+    "discountType": "Discount type",
+    "percent": "Percent (%)",
+    "fixed": "Fixed amount",
+    "percentOff": "Percent off *",
+    "amountOff": "Amount off *",
+    "amountPlaceholder": "5.00",
+    "currency": "Currency *",
+    "minOrder": "Min order amount",
+    "minOrderPlaceholder": "Optional",
+    "maxUses": "Max uses",
+    "maxUsesPlaceholder": "Unlimited",
+    "startsAt": "Starts at",
+    "endsAt": "Ends at",
+    "active": "Active",
+    "activeHint": "Inactive coupons cannot be redeemed at checkout.",
+    "cancel": "Cancel",
+    "save": "Save changes",
+    "create": "Create coupon"
+  },
+  "validation": {
+    "codeRequired": "Code is required.",
+    "codeFormat": "3–32 chars, letters/numbers/_/- only.",
+    "codeDuplicate": "A coupon with that code already exists.",
+    "percentRange": "Percent must be an integer 1–100.",
+    "fixedAmount": "Fixed amount must be greater than 0.",
+    "currencyRequired": "Currency is required for fixed coupons.",
+    "minOrderRange": "Must be 0 or greater.",
+    "maxUsesPositive": "Must be a positive integer (or leave blank).",
+    "endAfterStart": "End date must be after start date."
+  },
+  "toast": {
+    "loadFailed": "Failed to load coupons",
+    "created": "Coupon created",
+    "updated": "Coupon updated",
+    "saveFailed": "Failed to save coupon",
+    "deleteConfirm": "Delete coupon {{code}}? This cannot be undone.",
+    "deleted": "Coupon {{code}} deleted",
+    "deleteFailed": "Failed to delete coupon",
+    "activated": "{{code}} activated",
+    "deactivated": "{{code}} deactivated",
+    "toggleFailed": "Failed to update coupon"
+  }
+}

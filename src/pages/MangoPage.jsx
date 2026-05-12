@@ -3,19 +3,21 @@ import { Helmet } from 'react-helmet';
 import { m } from 'framer-motion';
 import { Heart, Sun, Globe, ShoppingBag, Info, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import Card from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
 const MangoPage = () => {
+  const { t } = useTranslation('mango');
   return (
     <>
       <Helmet>
-        <title>Mango - The King of Fruits | Kibay Sparkling</title>
-        <meta name="description" content="Discover the health benefits, vitamins, and rich history of Mango, the key ingredient in Kibay's premium organic sparkling wine." />
+        <title>{t('seo.title')}</title>
+        <meta name="description" content={t('seo.description')} />
       </Helmet>
-      
+
       <Navigation />
 
       <main id="main" role="main">
@@ -24,7 +26,7 @@ const MangoPage = () => {
         <div className="absolute inset-0 z-0">
           <img
             src="https://images.unsplash.com/photo-1602081593819-65e7a8cee0dd"
-            alt="Delicious ripe mangoes"
+            alt={t('hero.imgAlt')}
             width="1920"
             height="1080"
             fetchPriority="high"
@@ -33,7 +35,7 @@ const MangoPage = () => {
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/50 to-background"></div>
         </div>
-        
+
         <m.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -41,10 +43,10 @@ const MangoPage = () => {
           className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
         >
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-light mb-6 text-foreground">
-            The Golden <span className="bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent font-normal">Mango</span>
+            {t('hero.title')} <span className="bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent font-normal">{t('hero.titleAccent')}</span>
           </h1>
           <p className="text-xl sm:text-2xl text-foreground/90 max-w-3xl mx-auto font-light leading-relaxed">
-            Sweet, juicy, and packed with sunshine—discover why we chose this tropical treasure for Kibay.
+            {t('hero.tagline')}
           </p>
         </m.div>
       </section>
@@ -52,7 +54,7 @@ const MangoPage = () => {
       {/* Content Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background font-lato">
         <div className="max-w-7xl mx-auto space-y-24">
-          
+
           {/* Intro Grid */}
           <div className="grid md:grid-cols-2 gap-12 items-center">
              <m.div
@@ -63,10 +65,10 @@ const MangoPage = () => {
              >
                 <div className="flex items-center gap-3 mb-6">
                   <Info className="w-10 h-10 text-orange-500" />
-                  <h2 className="text-3xl font-light text-foreground">Characteristics</h2>
+                  <h2 className="text-3xl font-light text-foreground">{t('characteristics.heading')}</h2>
                 </div>
                 <p className="text-lg text-foreground/80 leading-relaxed font-light">
-                  Sweet, juicy, and fragrant; typically orange in color with a smooth, fibrous texture. The mango's lush flavor profile makes it the perfect base for a refreshing sparkling wine, offering a natural sweetness balanced by subtle acidity.
+                  {t('characteristics.body')}
                 </p>
              </m.div>
              <m.div
@@ -77,23 +79,23 @@ const MangoPage = () => {
              >
                 <div className="flex items-center gap-3 mb-6">
                   <Globe className="w-10 h-10 text-orange-500" />
-                  <h2 className="text-3xl font-light text-foreground">Origins & History</h2>
+                  <h2 className="text-3xl font-light text-foreground">{t('origins.heading')}</h2>
                 </div>
                 <p className="text-lg text-foreground/80 leading-relaxed font-light">
-                  Mangoes have a rich history in South Asia and are considered the national fruit of India. They have been cultivated for over 4,000 years and have traveled across the globe to the Caribbean, where they thrive in our tropical climate.
+                  {t('origins.body')}
                 </p>
              </m.div>
           </div>
 
           {/* Benefits Cards */}
           <div>
-            <m.div 
+            <m.div
                initial={{ opacity: 0, y: 20 }}
                whileInView={{ opacity: 1, y: 0 }}
                viewport={{ once: true }}
                className="text-center mb-12"
             >
-               <h2 className="text-3xl sm:text-4xl font-light text-foreground">Nature's Powerhouse</h2>
+               <h2 className="text-3xl sm:text-4xl font-light text-foreground">{t('benefits.heading')}</h2>
             </m.div>
 
             <div className="grid md:grid-cols-2 gap-8">
@@ -107,9 +109,9 @@ const MangoPage = () => {
                   <div className="w-12 h-12 bg-background rounded-full flex items-center justify-center mb-6">
                     <Heart className="w-6 h-6 text-orange-500" />
                   </div>
-                  <h3 className="text-xl font-normal text-foreground mb-4">Health Benefits</h3>
+                  <h3 className="text-xl font-normal text-foreground mb-4">{t('benefits.health.title')}</h3>
                   <p className="text-foreground/70 font-light leading-relaxed">
-                    Mangoes are rich in antioxidants, improve digestion, boost immunity, and support eye health. Their natural enzymes aid in breaking down proteins, making them excellent for digestion.
+                    {t('benefits.health.body')}
                   </p>
                 </Card>
               </m.div>
@@ -124,9 +126,9 @@ const MangoPage = () => {
                   <div className="w-12 h-12 bg-background rounded-full flex items-center justify-center mb-6">
                     <Sun className="w-6 h-6 text-orange-500" />
                   </div>
-                  <h3 className="text-xl font-normal text-foreground mb-4">Vitamins & Nutrients</h3>
+                  <h3 className="text-xl font-normal text-foreground mb-4">{t('benefits.vitamins.title')}</h3>
                   <p className="text-foreground/70 font-light leading-relaxed">
-                    High in Vitamin C, Vitamin A, and dietary fiber. A single serving provides a significant boost to your daily nutritional needs while satisfying your sweet tooth naturally.
+                    {t('benefits.vitamins.body')}
                   </p>
                 </Card>
               </m.div>
@@ -141,14 +143,14 @@ const MangoPage = () => {
             viewport={{ once: true }}
             className="text-center bg-gradient-to-r from-orange-500/10 to-orange-600/10 rounded-3xl p-12 border border-orange-500/20"
           >
-            <h2 className="text-3xl font-light text-foreground mb-6">Experience the Taste of Real Mango</h2>
+            <h2 className="text-3xl font-light text-foreground mb-6">{t('cta.heading')}</h2>
             <p className="text-lg text-foreground/80 max-w-2xl mx-auto mb-8 font-light">
-              Ready to taste the magic? Try our Kibay Mango Sparkling Wine today.
+              {t('cta.body')}
             </p>
             <Link to="/shop">
               <Button size="lg" className="bg-orange-500 hover:bg-orange-600 text-foreground font-normal rounded-full px-10 py-6 text-lg shadow-lg hover:shadow-orange-500/30 transition-all">
                 <ShoppingBag className="mr-2 h-5 w-5" />
-                Shop Now
+                {t('cta.button')}
               </Button>
             </Link>
           </m.div>

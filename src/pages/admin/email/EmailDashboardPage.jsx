@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { motion as m } from 'framer-motion';
@@ -53,6 +54,7 @@ const StatusColors = {
 };
 
 const EmailDashboardPage = () => {
+	const { t } = useTranslation('adminEmailDashboard');
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const [kpis, setKpis] = useState({
@@ -172,11 +174,11 @@ const EmailDashboardPage = () => {
 			setComparison(cmp);
 			setTopBouncing(topDomains);
 		} catch (err) {
-			setError(err.message || 'Failed to load dashboard data');
+			setError(err.message || t('errors.loadFailed'));
 		} finally {
 			setLoading(false);
 		}
-	}, []);
+	}, [t]);
 
 	useEffect(() => {
 		load();
@@ -191,15 +193,15 @@ const EmailDashboardPage = () => {
 			bounceRate: pct(data.bounces, data.count),
 		});
 		return [
-			make('B2B', Building2, comparison.b2b),
-			make('Individual', UserCircle, comparison.individual),
+			make(t('comparison.b2b'), Building2, comparison.b2b),
+			make(t('comparison.individual'), UserCircle, comparison.individual),
 		];
-	}, [comparison]);
+	}, [comparison, t]);
 
 	return (
 		<>
 			<Helmet>
-				<title>Email marketing — Admin</title>
+				<title>{t('seoTitle')}</title>
 			</Helmet>
 			<Navigation />
 			<main id="main" role="main" className="min-h-screen bg-background pt-32 pb-20 px-4 sm:px-6 lg:px-8">
@@ -210,13 +212,13 @@ const EmailDashboardPage = () => {
 								to="/dashboard/blog"
 								className="inline-flex items-center gap-1 text-xs uppercase tracking-widest text-foreground/60 hover:text-foreground mb-3"
 							>
-								<ArrowLeft className="w-3 h-3" /> Admin dashboard
+								<ArrowLeft className="w-3 h-3" /> {t('backToDashboard')}
 							</Link>
 							<h1 className="text-3xl sm:text-4xl font-light text-foreground flex items-center gap-3">
-								<Mail className="w-8 h-8 text-mango-500" /> Email marketing
+								<Mail className="w-8 h-8 text-mango-500" /> {t('heading')}
 							</h1>
 							<p className="text-foreground/60 mt-2 font-light">
-								KPIs, charts, and quick links for the email program.
+								{t('subheading')}
 							</p>
 						</div>
 						<div className="flex gap-3">
@@ -225,7 +227,7 @@ const EmailDashboardPage = () => {
 								variant="ghost"
 								className="border border-foreground/10 text-foreground"
 							>
-								<RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} /> Refresh
+								<RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} /> {t('buttons.refresh')}
 							</Button>
 						</div>
 					</div>
@@ -239,18 +241,18 @@ const EmailDashboardPage = () => {
 
 					{/* KPI row */}
 					<div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-						<KpiTile loading={loading} icon={Users} label="Active contacts" value={kpis.totalContacts} />
-						<KpiTile loading={loading} icon={Send} label="Campaigns sent" value={kpis.campaignsSent} />
+						<KpiTile loading={loading} icon={Users} label={t('kpis.activeContacts')} value={kpis.totalContacts} />
+						<KpiTile loading={loading} icon={Send} label={t('kpis.campaignsSent')} value={kpis.campaignsSent} />
 						<KpiTile
 							loading={loading}
 							icon={TrendingUp}
-							label="30d deliverability"
+							label={t('kpis.deliverability30d')}
 							value={`${kpis.deliverability}%`}
 						/>
 						<KpiTile
 							loading={loading}
 							icon={MailOpen}
-							label="30d open rate"
+							label={t('kpis.openRate30d')}
 							value={`${kpis.openRate}%`}
 						/>
 					</div>
@@ -259,17 +261,17 @@ const EmailDashboardPage = () => {
 					<div className="flex flex-wrap gap-3 mb-10">
 						<Link to="/admin/email/contacts">
 							<Button variant="ghost" className="border border-foreground/10 text-foreground">
-								<Users className="w-4 h-4 mr-2" /> Manage contacts
+								<Users className="w-4 h-4 mr-2" /> {t('buttons.manageContacts')}
 							</Button>
 						</Link>
 						<Link to="/admin/email/campaigns">
 							<Button variant="ghost" className="border border-foreground/10 text-foreground">
-								<Send className="w-4 h-4 mr-2" /> All campaigns
+								<Send className="w-4 h-4 mr-2" /> {t('buttons.allCampaigns')}
 							</Button>
 						</Link>
 						<Link to="/admin/email/campaigns/new">
 							<Button className="bg-mango-500 hover:bg-mango-600 text-stone-900">
-								<PlusCircle className="w-4 h-4 mr-2" /> New campaign
+								<PlusCircle className="w-4 h-4 mr-2" /> {t('buttons.newCampaign')}
 							</Button>
 						</Link>
 					</div>
@@ -283,7 +285,7 @@ const EmailDashboardPage = () => {
 					>
 						<div className="rounded-2xl border border-foreground/10 bg-card/40 backdrop-blur-sm p-5">
 							<h2 className="text-sm uppercase tracking-widest text-foreground/60 mb-4">
-								Emails sent — last 30 days
+								{t('charts.emailsSent30d')}
 							</h2>
 							{loading ? (
 								<div className="flex items-center justify-center h-72">
@@ -318,7 +320,7 @@ const EmailDashboardPage = () => {
 
 						<div className="rounded-2xl border border-foreground/10 bg-card/40 backdrop-blur-sm p-5">
 							<h2 className="text-sm uppercase tracking-widest text-foreground/60 mb-4">
-								Status distribution (30d)
+								{t('charts.statusDistribution')}
 							</h2>
 							{loading ? (
 								<div className="flex items-center justify-center h-72">
@@ -355,7 +357,7 @@ const EmailDashboardPage = () => {
 					<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 						<div className="rounded-2xl border border-foreground/10 bg-card/40 backdrop-blur-sm p-5">
 							<h2 className="text-sm uppercase tracking-widest text-foreground/60 mb-4">
-								B2B vs Individual
+								{t('comparison.title')}
 							</h2>
 							<div className="grid grid-cols-2 gap-4">
 								{comparisonCards.map(({ label, icon: Icon, count, openRate, bounceRate }) => (
@@ -368,15 +370,15 @@ const EmailDashboardPage = () => {
 										</div>
 										<dl className="space-y-2 text-sm">
 											<div className="flex justify-between">
-												<dt className="text-foreground/50">Recipients</dt>
+												<dt className="text-foreground/50">{t('comparison.recipients')}</dt>
 												<dd className="text-foreground">{count}</dd>
 											</div>
 											<div className="flex justify-between">
-												<dt className="text-foreground/50">Open rate</dt>
+												<dt className="text-foreground/50">{t('comparison.openRate')}</dt>
 												<dd className="text-foreground">{openRate}%</dd>
 											</div>
 											<div className="flex justify-between">
-												<dt className="text-foreground/50">Bounce rate</dt>
+												<dt className="text-foreground/50">{t('comparison.bounceRate')}</dt>
 												<dd className="text-foreground">{bounceRate}%</dd>
 											</div>
 										</dl>
@@ -387,20 +389,20 @@ const EmailDashboardPage = () => {
 
 						<div className="rounded-2xl border border-foreground/10 bg-card/40 backdrop-blur-sm p-5">
 							<h2 className="text-sm uppercase tracking-widest text-foreground/60 mb-4">
-								Top 5 bouncing domains (30d)
+								{t('bouncing.title')}
 							</h2>
 							{loading ? (
 								<div className="flex items-center justify-center h-40">
 									<Loader2 className="w-6 h-6 animate-spin text-foreground/40" />
 								</div>
 							) : topBouncing.length === 0 ? (
-								<p className="text-foreground/50 text-sm italic">No bounces in the last 30 days.</p>
+								<p className="text-foreground/50 text-sm italic">{t('bouncing.noBounces')}</p>
 							) : (
 								<table className="w-full text-sm">
 									<thead className="text-foreground/50 uppercase text-xs tracking-wider">
 										<tr>
-											<th className="text-left py-2">Domain</th>
-											<th className="text-right py-2">Bounces</th>
+											<th className="text-left py-2">{t('bouncing.domain')}</th>
+											<th className="text-right py-2">{t('bouncing.bounces')}</th>
 										</tr>
 									</thead>
 									<tbody>

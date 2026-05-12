@@ -1,0 +1,54 @@
+{
+  "heading": "Blog Dashboard",
+  "subheading": "Manage your blog posts, create new content, and track status.",
+  "buttons": {
+    "shopOrders": "Shop orders",
+    "createNew": "Create New Post",
+    "cancel": "Cancel",
+    "delete": "Delete"
+  },
+  "tabs": {
+    "overview": "Posts Overview",
+    "seo": "SEO Audit"
+  },
+  "search": {
+    "placeholder": "Search posts..."
+  },
+  "table": {
+    "title": "Title",
+    "status": "Status",
+    "socialStatus": "Social Status",
+    "date": "Date",
+    "actions": "Actions",
+    "empty": "No posts found."
+  },
+  "status": {
+    "published": "Published",
+    "draft": "Draft"
+  },
+  "actions": {
+    "retrySocial": "Retry Social Posting via Make.com",
+    "edit": "Edit",
+    "unpublish": "Unpublish",
+    "publish": "Publish"
+  },
+  "delete": {
+    "title": "Are you sure?",
+    "description": "This action cannot be undone. This will permanently delete the blog post and its analytics."
+  },
+  "toast": {
+    "error": "Error",
+    "loadFailed": "Could not load blog posts.",
+    "statusUpdated": "Status Updated",
+    "publishedSuccess": "Post published successfully.",
+    "unpublishedSuccess": "Post unpublished successfully.",
+    "updateFailed": "Failed to update status.",
+    "socialTriggered": "Social Workflow Triggered",
+    "socialTriggeredDesc": "Content is being processed by Make.com for Instagram, TikTok, and Facebook.",
+    "socialFailed": "Posting Failed",
+    "socialFailedDesc": "Could not trigger social media workflow.",
+    "deleted": "Deleted",
+    "deletedDesc": "Post has been removed permanently.",
+    "deleteFailed": "Failed to delete post."
+  }
+}

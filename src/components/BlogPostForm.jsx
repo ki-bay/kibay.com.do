@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { m } from 'framer-motion';
 import { Save, ArrowLeft, Loader2, Send, Sparkles } from 'lucide-react';
@@ -21,6 +22,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const BlogPostForm = () => {
+  const { t } = useTranslation('adminBlogForm');
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -72,8 +74,8 @@ const BlogPostForm = () => {
       console.error('Error fetching post:', error);
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Could not load the blog post.",
+        title: t('toast.error'),
+        description: t('toast.loadFailed'),
       });
       navigate('/dashboard/blog');
     } finally {
@@ -119,8 +121,8 @@ const BlogPostForm = () => {
     
     setSlugError('');
     toast({
-      title: "SEO Generated",
-      description: "SEO fields populated based on content.",
+      title: t('toast.seoGenerated'),
+      description: t('toast.seoGeneratedDesc'),
     });
   };
 
@@ -133,11 +135,11 @@ const BlogPostForm = () => {
      const isUnique = await isSlugUnique(slugToValidate, id || null); 
 
      if (!isUnique) {
-        setSlugError('This slug is already in use. Please choose another one.');
+        setSlugError(t('validation.duplicateSlugLabel'));
         toast({
           variant: "destructive",
-          title: "Duplicate Slug",
-          description: "The URL slug must be unique.",
+          title: t('validation.duplicateSlugTitle'),
+          description: t('validation.duplicateSlugDesc'),
         });
         setActiveTab("seo");
         return false;
@@ -153,8 +155,8 @@ const BlogPostForm = () => {
     if (!formData.title || !formData.description) {
       toast({
         variant: "destructive",
-        title: "Missing fields",
-        description: "Title and description are required.",
+        title: t('validation.missingFieldsTitle'),
+        description: t('validation.missingFieldsDesc'),
       });
       return;
     }
@@ -169,8 +171,8 @@ const BlogPostForm = () => {
     if (!finalSlug) {
         toast({
             variant: "destructive",
-            title: "Invalid Title",
-            description: "Could not generate a valid URL slug from the title.",
+            title: t('validation.invalidTitleTitle'),
+            description: t('validation.invalidTitleDesc'),
         });
         return;
     }
@@ -230,15 +232,15 @@ const BlogPostForm = () => {
                     postUrl: `${window.location.origin}/blog/${postId}`
                 })
             });
-            toast({ title: "Notifications Sent" });
+            toast({ title: t('toast.notificationsSent') });
         } catch (notifyErr) {
             console.error("Notification Error:", notifyErr);
         }
       }
 
       toast({
-        title: "Success",
-        description: `Blog post ${id ? 'updated' : 'created'} successfully!`,
+        title: t('toast.success'),
+        description: id ? t('toast.updatedSuccess') : t('toast.createdSuccess'),
       });
       
       navigate('/dashboard/blog');
@@ -246,8 +248,8 @@ const BlogPostForm = () => {
       console.error('Error saving post:', error);
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Failed to save the blog post. Please check your connection.",
+        title: t('toast.error'),
+        description: t('toast.saveFailed'),
       });
     } finally {
       setLoading(false);
@@ -274,10 +276,10 @@ const BlogPostForm = () => {
                 onClick={() => navigate('/dashboard/blog')}
                 className="text-foreground/60 hover:text-foreground"
             >
-                <ArrowLeft className="w-4 h-4 mr-2" /> Back
+                <ArrowLeft className="w-4 h-4 mr-2" /> {t('buttons.back')}
             </Button>
             <h1 className="text-3xl font-bold text-foreground">
-                {id ? 'Edit Post' : 'Create New Post'}
+                {id ? t('heading.edit') : t('heading.create')}
             </h1>
             </div>
             
@@ -287,15 +289,15 @@ const BlogPostForm = () => {
                 seoScore >= 50 ? 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400' :
                 'bg-red-500/10 border-red-500/20 text-red-400'
             }`}>
-                <span className="text-xs font-bold uppercase">SEO Score</span>
+                <span className="text-xs font-bold uppercase">{t('seoScore.label')}</span>
                 <span className="font-bold">{seoScore}/100</span>
             </div>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <TabsList className="bg-card border border-foreground/10">
-                <TabsTrigger value="content">Content</TabsTrigger>
-                <TabsTrigger value="seo">SEO & Metadata</TabsTrigger>
+                <TabsTrigger value="content">{t('tabs.content')}</TabsTrigger>
+                <TabsTrigger value="seo">{t('tabs.seo')}</TabsTrigger>
             </TabsList>
 
             <m.div 
@@ -308,33 +310,33 @@ const BlogPostForm = () => {
                 <TabsContent value="content" className="space-y-6 mt-0">
                     {/* Title */}
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-foreground/80">Title *</label>
+                        <label className="text-sm font-medium text-foreground/80">{t('fields.title')}</label>
                         <input
                             type="text"
                             name="title"
                             value={formData.title}
                             onChange={handleChange}
-                            placeholder="Enter post title"
+                            placeholder={t('fields.titlePlaceholder')}
                             className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground placeholder:text-foreground/20 focus:border-mango-500 focus:outline-none transition-colors"
                         />
                     </div>
 
                     {/* Description */}
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-foreground/80">Excerpt / Description *</label>
+                        <label className="text-sm font-medium text-foreground/80">{t('fields.description')}</label>
                         <textarea
                             name="description"
                             value={formData.description}
                             onChange={handleChange}
                             rows={3}
-                            placeholder="Short summary for the card view..."
+                            placeholder={t('fields.descriptionPlaceholder')}
                             className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground placeholder:text-foreground/20 focus:border-mango-500 focus:outline-none transition-colors resize-none"
                         />
                     </div>
 
                     {/* Featured Image */}
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-foreground/80">Featured Image</label>
+                        <label className="text-sm font-medium text-foreground/80">{t('fields.featuredImage')}</label>
                         <ImageUploadField 
                             value={formData.featured_image_url} 
                             onChange={handleImageChange} 
@@ -343,7 +345,7 @@ const BlogPostForm = () => {
 
                     {/* Rich Text Content */}
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-foreground/80">Content</label>
+                        <label className="text-sm font-medium text-foreground/80">{t('fields.content')}</label>
                         <RichTextEditor 
                             content={formData.content} 
                             onChange={handleEditorChange} 
@@ -356,14 +358,14 @@ const BlogPostForm = () => {
                         <div>
                             <h3 className="text-foreground font-medium flex items-center gap-2">
                                 <Sparkles className="w-4 h-4 text-mango-500" />
-                                Auto-Generate SEO Fields
+                                {t('autoSeo.title')}
                             </h3>
                             <p className="text-foreground/60 text-sm mt-1">
-                                Automatically populate SEO fields based on your content.
+                                {t('autoSeo.body')}
                             </p>
                         </div>
                         <Button type="button" onClick={handleAutoGenerateSEO} variant="outline" className="border-mango-500/50 text-mango-400 hover:text-mango-300 hover:bg-mango-500/10">
-                            Generate Now
+                            {t('buttons.generateNow')}
                         </Button>
                     </div>
 
@@ -372,7 +374,7 @@ const BlogPostForm = () => {
                             {/* SEO Title */}
                             <div className="space-y-2">
                                 <div className="flex justify-between text-sm">
-                                    <label className="font-medium text-foreground/80">SEO Title</label>
+                                    <label className="font-medium text-foreground/80">{t('fields.seoTitle')}</label>
                                     <span className={`${formData.seo_title.length > 60 ? 'text-red-400' : 'text-foreground/40'}`}>
                                         {formData.seo_title.length}/60
                                     </span>
@@ -382,14 +384,14 @@ const BlogPostForm = () => {
                                     name="seo_title"
                                     value={formData.seo_title}
                                     onChange={handleChange}
-                                    placeholder="Title for search engines"
+                                    placeholder={t('fields.seoTitlePlaceholder')}
                                     className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground placeholder:text-foreground/20 focus:border-mango-500 focus:outline-none transition-colors"
                                 />
                             </div>
 
                              {/* Slug */}
                              <div className="space-y-2">
-                                <label className="text-sm font-medium text-foreground/80">URL Slug</label>
+                                <label className="text-sm font-medium text-foreground/80">{t('fields.slug')}</label>
                                 <div className="flex items-center gap-2">
                                     <span className="text-foreground/40 text-sm bg-background/50 px-3 py-3 border border-foreground/10 rounded-l-lg border-r-0">
                                         kibay.com.do/blog/
@@ -399,7 +401,7 @@ const BlogPostForm = () => {
                                         name="slug"
                                         value={formData.slug}
                                         onChange={handleChange}
-                                        placeholder="url-slug-here"
+                                        placeholder={t('fields.slugPlaceholder')}
                                         className={`w-full bg-background/50 border rounded-r-lg p-3 text-foreground placeholder:text-foreground/20 focus:outline-none transition-colors ${slugError ? 'border-red-500' : 'border-foreground/10 focus:border-mango-500'}`}
                                     />
                                 </div>
@@ -409,7 +411,7 @@ const BlogPostForm = () => {
                             {/* SEO Description */}
                             <div className="space-y-2">
                                 <div className="flex justify-between text-sm">
-                                    <label className="font-medium text-foreground/80">SEO Description</label>
+                                    <label className="font-medium text-foreground/80">{t('fields.seoDescription')}</label>
                                     <span className={`${formData.seo_description.length > 160 ? 'text-red-400' : 'text-foreground/40'}`}>
                                         {formData.seo_description.length}/160
                                     </span>
@@ -419,7 +421,7 @@ const BlogPostForm = () => {
                                     value={formData.seo_description}
                                     onChange={handleChange}
                                     rows={4}
-                                    placeholder="Description for search results..."
+                                    placeholder={t('fields.seoDescriptionPlaceholder')}
                                     className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground placeholder:text-foreground/20 focus:border-mango-500 focus:outline-none transition-colors resize-none"
                                 />
                             </div>
@@ -428,11 +430,11 @@ const BlogPostForm = () => {
                         <div className="space-y-6">
                             {/* Search Preview */}
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-foreground/80">Google Search Preview</label>
+                                <label className="text-sm font-medium text-foreground/80">{t('fields.googlePreview')}</label>
                                 <div className="bg-white p-4 rounded-lg font-sans">
                                     <div className="flex items-center gap-1 text-[#202124] text-sm mb-1">
                                         <div className="w-7 h-7 bg-slate-200 rounded-full flex items-center justify-center text-[10px] overflow-hidden">
-                                            <img src="/logo.png" alt="logo" className="w-full h-full object-cover" onError={(e) => e.target.style.display = 'none'} />
+                                            <img src="/logo.png" alt={t('preview.logoAlt')} className="w-full h-full object-cover" onError={(e) => e.target.style.display = 'none'} />
                                         </div>
                                         <div className="flex flex-col leading-tight">
                                             <span className="text-[#202124]">Kibay</span>
@@ -440,49 +442,49 @@ const BlogPostForm = () => {
                                         </div>
                                     </div>
                                     <h3 className="text-[#1a0dab] text-xl font-normal hover:underline cursor-pointer truncate">
-                                        {formData.seo_title || formData.title || 'Your Post Title'}
+                                        {formData.seo_title || formData.title || t('preview.fallbackTitle')}
                                     </h3>
                                     <p className="text-[#4d5156] text-sm mt-1 line-clamp-2">
-                                        {formData.seo_description || formData.description || 'This is how your description will appear in search results...'}
+                                        {formData.seo_description || formData.description || t('preview.fallbackDescription')}
                                     </p>
                                 </div>
                             </div>
 
                             {/* Keywords */}
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-foreground/80">Keywords (Comma separated)</label>
+                                <label className="text-sm font-medium text-foreground/80">{t('fields.keywords')}</label>
                                 <input
                                     type="text"
                                     name="seo_keywords"
                                     value={formData.seo_keywords}
                                     onChange={handleChange}
-                                    placeholder="tropical, mango, drink, ..."
+                                    placeholder={t('fields.keywordsPlaceholder')}
                                     className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground placeholder:text-foreground/20 focus:border-mango-500 focus:outline-none transition-colors"
                                 />
                             </div>
 
                              {/* Alt Text */}
                              <div className="space-y-2">
-                                <label className="text-sm font-medium text-foreground/80">Featured Image Alt Text</label>
+                                <label className="text-sm font-medium text-foreground/80">{t('fields.altText')}</label>
                                 <input
                                     type="text"
                                     name="alt_text"
                                     value={formData.alt_text}
                                     onChange={handleChange}
-                                    placeholder="Describe the image for accessibility"
+                                    placeholder={t('fields.altTextPlaceholder')}
                                     className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground placeholder:text-foreground/20 focus:border-mango-500 focus:outline-none transition-colors"
                                 />
                             </div>
 
                             {/* Canonical */}
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-foreground/80">Canonical URL (Optional)</label>
+                                <label className="text-sm font-medium text-foreground/80">{t('fields.canonical')}</label>
                                 <input
                                     type="text"
                                     name="canonical_url"
                                     value={formData.canonical_url}
                                     onChange={handleChange}
-                                    placeholder="https://..."
+                                    placeholder={t('fields.canonicalPlaceholder')}
                                     className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground placeholder:text-foreground/20 focus:border-mango-500 focus:outline-none transition-colors"
                                 />
                             </div>
@@ -503,7 +505,7 @@ const BlogPostForm = () => {
                                 className="w-5 h-5 rounded border-foreground/20 bg-card text-mango-500 focus:ring-mango-500"
                             />
                             <label htmlFor="published" className="text-foreground cursor-pointer select-none font-medium">
-                                Publish immediately
+                                {t('publish.now')}
                             </label>
                         </div>
                         
@@ -518,7 +520,7 @@ const BlogPostForm = () => {
                             />
                             <label htmlFor="sendNotification" className={`text-foreground cursor-pointer select-none flex items-center gap-2 ${!formData.published && 'opacity-50'}`}>
                                 <Send className="w-4 h-4" />
-                                Send email notification
+                                {t('publish.sendNotification')}
                             </label>
                         </div>
                     </div>
@@ -530,7 +532,7 @@ const BlogPostForm = () => {
                             onClick={() => navigate('/dashboard/blog')}
                             className="border-foreground/10 text-foreground hover:bg-foreground/5"
                         >
-                            Cancel
+                            {t('buttons.cancel')}
                         </Button>
                         <Button 
                             type="submit" 
@@ -540,12 +542,12 @@ const BlogPostForm = () => {
                             {loading ? (
                             <>
                                 <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                                Saving...
+                                {t('buttons.saving')}
                             </>
                             ) : (
                             <>
                                 <Save className="w-4 h-4 mr-2" />
-                                Save Post
+                                {t('buttons.save')}
                             </>
                             )}
                         </Button>

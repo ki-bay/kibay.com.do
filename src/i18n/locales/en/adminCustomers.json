@@ -1,0 +1,47 @@
+{
+  "seoTitle": "Customers — Admin",
+  "backToDashboard": "Admin dashboard",
+  "header": {
+    "title": "Customers",
+    "subtitlePrefix": "Everyone in",
+    "subtitleSuffix": "— see who's buying, how often, and how much.",
+    "refresh": "Refresh"
+  },
+  "kpis": {
+    "totalCustomers": "Total customers",
+    "payingCustomers": "With paid orders",
+    "lifetimeRevenue": "Lifetime revenue (DOP)"
+  },
+  "search": {
+    "placeholder": "Search by email or name…"
+  },
+  "table": {
+    "name": "Name",
+    "email": "Email",
+    "signedUp": "Signed up",
+    "orders": "Orders",
+    "totalSpent": "Total spent",
+    "lastOrder": "Last order",
+    "role": "Role",
+    "actions": "Actions",
+    "mixedCurrencies": "{{value}} (mixed)",
+    "viewOrders": "View orders"
+  },
+  "roles": {
+    "admin": "admin",
+    "customer": "customer"
+  },
+  "empty": {
+    "noMatch": "No customers match \"{{search}}\".",
+    "noCustomers": "No customers yet."
+  },
+  "pagination": {
+    "summary": "Page {{page}} of {{totalPages}} · {{count}} customer",
+    "summary_plural": "Page {{page}} of {{totalPages}} · {{count}} customers",
+    "prev": "Prev",
+    "next": "Next"
+  },
+  "toast": {
+    "loadFailed": "Failed to load customers"
+  }
+}

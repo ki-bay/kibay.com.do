@@ -1,0 +1,35 @@
+{
+  "seo": {
+    "title": "Account - Kibay Espumante"
+  },
+  "header": {
+    "defaultName": "User",
+    "signOut": "Sign Out"
+  },
+  "tabs": {
+    "profile": "Profile Settings",
+    "orders": "Order History",
+    "adminLabel": "Admin",
+    "shopOrders": "Shop orders",
+    "blogDashboard": "Blog dashboard"
+  },
+  "personal": {
+    "heading": "Personal Information",
+    "fullNameLabel": "Full Name",
+    "emailLabel": "Email"
+  },
+  "preferences": {
+    "heading": "Preferences",
+    "newsletter": "Subscribe to newsletter for updates and offers"
+  },
+  "actions": {
+    "saving": "Saving...",
+    "save": "Save Changes"
+  },
+  "toast": {
+    "errorLoadTitle": "Error loading profile",
+    "updatedTitle": "Profile updated",
+    "updatedDescription": "Your changes have been saved successfully.",
+    "updateFailedTitle": "Update failed"
+  }
+}

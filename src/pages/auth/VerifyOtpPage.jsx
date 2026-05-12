@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet';
 import { m } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { KeyRound, ArrowRight, Loader2, AlertCircle, CheckCircle2, Clock } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { Button } from '@/components/ui/button';
 import Navigation from '@/components/Navigation';
@@ -10,6 +11,7 @@ import Footer from '@/components/Footer';
 import { useToast } from '@/components/ui/use-toast';
 
 const VerifyOtpPage = () => {
+  const { t } = useTranslation('verifyOtp');
   const [token, setToken] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -28,8 +30,8 @@ const VerifyOtpPage = () => {
   useEffect(() => {
     if (user) {
       toast({
-        title: "Successfully Authenticated",
-        description: "Welcome back!",
+        title: t('toast.authenticatedTitle'),
+        description: t('toast.authenticatedDescription'),
       });
       navigate('/account'); 
     }
@@ -49,12 +51,12 @@ const VerifyOtpPage = () => {
     setErrorMsg('');
 
     if (!email) {
-      setErrorMsg("Email address is missing. Please go back to login.");
+      setErrorMsg(t('errors.emailMissing'));
       return;
     }
 
     if (!token || token.length < 6) {
-      setErrorMsg("Please enter the full 6-digit code.");
+      setErrorMsg(t('errors.fullCode'));
       return;
     }
     
@@ -69,21 +71,21 @@ const VerifyOtpPage = () => {
     setIsLoading(false);
 
     if (error) {
-      setErrorMsg(error.message || "Invalid verification code.");
+      setErrorMsg(error.message || t('errors.invalidCode'));
       // We also show a toast for visibility
       toast({
         variant: "destructive",
-        title: "Verification Failed",
+        title: t('toast.failedTitle'),
         description: error.message,
       });
     } else {
-      setSuccessMsg("Verified successfully! Logging you in...");
+      setSuccessMsg(t('success.verified'));
     }
   };
 
   const handleResend = async () => {
     if (!email) {
-      setErrorMsg("Please enter your email address to resend the code.");
+      setErrorMsg(t('errors.emailForResend'));
       return;
     }
     
@@ -95,11 +97,11 @@ const VerifyOtpPage = () => {
     
     if (!error) {
       toast({
-        title: "Code Sent",
-        description: "A new code has been sent to your email.",
+        title: t('toast.codeSentTitle'),
+        description: t('toast.codeSentDescription'),
       });
       setErrorMsg('');
-      setSuccessMsg("New code sent! Please check your email.");
+      setSuccessMsg(t('success.newCodeSent'));
       setCooldown(60); // Reset cooldown
     } else {
       setErrorMsg(error.message);
@@ -109,7 +111,7 @@ const VerifyOtpPage = () => {
   return (
     <>
       <Helmet>
-        <title>Enter Code - Kibay Espumante</title>
+        <title>{t('seo.title')}</title>
       </Helmet>
       <Navigation />
       <main id="main" role="main" className="min-h-screen flex items-center justify-center bg-background pt-20 px-4">
@@ -119,18 +121,18 @@ const VerifyOtpPage = () => {
           className="w-full max-w-md bg-card p-8 rounded-2xl border border-foreground/10 shadow-2xl"
         >
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-foreground mb-2">Check Your Email</h1>
+            <h1 className="text-3xl font-bold text-foreground mb-2">{t('header.h1')}</h1>
             {isLoading ? (
-              <p className="text-foreground/60">Verifying credentials...</p>
+              <p className="text-foreground/60">{t('header.verifying')}</p>
             ) : (
               <div className="text-foreground/60">
                 {email ? (
                   <>
-                    <p>Enter the 6-digit code sent to:</p>
+                    <p>{t('header.codeSentTo')}</p>
                     <p className="text-mango-400 font-medium mt-1">{email}</p>
                   </>
                 ) : (
-                  "Enter your email and code to sign in."
+                  t('header.fallback')
                 )}
               </div>
             )}
@@ -153,12 +155,12 @@ const VerifyOtpPage = () => {
           <form onSubmit={handleVerify} className="space-y-6">
             {!emailFromState && (
                <div className="space-y-2">
-               <label className="text-sm font-medium text-foreground/80">Email Address</label>
+               <label className="text-sm font-medium text-foreground/80">{t('form.emailLabel')}</label>
                <input
                  type="email"
                  value={email}
                  onChange={(e) => setEmail(e.target.value)}
-                 placeholder="you@example.com"
+                 placeholder={t('form.emailPlaceholder')}
                  className="w-full bg-background/50 border border-foreground/10 rounded-lg py-2.5 px-4 text-foreground focus:outline-none focus:border-mango-500"
                  disabled={isLoading}
                />
@@ -166,7 +168,7 @@ const VerifyOtpPage = () => {
             )}
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground/80">6-Digit Code</label>
+              <label className="text-sm font-medium text-foreground/80">{t('form.codeLabel')}</label>
               <div className="relative">
                 <KeyRound className="absolute left-3 top-3 h-5 w-5 text-foreground/40" />
                 <input
@@ -177,7 +179,7 @@ const VerifyOtpPage = () => {
                     const val = e.target.value.replace(/[^0-9]/g, '').slice(0, 6);
                     setToken(val);
                   }}
-                  placeholder="000000"
+                  placeholder={t('form.codePlaceholder')}
                   className="w-full bg-background/50 border border-foreground/10 rounded-lg py-2.5 pl-10 pr-4 text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-mango-500 focus:ring-1 focus:ring-mango-500 transition-colors tracking-[0.5em] text-lg font-mono text-center"
                   disabled={isLoading}
                   autoFocus
@@ -194,7 +196,7 @@ const VerifyOtpPage = () => {
                 <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
                 <>
-                  Verify Code <ArrowRight className="ml-2 w-5 h-5" />
+                  {t('form.submit')} <ArrowRight className="ml-2 w-5 h-5" />
                 </>
               )}
             </Button>
@@ -210,10 +212,10 @@ const VerifyOtpPage = () => {
             >
               {cooldown > 0 ? (
                 <>
-                   <Clock className="w-4 h-4" /> Resend code in {cooldown}s
+                   <Clock className="w-4 h-4" /> {t('resend.cooldown', { seconds: cooldown })}
                 </>
               ) : (
-                "Didn't receive a code? Resend Code"
+                t('resend.prompt')
               )}
             </button>
           </div>

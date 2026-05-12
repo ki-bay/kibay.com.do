@@ -1,0 +1,39 @@
+{
+  "seo": {
+    "title": "Enter Code - Kibay Espumante"
+  },
+  "header": {
+    "h1": "Check Your Email",
+    "verifying": "Verifying credentials...",
+    "codeSentTo": "Enter the 6-digit code sent to:",
+    "fallback": "Enter your email and code to sign in."
+  },
+  "form": {
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "you@example.com",
+    "codeLabel": "6-Digit Code",
+    "codePlaceholder": "000000",
+    "submit": "Verify Code"
+  },
+  "errors": {
+    "emailMissing": "Email address is missing. Please go back to login.",
+    "fullCode": "Please enter the full 6-digit code.",
+    "invalidCode": "Invalid verification code.",
+    "emailForResend": "Please enter your email address to resend the code."
+  },
+  "success": {
+    "verified": "Verified successfully! Logging you in...",
+    "newCodeSent": "New code sent! Please check your email."
+  },
+  "toast": {
+    "authenticatedTitle": "Successfully Authenticated",
+    "authenticatedDescription": "Welcome back!",
+    "failedTitle": "Verification Failed",
+    "codeSentTitle": "Code Sent",
+    "codeSentDescription": "A new code has been sent to your email."
+  },
+  "resend": {
+    "cooldown": "Resend code in {{seconds}}s",
+    "prompt": "Didn't receive a code? Resend Code"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "seo": {
+    "title": "Kibay Sparkling | Organic Sparkling Wine from Dominican Republic",
+    "description": "Kibay Sparkling: A premium organic sparkling wine crafted with mango and passion fruit. Fermented, not flavored. Real wine, refreshingly alive."
+  },
+  "hero": {
+    "eyebrow": "The New Caribbean Standard",
+    "h1Lead": "Kibay",
+    "h1Accent": "Sparkling",
+    "subtitle": "Organic Sparkling Wine with Mango & Passion Fruit",
+    "body": "Fermented, not flavored. Real wine, refreshingly alive. A sophisticated expression of Dominican terroir crafted for modern enjoyment.",
+    "cta": "Discover the Wine",
+    "imgAlt": "Kibay Sparkling Can"
+  },
+  "what": {
+    "heading": "A Real Sparkling Wine",
+    "body": "Kibay Sparkling is true wine, achieved through natural fermentation. We don't simply mix fruit juice with alcohol. We ferment premium, organic mango and passion fruit from Ocoa Bay to create a complex, structured sparkling wine that retains the authentic soul of its ingredients.",
+    "isTitle": "What It Is",
+    "isItems": [
+      "Naturally fermented sparkling wine",
+      "Crafted from 100% organic fruit",
+      "A product of skilled winemaking",
+      "Complex, dry, and refreshing"
+    ],
+    "notTitle": "What It's Not",
+    "notItems": [
+      "Not a wine cooler or spritzer",
+      "Not a sugar-laden cocktail",
+      "Not artificially flavored",
+      "Not a soda with alcohol"
+    ]
+  },
+  "origin": {
+    "eyebrow": "Ocoa Bay, Dominican Republic",
+    "heading": "From the Dominican Republic",
+    "body1": "Born in the unique microclimate of Ocoa Bay, where the mountains meet the Caribbean Sea. This dry, sunny region produces mangoes and chinola (passion fruit) with concentrated flavors and exceptional aromatics essential for high-quality winemaking.",
+    "body2": "Our production happens entirely on the island, supporting local agriculture and minimizing our carbon footprint.",
+    "quote": "\"From the same winery as Kibay wine — by Ocoa Bay\"",
+    "imgAlt": "Vineyard landscape",
+    "imgTitle": "Ocoa Bay Winery",
+    "imgSubtitle": "The first vineyard in the Caribbean"
+  },
+  "flavor": {
+    "heading": "Taste the Terroir",
+    "intro": "A sophisticated profile that balances the natural sweetness of tropical fruit with the crisp acidity of a well-crafted sparkling wine.",
+    "aromaTitle": "Aroma",
+    "aromaBody": "Elegant and expressive, opening with distinct notes of ripe mango and hints of tropical florals, underpinned by a fresh citrus zest.",
+    "palateTitle": "Palate",
+    "palateBody": "Refreshing and balanced. The passion fruit brings a lively acidity that dances on the tongue, perfectly countered by a round, fruity body that is never cloying.",
+    "finishTitle": "Finish",
+    "finishBody": "Clean, crisp, and persistent. Leaves a pleasant tropical memory that invites another sip without coating the palate in sugar."
+  },
+  "philosophy": {
+    "heading": "Crafted with Intention",
+    "body1": "We believe that the best flavors come from nature, not a lab. That's why Kibay Sparkling is made without artificial sugars, chemical flavorings, or synthetic additives.",
+    "body2": "Our philosophy is simple: respect the ingredients. By using organic fermentation methods, we preserve the integrity of the fruit and the land it comes from. It's a cleaner, more authentic way to enjoy sparkling wine.",
+    "imgAlt": "Fresh mango and passion fruit close-up product photography showing key ingredients in Kibay Sparkling",
+    "badgePercent": "100%",
+    "badgeLabel": "Natural"
+  },
+  "enjoy": {
+    "heading": "Ready for Any Moment",
+    "intro": "Versatile enough for a glass, casual enough for the can.",
+    "items": [
+      { "title": "Chilled in Glass", "desc": "Pour into a flute to appreciate the fine bubbles and golden color." },
+      { "title": "Straight from the Can", "desc": "Enjoy the premium experience anywhere, no glassware required." },
+      { "title": "Beachside", "desc": "The perfect sunset companion. Refreshing, tropical, and unbreakable." },
+      { "title": "Dinner Pairing", "desc": "Acidity cuts through rich foods; pairs beautifully with seafood or spice." }
+    ]
+  },
+  "specs": {
+    "heading": "Product Specifications",
+    "items": [
+      { "label": "Category", "value": "Organic Sparkling Wine" },
+      { "label": "Origin", "value": "Ocoa Bay, Dominican Republic" },
+      { "label": "Format", "value": "250 ml Aluminum Can (Recyclable)" },
+      { "label": "Ingredients", "value": "Fermented Mango & Passion Fruit" },
+      { "label": "Alcohol", "value": "6% ABV" },
+      { "label": "Shelf Life", "value": "Best consumed within 18 months" }
+    ]
+  },
+  "closing": {
+    "heading": "Wine Without Ceremony",
+    "body": "We've stripped away the pretension to reveal what matters: exceptional craftsmanship, authentic origin, and the pure joy of the Caribbean. This is modern wine culture.",
+    "cta": "Shop Kibay Sparkling"
+  }
+}

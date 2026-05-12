@@ -1,0 +1,25 @@
+{
+  "seo": {
+    "title": "Crear Cuenta - Kibay Espumante"
+  },
+  "header": {
+    "h1": "Crear Cuenta",
+    "subtitle": "Únete a la comunidad Kibay"
+  },
+  "form": {
+    "fullNameLabel": "Nombre Completo",
+    "fullNamePlaceholder": "Juan Pérez",
+    "emailLabel": "Correo Electrónico",
+    "emailPlaceholder": "tu@ejemplo.com",
+    "sending": "Enviando código...",
+    "submit": "Enviar Código de Acceso"
+  },
+  "toast": {
+    "missingTitle": "Falta Información",
+    "missingDescription": "Por favor completa todos los campos."
+  },
+  "footer": {
+    "haveAccount": "¿Ya tienes una cuenta?",
+    "logIn": "Inicia sesión"
+  }
+}

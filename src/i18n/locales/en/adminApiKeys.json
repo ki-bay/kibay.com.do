@@ -1,0 +1,46 @@
+{
+  "seoTitle": "API Keys | Admin",
+  "heading": "API Keys Management",
+  "subheading": "Manage programmatic access tokens for automations and webhooks.",
+  "buttons": {
+    "generateNew": "Generate New Key",
+    "generate": "Generate Key",
+    "done": "Done"
+  },
+  "table": {
+    "name": "Name",
+    "prefix": "Prefix",
+    "permissions": "Permissions",
+    "createdLastUsed": "Created / Last Used",
+    "status": "Status",
+    "actions": "Actions",
+    "never": "Never",
+    "empty": "No API keys found."
+  },
+  "status": {
+    "active": "Active",
+    "revoked": "Revoked"
+  },
+  "modal": {
+    "title": "Generate API Key",
+    "description": "Create a new API key for external integrations.",
+    "keyName": "Key Name",
+    "namePlaceholder": "e.g., Make.com Production",
+    "permissions": "Permissions",
+    "warningTitle": "Please copy your API key now.",
+    "warningBody": "For your security, it will never be shown again."
+  },
+  "confirm": {
+    "revoke": "Are you sure you want to revoke this key?"
+  },
+  "toast": {
+    "error": "Error",
+    "success": "Success",
+    "loadFailed": "Failed to load API keys",
+    "nameRequired": "Name is required",
+    "keyGenerated": "API Key generated successfully",
+    "keyRevoked": "API Key revoked",
+    "copiedTitle": "Copied!",
+    "copiedDesc": "API Key copied to clipboard"
+  }
+}

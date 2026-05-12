@@ -1,0 +1,74 @@
+{
+  "buttons": {
+    "back": "Back",
+    "cancel": "Cancel",
+    "save": "Save Post",
+    "saving": "Saving...",
+    "generateNow": "Generate Now"
+  },
+  "heading": {
+    "edit": "Edit Post",
+    "create": "Create New Post"
+  },
+  "seoScore": {
+    "label": "SEO Score"
+  },
+  "tabs": {
+    "content": "Content",
+    "seo": "SEO & Metadata"
+  },
+  "fields": {
+    "title": "Title *",
+    "titlePlaceholder": "Enter post title",
+    "description": "Excerpt / Description *",
+    "descriptionPlaceholder": "Short summary for the card view...",
+    "featuredImage": "Featured Image",
+    "content": "Content",
+    "seoTitle": "SEO Title",
+    "seoTitlePlaceholder": "Title for search engines",
+    "slug": "URL Slug",
+    "slugPlaceholder": "url-slug-here",
+    "seoDescription": "SEO Description",
+    "seoDescriptionPlaceholder": "Description for search results...",
+    "googlePreview": "Google Search Preview",
+    "keywords": "Keywords (Comma separated)",
+    "keywordsPlaceholder": "tropical, mango, drink, ...",
+    "altText": "Featured Image Alt Text",
+    "altTextPlaceholder": "Describe the image for accessibility",
+    "canonical": "Canonical URL (Optional)",
+    "canonicalPlaceholder": "https://..."
+  },
+  "autoSeo": {
+    "title": "Auto-Generate SEO Fields",
+    "body": "Automatically populate SEO fields based on your content."
+  },
+  "preview": {
+    "fallbackTitle": "Your Post Title",
+    "fallbackDescription": "This is how your description will appear in search results...",
+    "logoAlt": "logo"
+  },
+  "publish": {
+    "now": "Publish immediately",
+    "sendNotification": "Send email notification"
+  },
+  "validation": {
+    "duplicateSlugLabel": "This slug is already in use. Please choose another one.",
+    "duplicateSlugTitle": "Duplicate Slug",
+    "duplicateSlugDesc": "The URL slug must be unique.",
+    "missingFieldsTitle": "Missing fields",
+    "missingFieldsDesc": "Title and description are required.",
+    "invalidTitleTitle": "Invalid Title",
+    "invalidTitleDesc": "Could not generate a valid URL slug from the title."
+  },
+  "toast": {
+    "error": "Error",
+    "loadFailed": "Could not load the blog post.",
+    "seoGenerated": "SEO Generated",
+    "seoGeneratedDesc": "SEO fields populated based on content.",
+    "notificationsSent": "Notifications Sent",
+    "success": "Success",
+    "createdSuccess": "Blog post created successfully!",
+    "updatedSuccess": "Blog post updated successfully!",
+    "saveFailed": "Failed to save the blog post. Please check your connection."
+  }
+}

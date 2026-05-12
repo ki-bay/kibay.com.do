@@ -1,0 +1,46 @@
+{
+  "seoTitle": "API Keys | Admin",
+  "heading": "Gestión de API Keys",
+  "subheading": "Administra los tokens de acceso programático para automatizaciones y webhooks.",
+  "buttons": {
+    "generateNew": "Generar nueva key",
+    "generate": "Generar key",
+    "done": "Listo"
+  },
+  "table": {
+    "name": "Nombre",
+    "prefix": "Prefijo",
+    "permissions": "Permisos",
+    "createdLastUsed": "Creada / Último uso",
+    "status": "Estado",
+    "actions": "Acciones",
+    "never": "Nunca",
+    "empty": "No se encontraron API keys."
+  },
+  "status": {
+    "active": "Activa",
+    "revoked": "Revocada"
+  },
+  "modal": {
+    "title": "Generar API Key",
+    "description": "Crea una nueva API key para integraciones externas.",
+    "keyName": "Nombre de la key",
+    "namePlaceholder": "Ej: Make.com Producción",
+    "permissions": "Permisos",
+    "warningTitle": "Copia tu API key ahora.",
+    "warningBody": "Por seguridad, no se mostrará de nuevo."
+  },
+  "confirm": {
+    "revoke": "¿Seguro que quieres revocar esta key?"
+  },
+  "toast": {
+    "error": "Error",
+    "success": "Éxito",
+    "loadFailed": "Error al cargar las API keys",
+    "nameRequired": "El nombre es obligatorio",
+    "keyGenerated": "API Key generada correctamente",
+    "keyRevoked": "API Key revocada",
+    "copiedTitle": "¡Copiada!",
+    "copiedDesc": "API Key copiada al portapapeles"
+  }
+}

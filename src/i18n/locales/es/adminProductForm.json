@@ -1,0 +1,100 @@
+{
+  "seoTitleEdit": "Editar {{name}} — Admin",
+  "seoTitleNew": "Nuevo producto — Admin",
+  "back": "Volver a productos",
+  "headingEdit": "Editar producto",
+  "headingNew": "Nuevo producto",
+  "subtitle": "Todos los campos bilingües requieren ES y EN. Convención de moneda: la UI en ES muestra DOP, la UI en EN muestra USD.",
+  "actions": {
+    "saveChanges": "Guardar cambios",
+    "createProduct": "Crear producto"
+  },
+  "sections": {
+    "basics": "Datos básicos",
+    "descriptions": "Descripción (HTML)",
+    "images": "Imágenes",
+    "variants": "Variantes e inventario",
+    "collections": "Colecciones",
+    "additionalInfo": "Secciones de información adicional"
+  },
+  "fields": {
+    "titleEs": "Título (ES) *",
+    "titleEsPlaceholder": "Kibay Espumante Lata",
+    "titleEn": "Título (EN) *",
+    "titleEnPlaceholder": "Kibay Sparkling Can",
+    "slug": "Slug *",
+    "slugHint": "Identificador amigable para URL. Se deriva automáticamente del título en ES.",
+    "slugPlaceholder": "kibay-sparkling",
+    "status": "Estado",
+    "subtitleEs": "Subtítulo (ES)",
+    "subtitleEn": "Subtítulo (EN)",
+    "ribbonEs": "Etiqueta (ES)",
+    "ribbonEsPlaceholder": "Espumante",
+    "ribbonEn": "Etiqueta (EN)",
+    "ribbonEnPlaceholder": "Sparkling",
+    "sortOrder": "Orden",
+    "sortOrderHint": "Los números más bajos se muestran primero.",
+    "purchasable": "Comprable",
+    "purchasableLabel": "Los clientes pueden agregarlo al carrito",
+    "descriptionEs": "Descripción (ES)",
+    "descriptionEn": "Descripción (EN)",
+    "thumbnailUrl": "URL de miniatura",
+    "thumbnailUrlHint": "Se usa en listas y tarjetas. La primera imagen subida se asigna automáticamente.",
+    "imageUrl": "URL de imagen",
+    "altText": "Texto alternativo",
+    "sku": "SKU",
+    "priceUsd": "Precio USD (centavos)",
+    "priceUsdHint": "$8.00 = 800",
+    "salePriceUsd": "Oferta USD (centavos)",
+    "priceDop": "Precio DOP (centavos)",
+    "priceDopHint": "RD$500 = 50000",
+    "salePriceDop": "Oferta DOP (centavos)",
+    "inventory": "Inventario",
+    "trackInventory": "Rastrear inventario",
+    "trackInventoryLabel": "Descontar automáticamente al pagar",
+    "weight": "Peso (g)",
+    "infoTitleEs": "Título (ES)",
+    "infoTitleEn": "Título (EN)",
+    "infoDescEs": "Descripción (ES) — HTML",
+    "infoDescEn": "Descripción (EN) — HTML"
+  },
+  "status": {
+    "draft": "borrador",
+    "published": "publicado",
+    "archived": "archivado"
+  },
+  "images": {
+    "upload": "Subir",
+    "addUrl": "Agregar URL",
+    "noImages": "Aún no hay imágenes."
+  },
+  "variants": {
+    "add": "Agregar variante",
+    "remove": "Eliminar"
+  },
+  "collections": {
+    "none": "No hay colecciones definidas."
+  },
+  "additionalInfo": {
+    "add": "Agregar sección",
+    "empty": "Secciones tipo FAQ como \"Conservación\", \"Alérgenos\", \"Devoluciones\".",
+    "remove": "Eliminar sección"
+  },
+  "toast": {
+    "productNotFound": "Producto no encontrado",
+    "fileTooLarge": "Archivo demasiado grande",
+    "fileTooLargeDesc": "Máximo 10MB.",
+    "imageUploaded": "Imagen subida",
+    "uploadFailed": "Error al subir",
+    "cannotSave": "No se puede guardar",
+    "saved": "Guardado",
+    "saveFailed": "Error al guardar"
+  },
+  "validation": {
+    "slugRequired": "El slug es obligatorio.",
+    "titleEsRequired": "El título (ES) es obligatorio.",
+    "titleEnRequired": "El título (EN) es obligatorio.",
+    "atLeastOneVariant": "Se requiere al menos una variante.",
+    "variantPricesRequired": "Cada variante requiere precios en USD y DOP."
+  }
+}

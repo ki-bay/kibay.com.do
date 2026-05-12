@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -46,6 +47,7 @@ const substituteSample = (html, sample) =>
 	});
 
 const EmailComposerPage = () => {
+	const { t } = useTranslation('adminEmailComposer');
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const isEdit = Boolean(id);
@@ -124,7 +126,7 @@ const EmailComposerPage = () => {
 					status_filter: sf.status || 'active',
 				});
 			} catch (err) {
-				setError(err.message || 'Failed to load campaign');
+				setError(err.message || t('toast.loadFailed'));
 			} finally {
 				setLoadingInitial(false);
 			}
@@ -195,9 +197,9 @@ const EmailComposerPage = () => {
 	};
 
 	const validateForSave = () => {
-		if (!form.name.trim()) return 'Campaign name is required.';
-		if (!form.subject.trim()) return 'Subject is required.';
-		if (!form.html_content.trim()) return 'Email body is required.';
+		if (!form.name.trim()) return t('validation.nameRequired');
+		if (!form.subject.trim()) return t('validation.subjectRequired');
+		if (!form.html_content.trim()) return t('validation.bodyRequired');
 		return null;
 	};
 
@@ -242,11 +244,11 @@ const EmailComposerPage = () => {
 					.single();
 			}
 			if (result.error) throw result.error;
-			toast.success('Draft saved.');
+			toast.success(t('toast.draftSaved'));
 			if (!isEdit) navigate(`/admin/email/campaigns/${result.data.id}/edit`, { replace: true });
 			return result.data.id;
 		} catch (err) {
-			toast.error(err.message || 'Save failed.');
+			toast.error(err.message || t('toast.saveFailed'));
 			return null;
 		} finally {
 			setSaving(false);
@@ -260,7 +262,7 @@ const EmailComposerPage = () => {
 			return;
 		}
 		if (!adminEmail) {
-			toast.error('No admin email on session.');
+			toast.error(t('toast.noAdmin'));
 			return;
 		}
 		setSendingTest(true);
@@ -270,9 +272,9 @@ const EmailComposerPage = () => {
 			if (!campaignId) campaignId = await saveDraft();
 			if (!campaignId) return;
 			await sendCampaign({ campaignId, testTo: adminEmail });
-			toast.success(`Test sent to ${adminEmail}.`);
+			toast.success(t('toast.testSent', { email: adminEmail }));
 		} catch (err) {
-			toast.error(err.message || 'Test send failed.');
+			toast.error(err.message || t('toast.testFailed'));
 		} finally {
 			setSendingTest(false);
 		}
@@ -291,10 +293,10 @@ const EmailComposerPage = () => {
 			if (!campaignId) campaignId = await saveDraft();
 			if (!campaignId) return;
 			await sendCampaign({ campaignId });
-			toast.success('Campaign queued for delivery.');
+			toast.success(t('toast.queued'));
 			navigate('/admin/email/campaigns');
 		} catch (err) {
-			toast.error(err.message || 'Send failed.');
+			toast.error(err.message || t('toast.sendFailed'));
 		} finally {
 			setSending(false);
 		}
@@ -323,7 +325,7 @@ const EmailComposerPage = () => {
 	return (
 		<>
 			<Helmet>
-				<title>{isEdit ? 'Edit campaign' : 'New campaign'} — Admin</title>
+				<title>{isEdit ? t('seoTitle.edit') : t('seoTitle.create')}</title>
 			</Helmet>
 			<Navigation />
 			<main id="main" role="main" className="min-h-screen bg-background pt-32 pb-20 px-4 sm:px-6 lg:px-8">
@@ -331,10 +333,10 @@ const EmailComposerPage = () => {
 					<div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
 						<div>
 							<Link to="/admin/email/campaigns" className="inline-flex items-center gap-1 text-xs uppercase tracking-widest text-foreground/60 hover:text-foreground mb-3">
-								<ArrowLeft className="w-3 h-3" /> Campaigns
+								<ArrowLeft className="w-3 h-3" /> {t('backToCampaigns')}
 							</Link>
 							<h1 className="text-3xl sm:text-4xl font-light text-foreground flex items-center gap-3">
-								<Mail className="w-8 h-8 text-mango-500" /> {isEdit ? 'Edit campaign' : 'Compose campaign'}
+								<Mail className="w-8 h-8 text-mango-500" /> {isEdit ? t('heading.edit') : t('heading.create')}
 							</h1>
 						</div>
 					</div>
@@ -349,15 +351,15 @@ const EmailComposerPage = () => {
 					<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 						{/* LEFT: form */}
 						<div className="space-y-5">
-							<Field label="Campaign name *">
+							<Field label={t('fields.name')}>
 								<input
 									value={form.name}
 									onChange={(e) => setForm({ ...form, name: e.target.value })}
 									className="w-full px-3 py-2 rounded-md bg-card border border-foreground/10 text-foreground text-sm"
-									placeholder="Internal label, e.g. May 2026 wholesale launch"
+									placeholder={t('fields.namePlaceholder')}
 								/>
 							</Field>
-							<Field label="Subject *">
+							<Field label={t('fields.subject')}>
 								<input
 									value={form.subject}
 									onChange={(e) => setForm({ ...form, subject: e.target.value })}
@@ -365,7 +367,7 @@ const EmailComposerPage = () => {
 								/>
 							</Field>
 							<div className="grid grid-cols-2 gap-3">
-								<Field label="From name">
+								<Field label={t('fields.fromName')}>
 									<input
 										value={form.from_name}
 										onChange={(e) => setForm({ ...form, from_name: e.target.value })}
@@ -373,7 +375,7 @@ const EmailComposerPage = () => {
 										className="w-full px-3 py-2 rounded-md bg-card/60 border border-foreground/10 text-foreground/70 text-sm"
 									/>
 								</Field>
-								<Field label="From email">
+								<Field label={t('fields.fromEmail')}>
 									<input
 										value={form.from_email}
 										onChange={(e) => setForm({ ...form, from_email: e.target.value })}
@@ -382,18 +384,18 @@ const EmailComposerPage = () => {
 									/>
 								</Field>
 							</div>
-							<Field label="Reply-to (optional)">
+							<Field label={t('fields.replyTo')}>
 								<input
 									value={form.reply_to}
 									onChange={(e) => setForm({ ...form, reply_to: e.target.value })}
 									className="w-full px-3 py-2 rounded-md bg-card border border-foreground/10 text-foreground text-sm"
-									placeholder="hello@kibay.com.do"
+									placeholder={t('fields.replyToPlaceholder')}
 								/>
 							</Field>
 
 							{/* Audience builder */}
 							<div className="rounded-2xl border border-foreground/10 bg-card/40 p-4">
-								<div className="text-xs uppercase tracking-widest text-foreground/50 mb-3">Audience</div>
+								<div className="text-xs uppercase tracking-widest text-foreground/50 mb-3">{t('audience.title')}</div>
 								<div className="flex flex-wrap gap-2 mb-3">
 									{['b2b', 'individual'].map((s) => {
 										const on = form.segments.includes(s);
@@ -420,7 +422,7 @@ const EmailComposerPage = () => {
 								</div>
 								{knownTags.length > 0 && (
 									<>
-										<div className="text-xs text-foreground/50 mb-2">Tag filters (optional)</div>
+										<div className="text-xs text-foreground/50 mb-2">{t('audience.tagsLabel')}</div>
 										<div className="flex flex-wrap gap-2 mb-3">
 											{knownTags.map((t) => {
 												const on = form.tags.includes(t);
@@ -448,7 +450,7 @@ const EmailComposerPage = () => {
 									</>
 								)}
 								<div className="flex items-center gap-2 mb-3">
-									<span className="text-xs text-foreground/50">Status:</span>
+									<span className="text-xs text-foreground/50">{t('audience.statusLabel')}</span>
 									{['active', 'unsubscribed', 'bounced'].map((s) => (
 										<label key={s} className="flex items-center gap-1 text-xs text-foreground/70">
 											<input
@@ -457,7 +459,7 @@ const EmailComposerPage = () => {
 												checked={form.status_filter === s}
 												onChange={() => setForm({ ...form, status_filter: s })}
 											/>
-											{s}
+											{t(`audience.status.${s}`)}
 										</label>
 									))}
 								</div>
@@ -466,8 +468,7 @@ const EmailComposerPage = () => {
 										<Loader2 className="w-4 h-4 animate-spin inline" />
 									) : (
 										<>
-											<span className="text-mango-400 font-medium">{recipientCount}</span> matching
-											recipient{recipientCount === 1 ? '' : 's'}
+											<span className="text-mango-400 font-medium">{recipientCount}</span>{recipientCount === 1 ? t('audience.recipientSuffix') : t('audience.recipientSuffixPlural')}
 										</>
 									)}
 								</div>
@@ -477,7 +478,7 @@ const EmailComposerPage = () => {
 							{mergeVarKeys.length > 0 && (
 								<div>
 									<div className="text-xs uppercase tracking-widest text-foreground/50 mb-2">
-										Personalization tokens
+										{t('personalization.title')}
 									</div>
 									<div className="flex flex-wrap gap-2">
 										{['first_name', 'last_name', 'email', ...mergeVarKeys].map((k) => (
@@ -494,7 +495,7 @@ const EmailComposerPage = () => {
 								</div>
 							)}
 
-							<Field label="HTML body *">
+							<Field label={t('fields.htmlBody')}>
 								<textarea
 									ref={textareaRef}
 									value={form.html_content}
@@ -508,7 +509,7 @@ const EmailComposerPage = () => {
 							<div className="flex flex-wrap gap-3 pt-2">
 								<Button onClick={saveDraft} disabled={saving} variant="ghost" className="border border-foreground/10 text-foreground">
 									{saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
-									Save draft
+									{t('buttons.saveDraft')}
 								</Button>
 								<Button
 									onClick={sendTest}
@@ -517,7 +518,7 @@ const EmailComposerPage = () => {
 									className="border border-foreground/10 text-foreground"
 								>
 									{sendingTest ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Send className="w-4 h-4 mr-2" />}
-									Send test to me
+									{t('buttons.sendTest')}
 								</Button>
 								<Button
 									onClick={() => setConfirmSend(true)}
@@ -525,7 +526,7 @@ const EmailComposerPage = () => {
 									className="bg-mango-500 hover:bg-mango-600 text-stone-900"
 								>
 									{sending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Send className="w-4 h-4 mr-2" />}
-									Send campaign
+									{t('buttons.sendCampaign')}
 								</Button>
 							</div>
 						</div>
@@ -533,7 +534,7 @@ const EmailComposerPage = () => {
 						{/* RIGHT: preview */}
 						<div className="space-y-3">
 							<div className="flex items-center justify-between">
-								<div className="text-xs uppercase tracking-widest text-foreground/50">Preview</div>
+								<div className="text-xs uppercase tracking-widest text-foreground/50">{t('preview.label')}</div>
 								<label className="flex items-center gap-2 text-xs text-foreground/70">
 									<input
 										type="checkbox"
@@ -541,14 +542,14 @@ const EmailComposerPage = () => {
 										onChange={(e) => setPreviewSample(e.target.checked)}
 										disabled={!sampleContact}
 									/>
-									Preview with sample data
+									{t('preview.withSample')}
 									{sampleContact && (
 										<span className="text-foreground/40">({sampleContact.email})</span>
 									)}
 								</label>
 							</div>
 							<iframe
-								title="Email preview"
+								title={t('preview.iframeTitle')}
 								sandbox=""
 								srcDoc={previewHtml}
 								className="w-full min-h-[640px] bg-white rounded-2xl border border-foreground/10"
@@ -565,21 +566,20 @@ const EmailComposerPage = () => {
 						onClick={(e) => e.stopPropagation()}
 					>
 						<div className="flex items-center justify-between mb-3">
-							<h2 className="text-xl font-light text-foreground">Confirm send</h2>
+							<h2 className="text-xl font-light text-foreground">{t('confirm.title')}</h2>
 							<button onClick={() => setConfirmSend(false)} className="text-foreground/50 hover:text-foreground">
 								<X className="w-5 h-5" />
 							</button>
 						</div>
 						<p className="text-foreground/70 text-sm mb-5">
-							Send <span className="text-mango-400 font-medium">{recipientCount}</span> email
-							{recipientCount === 1 ? '' : 's'} now? This cannot be undone.
+							{t(recipientCount === 1 ? 'confirm.body' : 'confirm.bodyPlural', { count: recipientCount })}
 						</p>
 						<div className="flex justify-end gap-2">
 							<Button variant="ghost" onClick={() => setConfirmSend(false)} className="border border-foreground/10 text-foreground">
-								Cancel
+								{t('buttons.cancel')}
 							</Button>
 							<Button onClick={sendNow} className="bg-mango-500 hover:bg-mango-600 text-stone-900">
-								Send to {recipientCount}
+								{t('confirm.send', { count: recipientCount })}
 							</Button>
 						</div>
 					</div>

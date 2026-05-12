@@ -1,0 +1,24 @@
+{
+  "seo": {
+    "title": "Login - Kibay Espumante"
+  },
+  "header": {
+    "h1": "Welcome Back",
+    "subtitle": "Enter your email to receive a secure login code.",
+    "subtitleLine2": "No password required."
+  },
+  "form": {
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "you@example.com",
+    "sending": "Sending Code...",
+    "submit": "Send Login Code"
+  },
+  "toast": {
+    "invalidEmailTitle": "Invalid Email",
+    "invalidEmailDescription": "Please enter a valid email address."
+  },
+  "footer": {
+    "newToKibay": "New to Kibay?",
+    "createAccount": "Create an account"
+  }
+}

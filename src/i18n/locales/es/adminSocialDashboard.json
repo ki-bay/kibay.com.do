@@ -1,0 +1,45 @@
+{
+  "seoTitle": "Panel de redes sociales | Admin",
+  "heading": "Automatización de redes sociales",
+  "subheading": "Administra y monitorea publicaciones automáticas.",
+  "buttons": {
+    "refresh": "Actualizar",
+    "retry": "Reintentar"
+  },
+  "metrics": {
+    "totalPosts": "Publicaciones generadas",
+    "successRate": "Tasa de éxito",
+    "failedPosts": "Publicaciones fallidas"
+  },
+  "sections": {
+    "recentSocial": "Publicaciones recientes",
+    "recentBlogs": "Blogs autogenerados recientes"
+  },
+  "tableSocial": {
+    "platform": "Plataforma",
+    "status": "Estado",
+    "date": "Fecha",
+    "action": "Acción",
+    "empty": "No se encontraron publicaciones"
+  },
+  "tableBlogs": {
+    "title": "Título",
+    "status": "Estado",
+    "keywords": "Palabras clave",
+    "empty": "No se encontraron blogs"
+  },
+  "status": {
+    "posted": "Publicada",
+    "failed": "Fallida",
+    "pending": "Pendiente",
+    "published": "Publicado",
+    "draft": "Borrador"
+  },
+  "toast": {
+    "retrying": "Reintentando...",
+    "retryingDesc": "Reintentando publicación en {{platform}}",
+    "success": "Éxito",
+    "retrySuccess": "Publicación reintentada con éxito en {{platform}}",
+    "retryFailed": "Falló el reintento"
+  }
+}

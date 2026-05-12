@@ -1,0 +1,33 @@
+{
+  "seoTitle": "Configuración de redes sociales | Admin",
+  "heading": "Credenciales de API",
+  "subheading": "Administra API keys y tokens de acceso para las plataformas sociales.",
+  "warning": {
+    "title": "Advertencia de seguridad",
+    "body": "Estas credenciales otorgan acceso directo a tus cuentas de redes sociales. Nunca las compartas. Se almacenan de forma segura en Supabase Secrets/Vault y nunca se exponen al frontend."
+  },
+  "facebook": {
+    "title": "Facebook",
+    "pageId": "ID de página",
+    "pageAccessToken": "Token de acceso de página"
+  },
+  "instagram": {
+    "title": "Instagram",
+    "businessAccountId": "ID de cuenta business",
+    "accessToken": "Token de acceso"
+  },
+  "twitter": {
+    "title": "X (Twitter)",
+    "apiKey": "API Key",
+    "apiSecret": "API Secret"
+  },
+  "buttons": {
+    "testConnections": "Probar conexiones",
+    "save": "Guardar configuración"
+  },
+  "toast": {
+    "saved": "Credenciales guardadas",
+    "savedDesc": "Las API keys se actualizaron de forma segura.",
+    "testMocked": "Prueba de conexión simulada por seguridad."
+  }
+}

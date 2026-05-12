@@ -1,0 +1,64 @@
+{
+  "seoTitle": "Newsletter — Admin",
+  "backToDashboard": "Admin dashboard",
+  "heading": "Newsletter",
+  "subheadingPrefix": "Subscribers in",
+  "subheadingSuffix": " — search, export, or remove.",
+  "buttons": {
+    "refresh": "Refresh",
+    "downloadCsv": "Download CSV",
+    "prev": "Prev",
+    "next": "Next",
+    "unsubscribe": "Unsubscribe",
+    "delete": "Delete"
+  },
+  "kpis": {
+    "total": "Total",
+    "active": "Active",
+    "unsubscribed": "Unsubscribed",
+    "last30d": "Last 30 days"
+  },
+  "search": {
+    "placeholder": "Search by email…"
+  },
+  "filters": {
+    "all": "All",
+    "active": "Active",
+    "unsubscribed": "Unsubscribed"
+  },
+  "table": {
+    "email": "Email",
+    "subscribed": "Subscribed",
+    "source": "Source",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "status": {
+    "active": "active",
+    "unsubscribed": "unsubscribed"
+  },
+  "empty": {
+    "noResults": "No subscribers match “{{query}}”.",
+    "none": "No subscribers yet."
+  },
+  "pagination": {
+    "summary": "Page {{page}} of {{total}} · {{count}} subscriber",
+    "summaryPlural": "Page {{page}} of {{total}} · {{count}} subscribers"
+  },
+  "confirm": {
+    "unsubscribe": "Mark {{email}} as unsubscribed?",
+    "delete": "Permanently delete {{email}}? This cannot be undone."
+  },
+  "toast": {
+    "alreadyUnsubscribed": "Already unsubscribed.",
+    "unsubscribed": "Subscriber unsubscribed.",
+    "unsubscribeFailed": "Failed to unsubscribe.",
+    "deleted": "Subscriber deleted.",
+    "deleteFailed": "Failed to delete subscriber.",
+    "noneToExport": "No subscribers in current filter to export.",
+    "exported": "Exported {{count}} subscriber.",
+    "exportedPlural": "Exported {{count}} subscribers.",
+    "exportFailed": "Export failed.",
+    "loadFailed": "Failed to load subscribers"
+  }
+}

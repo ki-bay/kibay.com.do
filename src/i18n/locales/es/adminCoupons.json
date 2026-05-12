@@ -1,0 +1,95 @@
+{
+  "seoTitle": "Cupones — Admin",
+  "backToDashboard": "Panel de admin",
+  "header": {
+    "title": "Cupones",
+    "subtitlePrefix": "Códigos de descuento desde",
+    "subtitleSuffix": "— crea, busca, activa y edita las reglas de canje.",
+    "refresh": "Actualizar",
+    "newCoupon": "Nuevo cupón"
+  },
+  "search": {
+    "placeholder": "Buscar por código…"
+  },
+  "filters": {
+    "all": "Todos",
+    "active": "Activos",
+    "inactive": "Inactivos"
+  },
+  "table": {
+    "code": "Código",
+    "type": "Tipo",
+    "minOrder": "Pedido mínimo",
+    "uses": "Usos",
+    "window": "Vigencia",
+    "active": "Activo",
+    "created": "Creado",
+    "actions": "Acciones",
+    "noLimit": "sin límite",
+    "typePercent": "Porcentaje {{value}}%",
+    "typeFixed": "Fijo {{symbol}}{{value}}",
+    "activeBadge": "Activo",
+    "inactiveBadge": "Inactivo",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "toggleAria": "Activar/desactivar {{code}}"
+  },
+  "empty": {
+    "noMatch": "Ningún cupón coincide con \"{{search}}\".",
+    "noneActive": "No hay cupones {{filter}}.",
+    "noCoupons": "Aún no hay cupones — crea tu primer código de descuento."
+  },
+  "summary": "{{count}} cupón · {{active}} activo",
+  "summary_plural": "{{count}} cupones · {{active}} activos",
+  "dialog": {
+    "titleNew": "Nuevo cupón",
+    "titleEdit": "Editar cupón",
+    "descriptionNew": "Los códigos de descuento se almacenan en MAYÚSCULAS. Define un límite de canjes y una ventana si lo necesitas.",
+    "descriptionEdit": "Actualiza el código de descuento. Los cambios tienen efecto inmediato.",
+    "code": "Código *",
+    "codePlaceholder": "VERANO25",
+    "description": "Descripción",
+    "descriptionPlaceholder": "Nota interna (opcional)",
+    "discountType": "Tipo de descuento",
+    "percent": "Porcentaje (%)",
+    "fixed": "Monto fijo",
+    "percentOff": "Porcentaje de descuento *",
+    "amountOff": "Monto de descuento *",
+    "amountPlaceholder": "5.00",
+    "currency": "Moneda *",
+    "minOrder": "Monto mínimo del pedido",
+    "minOrderPlaceholder": "Opcional",
+    "maxUses": "Usos máximos",
+    "maxUsesPlaceholder": "Ilimitado",
+    "startsAt": "Inicia el",
+    "endsAt": "Termina el",
+    "active": "Activo",
+    "activeHint": "Los cupones inactivos no pueden canjearse en el checkout.",
+    "cancel": "Cancelar",
+    "save": "Guardar cambios",
+    "create": "Crear cupón"
+  },
+  "validation": {
+    "codeRequired": "El código es obligatorio.",
+    "codeFormat": "3–32 caracteres, solo letras/números/_/-.",
+    "codeDuplicate": "Ya existe un cupón con ese código.",
+    "percentRange": "El porcentaje debe ser un entero entre 1 y 100.",
+    "fixedAmount": "El monto fijo debe ser mayor que 0.",
+    "currencyRequired": "La moneda es obligatoria para cupones fijos.",
+    "minOrderRange": "Debe ser 0 o mayor.",
+    "maxUsesPositive": "Debe ser un entero positivo (o dejar en blanco).",
+    "endAfterStart": "La fecha de fin debe ser posterior a la de inicio."
+  },
+  "toast": {
+    "loadFailed": "Error al cargar los cupones",
+    "created": "Cupón creado",
+    "updated": "Cupón actualizado",
+    "saveFailed": "Error al guardar el cupón",
+    "deleteConfirm": "¿Eliminar el cupón {{code}}? Esta acción no se puede deshacer.",
+    "deleted": "Cupón {{code}} eliminado",
+    "deleteFailed": "Error al eliminar el cupón",
+    "activated": "{{code}} activado",
+    "deactivated": "{{code}} desactivado",
+    "toggleFailed": "Error al actualizar el cupón"
+  }
+}

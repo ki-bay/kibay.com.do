@@ -1,0 +1,27 @@
+{
+  "seoTitle": "Shipping rates — Admin",
+  "back": "Back to dashboard",
+  "header": {
+    "title": "Shipping rates",
+    "subtitlePrefix": "Per-currency tiers used at checkout. Amounts are in major units (e.g. RD$200 not 20000 cents). Saving updates the live",
+    "subtitleSuffix": "table — checkout refetches on every page load."
+  },
+  "loading": "Loading…",
+  "empty": "No shipping rate rows found.",
+  "currencyHeading": "{{currency}} ({{symbol}})",
+  "updatedAt": "updated {{date}}",
+  "fields": {
+    "freeOver": "Free over ({{symbol}})",
+    "freeOverHint": "Subtotal at or above this threshold ships free.",
+    "standard": "Standard ({{symbol}})",
+    "express": "Express ({{symbol}})"
+  },
+  "actions": {
+    "save": "Save shipping rates",
+    "saving": "Saving…"
+  },
+  "toast": {
+    "updated": "Shipping rates updated",
+    "saveFailed": "Failed to save shipping rates"
+  }
+}

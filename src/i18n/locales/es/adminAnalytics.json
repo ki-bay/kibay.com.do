@@ -1,0 +1,85 @@
+{
+  "seoTitle": "Analíticas — Admin",
+  "header": {
+    "title": "Analíticas",
+    "subtitle": "Resumen de ventas y rendimiento de la tienda.",
+    "refresh": "Actualizar"
+  },
+  "period": {
+    "7d": "7d",
+    "30d": "30d",
+    "90d": "90d",
+    "all": "Todo el tiempo",
+    "previous": "anterior",
+    "prev": "{{label}} previos"
+  },
+  "change": {
+    "new": "nuevo"
+  },
+  "kpis": {
+    "totalRevenue": "Ingresos totales",
+    "revenueSubtitleUsd": "+ {{usd}} USD",
+    "revenueSubtitleDop": "DOP, estados pagado+",
+    "revenueFootnote": "USD se muestra por separado, sin conversión cambiaria.",
+    "orders": "Pedidos",
+    "ordersSubtitle": "Todos los estados en el período",
+    "paidOrders": "Pedidos pagados",
+    "conversion": "Conversión: {{value}}%",
+    "aov": "Ticket promedio",
+    "aovSubtitleUsd": "{{usd}} USD promedio",
+    "aovSubtitleDop": "Solo DOP"
+  },
+  "revenueChart": {
+    "title": "Ingresos en el tiempo",
+    "subtitleDay": "Solo DOP · agrupado por día",
+    "subtitleWeek": "Solo DOP · agrupado por semana",
+    "subtitleMonth": "Solo DOP · agrupado por mes",
+    "empty": "Sin ingresos pagados en este período.",
+    "tooltipLabel": "Ingresos"
+  },
+  "topProducts": {
+    "title": "Top 5 productos",
+    "subtitle": "Ingresos de pedidos pagado+ (DOP)",
+    "empty": "Sin ventas de productos en este período.",
+    "unknownProduct": "Producto desconocido",
+    "tooltipLabel": "Ingresos"
+  },
+  "statusBreakdown": {
+    "title": "Distribución por estado",
+    "subtitle": "Todos los pedidos del período, por estado",
+    "empty": "Sin pedidos en este período."
+  },
+  "topCustomers": {
+    "title": "Top 5 clientes",
+    "subtitle": "Por total gastado en pedidos pagado+",
+    "empty": "Sin clientes pagantes en este período.",
+    "customer": "Cliente",
+    "orders": "Pedidos",
+    "totalSpent": "Total gastado"
+  },
+  "recentPaid": {
+    "title": "Pedidos pagados recientes",
+    "viewAll": "Ver todos",
+    "subtitle": "Últimos 5 pedidos pagado+ del período",
+    "empty": "Sin pedidos pagados en este período.",
+    "order": "Pedido",
+    "customer": "Cliente",
+    "total": "Total",
+    "paid": "Pagado"
+  },
+  "status": {
+    "awaiting_payment": "Esperando pago",
+    "paid": "Pagado",
+    "processing": "Procesando",
+    "shipped": "Enviado",
+    "delivered": "Entregado",
+    "canceled": "Cancelado",
+    "failed": "Fallido",
+    "refunded": "Reembolsado",
+    "disputed": "Disputado",
+    "unknown": "Desconocido"
+  },
+  "toast": {
+    "loadFailed": "Error al cargar las analíticas"
+  }
+}

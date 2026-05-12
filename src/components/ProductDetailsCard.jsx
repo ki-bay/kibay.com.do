@@ -1,8 +1,10 @@
 import React from 'react';
 import { m } from 'framer-motion';
 import { Wine, Globe, Package, Leaf, Percent, Calendar, Tag } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
-const ProductDetailsCard = ({ details }) => {
+const ProductDetailsCard = ({ details, labels, title }) => {
+  const { t } = useTranslation('product');
   const icons = {
     Category: Tag,
     Origin: Globe,
@@ -16,11 +18,12 @@ const ProductDetailsCard = ({ details }) => {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-stone-100 p-8">
       <h2 className="text-2xl font-normal text-stone-900 mb-8 pb-4 border-b border-stone-100">
-        Product Details
+        {title || t('details')}
       </h2>
       <div className="grid gap-6">
         {Object.entries(details).map(([key, value], index) => {
           const Icon = icons[key] || Tag;
+          const label = labels && labels[key] ? labels[key] : key;
           return (
             <m.div
               key={key}
@@ -32,7 +35,7 @@ const ProductDetailsCard = ({ details }) => {
             >
               <div className="flex items-center gap-3 text-stone-500">
                 <Icon className="w-5 h-5 text-mango-500/70" strokeWidth={1.5} />
-                <span className="font-normal text-sm uppercase tracking-wide">{key}</span>
+                <span className="font-normal text-sm uppercase tracking-wide">{label}</span>
               </div>
               <span className="text-stone-800 font-light text-right group-hover:text-mango-600 transition-colors">
                 {value}

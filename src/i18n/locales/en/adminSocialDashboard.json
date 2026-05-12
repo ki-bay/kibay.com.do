@@ -1,0 +1,45 @@
+{
+  "seoTitle": "Social Media Dashboard | Admin",
+  "heading": "Social Media Automation",
+  "subheading": "Manage and monitor automated social posts.",
+  "buttons": {
+    "refresh": "Refresh",
+    "retry": "Retry"
+  },
+  "metrics": {
+    "totalPosts": "Total Posts Generated",
+    "successRate": "Success Rate",
+    "failedPosts": "Failed Posts"
+  },
+  "sections": {
+    "recentSocial": "Recent Social Posts",
+    "recentBlogs": "Recent Auto-Generated Blogs"
+  },
+  "tableSocial": {
+    "platform": "Platform",
+    "status": "Status",
+    "date": "Date",
+    "action": "Action",
+    "empty": "No posts found"
+  },
+  "tableBlogs": {
+    "title": "Title",
+    "status": "Status",
+    "keywords": "Keywords",
+    "empty": "No blogs found"
+  },
+  "status": {
+    "posted": "Posted",
+    "failed": "Failed",
+    "pending": "Pending",
+    "published": "Published",
+    "draft": "Draft"
+  },
+  "toast": {
+    "retrying": "Retrying...",
+    "retryingDesc": "Retrying post for {{platform}}",
+    "success": "Success",
+    "retrySuccess": "Successfully retried post for {{platform}}",
+    "retryFailed": "Retry Failed"
+  }
+}

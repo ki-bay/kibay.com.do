@@ -1,0 +1,63 @@
+{
+  "seo": {
+    "title": "KiBay Wine | Tropical Wine Crafted at Ocoa Bay",
+    "description": "KiBay Wine: An authentic expression of Caribbean terroir. Tropical wine crafted at Ocoa Bay with innovative winemaking techniques."
+  },
+  "hero": {
+    "eyebrow": "Authentic Caribbean Wine",
+    "h1Lead": "KiBay",
+    "h1Accent": "Wine",
+    "subtitle": "Tropical Wine Crafted at Ocoa Bay",
+    "body": "An expression of Caribbean terroir and innovative winemaking. Smooth, aromatic, and deeply rooted in the land of the Dominican Republic.",
+    "cta": "Explore the Collection",
+    "imgAlt": "KiBay Wine Bottle"
+  },
+  "origin": {
+    "heading": "Rooted in Place",
+    "intro": "KiBay Wine is not just made in the Caribbean; it is of the Caribbean. It captures the essence of Ocoa Bay—the salinity of the sea air, the minerality of the soil, and the intensity of the tropical sun.",
+    "imgAlt": "Ocoa Bay Vineyard",
+    "subheading": "A Unique Terroir",
+    "body1": "The Ocoa Bay region offers a unique microclimate for viticulture. The combination of dry weather, cool maritime breezes, and limestone-rich soils creates conditions that allow our fruits to develop complex flavor profiles unlike anywhere else in the world.",
+    "body2": "Our winemakers harness these natural gifts, employing sustainable farming practices that honor the land and ensure the longevity of our ecosystem."
+  },
+  "flavor": {
+    "heading": "A Taste of the Caribbean",
+    "aromaTitle": "Aromatic Expression",
+    "aromaBody": "The nose is greeted with an intense bouquet of tropical fruits—ripe mango, passion fruit, and subtle citrus blossom notes. It is fragrant without being perfumed, inviting the drinker in.",
+    "bodyTitle": "Body & Structure",
+    "bodyBody": "Light, smooth, and refreshing. KiBay Wine features a delicate structure that highlights fruit purity over heavy tannins or oak. It finishes clean, with a lingering hint of minerality.",
+    "essenceHeading": "The Essence of KiBay",
+    "essenceQuote": "\"The Spirit of Ocoa Bay\"",
+    "essenceBody": "KiBay Wine captures the relaxed yet vibrant energy of the Dominican lifestyle. It is a wine that feels at home at a formal dinner as it does at a beachside gathering. It represents the harmony between land, sea, and fruit."
+  },
+  "enjoy": {
+    "heading": "Moments Worth Savoring",
+    "intro": "Designed to complement the Caribbean climate and cuisine.",
+    "items": [
+      { "title": "Serve Chilled", "text": "Best enjoyed between 8-10°C to accentuate its refreshing acidity." },
+      { "title": "Perfect Pairing", "text": "Complements fresh seafood, ceviche, mild cheeses, and light salads." },
+      { "title": "Sunset Ritual", "text": "The ideal companion for the golden hour, reflecting the warmth of the sun." }
+    ]
+  },
+  "relationship": {
+    "heading": "Two Expressions, One Origin",
+    "body": "Just like our Sparkling, KiBay Wine is born from the same dedication to organic quality and local sourcing. While the Sparkling celebrates effervescence and celebration, KiBay Wine offers a tranquil, contemplative experience of our terroir. Together, they represent the full spectrum of Ocoa Bay's potential.",
+    "ctaSparkling": "Discover Sparkling",
+    "ctaShop": "Shop All Wines"
+  },
+  "specs": {
+    "heading": "Product Specifications",
+    "items": [
+      { "label": "Category", "value": "Organic Wine" },
+      { "label": "Origin", "value": "Ocoa Bay, Dominican Republic" },
+      { "label": "Format", "value": "750 ml glass bottle (Recyclable)" },
+      { "label": "Ingredients", "value": "Fermented Mango & Passion Fruit" },
+      { "label": "Alcohol", "value": "8% ABV" },
+      { "label": "Shelf Life", "value": "Best consumed within 36 months" }
+    ]
+  },
+  "closing": {
+    "heading": "Heritage & Innovation",
+    "body": "KiBay Wine stands at the intersection of Dominican agricultural heritage and modern viniculture. It is our invitation to the world to taste the Caribbean in a new, sophisticated way."
+  }
+}

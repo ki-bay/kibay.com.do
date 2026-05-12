@@ -1,0 +1,35 @@
+{
+  "seo": {
+    "title": "Mi Cuenta - Kibay Espumante"
+  },
+  "header": {
+    "defaultName": "Usuario",
+    "signOut": "Cerrar Sesión"
+  },
+  "tabs": {
+    "profile": "Ajustes de Perfil",
+    "orders": "Historial de Pedidos",
+    "adminLabel": "Admin",
+    "shopOrders": "Pedidos de la tienda",
+    "blogDashboard": "Panel del blog"
+  },
+  "personal": {
+    "heading": "Información Personal",
+    "fullNameLabel": "Nombre Completo",
+    "emailLabel": "Correo"
+  },
+  "preferences": {
+    "heading": "Preferencias",
+    "newsletter": "Suscríbete al boletín para novedades y ofertas"
+  },
+  "actions": {
+    "saving": "Guardando...",
+    "save": "Guardar Cambios"
+  },
+  "toast": {
+    "errorLoadTitle": "Error al cargar el perfil",
+    "updatedTitle": "Perfil actualizado",
+    "updatedDescription": "Tus cambios se guardaron exitosamente.",
+    "updateFailedTitle": "Error al actualizar"
+  }
+}

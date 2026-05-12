@@ -1,0 +1,33 @@
+{
+  "seoTitle": "Social Media Settings | Admin",
+  "heading": "API Credentials",
+  "subheading": "Manage API keys and access tokens for social platforms.",
+  "warning": {
+    "title": "Security Warning",
+    "body": "These credentials provide direct access to your social media accounts. Never share them. They are stored securely in Supabase Secrets/Vault and are never exposed to the frontend directly."
+  },
+  "facebook": {
+    "title": "Facebook",
+    "pageId": "Page ID",
+    "pageAccessToken": "Page Access Token"
+  },
+  "instagram": {
+    "title": "Instagram",
+    "businessAccountId": "Business Account ID",
+    "accessToken": "Access Token"
+  },
+  "twitter": {
+    "title": "X (Twitter)",
+    "apiKey": "API Key",
+    "apiSecret": "API Secret"
+  },
+  "buttons": {
+    "testConnections": "Test Connections",
+    "save": "Save Configuration"
+  },
+  "toast": {
+    "saved": "Credentials Saved",
+    "savedDesc": "API keys have been securely updated.",
+    "testMocked": "Connection test mocked for safety."
+  }
+}

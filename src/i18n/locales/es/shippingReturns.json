@@ -1,0 +1,48 @@
+{
+  "seo": {
+    "title": "Envío y Devoluciones - Kibay Espumante",
+    "description": "Información sobre las políticas de envío, áreas de entrega y procedimientos de devolución de Kibay Espumante para nuestros vinos premium."
+  },
+  "backToHome": "Volver al inicio",
+  "eyebrow": "Política",
+  "title": "Envío y Devoluciones",
+  "intro": "Trabajamos para que su experiencia Kibay sea impecable desde nuestra bodega hasta su copa. Aquí encontrará todo lo que necesita saber sobre nuestros procesos de entrega y devolución.",
+  "sections": [
+    {
+      "title": "1. Envío de productos alcohólicos",
+      "content": "Actualmente realizamos envíos a ubicaciones seleccionadas dentro de la República Dominicana. Todos los pedidos que contengan alcohol deben ser recibidos por un adulto con la edad legal para consumir alcohol (18+). Al momento de la entrega se requiere una identificación oficial vigente con foto. Los transportistas no dejarán paquetes sin que alguien los reciba."
+    },
+    {
+      "title": "2. Costos de envío",
+      "content": "Los costos de envío se calculan al momento del pago en función del peso del pedido y del destino de entrega. Podemos ofrecer promociones de envío gratuito en pedidos que superen un determinado monto. Pueden estar disponibles opciones de envío exprés con un costo adicional."
+    },
+    {
+      "title": "3. Procesamiento de pedidos",
+      "content": "Los pedidos normalmente se procesan en un plazo de 1 a 2 días hábiles. Los pedidos realizados los fines de semana o días festivos se procesarán el siguiente día hábil. Recibirá un correo electrónico de confirmación con información de seguimiento una vez que su pedido haya sido enviado."
+    },
+    {
+      "title": "4. Política de devoluciones de alcohol",
+      "content": "Debido a las regulaciones legales y a la naturaleza perecedera de nuestros productos, por lo general no aceptamos devoluciones de bebidas alcohólicas. Todas las ventas se consideran finales. No obstante, estamos comprometidos con la satisfacción del cliente y atenderemos cualquier inconveniente con pedidos dañados o incorrectos."
+    },
+    {
+      "title": "5. Pedidos dañados o incorrectos",
+      "content": "Si su pedido llega dañado, en mal estado o incorrecto, contáctenos de inmediato en info@kibay.com.do. Por favor, conserve el empaque y el contenido original. Podríamos solicitar fotografías del daño para procesar un reemplazo o reembolso."
+    },
+    {
+      "title": "6. Cancelaciones",
+      "content": "Los pedidos solo pueden cancelarse si aún no han sido procesados para envío. Una vez que un pedido ha sido empacado y se ha generado una etiqueta de envío, no podrá cancelarse. Contáctenos de inmediato si desea solicitar una cancelación."
+    },
+    {
+      "title": "7. Paquetes perdidos o robados",
+      "content": "No nos hacemos responsables por paquetes perdidos o robados después de haber sido entregados con éxito en la dirección proporcionada. Por favor, asegúrese de que haya alguien disponible para recibir el paquete, especialmente considerando el requisito de firma para productos con alcohol."
+    },
+    {
+      "title": "8. Entrega responsable",
+      "content": "Nuestros socios de entrega se reservan el derecho de rechazar la entrega si el destinatario parece estar en estado de embriaguez o no puede presentar una identificación válida que acredite su edad. En tales casos, el paquete podrá ser devuelto a nosotros y podrían aplicarse un cargo por reposición más los costos de envío de devolución."
+    },
+    {
+      "title": "9. Información de contacto",
+      "content": "Para cualquier consulta relacionada con envíos o devoluciones, escriba a nuestro equipo de soporte en info@kibay.com.do. Estamos aquí para asegurar que tenga una excelente experiencia con Kibay Espumante."
+    }
+  ]
+}

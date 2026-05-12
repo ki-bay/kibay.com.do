@@ -1,0 +1,27 @@
+{
+  "seoTitle": "Tarifas de envío — Admin",
+  "back": "Volver al panel",
+  "header": {
+    "title": "Tarifas de envío",
+    "subtitlePrefix": "Tarifas por moneda usadas en el checkout. Los montos están en unidades mayores (ej. RD$200, no 20000 centavos). Guardar actualiza la tabla en vivo",
+    "subtitleSuffix": "— el checkout las recarga en cada visita."
+  },
+  "loading": "Cargando…",
+  "empty": "No se encontraron tarifas de envío.",
+  "currencyHeading": "{{currency}} ({{symbol}})",
+  "updatedAt": "actualizado el {{date}}",
+  "fields": {
+    "freeOver": "Gratis sobre ({{symbol}})",
+    "freeOverHint": "El subtotal igual o mayor a este umbral se envía gratis.",
+    "standard": "Estándar ({{symbol}})",
+    "express": "Exprés ({{symbol}})"
+  },
+  "actions": {
+    "save": "Guardar tarifas",
+    "saving": "Guardando…"
+  },
+  "toast": {
+    "updated": "Tarifas de envío actualizadas",
+    "saveFailed": "Error al guardar las tarifas"
+  }
+}
