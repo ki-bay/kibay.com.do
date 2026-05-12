@@ -3,13 +3,15 @@ import { useOrderHistory } from '@/hooks/useOrderHistory';
 import OrderFiltersBar from './OrderFiltersBar';
 import OrderCard from './OrderCard';
 import { ShoppingBag, Loader2, AlertTriangle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 
 const OrderHistoryPanel = () => {
-  const { 
-    orders, 
-    loading, 
+  const { t } = useTranslation('orderHistory');
+  const {
+    orders,
+    loading,
     error,
     filterStatus,
     setFilterStatus,
@@ -45,7 +47,7 @@ const OrderHistoryPanel = () => {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-foreground/40">
         <Loader2 className="w-10 h-10 animate-spin mb-4 text-mango-500" />
-        <p className="font-light">Loading your order history...</p>
+        <p className="font-light">{t('loading')}</p>
       </div>
     );
   }
@@ -53,9 +55,9 @@ const OrderHistoryPanel = () => {
   if (error) {
     return (
       <div className="text-center py-12 px-4 rounded-xl bg-red-500/5 border border-red-500/10">
-        <p className="text-red-400 mb-4">Unable to load orders.</p>
+        <p className="text-red-400 mb-4">{t('errorLoad')}</p>
         <Button onClick={refreshOrders} variant="outline" className="text-red-400 border-red-500/20 hover:bg-red-500/10">
-          Try Again
+          {t('tryAgain')}
         </Button>
       </div>
     );
@@ -64,9 +66,9 @@ const OrderHistoryPanel = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-normal text-foreground">Order History</h2>
+        <h2 className="text-xl font-normal text-foreground">{t('heading')}</h2>
         <span className="text-sm text-foreground/40 font-light">
-          {orders.length} Order{orders.length !== 1 && 's'} Found
+          {t('ordersFound', { count: orders.length })}
         </span>
       </div>
 
@@ -74,23 +76,22 @@ const OrderHistoryPanel = () => {
         <div className="bg-yellow-500/10 border border-yellow-500/20 p-4 rounded-lg flex items-start gap-3">
           <AlertTriangle className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
           <div>
-            <h4 className="text-yellow-500 font-medium text-sm">Recent Order Processing</h4>
+            <h4 className="text-yellow-500 font-medium text-sm">{t('missingOrderTitle')}</h4>
             <p className="text-yellow-500/80 text-sm font-light">
-              We detected a recent purchase that isn't showing up yet. It might still be processing. 
-              Please refresh in a few moments.
+              {t('missingOrderBody')}
             </p>
-            <Button 
-              variant="link" 
+            <Button
+              variant="link"
               className="text-yellow-500 p-0 h-auto mt-1 underline"
               onClick={refreshOrders}
             >
-              Refresh List
+              {t('refreshList')}
             </Button>
           </div>
         </div>
       )}
 
-      <OrderFiltersBar 
+      <OrderFiltersBar
         filterStatus={filterStatus}
         setFilterStatus={setFilterStatus}
         searchQuery={searchQuery}
@@ -109,16 +110,16 @@ const OrderHistoryPanel = () => {
             <div className="w-16 h-16 bg-foreground/5 rounded-full flex items-center justify-center mx-auto mb-4">
               <ShoppingBag className="w-8 h-8 text-foreground/20" />
             </div>
-            <h3 className="text-foreground font-medium mb-2">No orders found</h3>
+            <h3 className="text-foreground font-medium mb-2">{t('noOrders')}</h3>
             <p className="text-foreground/40 text-sm font-light mb-6 max-w-xs mx-auto">
-              {searchQuery || filterStatus !== 'All' 
-                ? "Try adjusting your filters to see more results." 
-                : "Looks like you haven't placed any orders yet."}
+              {searchQuery || filterStatus !== 'All'
+                ? t('tryAdjusting')
+                : t('noOrdersYet')}
             </p>
             {!searchQuery && filterStatus === 'All' && (
               <Link to="/shop">
                 <Button className="bg-mango-500 hover:bg-mango-600 text-foreground font-normal">
-                  Start Shopping
+                  {t('startShopping')}
                 </Button>
               </Link>
             )}

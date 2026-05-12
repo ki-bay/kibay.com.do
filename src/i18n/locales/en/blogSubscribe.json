@@ -1,0 +1,20 @@
+{
+  "toast": {
+    "invalidEmailTitle": "Invalid Email",
+    "invalidEmailDescription": "Please enter a valid email address.",
+    "successTitle": "You're on the list!",
+    "successDescription": "Thanks — you'll hear from us with updates and offers.",
+    "errorTitle": "Subscription Failed",
+    "errorDescription": "Something went wrong. Please try again later."
+  },
+  "tagline": "Stay in the loop",
+  "title": "Subscribe to our newsletter",
+  "description": "Get the latest stories, cocktail recipes, and exclusive offers delivered straight to your inbox. No spam, just flavor.",
+  "successBoxTitle": "You're Subscribed!",
+  "successBoxDescription": "Thanks for joining us.",
+  "subscribeAnother": "Subscribe another email",
+  "emailPlaceholder": "Enter your email",
+  "submitting": "Subscribing...",
+  "submit": "Subscribe to Updates",
+  "privacyNote": "We respect your privacy. Unsubscribe at any time."
+}

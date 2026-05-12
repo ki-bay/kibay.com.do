@@ -1,14 +1,19 @@
 // Note: This component serves as a visual reference and template source.
 // The actual HTML string is constructed in the Edge Function for email sending.
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
-const EmailNotificationTemplate = ({ 
-  postTitle = "Discover the Taste of Kibay",
-  postDescription = "Experience the refreshing blend of premium sparkling wine and natural tropical flavors.",
+const EmailNotificationTemplate = ({
+  postTitle,
+  postDescription,
   featuredImageUrl = "https://example.com/kibay-hero.jpg",
   postUrl = "#",
   unsubscribeUrl = "#"
 }) => {
+  const { t } = useTranslation('emailTemplate');
+  const resolvedTitle = postTitle || t('defaultPostTitle');
+  const resolvedDescription = postDescription || t('defaultPostDescription');
+
   // Styles inline for email compatibility
   const styles = {
     body: { fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", backgroundColor: "#f8fafc", margin: 0, padding: 0, color: "#334155" },
@@ -31,22 +36,22 @@ const EmailNotificationTemplate = ({
         <div style={styles.header}>
           <h1 style={styles.headerText}>Ki-BAY</h1>
         </div>
-        
+
         {featuredImageUrl && (
-          <img src={featuredImageUrl} alt={postTitle} style={styles.heroImage} />
+          <img src={featuredImageUrl} alt={resolvedTitle} style={styles.heroImage} />
         )}
-        
+
         <div style={styles.content}>
-          <span style={styles.tag}>New Story</span>
-          <h2 style={styles.title}>{postTitle}</h2>
-          <p style={styles.description}>{postDescription}</p>
-          <a href={postUrl} style={styles.button}>Read Full Story</a>
+          <span style={styles.tag}>{t('newStory')}</span>
+          <h2 style={styles.title}>{resolvedTitle}</h2>
+          <p style={styles.description}>{resolvedDescription}</p>
+          <a href={postUrl} style={styles.button}>{t('readFullStory')}</a>
         </div>
-        
+
         <div style={styles.footer}>
-          <p style={{margin: "0 0 8px"}}>&copy; {new Date().getFullYear()} Kibay Espumante. All rights reserved.</p>
-          <p style={{margin: "0 0 8px"}}>You received this email because you subscribed to our newsletter.</p>
-          <a href={unsubscribeUrl} style={styles.link}>Unsubscribe</a>
+          <p style={{margin: "0 0 8px"}}>{t('copyright', { year: new Date().getFullYear() })}</p>
+          <p style={{margin: "0 0 8px"}}>{t('subscribedNote')}</p>
+          <a href={unsubscribeUrl} style={styles.link}>{t('unsubscribe')}</a>
         </div>
       </div>
     </div>

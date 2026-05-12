@@ -1,0 +1,20 @@
+{
+  "toast": {
+    "invalidEmailTitle": "Correo no válido",
+    "invalidEmailDescription": "Por favor ingresa un correo válido.",
+    "successTitle": "¡Estás en la lista!",
+    "successDescription": "Gracias — pronto sabrás de nosotros con novedades y ofertas.",
+    "errorTitle": "Falló la suscripción",
+    "errorDescription": "Algo salió mal. Inténtalo de nuevo más tarde."
+  },
+  "tagline": "Mantente al tanto",
+  "title": "Suscríbete a nuestro boletín",
+  "description": "Recibe las últimas historias, recetas de cócteles y ofertas exclusivas directamente en tu bandeja. Sin spam, solo sabor.",
+  "successBoxTitle": "¡Estás suscrito!",
+  "successBoxDescription": "Gracias por unirte.",
+  "subscribeAnother": "Suscribir otro correo",
+  "emailPlaceholder": "Escribe tu correo",
+  "submitting": "Suscribiendo...",
+  "submit": "Suscribirme",
+  "privacyNote": "Respetamos tu privacidad. Puedes darte de baja cuando quieras."
+}

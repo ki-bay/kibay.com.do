@@ -1,0 +1,20 @@
+{
+  "confirm": {
+    "title": "¿Darte de baja?",
+    "question": "¿Seguro que quieres dejar de recibir novedades en <1>{{email}}</1>?",
+    "processing": "Procesando...",
+    "confirmBtn": "Sí, darme de baja",
+    "cancel": "Cancelar y volver al inicio"
+  },
+  "processing": "Actualizando tus preferencias...",
+  "success": {
+    "title": "Te diste de baja",
+    "description": "Te removimos de nuestra lista de correos. ¡Nos vemos pronto!",
+    "returnHome": "Volver al inicio"
+  },
+  "error": {
+    "title": "Error",
+    "description": "Hubo un problema al procesar tu solicitud. Inténtalo de nuevo más tarde.",
+    "retry": "Reintentar"
+  }
+}

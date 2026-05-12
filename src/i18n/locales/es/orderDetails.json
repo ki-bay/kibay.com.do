@@ -1,0 +1,17 @@
+{
+  "orderPrefix": "Pedido #{{number}}",
+  "datePlaced": "Fecha del pedido",
+  "orderItems": "Artículos del pedido",
+  "qtyLine": "Cant.: {{quantity}} × {{unit}}",
+  "total": "Total",
+  "shippingAddress": "Dirección de envío",
+  "deliveryInfo": "Información de entrega",
+  "method": "Método:",
+  "tracking": "Rastreo:",
+  "trackShipment": "Rastrear envío",
+  "trackingPending": "El rastreo estará disponible cuando se envíe.",
+  "downloadInvoice": "Descargar factura (PDF)",
+  "estDelivery": "Entrega estimada: {{date}}",
+  "paymentCardFallback": "Tarjeta de pago",
+  "contactSupport": "Contactar soporte"
+}

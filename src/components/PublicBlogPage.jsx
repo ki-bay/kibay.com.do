@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { m } from 'framer-motion';
+import { Trans, useTranslation } from 'react-i18next';
 import { supabase } from '@/lib/customSupabaseClient';
 import BlogPostCard from '@/components/BlogPostCard';
 import BlogSubscribeForm from '@/components/BlogSubscribeForm';
@@ -7,6 +8,7 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 
 const PublicBlogPage = () => {
+  const { t } = useTranslation('publicBlog');
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -34,18 +36,22 @@ const PublicBlogPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
-      
+
       <main id="main" role="main" className="pt-28 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <m.div 
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            The <span className="text-mango-500">Ki-BAY</span> Journal
+            <Trans
+              i18nKey="title"
+              t={t}
+              components={[<span className="text-mango-500" />]}
+            />
           </h1>
           <p className="text-xl text-foreground/60 max-w-2xl mx-auto">
-            Stories, updates, and insights from the world of tropical flavors.
+            {t('subtitle')}
           </p>
         </m.div>
 
@@ -71,11 +77,11 @@ const PublicBlogPage = () => {
           </div>
         ) : (
           <div className="text-center py-20 bg-card/50 rounded-2xl border border-foreground/5 mb-20">
-            <h3 className="text-2xl font-bold text-foreground mb-2">Coming Soon</h3>
-            <p className="text-foreground/60">We haven't published any stories yet. Check back soon!</p>
+            <h3 className="text-2xl font-bold text-foreground mb-2">{t('empty.title')}</h3>
+            <p className="text-foreground/60">{t('empty.description')}</p>
           </div>
         )}
-        
+
         <m.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

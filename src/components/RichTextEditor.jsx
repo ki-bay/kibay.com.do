@@ -5,23 +5,25 @@ import Image from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
 import Youtube from '@tiptap/extension-youtube';
 import Placeholder from '@tiptap/extension-placeholder';
-import { 
-  Bold, Italic, Strikethrough, Code, 
-  List, ListOrdered, Quote, Minus, 
+import {
+  Bold, Italic, Strikethrough, Code,
+  List, ListOrdered, Quote, Minus,
   Undo, Redo, Link as LinkIcon, Youtube as YoutubeIcon,
   Heading1, Heading2, Heading3
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import MediaUploadButton from './MediaUploadButton';
 import '@/styles/editor.css';
 
 const MenuBar = ({ editor }) => {
+  const { t } = useTranslation('richTextEditor');
   if (!editor) {
     return null;
   }
 
   const addYoutubeVideo = () => {
-    const url = prompt('Enter YouTube URL');
+    const url = prompt(t('youtubePrompt'));
     if (url) {
       editor.commands.setYoutubeVideo({ src: url });
     }
@@ -29,8 +31,8 @@ const MenuBar = ({ editor }) => {
 
   const setLink = () => {
     const previousUrl = editor.getAttributes('link').href;
-    const url = window.prompt('URL', previousUrl);
-    
+    const url = window.prompt(t('linkPrompt'), previousUrl);
+
     if (url === null) {
       return;
     }
@@ -58,7 +60,7 @@ const MenuBar = ({ editor }) => {
           size="sm"
           onClick={() => editor.chain().focus().toggleBold().run()}
           className={editor.isActive('bold') ? 'bg-foreground/20' : ''}
-          title="Bold"
+          title={t('tooltips.bold')}
         >
           <Bold className="w-4 h-4" />
         </Button>
@@ -68,7 +70,7 @@ const MenuBar = ({ editor }) => {
           size="sm"
           onClick={() => editor.chain().focus().toggleItalic().run()}
           className={editor.isActive('italic') ? 'bg-foreground/20' : ''}
-          title="Italic"
+          title={t('tooltips.italic')}
         >
           <Italic className="w-4 h-4" />
         </Button>
@@ -78,7 +80,7 @@ const MenuBar = ({ editor }) => {
           size="sm"
           onClick={() => editor.chain().focus().toggleStrike().run()}
           className={editor.isActive('strike') ? 'bg-foreground/20' : ''}
-          title="Strikethrough"
+          title={t('tooltips.strikethrough')}
         >
           <Strikethrough className="w-4 h-4" />
         </Button>
@@ -91,7 +93,7 @@ const MenuBar = ({ editor }) => {
           size="sm"
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
           className={editor.isActive('heading', { level: 1 }) ? 'bg-foreground/20' : ''}
-          title="H1"
+          title={t('tooltips.h1')}
         >
           <Heading1 className="w-4 h-4" />
         </Button>
@@ -101,7 +103,7 @@ const MenuBar = ({ editor }) => {
           size="sm"
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
           className={editor.isActive('heading', { level: 2 }) ? 'bg-foreground/20' : ''}
-          title="H2"
+          title={t('tooltips.h2')}
         >
           <Heading2 className="w-4 h-4" />
         </Button>
@@ -111,7 +113,7 @@ const MenuBar = ({ editor }) => {
           size="sm"
           onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
           className={editor.isActive('heading', { level: 3 }) ? 'bg-foreground/20' : ''}
-          title="H3"
+          title={t('tooltips.h3')}
         >
           <Heading3 className="w-4 h-4" />
         </Button>
@@ -124,7 +126,7 @@ const MenuBar = ({ editor }) => {
           size="sm"
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           className={editor.isActive('bulletList') ? 'bg-foreground/20' : ''}
-          title="Bullet List"
+          title={t('tooltips.bulletList')}
         >
           <List className="w-4 h-4" />
         </Button>
@@ -134,7 +136,7 @@ const MenuBar = ({ editor }) => {
           size="sm"
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           className={editor.isActive('orderedList') ? 'bg-foreground/20' : ''}
-          title="Ordered List"
+          title={t('tooltips.orderedList')}
         >
           <ListOrdered className="w-4 h-4" />
         </Button>
@@ -147,7 +149,7 @@ const MenuBar = ({ editor }) => {
           size="sm"
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
           className={editor.isActive('blockquote') ? 'bg-foreground/20' : ''}
-          title="Quote"
+          title={t('tooltips.quote')}
         >
           <Quote className="w-4 h-4" />
         </Button>
@@ -157,7 +159,7 @@ const MenuBar = ({ editor }) => {
           size="sm"
           onClick={() => editor.chain().focus().toggleCodeBlock().run()}
           className={editor.isActive('codeBlock') ? 'bg-foreground/20' : ''}
-          title="Code Block"
+          title={t('tooltips.codeBlock')}
         >
           <Code className="w-4 h-4" />
         </Button>
@@ -166,7 +168,7 @@ const MenuBar = ({ editor }) => {
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().setHorizontalRule().run()}
-          title="Horizontal Rule"
+          title={t('tooltips.horizontalRule')}
         >
           <Minus className="w-4 h-4" />
         </Button>
@@ -179,7 +181,7 @@ const MenuBar = ({ editor }) => {
           size="sm"
           onClick={setLink}
           className={editor.isActive('link') ? 'bg-foreground/20' : ''}
-          title="Link"
+          title={t('tooltips.link')}
         >
           <LinkIcon className="w-4 h-4" />
         </Button>
@@ -189,7 +191,7 @@ const MenuBar = ({ editor }) => {
           variant="ghost"
           size="sm"
           onClick={addYoutubeVideo}
-          title="YouTube Video"
+          title={t('tooltips.youtube')}
         >
           <YoutubeIcon className="w-4 h-4" />
         </Button>
@@ -202,7 +204,7 @@ const MenuBar = ({ editor }) => {
           size="sm"
           onClick={() => editor.chain().focus().undo().run()}
           disabled={!editor.can().undo()}
-          title="Undo"
+          title={t('tooltips.undo')}
         >
           <Undo className="w-4 h-4" />
         </Button>
@@ -212,7 +214,7 @@ const MenuBar = ({ editor }) => {
           size="sm"
           onClick={() => editor.chain().focus().redo().run()}
           disabled={!editor.can().redo()}
-          title="Redo"
+          title={t('tooltips.redo')}
         >
           <Redo className="w-4 h-4" />
         </Button>
@@ -222,6 +224,7 @@ const MenuBar = ({ editor }) => {
 };
 
 const RichTextEditor = ({ content, onChange }) => {
+  const { t } = useTranslation('richTextEditor');
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -239,7 +242,7 @@ const RichTextEditor = ({ content, onChange }) => {
         controls: false,
       }),
       Placeholder.configure({
-        placeholder: 'Write your story...',
+        placeholder: t('placeholder'),
       }),
     ],
     content: content || '',

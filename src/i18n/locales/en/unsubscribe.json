@@ -1,0 +1,20 @@
+{
+  "confirm": {
+    "title": "Unsubscribe?",
+    "question": "Are you sure you want to stop receiving updates at <1>{{email}}</1>?",
+    "processing": "Processing...",
+    "confirmBtn": "Yes, Unsubscribe Me",
+    "cancel": "Cancel & Return Home"
+  },
+  "processing": "Updating your preferences...",
+  "success": {
+    "title": "Unsubscribed",
+    "description": "You have been successfully removed from our mailing list. We're sorry to see you go!",
+    "returnHome": "Return to Home"
+  },
+  "error": {
+    "title": "Error",
+    "description": "We encountered an error processing your request. Please try again later.",
+    "retry": "Try Again"
+  }
+}

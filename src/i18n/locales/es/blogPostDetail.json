@@ -1,0 +1,14 @@
+{
+  "notFound": {
+    "title": "Artículo no encontrado",
+    "description": "El artículo que buscas no existe o fue removido.",
+    "back": "Volver al blog"
+  },
+  "breadcrumbBlog": "Blog",
+  "backToArticles": "Volver a los artículos",
+  "draftBadge": "Vista previa (borrador)",
+  "minRead": "{{count}} min de lectura",
+  "share": "Compartir este artículo",
+  "copyLink": "Copiar enlace",
+  "defaultAuthor": "Equipo Kibay"
+}

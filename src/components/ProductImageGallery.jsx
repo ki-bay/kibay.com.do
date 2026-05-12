@@ -1,11 +1,13 @@
 import React, { useState, forwardRef, useMemo } from 'react';
 import { m, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import FlyToCartAnimation from '@/components/FlyToCartAnimation';
 import { resolveProductMediaUrl } from '@/config/mediaCdn';
 
 const placeholderImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjVmNWY0Ii8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2E4YTJhMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K";
 
 const ProductImageGallery = forwardRef(({ images = [], title, ribbonText }, ref) => {
+  const { t } = useTranslation('productGallery');
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   const safeImages = useMemo(() => {
@@ -21,14 +23,14 @@ const ProductImageGallery = forwardRef(({ images = [], title, ribbonText }, ref)
 
   return (
     <div className="w-full flex flex-col items-center">
-      {/* 
+      {/*
         Sizing constraints:
         - Mobile: w-full max-w-sm (unchanged mostly)
         - Desktop: max-w-md (reduced from max-w-lg) to keep it compact
       */}
       <div className="w-full max-w-sm md:max-w-md lg:max-w-md transition-all duration-300">
-        <FlyToCartAnimation 
-          ref={ref} 
+        <FlyToCartAnimation
+          ref={ref}
           className="relative aspect-[4/5] bg-white rounded-2xl overflow-hidden shadow-sm group w-full mb-6 mx-auto"
         >
           <AnimatePresence mode="wait">
@@ -63,14 +65,14 @@ const ProductImageGallery = forwardRef(({ images = [], title, ribbonText }, ref)
                 key={index}
                 onClick={() => setActiveImageIndex(index)}
                 className={`relative flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
-                  index === activeImageIndex 
-                    ? 'border-[#D4A574] ring-2 ring-[#D4A574]/20' 
+                  index === activeImageIndex
+                    ? 'border-[#D4A574] ring-2 ring-[#D4A574]/20'
                     : 'border-transparent hover:border-stone-200'
                 }`}
               >
                 <img
                   src={image.url || placeholderImage}
-                  alt={`${title} thumbnail ${index + 1}`}
+                  alt={t('thumbnailAlt', { title, index: index + 1 })}
                   width="80"
                   height="80"
                   loading="lazy"

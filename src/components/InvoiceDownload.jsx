@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { Download, Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { formatDopFromCents } from '@/lib/formatMoney';
 
 const InvoiceDownload = ({ order, orderItems, className }) => {
+  const { t, i18n } = useTranslation('invoiceDownload');
   const [isGenerating, setIsGenerating] = useState(false);
 
   const generatePDF = () => {
@@ -13,43 +15,45 @@ const InvoiceDownload = ({ order, orderItems, className }) => {
 
     try {
       const doc = new jsPDF();
-      
+
       // Brand Colors
       const primaryColor = [212, 165, 116]; // #D4A574
       const darkColor = [30, 30, 30];
 
+      const locale = i18n.language?.startsWith('es') ? 'es-DO' : 'en-US';
+
       // Header
       doc.setFillColor(...darkColor);
       doc.rect(0, 0, 210, 40, 'F');
-      
+
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(24);
       doc.text("KIBAY", 20, 20);
       doc.setFontSize(12);
-      doc.text("INVOICE", 180, 20, { align: 'right' });
+      doc.text(t('pdf.invoice'), 180, 20, { align: 'right' });
       doc.setFontSize(10);
       doc.setTextColor(200, 200, 200);
-      doc.text("Premium Sparkling Wine", 20, 28);
+      doc.text(t('pdf.tagline'), 20, 28);
 
       // Order Info
       doc.setTextColor(...darkColor);
       doc.setFontSize(10);
-      doc.text(`Order Number: ${order.order_number}`, 20, 55);
-      doc.text(`Date: ${new Date(order.created_at).toLocaleDateString()}`, 20, 60);
-      doc.text(`Status: ${order.status}`, 20, 65);
+      doc.text(t('pdf.orderNumber', { number: order.order_number }), 20, 55);
+      doc.text(t('pdf.date', { date: new Date(order.created_at).toLocaleDateString(locale) }), 20, 60);
+      doc.text(t('pdf.status', { status: order.status }), 20, 65);
 
       // Bill To
-      doc.text("Bill To:", 120, 55);
+      doc.text(t('pdf.billTo'), 120, 55);
       doc.setFont("helvetica", "bold");
       const address = order.shipping_address || {};
       doc.text(`${address.firstName || ''} ${address.lastName || ''}`, 120, 60);
       doc.setFont("helvetica", "normal");
       doc.text(address.address || '', 120, 65);
       doc.text(`${address.city || ''}, ${address.state || ''} ${address.zipCode || ''}`, 120, 70);
-      doc.text(address.country || 'Dominican Republic', 120, 75);
+      doc.text(address.country || t('pdf.defaultCountry'), 120, 75);
 
       // Items Table
-      const tableColumn = ["Item", "Quantity", "Unit Price", "Total"];
+      const tableColumn = [t('pdf.colItem'), t('pdf.colQuantity'), t('pdf.colUnitPrice'), t('pdf.colTotal')];
       const tableRows = orderItems.map(item => [
         item.product_name,
         item.quantity,
@@ -72,13 +76,13 @@ const InvoiceDownload = ({ order, orderItems, className }) => {
 
       // Totals
       const finalY = doc.lastAutoTable.finalY + 10;
-      doc.text("Total:", 140, finalY);
+      doc.text(t('pdf.totalLabel'), 140, finalY);
       doc.text(formatDopFromCents(order.total_amount), 190, finalY, { align: 'right' });
-      
+
       // Footer
       doc.setFontSize(8);
       doc.setTextColor(150, 150, 150);
-      doc.text("Thank you for choosing Kibay. For support, contact info@kibay.com.do", 105, 280, { align: 'center' });
+      doc.text(t('pdf.footer'), 105, 280, { align: 'center' });
 
       doc.save(`Kibay-Invoice-${order.order_number}.pdf`);
     } catch (err) {
@@ -89,10 +93,10 @@ const InvoiceDownload = ({ order, orderItems, className }) => {
   };
 
   return (
-    <Button 
-      variant="outline" 
-      size="sm" 
-      onClick={generatePDF} 
+    <Button
+      variant="outline"
+      size="sm"
+      onClick={generatePDF}
       disabled={isGenerating}
       className={className}
     >
@@ -101,7 +105,7 @@ const InvoiceDownload = ({ order, orderItems, className }) => {
       ) : (
         <Download className="w-4 h-4 mr-2" />
       )}
-      Download Invoice
+      {t('downloadInvoice')}
     </Button>
   );
 };

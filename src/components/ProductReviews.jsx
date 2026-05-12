@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Star, Loader2, ShieldCheck, ChevronDown, ChevronUp } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/lib/customSupabaseClient';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { Button } from '@/components/ui/button';
@@ -13,10 +14,10 @@ const TITLE_MAX = 80;
 const COMMENT_MAX = 2000;
 const PAID_STATUSES = ['paid', 'processing', 'shipped', 'delivered'];
 
-function formatDate(iso) {
+function formatDate(iso, locale) {
   if (!iso) return '';
   try {
-    return new Date(iso).toLocaleDateString(undefined, {
+    return new Date(iso).toLocaleDateString(locale, {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
@@ -26,7 +27,7 @@ function formatDate(iso) {
   }
 }
 
-function StarRow({ value, max = 5, size = 16, className = '' }) {
+function StarRow({ value, max = 5, size = 16, className = '', ariaLabel }) {
   // value can be fractional; we render filled stars for whole numbers
   // and a half-fill marker via aria-label for decimals.
   const stars = [];
@@ -49,16 +50,16 @@ function StarRow({ value, max = 5, size = 16, className = '' }) {
     );
   }
   return (
-    <span className={`inline-flex items-center gap-0.5 ${className}`} aria-label={`${value} out of ${max} stars`}>
+    <span className={`inline-flex items-center gap-0.5 ${className}`} aria-label={ariaLabel}>
       {stars}
     </span>
   );
 }
 
-function StarPicker({ value, onChange, disabled }) {
+function StarPicker({ value, onChange, disabled, t }) {
   const [hover, setHover] = useState(0);
   return (
-    <div className="flex items-center gap-1" role="radiogroup" aria-label="Rating">
+    <div className="flex items-center gap-1" role="radiogroup" aria-label={t('ratingAria')}>
       {[1, 2, 3, 4, 5].map((n) => {
         const active = (hover || value) >= n;
         return (
@@ -67,7 +68,7 @@ function StarPicker({ value, onChange, disabled }) {
             type="button"
             role="radio"
             aria-checked={value === n}
-            aria-label={`${n} star${n === 1 ? '' : 's'}`}
+            aria-label={t('starAria', { count: n })}
             disabled={disabled}
             onMouseEnter={() => setHover(n)}
             onMouseLeave={() => setHover(0)}
@@ -90,6 +91,7 @@ function StarPicker({ value, onChange, disabled }) {
 }
 
 export default function ProductReviews({ productId, onAggregateChange }) {
+  const { t, i18n } = useTranslation('productReviews');
   const { user } = useAuth();
 
   const [reviews, setReviews] = useState([]);
@@ -100,6 +102,8 @@ export default function ProductReviews({ productId, onAggregateChange }) {
   const [rating, setRating] = useState(0);
   const [title, setTitle] = useState('');
   const [comment, setComment] = useState('');
+
+  const locale = i18n.language?.startsWith('es') ? 'es-DO' : undefined;
 
   const fetchReviews = useCallback(async () => {
     if (!productId) return;
@@ -147,20 +151,20 @@ export default function ProductReviews({ productId, onAggregateChange }) {
     async (e) => {
       e.preventDefault();
       if (!user) {
-        toast.error('Please sign in to leave a review.');
+        toast.error(t('toast.signInRequired'));
         return;
       }
       if (rating < 1 || rating > 5) {
-        toast.error('Please choose a rating from 1 to 5 stars.');
+        toast.error(t('toast.ratingRequired'));
         return;
       }
       const trimmedComment = comment.trim();
       if (!trimmedComment) {
-        toast.error('Please write your review before submitting.');
+        toast.error(t('toast.commentRequired'));
         return;
       }
       if (trimmedComment.length > COMMENT_MAX) {
-        toast.error(`Review is too long (max ${COMMENT_MAX} characters).`);
+        toast.error(t('toast.commentTooLong', { max: COMMENT_MAX }));
         return;
       }
       const trimmedTitle = title.trim().slice(0, TITLE_MAX);
@@ -239,18 +243,18 @@ export default function ProductReviews({ productId, onAggregateChange }) {
 
         if (insertError) throw insertError;
 
-        toast.success('Thanks! Your review has been posted.');
+        toast.success(t('toast.success'));
         resetForm();
         setFormOpen(false);
         await fetchReviews();
       } catch (err) {
         console.error('ProductReviews: submit error', err);
-        toast.error(err?.message || 'Could not submit your review. Please try again.');
+        toast.error(err?.message || t('toast.submitError'));
       } finally {
         setSubmitting(false);
       }
     },
-    [user, rating, title, comment, productId, fetchReviews, resetForm]
+    [user, rating, title, comment, productId, fetchReviews, resetForm, t]
   );
 
   return (
@@ -262,21 +266,21 @@ export default function ProductReviews({ productId, onAggregateChange }) {
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
         <div>
           <h2 id="reviews-heading" className="text-3xl md:text-4xl font-serif text-stone-900 mb-2">
-            Customer Reviews
+            {t('heading')}
           </h2>
           {loading ? (
             <p className="text-stone-400 text-sm flex items-center gap-2">
-              <Loader2 size={14} className="animate-spin" /> Loading reviews…
+              <Loader2 size={14} className="animate-spin" /> {t('loading')}
             </p>
           ) : aggregate.count === 0 ? (
-            <p className="text-stone-500">Be the first to review this product</p>
+            <p className="text-stone-500">{t('beFirst')}</p>
           ) : (
             <div className="flex items-center gap-3 text-stone-600">
-              <StarRow value={aggregate.avg} size={20} />
+              <StarRow value={aggregate.avg} size={20} ariaLabel={t('starsAria', { value: aggregate.avg, max: 5 })} />
               <span className="text-stone-900 font-medium">{aggregate.avg.toFixed(1)}</span>
               <span className="text-stone-400">·</span>
               <span>
-                {aggregate.count} {aggregate.count === 1 ? 'review' : 'reviews'}
+                {t('reviewCount', { count: aggregate.count })}
               </span>
             </div>
           )}
@@ -291,11 +295,11 @@ export default function ProductReviews({ productId, onAggregateChange }) {
             >
               {formOpen ? (
                 <>
-                  Cancel <ChevronUp className="ml-1 h-4 w-4" />
+                  {t('cancel')} <ChevronUp className="ml-1 h-4 w-4" />
                 </>
               ) : (
                 <>
-                  Write a review <ChevronDown className="ml-1 h-4 w-4" />
+                  {t('writeReview')} <ChevronDown className="ml-1 h-4 w-4" />
                 </>
               )}
             </Button>
@@ -306,7 +310,7 @@ export default function ProductReviews({ productId, onAggregateChange }) {
                 variant="outline"
                 className="rounded-full border-stone-300 text-stone-700 hover:border-[#D4A574] hover:text-[#D4A574]"
               >
-                Sign in to review
+                {t('signInToReview')}
               </Button>
             </Link>
           )}
@@ -321,14 +325,14 @@ export default function ProductReviews({ productId, onAggregateChange }) {
         >
           <div className="mb-6">
             <Label className="block text-sm font-medium text-stone-900 mb-2">
-              Your rating
+              {t('yourRating')}
             </Label>
-            <StarPicker value={rating} onChange={setRating} disabled={submitting} />
+            <StarPicker value={rating} onChange={setRating} disabled={submitting} t={t} />
           </div>
 
           <div className="mb-5">
             <Label htmlFor="review-title" className="block text-sm font-medium text-stone-900 mb-2">
-              Title <span className="text-stone-400 font-normal">(optional)</span>
+              {t('title')} <span className="text-stone-400 font-normal">{t('optional')}</span>
             </Label>
             <Input
               id="review-title"
@@ -336,7 +340,7 @@ export default function ProductReviews({ productId, onAggregateChange }) {
               value={title}
               onChange={(e) => setTitle(e.target.value.slice(0, TITLE_MAX))}
               maxLength={TITLE_MAX}
-              placeholder="Sum up your experience"
+              placeholder={t('titlePlaceholder')}
               disabled={submitting}
             />
             <p className="text-xs text-stone-400 mt-1">
@@ -346,7 +350,7 @@ export default function ProductReviews({ productId, onAggregateChange }) {
 
           <div className="mb-6">
             <Label htmlFor="review-comment" className="block text-sm font-medium text-stone-900 mb-2">
-              Your review
+              {t('yourReview')}
             </Label>
             <Textarea
               id="review-comment"
@@ -354,7 +358,7 @@ export default function ProductReviews({ productId, onAggregateChange }) {
               onChange={(e) => setComment(e.target.value.slice(0, COMMENT_MAX))}
               maxLength={COMMENT_MAX}
               rows={5}
-              placeholder="What did you like or dislike? How did the product perform?"
+              placeholder={t('commentPlaceholder')}
               disabled={submitting}
               required
             />
@@ -374,7 +378,7 @@ export default function ProductReviews({ productId, onAggregateChange }) {
               disabled={submitting}
               className="rounded-full"
             >
-              Cancel
+              {t('cancel')}
             </Button>
             <Button
               type="submit"
@@ -383,10 +387,10 @@ export default function ProductReviews({ productId, onAggregateChange }) {
             >
               {submitting ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting…
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('submitting')}
                 </>
               ) : (
-                'Submit review'
+                t('submit')
               )}
             </Button>
           </div>
@@ -402,20 +406,20 @@ export default function ProductReviews({ productId, onAggregateChange }) {
               className="bg-white border border-stone-100 rounded-2xl p-5 md:p-6 shadow-sm"
             >
               <div className="flex flex-wrap items-center gap-3 mb-2">
-                <StarRow value={r.rating || 0} size={16} />
+                <StarRow value={r.rating || 0} size={16} ariaLabel={t('starsAria', { value: r.rating || 0, max: 5 })} />
                 {r.title && (
                   <h3 className="text-lg font-serif text-stone-900">{r.title}</h3>
                 )}
               </div>
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-stone-500 mb-3">
                 <span className="font-medium text-stone-700">
-                  {r.reviewer_name?.trim() || 'Anonymous'}
+                  {r.reviewer_name?.trim() || t('anonymous')}
                 </span>
                 <span aria-hidden="true">·</span>
-                <span>{formatDate(r.created_at)}</span>
+                <span>{formatDate(r.created_at, locale)}</span>
                 {r.verified_purchase && (
                   <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">
-                    <ShieldCheck size={14} /> Verified purchase
+                    <ShieldCheck size={14} /> {t('verifiedPurchase')}
                   </span>
                 )}
               </div>

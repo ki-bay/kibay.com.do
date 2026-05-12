@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { m } from 'framer-motion';
 import { Plus, Minus, ShoppingBag } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import Card from '@/components/ui/card';
 import { useCart } from '@/hooks/useCart';
@@ -9,10 +10,11 @@ import { useFlyToCart } from '@/hooks/useFlyToCart';
 import FlyToCartAnimation from '@/components/FlyToCartAnimation';
 
 const ProductCard = ({ product }) => {
+  const { t } = useTranslation('productCard');
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
   const { toast } = useToast();
-  
+
   const productImgRef = useRef(null);
   // We don't pass cartRef here because it's hard to get from Navigation.
   // The hook will fallback to document.getElementById('cart-icon-trigger')
@@ -25,8 +27,8 @@ const ProductCard = ({ product }) => {
     triggerFlyToCart();
     addToCart(product, quantity);
     toast({
-      title: "Added to Cart",
-      description: `${quantity} x ${product.name} added to your cart.`,
+      title: t('toast.title'),
+      description: t('toast.description', { count: quantity, name: product.name }),
     });
   };
 
@@ -40,7 +42,7 @@ const ProductCard = ({ product }) => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </FlyToCartAnimation>
-      
+
       <div className="p-6 flex flex-col flex-grow">
         <div className="flex justify-between items-start mb-4">
           <div>
@@ -51,7 +53,7 @@ const ProductCard = ({ product }) => {
             RD${product.price}
           </span>
         </div>
-        
+
         <p className="text-foreground/70 text-sm mb-6 line-clamp-2 font-light flex-grow">
           {product.description}
         </p>
@@ -61,7 +63,7 @@ const ProductCard = ({ product }) => {
             <button
               onClick={handleDecrement}
               className="p-2 text-foreground/70 hover:text-foreground transition-colors"
-              aria-label="Decrease quantity"
+              aria-label={t('decreaseQty')}
             >
               <Minus className="w-4 h-4" />
             </button>
@@ -71,18 +73,18 @@ const ProductCard = ({ product }) => {
             <button
               onClick={handleIncrement}
               className="p-2 text-foreground/70 hover:text-foreground transition-colors"
-              aria-label="Increase quantity"
+              aria-label={t('increaseQty')}
             >
               <Plus className="w-4 h-4" />
             </button>
           </div>
-          
+
           <Button
             onClick={handleAddToCart}
             className="flex-1 bg-mango-500 hover:bg-mango-600 text-foreground font-normal"
           >
             <ShoppingBag className="w-4 h-4 mr-2" />
-            Add to Cart
+            {t('addToCart')}
           </Button>
         </div>
       </div>

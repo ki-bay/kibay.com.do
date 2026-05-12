@@ -1,0 +1,15 @@
+{
+  "loading": "Loading your order history...",
+  "errorLoad": "Unable to load orders.",
+  "tryAgain": "Try Again",
+  "heading": "Order History",
+  "ordersFound_one": "{{count}} Order Found",
+  "ordersFound_other": "{{count}} Orders Found",
+  "missingOrderTitle": "Recent Order Processing",
+  "missingOrderBody": "We detected a recent purchase that isn't showing up yet. It might still be processing. Please refresh in a few moments.",
+  "refreshList": "Refresh List",
+  "noOrders": "No orders found",
+  "tryAdjusting": "Try adjusting your filters to see more results.",
+  "noOrdersYet": "Looks like you haven't placed any orders yet.",
+  "startShopping": "Start Shopping"
+}

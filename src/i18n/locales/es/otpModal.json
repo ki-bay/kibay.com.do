@@ -1,0 +1,10 @@
+{
+  "closeAriaLabel": "Cerrar ventana",
+  "title": "Verificación",
+  "subtitlePrefix": "Ingresa el código de 6 dígitos que enviamos a",
+  "verifying": "Verificando...",
+  "verifyAndLogin": "Verificar y entrar",
+  "resend": "Reenviar código",
+  "resendIn": "Reenviar en {{seconds}}s",
+  "useDifferentEmail": "Usar otro correo"
+}

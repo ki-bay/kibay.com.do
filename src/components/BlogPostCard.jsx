@@ -2,11 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { m } from 'framer-motion';
 import { Calendar, User, ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const BlogPostCard = ({ post }) => {
+  const { t, i18n } = useTranslation('blogPostCard');
   const { id, title, description, featured_image_url, author_email, created_at } = post;
-  
-  const formattedDate = new Date(created_at).toLocaleDateString('en-US', {
+
+  const locale = i18n.language?.startsWith('es') ? 'es-DO' : 'en-US';
+  const formattedDate = new Date(created_at).toLocaleDateString(locale, {
     year: 'numeric',
     month: 'long',
     day: 'numeric'
@@ -19,16 +22,16 @@ const BlogPostCard = ({ post }) => {
     >
       <Link to={`/blog/${id}`} className="block relative aspect-video overflow-hidden bg-background">
         {featured_image_url ? (
-          <img 
-            src={featured_image_url} 
-            alt={title} 
+          <img
+            src={featured_image_url}
+            alt={title}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-card relative overflow-hidden">
              {/* Fallback pattern or placeholder */}
             <div className="absolute inset-0 bg-gradient-to-br from-card to-background" />
-            <span className="relative z-10 text-foreground/10 text-4xl font-bold">Ki-BAY</span>
+            <span className="relative z-10 text-foreground/10 text-4xl font-bold">{t('fallbackBrand')}</span>
           </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-60" />
@@ -51,16 +54,16 @@ const BlogPostCard = ({ post }) => {
         <Link to={`/blog/${id}`} className="group-hover:text-mango-400 transition-colors">
           <h3 className="text-xl font-bold text-foreground mb-2 line-clamp-2">{title}</h3>
         </Link>
-        
+
         <p className="text-foreground/60 text-sm mb-4 line-clamp-3 flex-grow">
           {description}
         </p>
 
-        <Link 
+        <Link
           to={`/blog/${id}`}
           className="inline-flex items-center text-mango-400 text-sm font-medium hover:text-mango-300 mt-auto"
         >
-          Read Article <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
+          {t('readArticle')} <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
         </Link>
       </div>
     </m.div>

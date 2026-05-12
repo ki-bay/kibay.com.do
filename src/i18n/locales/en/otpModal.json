@@ -1,0 +1,10 @@
+{
+  "closeAriaLabel": "Close modal",
+  "title": "Verification",
+  "subtitlePrefix": "Enter the 6-digit code sent to",
+  "verifying": "Verifying...",
+  "verifyAndLogin": "Verify & Login",
+  "resend": "Resend Code",
+  "resendIn": "Resend in {{seconds}}s",
+  "useDifferentEmail": "Use a different email"
+}

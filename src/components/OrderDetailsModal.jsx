@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { formatDopFromCents } from '@/lib/formatMoney';
 import { Package, Truck, CreditCard, Calendar, Mail, Loader2, MapPin, FileText } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { useOrderHistory } from '@/hooks/useOrderHistory';
 import InvoiceDownload from '@/components/InvoiceDownload';
@@ -15,6 +16,7 @@ import { supabase } from '@/lib/customSupabaseClient';
 import { publicStorageObjectUrl } from '@/lib/supabaseStorage';
 
 const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
+  const { t, i18n } = useTranslation('orderDetails');
   const { getOrderItems } = useOrderHistory();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,7 +27,7 @@ const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
     if (isOpen && initialOrder) {
       setLoading(true);
       setCurrentOrder(initialOrder); // Reset to prop first
-      
+
       getOrderItems(initialOrder.id)
         .then(data => setItems(data || []))
         .catch(console.error)
@@ -34,16 +36,16 @@ const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
       // Realtime subscription for this specific order
       const channel = supabase
         .channel(`order-${initialOrder.id}`)
-        .on('postgres_changes', { 
-          event: 'UPDATE', 
-          schema: 'public', 
+        .on('postgres_changes', {
+          event: 'UPDATE',
+          schema: 'public',
           table: 'orders',
           filter: `id=eq.${initialOrder.id}`
         }, (payload) => {
           setCurrentOrder(payload.new);
         })
         .subscribe();
-        
+
       return () => {
         supabase.removeChannel(channel);
       };
@@ -76,6 +78,7 @@ const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
   };
 
   const address = currentOrder.shipping_address || {};
+  const locale = i18n.language?.startsWith('es') ? 'es-DO' : 'en-US';
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -84,17 +87,17 @@ const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
               <DialogTitle className="text-xl font-light text-foreground flex items-center gap-2">
-                Order #{currentOrder.order_number}
+                {t('orderPrefix', { number: currentOrder.order_number })}
               </DialogTitle>
               <p className={`text-sm font-medium mt-1 ${getStatusColor(currentOrder.status)}`}>
                 {currentOrder.status}
               </p>
             </div>
             <div className="text-right hidden sm:block">
-              <p className="text-xs text-foreground/40">Date Placed</p>
+              <p className="text-xs text-foreground/40">{t('datePlaced')}</p>
               <p className="text-sm font-light">
-                {new Date(currentOrder.created_at).toLocaleDateString(undefined, { 
-                  year: 'numeric', month: 'long', day: 'numeric' 
+                {new Date(currentOrder.created_at).toLocaleDateString(locale, {
+                  year: 'numeric', month: 'long', day: 'numeric'
                 })}
               </p>
             </div>
@@ -105,7 +108,7 @@ const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
           <div className="space-y-8">
             {/* Items List */}
             <div>
-              <h3 className="text-sm font-medium text-foreground/60 uppercase tracking-wider mb-4">Order Items</h3>
+              <h3 className="text-sm font-medium text-foreground/60 uppercase tracking-wider mb-4">{t('orderItems')}</h3>
               {loading ? (
                 <div className="flex justify-center py-8">
                   <Loader2 className="w-8 h-8 animate-spin text-mango-500" />
@@ -120,14 +123,14 @@ const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
                         </div>
                         <div>
                           <p className="font-medium text-foreground">{item.product_name}</p>
-                          <p className="text-sm text-foreground/40">Qty: {item.quantity} × {formatDopFromCents(item.price_per_item)}</p>
+                          <p className="text-sm text-foreground/40">{t('qtyLine', { quantity: item.quantity, unit: formatDopFromCents(item.price_per_item) })}</p>
                         </div>
                       </div>
                       <p className="font-medium text-mango-400">{formatDopFromCents(item.total_price)}</p>
                     </div>
                   ))}
                   <div className="flex justify-between items-center pt-4 mt-2 border-t border-foreground/10">
-                    <span className="font-bold text-foreground">Total</span>
+                    <span className="font-bold text-foreground">{t('total')}</span>
                     <span className="font-bold text-xl text-mango-400">{formatDopFromCents(currentOrder.total_amount)}</span>
                   </div>
                 </div>
@@ -139,7 +142,7 @@ const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
               <div className="bg-foreground/5 p-4 rounded-lg space-y-3">
                 <div className="flex items-center gap-2 text-mango-400 mb-2">
                   <MapPin className="w-4 h-4" />
-                  <span className="font-medium text-sm">Shipping Address</span>
+                  <span className="font-medium text-sm">{t('shippingAddress')}</span>
                 </div>
                 <div className="text-sm text-foreground/70 leading-relaxed font-light">
                   <p className="text-foreground font-normal">{address.firstName} {address.lastName}</p>
@@ -155,18 +158,18 @@ const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
               <div className="bg-foreground/5 p-4 rounded-lg space-y-3">
                 <div className="flex items-center gap-2 text-mango-400 mb-2">
                   <Truck className="w-4 h-4" />
-                  <span className="font-medium text-sm">Delivery Info</span>
+                  <span className="font-medium text-sm">{t('deliveryInfo')}</span>
                 </div>
                 <div className="space-y-2 text-sm">
                   {currentOrder.shipping_method && (
                     <p className="text-foreground/70">
-                      Method: <span className="text-foreground">{currentOrder.shipping_method}</span>
+                      {t('method')} <span className="text-foreground">{currentOrder.shipping_method}</span>
                     </p>
                   )}
                   {currentOrder.tracking_number ? (
                     <>
                       <p className="text-foreground/70 mt-2">
-                        Tracking:{' '}
+                        {t('tracking')}{' '}
                         <span className="text-foreground font-mono">{currentOrder.tracking_number}</span>
                       </p>
                       {currentOrder.tracking_url && (
@@ -176,12 +179,12 @@ const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
                           rel="noreferrer"
                           className="text-mango-400 hover:text-mango-300 underline text-xs inline-block mt-1"
                         >
-                          Track Shipment
+                          {t('trackShipment')}
                         </a>
                       )}
                     </>
                   ) : (
-                    <p className="text-foreground/40 italic">Tracking info will be available once shipped.</p>
+                    <p className="text-foreground/40 italic">{t('trackingPending')}</p>
                   )}
                   {currentOrder.invoice_pdf_path && (
                     <a
@@ -191,21 +194,21 @@ const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
                       className="inline-flex items-center gap-2 mt-3 text-mango-400 hover:text-mango-300 text-sm font-medium"
                     >
                       <FileText className="w-4 h-4" />
-                      Download invoice (PDF)
+                      {t('downloadInvoice')}
                     </a>
                   )}
                   {currentOrder.estimated_delivery_date && (
                     <div className="flex items-center gap-2 mt-2 pt-2 border-t border-foreground/5">
                       <Calendar className="w-3 h-3 text-foreground/40" />
                       <span className="text-foreground/70">
-                        Est. Delivery: {new Date(currentOrder.estimated_delivery_date).toLocaleDateString()}
+                        {t('estDelivery', { date: new Date(currentOrder.estimated_delivery_date).toLocaleDateString(locale) })}
                       </span>
                     </div>
                   )}
                    <div className="flex items-center gap-2 mt-2 pt-2 border-t border-foreground/5">
                       <CreditCard className="w-3 h-3 text-foreground/40" />
                       <span className="text-foreground/70">
-                        {currentOrder.payment_method || 'Payment Card'}
+                        {currentOrder.payment_method || t('paymentCardFallback')}
                       </span>
                     </div>
                 </div>
@@ -218,14 +221,14 @@ const OrderDetailsModal = ({ order: initialOrder, isOpen, onClose }) => {
            <a href="mailto:support@kibay.com.do" className="w-full sm:w-auto">
              <Button variant="ghost" className="w-full sm:w-auto text-foreground/60 hover:text-foreground hover:bg-foreground/10">
                <Mail className="w-4 h-4 mr-2" />
-               Contact Support
+               {t('contactSupport')}
              </Button>
            </a>
            {/* Only show Invoice download if items are loaded */}
            {!loading && (
-             <InvoiceDownload 
-               order={currentOrder} 
-               orderItems={items} 
+             <InvoiceDownload
+               order={currentOrder}
+               orderItems={items}
                className="w-full sm:w-auto text-mango-500 border-mango-500/50 hover:bg-mango-500/10"
              />
            )}

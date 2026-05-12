@@ -1,0 +1,12 @@
+{
+  "previewMode": "Preview Mode",
+  "noFeaturedImage": "No Featured Image",
+  "uncategorized": "Uncategorized",
+  "scheduled": "Scheduled: {{date}}",
+  "minRead": "{{count}} min read",
+  "untitled": "Untitled Post",
+  "currentUser": "Current User",
+  "author": "Author",
+  "placeholderContent": "<p>Start writing your content...</p>",
+  "tags": "Tags"
+}

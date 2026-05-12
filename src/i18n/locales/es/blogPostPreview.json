@@ -1,0 +1,12 @@
+{
+  "previewMode": "Modo vista previa",
+  "noFeaturedImage": "Sin imagen destacada",
+  "uncategorized": "Sin categoría",
+  "scheduled": "Programado: {{date}}",
+  "minRead": "{{count}} min de lectura",
+  "untitled": "Artículo sin título",
+  "currentUser": "Usuario actual",
+  "author": "Autor",
+  "placeholderContent": "<p>Empieza a escribir tu contenido...</p>",
+  "tags": "Etiquetas"
+}

@@ -1,0 +1,22 @@
+{
+  "youtubePrompt": "Enter YouTube URL",
+  "linkPrompt": "URL",
+  "placeholder": "Write your story...",
+  "tooltips": {
+    "bold": "Bold",
+    "italic": "Italic",
+    "strikethrough": "Strikethrough",
+    "h1": "H1",
+    "h2": "H2",
+    "h3": "H3",
+    "bulletList": "Bullet List",
+    "orderedList": "Ordered List",
+    "quote": "Quote",
+    "codeBlock": "Code Block",
+    "horizontalRule": "Horizontal Rule",
+    "link": "Link",
+    "youtube": "YouTube Video",
+    "undo": "Undo",
+    "redo": "Redo"
+  }
+}

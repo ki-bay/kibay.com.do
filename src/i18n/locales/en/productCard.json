@@ -1,0 +1,9 @@
+{
+  "toast": {
+    "title": "Added to Cart",
+    "description": "{{count}} x {{name}} added to your cart."
+  },
+  "decreaseQty": "Decrease quantity",
+  "increaseQty": "Increase quantity",
+  "addToCart": "Add to Cart"
+}

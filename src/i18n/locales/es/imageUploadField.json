@@ -1,0 +1,18 @@
+{
+  "toast": {
+    "invalidTypeTitle": "Tipo de archivo no válido",
+    "invalidTypeDescription": "Sube una imagen (JPG, PNG, WEBP, GIF).",
+    "tooLargeTitle": "Archivo muy grande",
+    "tooLargeDescription": "La imagen debe pesar menos de 5MB.",
+    "successTitle": "Listo",
+    "successDescription": "Imagen subida correctamente.",
+    "failedTitle": "Falló la subida",
+    "failedDescription": "No pudimos subir la imagen."
+  },
+  "uploading": "Subiendo...",
+  "featuredAlt": "Destacada",
+  "change": "Cambiar",
+  "remove": "Eliminar",
+  "clickToUpload": "Haz clic para subir imagen destacada",
+  "fileHint": "SVG, PNG, JPG o GIF (máx. 5MB)"
+}

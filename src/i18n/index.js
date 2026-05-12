@@ -60,6 +60,34 @@ import esAdminEmailDashboard from './locales/es/adminEmailDashboard.json';
 import esAdminEmailContacts from './locales/es/adminEmailContacts.json';
 import esAdminEmailCampaigns from './locales/es/adminEmailCampaigns.json';
 import esAdminEmailComposer from './locales/es/adminEmailComposer.json';
+import esNewsletter from './locales/es/newsletter.json';
+
+// Shared components (added 2026-05-12)
+import esBlogPostCard from './locales/es/blogPostCard.json';
+import esBlogPostDetail from './locales/es/blogPostDetail.json';
+import esBlogPostPreview from './locales/es/blogPostPreview.json';
+import esBlogSubscribe from './locales/es/blogSubscribe.json';
+import esPublicBlog from './locales/es/publicBlog.json';
+import esBreadcrumbNav from './locales/es/breadcrumbNav.json';
+import esCallToAction from './locales/es/callToAction.json';
+import esCanCollage from './locales/es/canCollage.json';
+import esCookieConsent from './locales/es/cookieConsent.json';
+import esOtpModal from './locales/es/otpModal.json';
+import esWelcomeMessage from './locales/es/welcomeMessage.json';
+import esUnsubscribe from './locales/es/unsubscribe.json';
+import esProductCard from './locales/es/productCard.json';
+import esProductGallery from './locales/es/productGallery.json';
+import esProductReviews from './locales/es/productReviews.json';
+import esOrderCard from './locales/es/orderCard.json';
+import esOrderDetails from './locales/es/orderDetails.json';
+import esOrderFilters from './locales/es/orderFilters.json';
+import esOrderHistory from './locales/es/orderHistory.json';
+import esEmailForm from './locales/es/emailForm.json';
+import esEmailTemplate from './locales/es/emailTemplate.json';
+import esInvoiceDownload from './locales/es/invoiceDownload.json';
+import esRichTextEditor from './locales/es/richTextEditor.json';
+import esImageUploadField from './locales/es/imageUploadField.json';
+import esMediaUploadButton from './locales/es/mediaUploadButton.json';
 
 // --- English --------------------------------------------------------------
 import enCommon from './locales/en/common.json';
@@ -114,6 +142,33 @@ import enAdminEmailDashboard from './locales/en/adminEmailDashboard.json';
 import enAdminEmailContacts from './locales/en/adminEmailContacts.json';
 import enAdminEmailCampaigns from './locales/en/adminEmailCampaigns.json';
 import enAdminEmailComposer from './locales/en/adminEmailComposer.json';
+import enNewsletter from './locales/en/newsletter.json';
+
+import enBlogPostCard from './locales/en/blogPostCard.json';
+import enBlogPostDetail from './locales/en/blogPostDetail.json';
+import enBlogPostPreview from './locales/en/blogPostPreview.json';
+import enBlogSubscribe from './locales/en/blogSubscribe.json';
+import enPublicBlog from './locales/en/publicBlog.json';
+import enBreadcrumbNav from './locales/en/breadcrumbNav.json';
+import enCallToAction from './locales/en/callToAction.json';
+import enCanCollage from './locales/en/canCollage.json';
+import enCookieConsent from './locales/en/cookieConsent.json';
+import enOtpModal from './locales/en/otpModal.json';
+import enWelcomeMessage from './locales/en/welcomeMessage.json';
+import enUnsubscribe from './locales/en/unsubscribe.json';
+import enProductCard from './locales/en/productCard.json';
+import enProductGallery from './locales/en/productGallery.json';
+import enProductReviews from './locales/en/productReviews.json';
+import enOrderCard from './locales/en/orderCard.json';
+import enOrderDetails from './locales/en/orderDetails.json';
+import enOrderFilters from './locales/en/orderFilters.json';
+import enOrderHistory from './locales/en/orderHistory.json';
+import enEmailForm from './locales/en/emailForm.json';
+import enEmailTemplate from './locales/en/emailTemplate.json';
+import enInvoiceDownload from './locales/en/invoiceDownload.json';
+import enRichTextEditor from './locales/en/richTextEditor.json';
+import enImageUploadField from './locales/en/imageUploadField.json';
+import enMediaUploadButton from './locales/en/mediaUploadButton.json';
 
 const resources = {
   es: {
@@ -164,6 +219,32 @@ const resources = {
     adminEmailContacts: esAdminEmailContacts,
     adminEmailCampaigns: esAdminEmailCampaigns,
     adminEmailComposer: esAdminEmailComposer,
+    newsletter: esNewsletter,
+    blogPostCard: esBlogPostCard,
+    blogPostDetail: esBlogPostDetail,
+    blogPostPreview: esBlogPostPreview,
+    blogSubscribe: esBlogSubscribe,
+    publicBlog: esPublicBlog,
+    breadcrumbNav: esBreadcrumbNav,
+    callToAction: esCallToAction,
+    canCollage: esCanCollage,
+    cookieConsent: esCookieConsent,
+    otpModal: esOtpModal,
+    welcomeMessage: esWelcomeMessage,
+    unsubscribe: esUnsubscribe,
+    productCard: esProductCard,
+    productGallery: esProductGallery,
+    productReviews: esProductReviews,
+    orderCard: esOrderCard,
+    orderDetails: esOrderDetails,
+    orderFilters: esOrderFilters,
+    orderHistory: esOrderHistory,
+    emailForm: esEmailForm,
+    emailTemplate: esEmailTemplate,
+    invoiceDownload: esInvoiceDownload,
+    richTextEditor: esRichTextEditor,
+    imageUploadField: esImageUploadField,
+    mediaUploadButton: esMediaUploadButton,
   },
   en: {
     common: enCommon,
@@ -213,6 +294,32 @@ const resources = {
     adminEmailContacts: enAdminEmailContacts,
     adminEmailCampaigns: enAdminEmailCampaigns,
     adminEmailComposer: enAdminEmailComposer,
+    newsletter: enNewsletter,
+    blogPostCard: enBlogPostCard,
+    blogPostDetail: enBlogPostDetail,
+    blogPostPreview: enBlogPostPreview,
+    blogSubscribe: enBlogSubscribe,
+    publicBlog: enPublicBlog,
+    breadcrumbNav: enBreadcrumbNav,
+    callToAction: enCallToAction,
+    canCollage: enCanCollage,
+    cookieConsent: enCookieConsent,
+    otpModal: enOtpModal,
+    welcomeMessage: enWelcomeMessage,
+    unsubscribe: enUnsubscribe,
+    productCard: enProductCard,
+    productGallery: enProductGallery,
+    productReviews: enProductReviews,
+    orderCard: enOrderCard,
+    orderDetails: enOrderDetails,
+    orderFilters: enOrderFilters,
+    orderHistory: enOrderHistory,
+    emailForm: enEmailForm,
+    emailTemplate: enEmailTemplate,
+    invoiceDownload: enInvoiceDownload,
+    richTextEditor: enRichTextEditor,
+    imageUploadField: enImageUploadField,
+    mediaUploadButton: enMediaUploadButton,
   },
 };
 
@@ -237,6 +344,13 @@ i18n
       'adminSocialDashboard', 'adminSocialSettings',
       'adminBlog', 'adminBlogForm',
       'adminEmailDashboard', 'adminEmailContacts', 'adminEmailCampaigns', 'adminEmailComposer',
+      'newsletter',
+      'blogPostCard', 'blogPostDetail', 'blogPostPreview', 'blogSubscribe', 'publicBlog',
+      'breadcrumbNav', 'callToAction', 'canCollage', 'cookieConsent', 'otpModal',
+      'welcomeMessage', 'unsubscribe', 'productCard', 'productGallery', 'productReviews',
+      'orderCard', 'orderDetails', 'orderFilters', 'orderHistory',
+      'emailForm', 'emailTemplate', 'invoiceDownload',
+      'richTextEditor', 'imageUploadField', 'mediaUploadButton',
     ],
     interpolation: { escapeValue: false },
     // ES is the default audience. Don't let an EN browser override that —

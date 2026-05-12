@@ -1,0 +1,21 @@
+{
+  "searchPlaceholder": "Buscar por # de pedido o monto...",
+  "status": {
+    "all": "Todos los estados",
+    "awaiting_payment": "Esperando pago",
+    "paid": "Pagado",
+    "Pending": "Pendiente",
+    "Processing": "Procesando",
+    "processing": "procesando",
+    "Shipped": "Enviado",
+    "shipped": "enviado",
+    "Delivered": "Entregado",
+    "Cancelled": "Cancelado"
+  },
+  "sort": {
+    "newest": "Más recientes",
+    "oldest": "Más antiguos",
+    "highest_amount": "Mayor monto",
+    "lowest_amount": "Menor monto"
+  }
+}

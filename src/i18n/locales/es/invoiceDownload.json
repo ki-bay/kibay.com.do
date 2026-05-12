@@ -1,0 +1,18 @@
+{
+  "downloadInvoice": "Descargar factura",
+  "pdf": {
+    "invoice": "FACTURA",
+    "tagline": "Vino espumante premium",
+    "orderNumber": "Número de pedido: {{number}}",
+    "date": "Fecha: {{date}}",
+    "status": "Estado: {{status}}",
+    "billTo": "Facturar a:",
+    "defaultCountry": "República Dominicana",
+    "colItem": "Artículo",
+    "colQuantity": "Cantidad",
+    "colUnitPrice": "Precio unitario",
+    "colTotal": "Total",
+    "totalLabel": "Total:",
+    "footer": "Gracias por elegir Kibay. Para soporte, contacta info@kibay.com.do"
+  }
+}

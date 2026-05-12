@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { m } from 'framer-motion';
 import { Send, Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { cn } from '@/lib/utils';
@@ -8,6 +9,7 @@ import { supabase } from '@/lib/customSupabaseClient';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 
 const EmailForm = ({ variant = 'default' }) => {
+  const { t } = useTranslation('emailForm');
   const [formData, setFormData] = useState({ name: '', email: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
@@ -29,17 +31,17 @@ const EmailForm = ({ variant = 'default' }) => {
     e.preventDefault();
 
     if (!formData.name.trim()) {
-      toast({ title: 'Name Required', description: 'Please enter your name.', variant: 'destructive' });
+      toast({ title: t('toast.nameRequiredTitle'), description: t('toast.nameRequiredDescription'), variant: 'destructive' });
       return;
     }
 
     if (!formData.email.trim()) {
-      toast({ title: 'Email Required', description: 'Please enter your email.', variant: 'destructive' });
+      toast({ title: t('toast.emailRequiredTitle'), description: t('toast.emailRequiredDescription'), variant: 'destructive' });
       return;
     }
 
     if (!validateEmail(formData.email)) {
-      toast({ title: 'Invalid Email', description: 'Please enter a valid email.', variant: 'destructive' });
+      toast({ title: t('toast.invalidEmailTitle'), description: t('toast.invalidEmailDescription'), variant: 'destructive' });
       return;
     }
 
@@ -57,13 +59,13 @@ const EmailForm = ({ variant = 'default' }) => {
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       toast({
-        title: 'Welcome to the Kibay Family! 🎉',
-        description: "You've successfully subscribed.",
+        title: t('toast.successTitle'),
+        description: t('toast.successDescription'),
       });
 
       setFormData({ name: '', email: '' });
     } catch (error) {
-      toast({ title: "Error", description: "Something went wrong.", variant: "destructive" });
+      toast({ title: t('toast.errorTitle'), description: t('toast.errorDescription'), variant: "destructive" });
     } finally {
       setIsSubmitting(false);
     }
@@ -84,7 +86,7 @@ const EmailForm = ({ variant = 'default' }) => {
         <input
           type="text"
           name="name"
-          placeholder="Your Name"
+          placeholder={t('namePlaceholder')}
           value={formData.name}
           onChange={handleChange}
           disabled={isSubmitting}
@@ -99,7 +101,7 @@ const EmailForm = ({ variant = 'default' }) => {
         <input
           type="email"
           name="email"
-          placeholder="your@email.com"
+          placeholder={t('emailPlaceholder')}
           value={formData.email}
           onChange={handleChange}
           disabled={isSubmitting}
@@ -127,12 +129,12 @@ const EmailForm = ({ variant = 'default' }) => {
         {isSubmitting ? (
           <>
             <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-            Subscribing...
+            {t('submitting')}
           </>
         ) : (
           <>
             <Send className="w-5 h-5 mr-2" />
-            Subscribe
+            {t('submit')}
           </>
         )}
       </Button>

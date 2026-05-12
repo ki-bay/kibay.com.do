@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const STORAGE_KEY = 'kibay_cookie_consent_v1';
 
 const CookieConsent = () => {
+	const { t } = useTranslation('cookieConsent');
 	const [show, setShow] = useState(false);
 
 	useEffect(() => {
@@ -32,14 +34,13 @@ const CookieConsent = () => {
 		<div
 			role="dialog"
 			aria-live="polite"
-			aria-label="Cookie consent"
+			aria-label={t('ariaLabel')}
 			className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-4 sm:max-w-md z-[60] bg-card border border-foreground/10 rounded-2xl shadow-xl p-5"
 		>
 			<p className="text-sm text-foreground/80 leading-relaxed mb-4">
-				We use only essential cookies to keep your cart, login, and language preference working.
-				No tracking, no ads. See our{' '}
+				{t('message')}{' '}
 				<Link to="/privacy" className="underline hover:text-mango-400">
-					privacy policy
+					{t('privacyPolicy')}
 				</Link>
 				.
 			</p>
@@ -49,14 +50,14 @@ const CookieConsent = () => {
 					onClick={accept}
 					className="flex-1 px-4 py-2 rounded-full bg-mango-500 hover:bg-mango-600 text-white text-sm font-medium"
 				>
-					OK
+					{t('accept')}
 				</button>
 				<button
 					type="button"
 					onClick={decline}
 					className="px-4 py-2 rounded-full border border-foreground/15 hover:bg-foreground/5 text-foreground/70 text-sm font-light"
 				>
-					Decline
+					{t('decline')}
 				</button>
 			</div>
 		</div>

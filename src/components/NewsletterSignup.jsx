@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { m } from 'framer-motion';
 import { Loader2, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { subscribeToNewsletter } from '@/services/NewsletterService';
@@ -11,16 +12,19 @@ const NewsletterSignup = ({
   headline,
   subtext,
   fields = { firstName: true, email: true },
-  buttonText = "Sign Up",
+  buttonText,
   source = "General Signup",
-  successMessage = "Welcome to the Kibay list!",
+  successMessage,
   variant = "default", // default (light bg), hero (dark bg), footer (compact)
   tags = []
 }) => {
+  const { t } = useTranslation('newsletter');
   const [formData, setFormData] = useState({ firstName: '', email: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const { toast } = useToast();
+  const resolvedButtonText = buttonText || t('defaultButton');
+  const resolvedSuccessMessage = successMessage || t('defaultSuccessMessage');
 
   const handleChange = (e) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -41,8 +45,8 @@ const NewsletterSignup = ({
       if (result.success) {
         setIsSuccess(true);
         toast({
-          title: "Success!",
-          description: successMessage,
+          title: t('toast.successTitle'),
+          description: resolvedSuccessMessage,
           className: "bg-[#D4A574] text-foreground border-none",
         });
       } else {
@@ -50,7 +54,7 @@ const NewsletterSignup = ({
       }
     } catch (error) {
       toast({
-        title: "Error",
+        title: t('toast.errorTitle'),
         description: error.message,
         variant: "destructive",
       });
@@ -70,8 +74,8 @@ const NewsletterSignup = ({
         )}
       >
         <CheckCircle2 className={cn("w-12 h-12 mx-auto mb-4", variant === 'hero' ? "text-[#D4A574]" : "text-[#D4A574]")} />
-        <h3 className="text-2xl font-normal mb-2">You're on the list!</h3>
-        <p className={variant === 'hero' ? "text-foreground/80 font-normal" : "text-stone-600 font-normal"}>{successMessage}</p>
+        <h3 className="text-2xl font-normal mb-2">{t('successTitle')}</h3>
+        <p className={variant === 'hero' ? "text-foreground/80 font-normal" : "text-stone-600 font-normal"}>{resolvedSuccessMessage}</p>
       </m.div>
     );
   }
@@ -113,7 +117,7 @@ const NewsletterSignup = ({
             <input
               type="text"
               name="firstName"
-              placeholder="First Name"
+              placeholder={t('firstNamePlaceholder')}
               value={formData.firstName}
               onChange={handleChange}
               required
@@ -131,7 +135,7 @@ const NewsletterSignup = ({
             <input
               type="email"
               name="email"
-              placeholder="Email Address"
+              placeholder={t('emailPlaceholder')}
               value={formData.email}
               onChange={handleChange}
               required
@@ -159,7 +163,7 @@ const NewsletterSignup = ({
         >
           {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
             <span className="flex items-center justify-center gap-2">
-              {buttonText} {isHero && <ArrowRight className="w-5 h-5" />}
+              {resolvedButtonText} {isHero && <ArrowRight className="w-5 h-5" />}
             </span>
           )}
         </Button>
@@ -170,8 +174,7 @@ const NewsletterSignup = ({
         isHero ? "text-foreground/50" : "text-stone-400",
         isFooter && "text-foreground/30"
       )}>
-        By signing up, you agree to our <Link to="/privacy" className="underline hover:text-[#D4A574]">Privacy Policy</Link>. 
-        You can unsubscribe at any time.
+        {t('consent.prefix')}<Link to="/privacy" className="underline hover:text-[#D4A574]">{t('consent.privacyLink')}</Link>{t('consent.suffix')}
       </p>
     </div>
   );

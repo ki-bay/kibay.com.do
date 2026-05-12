@@ -1,10 +1,12 @@
 import React, { useRef, useState } from 'react';
 import { Image as ImageIcon, Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/customSupabaseClient';
 import { useToast } from '@/components/ui/use-toast';
 
 const MediaUploadButton = ({ onUploadComplete }) => {
+  const { t } = useTranslation('mediaUploadButton');
   const [uploading, setUploading] = useState(false);
   const inputRef = useRef(null);
   const { toast } = useToast();
@@ -16,8 +18,8 @@ const MediaUploadButton = ({ onUploadComplete }) => {
     if (file.size > 10 * 1024 * 1024) { // 10MB limit
       toast({
         variant: "destructive",
-        title: "File too large",
-        description: "Media must be less than 10MB.",
+        title: t('toast.tooLargeTitle'),
+        description: t('toast.tooLargeDescription'),
       });
       return;
     }
@@ -39,13 +41,13 @@ const MediaUploadButton = ({ onUploadComplete }) => {
         .getPublicUrl(filePath);
 
       onUploadComplete(data.publicUrl);
-      
+
     } catch (error) {
       console.error("Upload error:", error);
       toast({
         variant: "destructive",
-        title: "Upload Failed",
-        description: "Could not upload media.",
+        title: t('toast.failedTitle'),
+        description: t('toast.failedDescription'),
       });
     } finally {
       setUploading(false);
@@ -70,7 +72,7 @@ const MediaUploadButton = ({ onUploadComplete }) => {
         onClick={() => inputRef.current?.click()}
         disabled={uploading}
         className={uploading ? "opacity-50" : ""}
-        title="Upload Image"
+        title={t('uploadImage')}
       >
         {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImageIcon className="w-4 h-4" />}
       </Button>

@@ -1,23 +1,25 @@
 import React from 'react';
 import { m } from 'framer-motion';
 import { X, Calendar, Clock, User } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { formatBlogDate, calculateReadingTime } from '@/utils/blogUtils';
 
 const BlogPostPreview = ({ post, onClose, authorName }) => {
+  const { t } = useTranslation('blogPostPreview');
   // Calculate reading time on the fly for preview if not saved yet
   const readingTime = calculateReadingTime(post.content);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4 overflow-y-auto">
-      <m.div 
+      <m.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
         className="bg-background w-full max-w-4xl rounded-2xl border border-foreground/10 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
       >
         <div className="flex items-center justify-between p-4 border-b border-foreground/10 bg-card">
-          <h3 className="text-foreground font-medium">Preview Mode</h3>
+          <h3 className="text-foreground font-medium">{t('previewMode')}</h3>
           <Button variant="ghost" size="icon" onClick={onClose} className="text-foreground/60 hover:text-foreground">
             <X className="w-5 h-5" />
           </Button>
@@ -29,15 +31,15 @@ const BlogPostPreview = ({ post, onClose, authorName }) => {
             {post.featured_image_url ? (
               <div className="w-full h-64 md:h-80 relative mb-8">
                 <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent z-10"></div>
-                <img 
-                  src={post.featured_image_url} 
-                  alt={post.title} 
+                <img
+                  src={post.featured_image_url}
+                  alt={post.title}
                   className="w-full h-full object-cover"
                 />
               </div>
             ) : (
               <div className="w-full h-32 bg-card mb-8 flex items-center justify-center text-foreground/20">
-                No Featured Image
+                {t('noFeaturedImage')}
               </div>
             )}
 
@@ -45,23 +47,23 @@ const BlogPostPreview = ({ post, onClose, authorName }) => {
               {/* Meta */}
               <div className="flex flex-wrap items-center gap-4 text-sm text-foreground/60 mb-6">
                 <span className="bg-mango-500/20 text-mango-400 px-3 py-1 rounded-full font-medium">
-                  {post.category_name || 'Uncategorized'}
+                  {post.category_name || t('uncategorized')}
                 </span>
                 <span className="flex items-center gap-1">
                   <Calendar className="w-4 h-4" />
-                  {post.scheduled_publish_at 
-                    ? `Scheduled: ${formatBlogDate(post.scheduled_publish_at)}` 
+                  {post.scheduled_publish_at
+                    ? t('scheduled', { date: formatBlogDate(post.scheduled_publish_at) })
                     : formatBlogDate(new Date())}
                 </span>
                 <span className="flex items-center gap-1">
                   <Clock className="w-4 h-4" />
-                  {readingTime} min read
+                  {t('minRead', { count: readingTime })}
                 </span>
               </div>
 
               {/* Title */}
               <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
-                {post.title || 'Untitled Post'}
+                {post.title || t('untitled')}
               </h1>
 
               {/* Excerpt */}
@@ -78,21 +80,21 @@ const BlogPostPreview = ({ post, onClose, authorName }) => {
                     {authorName?.charAt(0) || 'U'}
                   </div>
                   <div>
-                    <p className="text-foreground font-medium">{authorName || 'Current User'}</p>
-                    <p className="text-foreground/40 text-xs">Author</p>
+                    <p className="text-foreground font-medium">{authorName || t('currentUser')}</p>
+                    <p className="text-foreground/40 text-xs">{t('author')}</p>
                   </div>
                 </div>
               </div>
 
               {/* Content */}
               <div className="prose prose-invert prose-lg max-w-none text-foreground/80">
-                <div dangerouslySetInnerHTML={{ __html: post.content || '<p>Start writing your content...</p>' }} />
+                <div dangerouslySetInnerHTML={{ __html: post.content || t('placeholderContent') }} />
               </div>
 
               {/* Tags */}
               {post.tags && post.tags.length > 0 && (
                 <div className="mt-12 pt-8 border-t border-foreground/10">
-                  <h3 className="text-sm font-medium text-foreground/60 mb-4 uppercase tracking-wider">Tags</h3>
+                  <h3 className="text-sm font-medium text-foreground/60 mb-4 uppercase tracking-wider">{t('tags')}</h3>
                   <div className="flex flex-wrap gap-2">
                     {post.tags.map((tag, idx) => (
                       <span key={idx} className="bg-card text-foreground/70 px-3 py-1 rounded text-sm">

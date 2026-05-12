@@ -1,0 +1,21 @@
+{
+  "searchPlaceholder": "Search by Order # or Amount...",
+  "status": {
+    "all": "All Status",
+    "awaiting_payment": "Awaiting payment",
+    "paid": "Paid",
+    "Pending": "Pending",
+    "Processing": "Processing",
+    "processing": "processing",
+    "Shipped": "Shipped",
+    "shipped": "shipped",
+    "Delivered": "Delivered",
+    "Cancelled": "Cancelled"
+  },
+  "sort": {
+    "newest": "Newest First",
+    "oldest": "Oldest First",
+    "highest_amount": "Highest Amount",
+    "lowest_amount": "Lowest Amount"
+  }
+}

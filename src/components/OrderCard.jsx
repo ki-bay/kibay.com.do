@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { m } from 'framer-motion';
 import { Package, ChevronRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { formatDopFromCents } from '@/lib/formatMoney';
 import OrderDetailsModal from './OrderDetailsModal';
 
 const OrderCard = ({ order }) => {
+  const { t, i18n } = useTranslation('orderCard');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const getStatusStyle = (status) => {
@@ -31,9 +33,11 @@ const OrderCard = ({ order }) => {
     }
   };
 
+  const locale = i18n.language?.startsWith('es') ? 'es-DO' : 'en-US';
+
   return (
     <>
-      <m.div 
+      <m.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         className="group bg-card/50 hover:bg-card border border-foreground/5 hover:border-mango-500/30 rounded-xl p-5 transition-all duration-300 shadow-sm hover:shadow-glow-orange flex flex-col md:flex-row md:items-center justify-between gap-4"
@@ -42,7 +46,7 @@ const OrderCard = ({ order }) => {
           <div className="w-12 h-12 rounded-lg bg-foreground/5 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
             <Package className="w-6 h-6 text-foreground/30 group-hover:text-mango-400 transition-colors" />
           </div>
-          
+
           <div>
             <div className="flex items-center gap-3 mb-1">
               <span className="text-foreground font-medium">#{order.order_number}</span>
@@ -51,11 +55,11 @@ const OrderCard = ({ order }) => {
               </span>
             </div>
             <p className="text-sm text-foreground/50 font-light">
-              {new Date(order.created_at).toLocaleDateString(undefined, { 
-                month: 'short', day: 'numeric', year: 'numeric' 
+              {new Date(order.created_at).toLocaleDateString(locale, {
+                month: 'short', day: 'numeric', year: 'numeric'
               })}
               {' • '}
-              {order.items_count} item{order.items_count !== 1 && 's'}
+              {t('itemCount', { count: order.items_count })}
             </p>
           </div>
         </div>
@@ -64,23 +68,23 @@ const OrderCard = ({ order }) => {
           <p className="text-lg font-bold text-mango-400">
             {formatDopFromCents(order.total_amount)}
           </p>
-          
-          <Button 
-            variant="ghost" 
-            size="sm" 
+
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={() => setIsModalOpen(true)}
             className="text-foreground/60 hover:text-foreground hover:bg-foreground/10 gap-1 group/btn"
           >
-            View Details
+            {t('viewDetails')}
             <ChevronRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
           </Button>
         </div>
       </m.div>
 
-      <OrderDetailsModal 
-        order={order} 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+      <OrderDetailsModal
+        order={order}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
       />
     </>
   );

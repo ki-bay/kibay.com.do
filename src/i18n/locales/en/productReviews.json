@@ -1,0 +1,32 @@
+{
+  "ratingAria": "Rating",
+  "starsAria": "{{value}} out of {{max}} stars",
+  "starAria_one": "{{count}} star",
+  "starAria_other": "{{count}} stars",
+  "heading": "Customer Reviews",
+  "loading": "Loading reviews…",
+  "beFirst": "Be the first to review this product",
+  "reviewCount_one": "{{count}} review",
+  "reviewCount_other": "{{count}} reviews",
+  "writeReview": "Write a review",
+  "cancel": "Cancel",
+  "signInToReview": "Sign in to review",
+  "yourRating": "Your rating",
+  "title": "Title",
+  "optional": "(optional)",
+  "titlePlaceholder": "Sum up your experience",
+  "yourReview": "Your review",
+  "commentPlaceholder": "What did you like or dislike? How did the product perform?",
+  "submit": "Submit review",
+  "submitting": "Submitting…",
+  "anonymous": "Anonymous",
+  "verifiedPurchase": "Verified purchase",
+  "toast": {
+    "signInRequired": "Please sign in to leave a review.",
+    "ratingRequired": "Please choose a rating from 1 to 5 stars.",
+    "commentRequired": "Please write your review before submitting.",
+    "commentTooLong": "Review is too long (max {{max}} characters).",
+    "success": "Thanks! Your review has been posted.",
+    "submitError": "Could not submit your review. Please try again."
+  }
+}

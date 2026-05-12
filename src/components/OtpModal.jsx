@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { m, AnimatePresence } from 'framer-motion';
 import { X, Loader2, ArrowRight, RefreshCw } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 
 const OtpModal = ({ isOpen, onClose, email, onVerify, onResend, isLoading, error }) => {
+  const { t } = useTranslation('otpModal');
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [canResend, setCanResend] = useState(false);
   const [countdown, setCountdown] = useState(30);
@@ -47,7 +49,7 @@ const OtpModal = ({ isOpen, onClose, email, onVerify, onResend, isLoading, error
     if (element.value !== '' && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
-    
+
     // Auto-submit if all 6 digits are filled
     if (element.value !== '' && index === 5) {
         const fullCode = [...newOtp];
@@ -81,7 +83,7 @@ const OtpModal = ({ isOpen, onClose, email, onVerify, onResend, isLoading, error
         inputRefs.current[index + 1]?.focus();
     }
   };
-  
+
   const handlePaste = (e) => {
     e.preventDefault();
     const pastedData = e.clipboardData.getData('text').slice(0, 6).split('');
@@ -93,7 +95,7 @@ const OtpModal = ({ isOpen, onClose, email, onVerify, onResend, isLoading, error
         setOtp(newOtp);
         const nextFocus = Math.min(pastedData.length, 5);
         inputRefs.current[nextFocus]?.focus();
-        
+
         // Auto submit on paste if length is 6
         if (pastedData.length === 6) {
              onVerify(pastedData.join(''));
@@ -108,7 +110,7 @@ const OtpModal = ({ isOpen, onClose, email, onVerify, onResend, isLoading, error
       onVerify(code);
     }
   };
-  
+
   const handleResendClick = () => {
       if (!canResend) return;
       onResend();
@@ -130,7 +132,7 @@ const OtpModal = ({ isOpen, onClose, email, onVerify, onResend, isLoading, error
             onClick={onClose}
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
           />
-          
+
           {/* Modal Content */}
           <m.div
             initial={{ scale: 0.95, opacity: 0, y: 20 }}
@@ -141,15 +143,15 @@ const OtpModal = ({ isOpen, onClose, email, onVerify, onResend, isLoading, error
             <button
               onClick={onClose}
               className="absolute right-4 top-4 text-foreground/40 hover:text-foreground transition-colors"
-              aria-label="Close modal"
+              aria-label={t('closeAriaLabel')}
             >
               <X className="w-5 h-5" />
             </button>
 
             <div className="text-center mb-8">
-              <h3 className="text-2xl font-bold text-foreground mb-2">Verification</h3>
+              <h3 className="text-2xl font-bold text-foreground mb-2">{t('title')}</h3>
               <p className="text-foreground/60">
-                Enter the 6-digit code sent to <br />
+                {t('subtitlePrefix')} <br />
                 <span className="text-mango-400 font-medium">{email}</span>
               </p>
             </div>
@@ -187,32 +189,32 @@ const OtpModal = ({ isOpen, onClose, email, onVerify, onResend, isLoading, error
                 {isLoading ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                    Verifying...
+                    {t('verifying')}
                   </>
                 ) : (
                   <>
-                    Verify & Login <ArrowRight className="ml-2 w-5 h-5" />
+                    {t('verifyAndLogin')} <ArrowRight className="ml-2 w-5 h-5" />
                   </>
                 )}
               </Button>
-              
+
               <div className="text-center space-y-3">
-                  <button 
+                  <button
                       type="button"
                       onClick={handleResendClick}
                       disabled={!canResend}
                       className={`text-sm flex items-center justify-center gap-2 mx-auto transition-colors ${canResend ? 'text-mango-400 hover:text-mango-300' : 'text-foreground/30 cursor-not-allowed'}`}
                   >
                       <RefreshCw className={`w-3 h-3 ${!canResend && 'animate-spin-slow'}`} />
-                      {canResend ? "Resend Code" : `Resend in ${countdown}s`}
+                      {canResend ? t('resend') : t('resendIn', { seconds: countdown })}
                   </button>
 
-                  <button 
+                  <button
                       type="button"
                       onClick={onClose}
                       className="text-xs text-foreground/40 hover:text-foreground transition-colors block w-full"
                   >
-                      Use a different email
+                      {t('useDifferentEmail')}
                   </button>
               </div>
             </form>

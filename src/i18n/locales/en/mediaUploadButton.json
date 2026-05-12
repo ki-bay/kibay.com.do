@@ -1,0 +1,9 @@
+{
+  "toast": {
+    "tooLargeTitle": "File too large",
+    "tooLargeDescription": "Media must be less than 10MB.",
+    "failedTitle": "Upload Failed",
+    "failedDescription": "Could not upload media."
+  },
+  "uploadImage": "Upload Image"
+}

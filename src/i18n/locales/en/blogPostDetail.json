@@ -1,0 +1,14 @@
+{
+  "notFound": {
+    "title": "Post Not Found",
+    "description": "The article you're looking for doesn't exist or has been removed.",
+    "back": "Back to Blog"
+  },
+  "breadcrumbBlog": "Blog",
+  "backToArticles": "Back to Articles",
+  "draftBadge": "Draft Preview Mode",
+  "minRead": "{{count}} min read",
+  "share": "Share this article",
+  "copyLink": "Copy Link",
+  "defaultAuthor": "Kibay Team"
+}

@@ -1,0 +1,18 @@
+{
+  "toast": {
+    "invalidTypeTitle": "Invalid file type",
+    "invalidTypeDescription": "Please upload an image (JPG, PNG, WEBP, GIF).",
+    "tooLargeTitle": "File too large",
+    "tooLargeDescription": "Image size must be less than 5MB.",
+    "successTitle": "Success",
+    "successDescription": "Image uploaded successfully.",
+    "failedTitle": "Upload failed",
+    "failedDescription": "Could not upload image."
+  },
+  "uploading": "Uploading...",
+  "featuredAlt": "Featured",
+  "change": "Change",
+  "remove": "Remove",
+  "clickToUpload": "Click to upload featured image",
+  "fileHint": "SVG, PNG, JPG or GIF (max 5MB)"
+}

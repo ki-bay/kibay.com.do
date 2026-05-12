@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { m } from 'framer-motion';
 import { Mail, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/lib/customSupabaseClient';
 
 const BlogSubscribeForm = () => {
+  const { t } = useTranslation('blogSubscribe');
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState('idle'); // idle, success, error
@@ -13,12 +15,12 @@ const BlogSubscribeForm = () => {
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
-    
+
     if (!email || !email.includes('@')) {
       toast({
         variant: "destructive",
-        title: "Invalid Email",
-        description: "Please enter a valid email address.",
+        title: t('toast.invalidEmailTitle'),
+        description: t('toast.invalidEmailDescription'),
       });
       return;
     }
@@ -37,8 +39,8 @@ const BlogSubscribeForm = () => {
 
       setStatus('success');
       toast({
-        title: "You're on the list!",
-        description: "Thanks — you'll hear from us with updates and offers.",
+        title: t('toast.successTitle'),
+        description: t('toast.successDescription'),
       });
       setEmail('');
     } catch (error) {
@@ -46,8 +48,8 @@ const BlogSubscribeForm = () => {
       setStatus('error');
       toast({
         variant: "destructive",
-        title: "Subscription Failed",
-        description: "Something went wrong. Please try again later.",
+        title: t('toast.errorTitle'),
+        description: t('toast.errorDescription'),
       });
     } finally {
       setLoading(false);
@@ -58,18 +60,18 @@ const BlogSubscribeForm = () => {
     <div className="bg-card rounded-2xl border border-foreground/10 p-8 md:p-12 relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-mango-500/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
-      
+
       <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
         <div className="max-w-xl">
           <div className="inline-flex items-center gap-2 text-mango-400 font-medium mb-2">
             <Mail className="w-5 h-5" />
-            <span>Stay in the loop</span>
+            <span>{t('tagline')}</span>
           </div>
           <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
-            Subscribe to our newsletter
+            {t('title')}
           </h3>
           <p className="text-foreground/60 text-lg">
-            Get the latest stories, cocktail recipes, and exclusive offers delivered straight to your inbox. No spam, just flavor.
+            {t('description')}
           </p>
         </div>
 
@@ -83,14 +85,14 @@ const BlogSubscribeForm = () => {
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-green-500/20 text-green-400 mb-3">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
-              <h4 className="text-foreground font-bold text-lg">You're Subscribed!</h4>
-              <p className="text-foreground/60 text-sm mt-1">Thanks for joining us.</p>
-              <Button 
-                variant="ghost" 
+              <h4 className="text-foreground font-bold text-lg">{t('successBoxTitle')}</h4>
+              <p className="text-foreground/60 text-sm mt-1">{t('successBoxDescription')}</p>
+              <Button
+                variant="ghost"
                 className="mt-4 text-green-400 hover:text-green-300 hover:bg-green-500/10"
                 onClick={() => setStatus('idle')}
               >
-                Subscribe another email
+                {t('subscribeAnother')}
               </Button>
             </m.div>
           ) : (
@@ -101,28 +103,28 @@ const BlogSubscribeForm = () => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
+                  placeholder={t('emailPlaceholder')}
                   required
                   className="w-full bg-background/50 border border-foreground/10 rounded-xl py-3 pl-10 pr-4 text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-mango-500 focus:ring-1 focus:ring-mango-500 transition-all shadow-inner"
                   disabled={loading}
                 />
               </div>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 className="bg-mango-500 hover:bg-mango-600 text-foreground py-6 text-lg font-medium rounded-xl shadow-lg shadow-mango-500/20 w-full"
                 disabled={loading}
               >
                 {loading ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                    Subscribing...
+                    {t('submitting')}
                   </>
                 ) : (
-                  "Subscribe to Updates"
+                  t('submit')
                 )}
               </Button>
               <p className="text-xs text-foreground/30 text-center mt-2">
-                We respect your privacy. Unsubscribe at any time.
+                {t('privacyNote')}
               </p>
             </form>
           )}

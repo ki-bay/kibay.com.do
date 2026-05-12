@@ -1,0 +1,22 @@
+{
+  "youtubePrompt": "Ingresa la URL de YouTube",
+  "linkPrompt": "URL",
+  "placeholder": "Escribe tu historia...",
+  "tooltips": {
+    "bold": "Negrita",
+    "italic": "Cursiva",
+    "strikethrough": "Tachado",
+    "h1": "H1",
+    "h2": "H2",
+    "h3": "H3",
+    "bulletList": "Lista con viñetas",
+    "orderedList": "Lista numerada",
+    "quote": "Cita",
+    "codeBlock": "Bloque de código",
+    "horizontalRule": "Regla horizontal",
+    "link": "Enlace",
+    "youtube": "Video de YouTube",
+    "undo": "Deshacer",
+    "redo": "Rehacer"
+  }
+}

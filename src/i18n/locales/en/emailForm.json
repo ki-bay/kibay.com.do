@@ -1,0 +1,18 @@
+{
+  "toast": {
+    "nameRequiredTitle": "Name Required",
+    "nameRequiredDescription": "Please enter your name.",
+    "emailRequiredTitle": "Email Required",
+    "emailRequiredDescription": "Please enter your email.",
+    "invalidEmailTitle": "Invalid Email",
+    "invalidEmailDescription": "Please enter a valid email.",
+    "successTitle": "Welcome to the Kibay Family! 🎉",
+    "successDescription": "You've successfully subscribed.",
+    "errorTitle": "Error",
+    "errorDescription": "Something went wrong."
+  },
+  "namePlaceholder": "Your Name",
+  "emailPlaceholder": "your@email.com",
+  "submitting": "Subscribing...",
+  "submit": "Subscribe"
+}

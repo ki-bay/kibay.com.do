@@ -1,0 +1,32 @@
+{
+  "ratingAria": "Calificación",
+  "starsAria": "{{value}} de {{max}} estrellas",
+  "starAria_one": "{{count}} estrella",
+  "starAria_other": "{{count}} estrellas",
+  "heading": "Reseñas de clientes",
+  "loading": "Cargando reseñas…",
+  "beFirst": "Sé el primero en reseñar este producto",
+  "reviewCount_one": "{{count}} reseña",
+  "reviewCount_other": "{{count}} reseñas",
+  "writeReview": "Escribir una reseña",
+  "cancel": "Cancelar",
+  "signInToReview": "Inicia sesión para reseñar",
+  "yourRating": "Tu calificación",
+  "title": "Título",
+  "optional": "(opcional)",
+  "titlePlaceholder": "Resume tu experiencia",
+  "yourReview": "Tu reseña",
+  "commentPlaceholder": "¿Qué te gustó o no te gustó? ¿Cómo te funcionó el producto?",
+  "submit": "Publicar reseña",
+  "submitting": "Publicando…",
+  "anonymous": "Anónimo",
+  "verifiedPurchase": "Compra verificada",
+  "toast": {
+    "signInRequired": "Inicia sesión para dejar una reseña.",
+    "ratingRequired": "Elige una calificación de 1 a 5 estrellas.",
+    "commentRequired": "Escribe tu reseña antes de enviarla.",
+    "commentTooLong": "La reseña es muy larga (máx. {{max}} caracteres).",
+    "success": "¡Gracias! Tu reseña fue publicada.",
+    "submitError": "No pudimos publicar tu reseña. Inténtalo de nuevo."
+  }
+}

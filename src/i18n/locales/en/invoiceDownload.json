@@ -1,0 +1,18 @@
+{
+  "downloadInvoice": "Download Invoice",
+  "pdf": {
+    "invoice": "INVOICE",
+    "tagline": "Premium Sparkling Wine",
+    "orderNumber": "Order Number: {{number}}",
+    "date": "Date: {{date}}",
+    "status": "Status: {{status}}",
+    "billTo": "Bill To:",
+    "defaultCountry": "Dominican Republic",
+    "colItem": "Item",
+    "colQuantity": "Quantity",
+    "colUnitPrice": "Unit Price",
+    "colTotal": "Total",
+    "totalLabel": "Total:",
+    "footer": "Thank you for choosing Kibay. For support, contact info@kibay.com.do"
+  }
+}

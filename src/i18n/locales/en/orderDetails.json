@@ -1,0 +1,17 @@
+{
+  "orderPrefix": "Order #{{number}}",
+  "datePlaced": "Date Placed",
+  "orderItems": "Order Items",
+  "qtyLine": "Qty: {{quantity}} × {{unit}}",
+  "total": "Total",
+  "shippingAddress": "Shipping Address",
+  "deliveryInfo": "Delivery Info",
+  "method": "Method:",
+  "tracking": "Tracking:",
+  "trackShipment": "Track Shipment",
+  "trackingPending": "Tracking info will be available once shipped.",
+  "downloadInvoice": "Download invoice (PDF)",
+  "estDelivery": "Est. Delivery: {{date}}",
+  "paymentCardFallback": "Payment Card",
+  "contactSupport": "Contact Support"
+}

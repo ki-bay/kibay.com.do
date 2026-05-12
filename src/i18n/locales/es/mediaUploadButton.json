@@ -1,0 +1,9 @@
+{
+  "toast": {
+    "tooLargeTitle": "Archivo muy grande",
+    "tooLargeDescription": "El archivo debe pesar menos de 10MB.",
+    "failedTitle": "Falló la subida",
+    "failedDescription": "No pudimos subir el archivo."
+  },
+  "uploadImage": "Subir imagen"
+}

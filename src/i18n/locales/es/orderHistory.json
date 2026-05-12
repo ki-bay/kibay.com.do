@@ -1,0 +1,15 @@
+{
+  "loading": "Cargando tu historial de pedidos...",
+  "errorLoad": "No pudimos cargar tus pedidos.",
+  "tryAgain": "Reintentar",
+  "heading": "Historial de pedidos",
+  "ordersFound_one": "{{count}} pedido encontrado",
+  "ordersFound_other": "{{count}} pedidos encontrados",
+  "missingOrderTitle": "Pedido reciente procesándose",
+  "missingOrderBody": "Detectamos una compra reciente que aún no aparece. Puede que siga procesándose. Actualiza en unos momentos.",
+  "refreshList": "Actualizar lista",
+  "noOrders": "No se encontraron pedidos",
+  "tryAdjusting": "Ajusta tus filtros para ver más resultados.",
+  "noOrdersYet": "Parece que aún no has hecho ningún pedido.",
+  "startShopping": "Empezar a comprar"
+}
