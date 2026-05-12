@@ -145,7 +145,10 @@ const EmailComposerPage = () => {
 				setRecipientLoading(false);
 				return;
 			}
-			if (form.tags?.length) q = q.contains('subtype_tags', form.tags);
+			// Use OR semantics on tags (overlaps) to match how the worker resolves
+			// recipients at send time. `.contains` would require all tags to be
+			// present on the contact, which is almost never what you want here.
+			if (form.tags?.length) q = q.overlaps('subtype_tags', form.tags);
 			const { count } = await q;
 			setRecipientCount(count || 0);
 
@@ -153,7 +156,7 @@ const EmailComposerPage = () => {
 			let sq = supabase.from('email_contacts').select('merge_vars, first_name, last_name, email').limit(1);
 			if (form.status_filter) sq = sq.eq('status', form.status_filter);
 			if (form.segments?.length === 1) sq = sq.eq('segment', form.segments[0]);
-			if (form.tags?.length) sq = sq.contains('subtype_tags', form.tags);
+			if (form.tags?.length) sq = sq.overlaps('subtype_tags', form.tags);
 			const { data: srows } = await sq;
 			if (srows && srows[0]) {
 				const c = srows[0];
