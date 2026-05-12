@@ -79,7 +79,6 @@ const SchemaMarkup = ({ type, data }) => {
         "@type": "PostalAddress",
         "addressCountry": "DO"
       },
-      // TODO: replace with real number once available
       "telephone": (data && data.telephone) || undefined
     };
   } else if (type === 'Product') {

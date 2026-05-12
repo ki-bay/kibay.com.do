@@ -4,6 +4,10 @@ import { useToast } from '@/components/ui/use-toast';
 
 const AuthContext = createContext(undefined);
 
+const devLog = (...args) => {
+  if (import.meta.env.DEV) console.log(...args);
+};
+
 export const AuthProvider = ({ children }) => {
   const { toast } = useToast();
   const [user, setUser] = useState(null);
@@ -15,7 +19,7 @@ export const AuthProvider = ({ children }) => {
 
   // Initialize and listen for auth changes
   useEffect(() => {
-    console.log('AuthContext: Initializing...');
+    devLog('AuthContext: Initializing...');
     
     const getSession = async () => {
       try {
@@ -25,7 +29,7 @@ export const AuthProvider = ({ children }) => {
           throw error;
         }
         
-        console.log('AuthContext: Session retrieved', session ? 'Active Session' : 'No Session');
+        devLog('AuthContext: Session retrieved', session ? 'Active Session' : 'No Session');
         setSession(session);
         setUser(session?.user ?? null);
       } catch (err) {
@@ -39,7 +43,7 @@ export const AuthProvider = ({ children }) => {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log(`AuthContext: Auth State Changed: ${event}`, session?.user?.email);
+        devLog(`AuthContext: Auth State Changed: ${event}`, session?.user?.email);
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
@@ -63,7 +67,7 @@ export const AuthProvider = ({ children }) => {
 
   // Send OTP Function (6-digit code)
   const sendOtp = useCallback(async (email) => {
-    console.log('AuthContext: sendOtp called for:', email);
+    devLog('AuthContext: sendOtp called for:', email);
     setLoading(true);
     setAuthError(null);
     
@@ -84,7 +88,7 @@ export const AuthProvider = ({ children }) => {
         return { success: false, error };
       }
       
-      console.log('AuthContext: sendOtp API Success');
+      devLog('AuthContext: sendOtp API Success');
       toast({
         title: "Code Sent",
         description: `We've sent a verification code to ${email}`,
@@ -101,7 +105,7 @@ export const AuthProvider = ({ children }) => {
 
   // Verify OTP Function
   const verifyOtp = useCallback(async (email, token) => {
-    console.log('AuthContext: verifyOtp called for:', email);
+    devLog('AuthContext: verifyOtp called for:', email);
     setLoading(true);
     setAuthError(null);
 
@@ -132,7 +136,7 @@ export const AuthProvider = ({ children }) => {
         return { success: false, error };
       }
 
-      console.log('AuthContext: verifyOtp API Success - User Logged In');
+      devLog('AuthContext: verifyOtp API Success - User Logged In');
       setLoading(false);
       return { success: true, data };
     } catch (err) {
@@ -180,7 +184,7 @@ export const AuthProvider = ({ children }) => {
   }, [toast]);
 
   const signOut = useCallback(async () => {
-    console.log('AuthContext: signOut called');
+    devLog('AuthContext: signOut called');
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;

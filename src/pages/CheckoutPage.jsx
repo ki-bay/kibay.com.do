@@ -735,23 +735,29 @@ const CheckoutPage = () => {
 								<div className="space-y-4 mb-6">
 									{cartItems.map((item) => {
 										const unit =
-											(item.variant.sale_price_in_cents ?? item.variant.price_in_cents) / 100;
+											((item.variant?.sale_price_in_cents ?? item.variant?.price_in_cents) || 0) / 100;
+										const productTitle = item.product?.title || 'Product';
+										const variantTitle = item.variant?.title || '';
 										return (
 											<div
-												key={item.variant.id}
+												key={item.variant?.id || item.product?.id}
 												className="flex justify-between items-center py-2 border-b border-foreground/5 last:border-0"
 											>
 												<div className="flex items-center gap-4">
 													<div className="w-12 h-12 bg-background rounded overflow-hidden">
-														<img
-															src={item.product.image}
-															alt={item.product.title}
-															className="w-full h-full object-cover"
-														/>
+														{item.product?.image ? (
+															<img
+																src={item.product.image}
+																alt={productTitle}
+																className="w-full h-full object-cover"
+															/>
+														) : null}
 													</div>
 													<div>
-														<p className="text-foreground font-medium text-sm">{item.product.title}</p>
-														<p className="text-foreground/60 text-xs font-light">{item.variant.title}</p>
+														<p className="text-foreground font-medium text-sm">{productTitle}</p>
+														{variantTitle && (
+															<p className="text-foreground/60 text-xs font-light">{variantTitle}</p>
+														)}
 														<p className="text-foreground/40 text-xs font-light">{t('quantity', { defaultValue: 'Qty' })}: {item.quantity}</p>
 													</div>
 												</div>

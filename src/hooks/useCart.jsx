@@ -28,19 +28,24 @@ export const CartProvider = ({ children }) => {
 
   const addToCart = useCallback((product, variant, quantity, availableQuantity) => {
     return new Promise((resolve, reject) => {
-      if (variant.manage_inventory) {
-        const existingItem = cartItems.find(item => item.variant.id === variant.id);
-        const currentCartQuantity = existingItem ? existingItem.quantity : 0;
-        if ((currentCartQuantity + quantity) > availableQuantity) {
-          const error = new Error(`Not enough stock for ${product.title} (${variant.title}). Only ${availableQuantity} left.`);
-          reject(error);
-          return;
-        }
-      }
-
+      // Check inventory and apply the mutation inside the same updater so
+      // rapid back-to-back calls always see the freshest cart state. Reading
+      // `cartItems` from closure would let two concurrent clicks both pass
+      // the stock check and overstock the cart.
+      let overflowError = null;
       setCartItems(prevItems => {
-        const existingItem = prevItems.find(item => item.variant.id === variant.id);
-        if (existingItem) {
+        if (variant.manage_inventory) {
+          const existing = prevItems.find(item => item.variant.id === variant.id);
+          const currentQty = existing ? existing.quantity : 0;
+          if (currentQty + quantity > availableQuantity) {
+            overflowError = new Error(
+              `Not enough stock for ${product.title} (${variant.title}). Only ${availableQuantity} left.`
+            );
+            return prevItems;
+          }
+        }
+        const existing = prevItems.find(item => item.variant.id === variant.id);
+        if (existing) {
           return prevItems.map(item =>
             item.variant.id === variant.id
               ? { ...item, quantity: item.quantity + quantity }
@@ -49,9 +54,12 @@ export const CartProvider = ({ children }) => {
         }
         return [...prevItems, { product, variant, quantity }];
       });
-      resolve();
+      queueMicrotask(() => {
+        if (overflowError) reject(overflowError);
+        else resolve();
+      });
     });
-  }, [cartItems]);
+  }, []);
 
   const removeFromCart = useCallback((variantId) => {
     setCartItems(prevItems => prevItems.filter(item => item.variant.id !== variantId));

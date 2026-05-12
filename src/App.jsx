@@ -5,9 +5,6 @@ import { useTranslation } from 'react-i18next';
 import ScrollToTop from './components/ScrollToTop';
 import ProtectedRoute from './components/ProtectedRoute';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute';
-import { CartProvider } from './hooks/useCart';
-import { AuthProvider } from './contexts/SupabaseAuthContext';
-import ErrorBoundary from './components/ErrorBoundary';
 import CookieConsent from './components/CookieConsent';
 
 // Pages (lazy)
@@ -81,10 +78,9 @@ function HtmlLangSync() {
 
 function App() {
   return (
-    <CartProvider>
-      <AuthProvider>
-        <HtmlLangSync />
-        <Router>
+    <>
+      <HtmlLangSync />
+      <Router>
           <a href="#main" className="skip-to-content">Skip to main content</a>
           <ScrollToTop />
           <Suspense fallback={<div className="min-h-screen bg-background" />}>
@@ -162,10 +158,9 @@ function App() {
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </Suspense>
-          <CookieConsent />
-        </Router>
-      </AuthProvider>
-    </CartProvider>
+        <CookieConsent />
+      </Router>
+    </>
   );
 }
 

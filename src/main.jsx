@@ -6,13 +6,17 @@ import ReactDOM from 'react-dom/client';
 // the user's old index.html is referencing chunk hashes that no longer exist.
 // Force a single full reload so they pick up the new HTML + chunk graph.
 const RELOAD_KEY = 'kibay_chunk_reload_at';
+const WARN_KEY = 'kibay_chunk_warned';
 function tryStaleChunkReload(reason) {
 	try {
 		const last = Number(sessionStorage.getItem(RELOAD_KEY) || 0);
 		// Don't loop: only reload if we haven't already reloaded in the last 30s.
 		if (Date.now() - last < 30_000) return;
 		sessionStorage.setItem(RELOAD_KEY, String(Date.now()));
-		console.warn('Stale chunk detected — reloading. Reason:', reason);
+		if (!sessionStorage.getItem(WARN_KEY)) {
+			sessionStorage.setItem(WARN_KEY, '1');
+			console.warn('Stale chunk detected — reloading. Reason:', reason);
+		}
 		window.location.reload();
 	} catch {
 		/* ignore */

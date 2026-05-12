@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { m } from 'framer-motion';
 import { ArrowLeft, Calendar, User, Clock, Share2, Loader2 } from 'lucide-react';
 import { supabase } from '@/lib/customSupabaseClient';
@@ -14,47 +14,45 @@ import BreadcrumbNav from '@/components/BreadcrumbNav';
 import '@/styles/editor.css'; 
 
 const BlogPostDetailPage = () => {
-  const { id } = useParams(); // Note: Ideally we should also support slug here, but existing router uses ID.
+  const { id } = useParams();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { user } = useAuth();
-  const navigate = useNavigate();
+  const userEmail = user?.email?.toLowerCase() || null;
 
   useEffect(() => {
+    let cancelled = false;
+    const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    const column = UUID_RE.test(id) ? 'id' : 'slug';
+
     const fetchPost = async () => {
       try {
-        // Try to fetch by ID (UUID format)
-        let query = supabase.from('blog_posts').select('*');
-        
-        // Simple regex to check for UUID. If not UUID, assume slug.
-        // Or simpler: supabase handles types. But 'id' from params is a string.
-        // Assuming current routing only uses /blog/:id where :id is the PK. 
-        // If user wants /blog/:slug, router needs update. 
-        // For now sticking to ID logic as per previous implementation but handling 404 gracefully.
-        
-        query = query.eq('id', id).single();
-        const { data, error } = await query;
+        const { data, error } = await supabase
+          .from('blog_posts')
+          .select('*')
+          .eq(column, id)
+          .single();
 
         if (error) throw error;
-        
-        if (!data.published) {
-            if (!user || user.email !== 'info@kibay.com.do') {
-                throw new Error("Post not found or unpublished");
-            }
+
+        if (!data.published && userEmail !== 'info@kibay.com.do') {
+          throw new Error('Post not found or unpublished');
         }
-        
-        setPost(data);
+
+        if (!cancelled) setPost(data);
       } catch (err) {
-        console.error('Error details:', err);
-        setError("Post not found");
+        if (!cancelled) setError('Post not found');
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
 
     fetchPost();
-  }, [id, user]);
+    return () => {
+      cancelled = true;
+    };
+  }, [id, userEmail]);
 
   if (loading) {
     return (

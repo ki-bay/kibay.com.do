@@ -66,10 +66,12 @@ const CheckoutSuccessPage = () => {
 		}
 
 		let attempts = 0;
+		let cancelled = false;
 		const maxAttempts = 18;
 		const id = setInterval(async () => {
 			attempts += 1;
 			const { data, error: e } = await supabase.from('orders').select('*').eq('id', orderId).single();
+			if (cancelled) return;
 			if (!e && data) {
 				setOrder(data);
 				if (data.invoice_pdf_path || attempts >= maxAttempts) {
@@ -80,7 +82,10 @@ const CheckoutSuccessPage = () => {
 			}
 		}, 3000);
 
-		return () => clearInterval(id);
+		return () => {
+			cancelled = true;
+			clearInterval(id);
+		};
 	}, [orderId, order?.invoice_pdf_path, order?.id]);
 
 	const invoiceHref =
