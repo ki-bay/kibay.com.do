@@ -239,8 +239,11 @@ i18n
       'adminEmailDashboard', 'adminEmailContacts', 'adminEmailCampaigns', 'adminEmailComposer',
     ],
     interpolation: { escapeValue: false },
+    // ES is the default audience. Don't let an EN browser override that —
+    // detection only checks localStorage (the user's explicit choice via the
+    // LanguageSwitcher). If unset, falls back to fallbackLng ('es').
     detection: {
-      order: ['localStorage', 'navigator', 'htmlTag'],
+      order: ['localStorage', 'htmlTag'],
       caches: ['localStorage'],
       lookupLocalStorage: 'kibay_lang',
     },
