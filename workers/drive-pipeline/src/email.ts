@@ -91,9 +91,9 @@ export async function sendReviewEmail(env: EmailEnv, post: ReviewEmailInput): Pr
 <tr><td align="center">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
   <tr><td style="padding:24px 28px 8px;">
-    <div style="font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:#999;">Kibay — new auto-draft</div>
-    <h1 style="margin:8px 0 4px;font-size:22px;font-weight:600;line-height:1.3;">${escapeHtml(post.titleEn)}</h1>
-    <div style="font-size:15px;color:#666;font-style:italic;margin-bottom:8px;">${escapeHtml(post.titleEs)}</div>
+    <div style="font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:#999;">Kibay — nuevo borrador automático</div>
+    <h1 style="margin:8px 0 4px;font-size:22px;font-weight:600;line-height:1.3;">${escapeHtml(post.titleEs)}</h1>
+    <div style="font-size:15px;color:#666;font-style:italic;margin-bottom:8px;">${escapeHtml(post.titleEn)}</div>
     <div style="font-size:12px;color:#aaa;">from <code>${escapeHtml(post.driveFilename)}</code></div>
   </td></tr>
   <tr><td style="padding:8px 28px;">
@@ -111,12 +111,12 @@ export async function sendReviewEmail(env: EmailEnv, post: ReviewEmailInput): Pr
 	}
   </td></tr>
   <tr><td style="padding:16px 28px 4px;">
-    <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#999;margin-bottom:4px;">English excerpt</div>
-    <div style="font-size:14px;line-height:1.6;color:#333;">${escapeHtml(post.bodyExcerptEn)}</div>
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#999;margin-bottom:4px;">Extracto español</div>
+    <div style="font-size:14px;line-height:1.6;color:#333;">${escapeHtml(post.bodyExcerptEs)}</div>
   </td></tr>
   <tr><td style="padding:12px 28px 4px;">
-    <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#999;margin-bottom:4px;">Spanish excerpt</div>
-    <div style="font-size:14px;line-height:1.6;color:#333;">${escapeHtml(post.bodyExcerptEs)}</div>
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#999;margin-bottom:4px;">English excerpt (alt)</div>
+    <div style="font-size:14px;line-height:1.6;color:#333;">${escapeHtml(post.bodyExcerptEn)}</div>
   </td></tr>
   <tr><td style="padding:24px 28px;" align="center">
     <table role="presentation" cellpadding="0" cellspacing="0"><tr>

@@ -153,8 +153,13 @@ export async function postToFacebook(
 
 export async function postToInstagram(
 	env: SocialEnv,
-	opts: { caption: string; imageUrls: string[] },
+	opts: { caption: string; imageUrls: string[]; linkUrl?: string },
 ): Promise<SocialResult> {
+	// Append the blog URL to the caption (IG doesn't render it as a hyperlink,
+	// but readers can copy it and it's a brand signal pointing to the full post).
+	const fullCaption = opts.linkUrl
+		? `${opts.caption.trim()}\n\nRead more: ${opts.linkUrl}`
+		: opts.caption;
 	if (env.META_ENABLED !== 'true') {
 		return { platform: 'ig', status: 'skipped', error_msg: 'META_ENABLED=false' };
 	}
@@ -182,7 +187,7 @@ export async function postToInstagram(
 				method: 'POST',
 				body: new URLSearchParams({
 					image_url: opts.imageUrls[0],
-					caption: opts.caption,
+					caption: fullCaption,
 					access_token: token,
 				}),
 			});
@@ -255,7 +260,7 @@ export async function postToInstagram(
 			body: new URLSearchParams({
 				media_type: 'CAROUSEL',
 				children: childIds.join(','),
-				caption: opts.caption,
+				caption: fullCaption,
 				access_token: token,
 			}),
 		});
@@ -336,7 +341,7 @@ export async function crossPostAll(
 ): Promise<SocialResult[]> {
 	return Promise.all([
 		postToFacebook(env, { caption: post.caption_fb, imageUrls: post.imageUrls, linkUrl: post.linkUrl }),
-		postToInstagram(env, { caption: post.caption_ig, imageUrls: post.imageUrls }),
+		postToInstagram(env, { caption: post.caption_ig, imageUrls: post.imageUrls, linkUrl: post.linkUrl }),
 		postToLinkedIn(env, { caption: post.caption_li, imageUrls: post.imageUrls, linkUrl: post.linkUrl }),
 	]);
 }

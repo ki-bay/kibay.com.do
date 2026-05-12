@@ -49,7 +49,7 @@ const SchemaMarkup = ({ type, data }) => {
       "url": window.location.origin,
       "logo": `${window.location.origin}/logo.png`,
       "sameAs": [
-        "https://www.facebook.com/kibay",
+        "https://www.facebook.com/profile.php?id=61589761255222",
         "https://www.instagram.com/kibay",
         "https://www.tiktok.com/@kibay"
       ],

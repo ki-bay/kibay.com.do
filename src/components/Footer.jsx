@@ -124,7 +124,7 @@ const Footer = () => {
                   <a href="https://www.instagram.com/kibaywine/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-foreground/5 hover:bg-[#D4A574] hover:text-foreground text-foreground/70 flex items-center justify-center transition-all duration-300" aria-label="Instagram">
                     <Instagram className="w-4 h-4" />
                   </a>
-                  <a href="https://www.facebook.com/profile.php?id=61587482222662" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-foreground/5 hover:bg-[#D4A574] hover:text-foreground text-foreground/70 flex items-center justify-center transition-all duration-300" aria-label="Facebook">
+                  <a href="https://www.facebook.com/profile.php?id=61589761255222" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-foreground/5 hover:bg-[#D4A574] hover:text-foreground text-foreground/70 flex items-center justify-center transition-all duration-300" aria-label="Facebook">
                     <Facebook className="w-4 h-4" />
                   </a>
                   <a href="https://www.tiktok.com/@kibaywine" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-foreground/5 hover:bg-[#D4A574] hover:text-foreground text-foreground/70 flex items-center justify-center transition-all duration-300" aria-label="TikTok">

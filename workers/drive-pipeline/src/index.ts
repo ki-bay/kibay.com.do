@@ -47,6 +47,56 @@ export default {
 			return handleAction(req, env, ctx, 'reject');
 		}
 
+		// Resend the review email for an existing post (used when the pipeline ran out of
+		// waitUntil budget mid-flow and managed to insert the post but never fired the email).
+		// Same protect token as /run. ?post_id=<uuid> is required.
+		if (url.pathname === '/resend-review' && req.method === 'POST') {
+			const token = url.searchParams.get('token');
+			if (token !== env.SUPABASE_SERVICE_ROLE_KEY.slice(0, 24)) {
+				return new Response('forbidden', { status: 403 });
+			}
+			const postId = url.searchParams.get('post_id');
+			if (!postId) return new Response('post_id required', { status: 400 });
+
+			const r = await fetch(
+				`${env.SUPABASE_URL}/rest/v1/blog_posts?id=eq.${encodeURIComponent(postId)}&select=id,title,slug,content,featured_image_url,auto_draft_meta&limit=1`,
+				{ headers: { apikey: env.SUPABASE_SERVICE_ROLE_KEY, Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}` } },
+			);
+			const rows = (await r.json()) as Array<{
+				id: string;
+				title: string;
+				slug: string;
+				content: string;
+				featured_image_url: string;
+				auto_draft_meta: {
+					gallery_urls?: string[];
+					drive_group_name?: string;
+					en?: { title?: string; body_html?: string };
+				} | null;
+			}>;
+			if (!rows.length) return new Response('post not found', { status: 404 });
+			const post = rows[0];
+			const meta = post.auto_draft_meta || {};
+			// Spanish is primary (post.title, post.content); EN lives in meta.en
+			const enBody = meta.en?.body_html || '';
+			const enTitle = meta.en?.title || post.title;
+
+			ctx.waitUntil(
+				sendReviewEmail(env, {
+					postId: post.id,
+					titleEs: post.title,
+					titleEn: enTitle,
+					slug: post.slug,
+					imageUrl: post.featured_image_url,
+					galleryUrls: meta.gallery_urls,
+					bodyExcerptEs: firstSentenceFromHtml(post.content),
+					bodyExcerptEn: firstSentenceFromHtml(enBody),
+					driveFilename: meta.drive_group_name || 'unknown',
+				}).catch((e) => console.error('resend-review:', e)),
+			);
+			return new Response('queued', { status: 202 });
+		}
+
 		// Diagnostic: post a single image directly to IG and return raw Meta responses.
 		// ?post_id=<uuid> → uses gallery[0] of that post. Same protect token as /run.
 		if (url.pathname === '/debug-ig' && req.method === 'POST') {
@@ -199,15 +249,16 @@ async function runPipeline(env: Env): Promise<void> {
 			const heroUrl = uploaded[0].url;
 			const galleryUrls = uploaded.map((u) => u.url);
 
+			// Spanish is PRIMARY (site audience: DR + Latin America).
 			const blogRow = {
-				title: post.en.title,
+				title: post.es.title,
 				slug,
-				description: post.en.seo_description,
-				content: bodyEn,
+				description: post.es.seo_description,
+				content: bodyEs,
 				featured_image_url: heroUrl,
 				alt_text: post.alt_text,
-				seo_title: post.en.title,
-				seo_description: post.en.seo_description,
+				seo_title: post.es.title,
+				seo_description: post.es.seo_description,
 				seo_keywords: post.tags.join(', '),
 				reading_time: post.reading_time_min,
 				published: false,
@@ -218,12 +269,12 @@ async function runPipeline(env: Env): Promise<void> {
 					drive_is_multi_image: g.isMultiImage,
 					drive_modified_time: g.latestModified,
 					gallery_urls: galleryUrls,
-					es: { ...post.es, body_html: bodyEs },
-					en_extras: {
-						faqs: post.en.faqs,
-						data_callout: post.en.data_callout,
-						pull_quote: post.en.pull_quote,
+					es_extras: {
+						faqs: post.es.faqs,
+						data_callout: post.es.data_callout,
+						pull_quote: post.es.pull_quote,
 					},
+					en: { ...post.en, body_html: bodyEn },
 					social: {
 						facebook: post.caption_facebook,
 						instagram: post.caption_instagram,
