@@ -4,8 +4,11 @@ compatibility_date = "2026-05-11"
 compatibility_flags = ["nodejs_compat"]
 
 [triggers]
-# Daily at 3:00 PM Dominican Republic time (AST = UTC-4, no DST) → 19:00 UTC.
-crons = ["0 19 * * *"]
+# Every 5 days at 3:00 PM Dominican Republic time (AST = UTC-4, no DST) → 19:00 UTC.
+# Day-of-month */5 fires on days 1, 6, 11, 16, 21, 26, 31. Slightly uneven
+# across month boundaries (gap shrinks from 5 to 4 between day 31 and day 1
+# of the next month) but stable and predictable.
+crons = ["0 19 */5 * *"]
 
 [vars]
 SUPABASE_URL = "https://bsnxwajuqkatrmgoqcnu.supabase.co"

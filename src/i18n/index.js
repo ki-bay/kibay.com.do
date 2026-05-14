@@ -60,6 +60,7 @@ import esAdminEmailDashboard from './locales/es/adminEmailDashboard.json';
 import esAdminEmailContacts from './locales/es/adminEmailContacts.json';
 import esAdminEmailCampaigns from './locales/es/adminEmailCampaigns.json';
 import esAdminEmailComposer from './locales/es/adminEmailComposer.json';
+import esAdminEmailTemplates from './locales/es/adminEmailTemplates.json';
 import esNewsletter from './locales/es/newsletter.json';
 
 // Shared components (added 2026-05-12)
@@ -142,6 +143,7 @@ import enAdminEmailDashboard from './locales/en/adminEmailDashboard.json';
 import enAdminEmailContacts from './locales/en/adminEmailContacts.json';
 import enAdminEmailCampaigns from './locales/en/adminEmailCampaigns.json';
 import enAdminEmailComposer from './locales/en/adminEmailComposer.json';
+import enAdminEmailTemplates from './locales/en/adminEmailTemplates.json';
 import enNewsletter from './locales/en/newsletter.json';
 
 import enBlogPostCard from './locales/en/blogPostCard.json';
@@ -219,6 +221,7 @@ const resources = {
     adminEmailContacts: esAdminEmailContacts,
     adminEmailCampaigns: esAdminEmailCampaigns,
     adminEmailComposer: esAdminEmailComposer,
+    adminEmailTemplates: esAdminEmailTemplates,
     newsletter: esNewsletter,
     blogPostCard: esBlogPostCard,
     blogPostDetail: esBlogPostDetail,
@@ -294,6 +297,7 @@ const resources = {
     adminEmailContacts: enAdminEmailContacts,
     adminEmailCampaigns: enAdminEmailCampaigns,
     adminEmailComposer: enAdminEmailComposer,
+    adminEmailTemplates: enAdminEmailTemplates,
     newsletter: enNewsletter,
     blogPostCard: enBlogPostCard,
     blogPostDetail: enBlogPostDetail,
@@ -343,7 +347,7 @@ i18n
       'adminApiKeys', 'adminLogs', 'adminNewsletter',
       'adminSocialDashboard', 'adminSocialSettings',
       'adminBlog', 'adminBlogForm',
-      'adminEmailDashboard', 'adminEmailContacts', 'adminEmailCampaigns', 'adminEmailComposer',
+      'adminEmailDashboard', 'adminEmailContacts', 'adminEmailCampaigns', 'adminEmailComposer', 'adminEmailTemplates',
       'newsletter',
       'blogPostCard', 'blogPostDetail', 'blogPostPreview', 'blogSubscribe', 'publicBlog',
       'breadcrumbNav', 'callToAction', 'canCollage', 'cookieConsent', 'otpModal',

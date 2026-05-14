@@ -23,6 +23,7 @@
 - [Untitled Page](/emailcampaigns): No description available
 - [Untitled Page](/emailcomposer): No description available
 - [Untitled Page](/emaildashboard): No description available
+- [Untitled Page](/emailtemplates): No description available
 - [Untitled Page](/bloglogin): No description available
 - [Untitled Page](/login): No description available
 - [Untitled Page](/register): No description available

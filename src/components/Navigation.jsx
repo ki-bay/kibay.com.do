@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { m, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, ChevronDown, LogOut, LayoutDashboard, Settings, Activity, Key, BookOpen, Package, Receipt, Users, Ticket, BarChart3, Mail, Truck, Send, AtSign } from 'lucide-react';
+import { Menu, X, User, ChevronDown, LogOut, LayoutDashboard, Settings, Activity, Key, BookOpen, Package, Receipt, Users, Ticket, BarChart3, Mail, Truck, Send, AtSign, FileText } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -175,6 +175,7 @@ const Navigation = () => {
                               <Link to="/admin/email" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><BarChart3 className="w-3 h-3" aria-hidden="true" /> Email Dashboard</Link>
                               <Link to="/admin/email/contacts" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><AtSign className="w-3 h-3" aria-hidden="true" /> Email Contacts</Link>
                               <Link to="/admin/email/campaigns" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><Mail className="w-3 h-3" aria-hidden="true" /> Campaigns</Link>
+                              <Link to="/admin/email/templates" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><FileText className="w-3 h-3" aria-hidden="true" /> Email Templates</Link>
                               <Link to="/admin/email/campaigns/new" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><Send className="w-3 h-3" aria-hidden="true" /> New Campaign</Link>
                               <div className="border-t border-border my-1"></div>
                               <Link to="/dashboard/blog" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><LayoutDashboard className="w-3 h-3" aria-hidden="true" /> Blog Dashboard</Link>
@@ -297,6 +298,7 @@ const Navigation = () => {
                               <Link to="/admin/email" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">Email Dashboard</Link>
                               <Link to="/admin/email/contacts" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">Email Contacts</Link>
                               <Link to="/admin/email/campaigns" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">Campaigns</Link>
+                              <Link to="/admin/email/templates" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">Email Templates</Link>
                               <Link to="/admin/email/campaigns/new" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">New Campaign</Link>
                               <Link to="/dashboard/blog" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">Blog Dashboard</Link>
                               <Link to="/admin/social-media" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">Social Dashboard</Link>

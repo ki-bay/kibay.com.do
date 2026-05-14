@@ -66,6 +66,7 @@ const EmailDashboardPage = lazy(() => import('./pages/admin/email/EmailDashboard
 const EmailContactsPage = lazy(() => import('./pages/admin/email/EmailContactsPage'));
 const EmailCampaignsPage = lazy(() => import('./pages/admin/email/EmailCampaignsPage'));
 const EmailComposerPage = lazy(() => import('./pages/admin/email/EmailComposerPage'));
+const EmailTemplatesPage = lazy(() => import('./pages/admin/email/EmailTemplatesPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 // Sitemap is served as a static file at /sitemap.xml (built by
@@ -161,6 +162,7 @@ function App() {
               <Route path="/admin/email/campaigns" element={<ProtectedAdminRoute><EmailCampaignsPage /></ProtectedAdminRoute>} />
               <Route path="/admin/email/campaigns/new" element={<ProtectedAdminRoute><EmailComposerPage /></ProtectedAdminRoute>} />
               <Route path="/admin/email/campaigns/:id/edit" element={<ProtectedAdminRoute><EmailComposerPage /></ProtectedAdminRoute>} />
+              <Route path="/admin/email/templates" element={<ProtectedAdminRoute><EmailTemplatesPage /></ProtectedAdminRoute>} />
               <Route path="/admin/shipping" element={<ProtectedAdminRoute><AdminShippingPage /></ProtectedAdminRoute>} />
 
               {/* 404 catch-all — must stay LAST */}

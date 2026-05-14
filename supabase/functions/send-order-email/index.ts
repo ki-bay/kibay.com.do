@@ -129,7 +129,23 @@ serve(async (req) => {
 	const lang: 'es' | 'en' = order.currency === 'USD' ? 'en' : 'es';
 	// Admin emails are always English regardless of the customer's locale.
 	const renderLang: 'es' | 'en' = isAdminEmail ? 'en' : lang;
-	const { subject, html } = renderEmail(type, order, items || [], renderLang);
+
+	// Pull editable copy from email_templates (admin-managed). If the row is
+	// missing or the query fails, renderEmail falls back to the hardcoded T.
+	let dbTpl: DbTemplate | null = null;
+	try {
+		const { data: tplRow } = await admin
+			.from('email_templates')
+			.select('*')
+			.eq('type', type as string)
+			.eq('lang', renderLang)
+			.maybeSingle();
+		if (tplRow) dbTpl = tplRow as DbTemplate;
+	} catch (err) {
+		console.error('email_templates read failed, falling back to defaults', err);
+	}
+
+	const { subject, html } = renderEmail(type, order, items || [], renderLang, dbTpl);
 
 	const recipientName = isAdminEmail
 		? 'Kibay Admin'
@@ -198,6 +214,31 @@ type Item = Record<string, unknown> & {
 	price_per_item: number;
 	total_price: number;
 };
+
+// Row shape from public.email_templates. All copy fields are optional at the
+// type level so we can layer them over the hardcoded T defaults — any missing
+// column falls back to the baked-in string.
+type DbTemplate = {
+	type: string;
+	lang: string;
+	subject?: string | null;
+	heading?: string | null;
+	intro?: string | null;
+	outro?: string | null;
+	items_label?: string | null;
+	subtotal_label?: string | null;
+	shipping_label?: string | null;
+	total_label?: string | null;
+	ship_to_label?: string | null;
+	tracking_label?: string | null;
+	method_label?: string | null;
+	cta_label?: string | null;
+};
+
+// {{order_number}} is the only supported placeholder in DB-stored subjects.
+function applySubjectVars(template: string, order: Order): string {
+	return String(template ?? '').replace(/\{\{\s*order_number\s*\}\}/g, String(order.order_number ?? ''));
+}
 
 const T = {
 	confirmation: {
@@ -303,12 +344,29 @@ function renderEmail(
 	order: Order,
 	items: Item[],
 	lang: 'es' | 'en',
+	dbTpl: DbTemplate | null = null,
 ): { subject: string; html: string } {
 	if (type === 'admin_new_order' || type === 'admin_refunded') {
-		return renderAdminEmail(type, order, items);
+		return renderAdminEmail(type, order, items, dbTpl);
 	}
-	const tpl = T[type][lang];
-	const subject = tpl.subject(order);
+	const defaults = T[type][lang] as Record<string, unknown>;
+	// Build a merged view: prefer DB value, fall back to hardcoded default.
+	const subject = dbTpl?.subject
+		? applySubjectVars(dbTpl.subject, order)
+		: (defaults.subject as (o: Order) => string)(order);
+	const tpl = {
+		heading: dbTpl?.heading ?? (defaults.heading as string),
+		intro: dbTpl?.intro ?? (defaults.intro as string),
+		outro: dbTpl?.outro ?? (defaults.outro as string),
+		itemsLabel: dbTpl?.items_label ?? (defaults.itemsLabel as string),
+		subtotalLabel: dbTpl?.subtotal_label ?? (defaults.subtotalLabel as string),
+		shippingLabel: dbTpl?.shipping_label ?? (defaults.shippingLabel as string),
+		totalLabel: dbTpl?.total_label ?? (defaults.totalLabel as string),
+		shipToLabel: dbTpl?.ship_to_label ?? (defaults.shipToLabel as string),
+		trackingLabel: dbTpl?.tracking_label ?? (defaults.trackingLabel as string),
+		methodLabel: dbTpl?.method_label ?? (defaults.methodLabel as string),
+		ctaLabel: dbTpl?.cta_label ?? (defaults.ctaLabel as string),
+	} as Record<string, string>;
 	const symbol = order.currency === 'USD' ? '$' : 'RD$';
 	const fmt = (cents: number) => `${symbol}${(Number(cents) / 100).toFixed(2)}`;
 	const ship = order.shipping_address || {};
@@ -318,7 +376,7 @@ function renderEmail(
 	// but adds a prominent CTA back to the cart so the customer can finish.
 	const showItems = type === 'confirmation' || type === 'abandoned_cart';
 	const showCta = type === 'abandoned_cart';
-	const ctaLabel = showCta ? (tpl as Record<string, string>).ctaLabel || 'Finish my order' : '';
+	const ctaLabel = showCta ? tpl.ctaLabel || 'Finish my order' : '';
 
 	const taglineEs = 'Vino espumoso orgánico premium de la República Dominicana. Elaborado con pasión, sostenibilidad y los mejores frutos locales.';
 	const taglineEn = 'Premium organic sparkling wine from the Dominican Republic. Crafted with passion, sustainability, and the finest local fruits.';
@@ -351,7 +409,7 @@ function renderEmail(
           ${showItems ? renderItemsTable(items, fmt, tpl as Record<string, string>, order, symbol) : ''}
           ${type === 'tracking' ? renderTrackingBlock(order, tpl as Record<string, string>) : ''}
           ${showCta ? `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 24px 0;"><tr><td align="center"><a href="https://kibay.com.do/cart" style="display:inline-block;padding:14px 32px;background:#1a1a1a;color:#ffffff;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;letter-spacing:0.3px;">${escapeHtml(ctaLabel)}</a></td></tr></table>` : ''}
-          ${renderShipToBlock(ship, customerName, lang)}
+          ${renderShipToBlock(ship, customerName, lang, tpl.shipToLabel)}
           <p style="margin:24px 0 0 0;font-size:14px;line-height:1.6;color:#666;">${escapeHtml(tpl.outro)}</p>
         </td></tr>
         <tr><td style="padding:28px 40px 0;">
@@ -409,9 +467,16 @@ function renderAdminEmail(
 	type: 'admin_new_order' | 'admin_refunded',
 	order: Order,
 	items: Item[],
+	dbTpl: DbTemplate | null = null,
 ): { subject: string; html: string } {
-	const tpl = (T as Record<string, Record<'en', { subject: (o: Order) => string; heading: string; intro: string }>>)[type].en;
-	const subject = tpl.subject(order);
+	const defaults = (T as Record<string, Record<'en', { subject: (o: Order) => string; heading: string; intro: string }>>)[type].en;
+	const tpl = {
+		heading: dbTpl?.heading ?? defaults.heading,
+		intro: dbTpl?.intro ?? defaults.intro,
+	};
+	const subject = dbTpl?.subject
+		? applySubjectVars(dbTpl.subject, order)
+		: defaults.subject(order);
 	const symbol = order.currency === 'USD' ? '$' : 'RD$';
 	const fmt = (cents: number) => `${symbol}${(Number(cents) / 100).toFixed(2)}`;
 	const ship = order.shipping_address || {};
@@ -487,8 +552,13 @@ function renderTrackingBlock(order: Order, tpl: Record<string, string>): string 
   </table>`;
 }
 
-function renderShipToBlock(ship: Record<string, string>, name: string, lang: 'es' | 'en'): string {
-	const label = lang === 'es' ? 'Envío a' : 'Ship to';
+function renderShipToBlock(
+	ship: Record<string, string>,
+	name: string,
+	lang: 'es' | 'en',
+	labelOverride?: string,
+): string {
+	const label = labelOverride || (lang === 'es' ? 'Envío a' : 'Ship to');
 	const lines = [
 		name,
 		ship.address,
