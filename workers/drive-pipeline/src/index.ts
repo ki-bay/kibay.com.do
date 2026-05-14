@@ -195,10 +195,62 @@ h1{margin:0 0 12px;color:#16a34a;}
 		// =====================================================================
 		// Email marketing module (added 2026-05-12)
 		// Routes:
-		//   POST /email/send         — admin sends campaign / test / inline
-		//   GET  /unsubscribe        — recipient self-suppresses (HMAC-signed)
-		//   POST /webhooks/brevo     — Brevo event tracking (delivered/open/etc)
+		//   POST /email/send           — admin sends campaign / test / inline
+		//   GET  /unsubscribe          — recipient self-suppresses (HMAC-signed)
+		//   POST /webhooks/brevo       — Brevo event tracking (delivered/open/etc)
+		//   POST /newsletter/welcome   — fires a welcome email after public signup
 		// =====================================================================
+
+		if (url.pathname === '/newsletter/welcome' && req.method === 'POST') {
+			try {
+				const body = (await req.json()) as { email?: string; first_name?: string };
+				const email = (body.email || '').trim().toLowerCase();
+				if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+					return withCors(new Response(JSON.stringify({ ok: false, error: 'invalid email' }), {
+						status: 400,
+						headers: { 'content-type': 'application/json' },
+					}), req);
+				}
+				// Verify the address is actually a subscriber before sending — prevents
+				// abuse (random anon clients trying to spam arbitrary addresses with
+				// "welcome to Kibay" mail). Service-role bypasses RLS for the check.
+				const checkR = await fetch(
+					`${env.SUPABASE_URL}/rest/v1/newsletter_subscribers?email=eq.${encodeURIComponent(email)}&select=email,first_name&limit=1`,
+					{
+						headers: {
+							apikey: env.SUPABASE_SERVICE_ROLE_KEY,
+							Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+						},
+					},
+				);
+				const subs = (await checkR.json()) as Array<{ email: string; first_name?: string | null }>;
+				if (!subs.length) {
+					return withCors(new Response(JSON.stringify({ ok: false, error: 'not a subscriber' }), {
+						status: 404,
+						headers: { 'content-type': 'application/json' },
+					}), req);
+				}
+				const firstName = body.first_name || subs[0].first_name || '';
+				const unsubUrl = await signUnsubscribeUrl(env, email);
+				const html = renderWelcomeEmail(firstName, unsubUrl);
+				await sendBrevoEmail(env, {
+					to: [{ email, name: firstName || undefined }],
+					subject: 'Bienvenido/a a Kibay — gracias por suscribirte',
+					htmlContent: html,
+					replyTo: { email: 'info@kibay.com.do', name: 'Kibay' },
+					tags: ['newsletter-welcome'],
+				});
+				return withCors(new Response(JSON.stringify({ ok: true }), {
+					headers: { 'content-type': 'application/json' },
+				}), req);
+			} catch (e) {
+				console.error('/newsletter/welcome error:', e);
+				return withCors(new Response(JSON.stringify({ ok: false, error: (e as Error).message }), {
+					status: 500,
+					headers: { 'content-type': 'application/json' },
+				}), req);
+			}
+		}
 
 		if (url.pathname === '/email/send' && req.method === 'POST') {
 			const auth = await verifyAdminAuth(env, req);
@@ -1486,4 +1538,68 @@ function firstSentenceFromHtml(html: string): string {
 	const cut = sentenceEnd > 60 ? sentenceEnd + 1 : Math.min(text.length, 280);
 	const out = text.slice(0, cut).trim();
 	return out.length === text.length ? out : out + '…';
+}
+
+// ---------------------------------------------------------------------------
+// Newsletter welcome email — fired after a public footer signup.
+// ---------------------------------------------------------------------------
+function renderWelcomeEmail(firstName: string, unsubUrl: string): string {
+	const greeting = firstName ? `Hola ${escapeHtml(firstName)},` : 'Hola,';
+	return `<!doctype html>
+<html lang="es">
+<body style="margin:0;padding:0;background:#f4f4f0;font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:#1a1a1a;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding:32px 0;background:#f4f4f0;">
+    <tr><td align="center">
+      <table role="presentation" width="560" style="max-width:560px;background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);">
+        <tr><td style="padding:32px 40px 0;" align="center">
+          <div style="font-family:Georgia,serif;font-size:30px;font-weight:600;letter-spacing:1.5px;color:#1a1a1a;">Kibay</div>
+          <div style="height:2px;width:56px;background:#D4A574;margin:12px auto 0;"></div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#aaa;margin-top:10px;">Vino Espumoso Orgánico del Caribe</div>
+        </td></tr>
+        <tr><td style="padding:32px 40px 8px;">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#999;">Bienvenido/a a la lista</div>
+          <h1 style="margin:10px 0 0;font-size:24px;font-weight:600;line-height:1.3;">${greeting} gracias por suscribirte</h1>
+          <p style="margin:14px 0 0;color:#666;font-size:15px;line-height:1.65;">Ya estás en la lista de Kibay. Te escribiremos de vez en cuando — sin spam, sin prisa.</p>
+        </td></tr>
+        <tr><td style="padding:12px 40px 0;">
+          <p style="margin:0;color:#444;font-size:15px;line-height:1.65;">Qué esperar:</p>
+          <ul style="margin:8px 0 0;padding-left:20px;color:#444;font-size:15px;line-height:1.7;">
+            <li>Historias de Bahía de Ocoa, nuestra bodega en el sur dominicano.</li>
+            <li>Lanzamientos de añada y nuevas etiquetas (próximamente Rosé y French Colombard 2026).</li>
+            <li>Invitaciones a catas y visitas a la bodega.</li>
+            <li>Ofertas exclusivas que no aparecen en redes.</li>
+          </ul>
+        </td></tr>
+        <tr><td style="padding:18px 40px 6px;">
+          <div style="border-left:3px solid #D4A574;padding:6px 16px;color:#555;font-style:italic;font-size:15px;line-height:1.55;">
+            "Caribe en una copa. Orgánico, brillante, hecho a 90 minutos de Santo Domingo."
+          </div>
+        </td></tr>
+        <tr><td style="padding:28px 40px 8px;" align="center">
+          <a href="https://kibay.com.do/shop" style="display:inline-block;background:#1a1a1a;color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:8px;font-weight:600;font-size:15px;letter-spacing:0.3px;">Explorar la tienda</a>
+        </td></tr>
+        <tr><td style="padding:6px 40px 32px;" align="center">
+          <a href="https://kibay.com.do/vine-and-barrel" style="color:#888;font-size:13px;text-decoration:underline;">O reserva una visita a la bodega →</a>
+        </td></tr>
+        <tr><td style="padding:0 40px;"><div style="height:1px;background:#eee;"></div></td></tr>
+        <tr><td style="padding:24px 40px 28px;text-align:center;">
+          <div style="font-family:Georgia,serif;font-size:18px;font-weight:600;color:#1a1a1a;letter-spacing:0.5px;">Kibay</div>
+          <div style="font-size:12px;color:#777;margin-top:6px;line-height:1.5;max-width:380px;margin-left:auto;margin-right:auto;">Vino orgánico premium de la República Dominicana. Elaborado con pasión, sostenibilidad y los mejores frutos locales.</div>
+          <div style="font-size:11px;color:#999;margin-top:14px;">Bahía de Ocoa, Km 6 1/2 Hatillo, Azua 71003 · República Dominicana</div>
+          <div style="margin-top:18px;">
+            <a href="https://www.instagram.com/kibaywine" style="display:inline-block;margin:0 6px;color:#888;font-size:12px;text-decoration:none;">Instagram</a><span style="color:#ddd;">·</span>
+            <a href="https://www.facebook.com/profile.php?id=61589761255222" style="display:inline-block;margin:0 6px;color:#888;font-size:12px;text-decoration:none;">Facebook</a><span style="color:#ddd;">·</span>
+            <a href="https://www.tiktok.com/@kibaywine" style="display:inline-block;margin:0 6px;color:#888;font-size:12px;text-decoration:none;">TikTok</a><span style="color:#ddd;">·</span>
+            <a href="https://www.linkedin.com/company/116054911" style="display:inline-block;margin:0 6px;color:#888;font-size:12px;text-decoration:none;">LinkedIn</a>
+          </div>
+          <div style="font-size:11px;color:#aaa;margin-top:16px;">
+            <a href="${unsubUrl}" style="color:#aaa;text-decoration:underline;">Cancelar suscripción</a> · <a href="https://kibay.com.do" style="color:#aaa;text-decoration:none;">kibay.com.do</a>
+          </div>
+          <div style="font-size:10px;color:#bbb;margin-top:14px;letter-spacing:0.5px;text-transform:uppercase;">© Kibay · Hecho en la República Dominicana</div>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
 }
