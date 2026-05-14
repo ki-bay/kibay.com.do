@@ -233,6 +233,7 @@ h1{margin:0 0 12px;color:#16a34a;}
 				const firstName = body.first_name || subs[0].first_name || '';
 				const unsubUrl = await signUnsubscribeUrl(env, email);
 				const html = renderWelcomeEmail(firstName, unsubUrl);
+				// 1. Customer welcome
 				await sendBrevoEmail(env, {
 					to: [{ email, name: firstName || undefined }],
 					subject: 'Bienvenido/a a Kibay — gracias por suscribirte',
@@ -240,6 +241,19 @@ h1{margin:0 0 12px;color:#16a34a;}
 					replyTo: { email: 'info@kibay.com.do', name: 'Kibay' },
 					tags: ['newsletter-welcome'],
 				});
+				// 2. Admin notification to REVIEW_EMAIL_TO (info@kibay.com.do). Best-
+				//    effort: a failure here doesn't undo the customer-side success.
+				try {
+					const adminHtml = renderNewsletterAdminNotice(email, firstName);
+					await sendBrevoEmail(env, {
+						to: [{ email: env.REVIEW_EMAIL_TO, name: 'Kibay Admin' }],
+						subject: `[Kibay] Nuevo suscriptor: ${email}`,
+						htmlContent: adminHtml,
+						tags: ['newsletter-admin-notify'],
+					});
+				} catch (adminErr) {
+					console.error('admin notify failed (non-fatal):', adminErr);
+				}
 				return withCors(new Response(JSON.stringify({ ok: true }), {
 					headers: { 'content-type': 'application/json' },
 				}), req);
@@ -1538,6 +1552,34 @@ function firstSentenceFromHtml(html: string): string {
 	const cut = sentenceEnd > 60 ? sentenceEnd + 1 : Math.min(text.length, 280);
 	const out = text.slice(0, cut).trim();
 	return out.length === text.length ? out : out + '…';
+}
+
+// ---------------------------------------------------------------------------
+// Newsletter admin notice — short internal-style email to info@kibay.com.do
+// when a new public subscriber lands. Lightweight, no marketing chrome.
+// ---------------------------------------------------------------------------
+function renderNewsletterAdminNotice(email: string, firstName: string): string {
+	const when = new Date().toLocaleString('es-DO', { timeZone: 'America/Santo_Domingo' });
+	return `<!doctype html><html><body style="margin:0;padding:0;background:#f5f5f4;font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:#1c1917;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="padding:24px 16px;background:#f5f5f4;"><tr><td align="center">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;background:#ffffff;border:1px solid #e7e5e4;border-radius:8px;">
+  <tr><td style="padding:20px 24px;border-bottom:1px solid #e7e5e4;">
+    <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#a8a29e;">Kibay admin · newsletter</div>
+    <h1 style="margin:4px 0 0;font-size:18px;font-weight:600;color:#1c1917;">Nuevo suscriptor</h1>
+  </td></tr>
+  <tr><td style="padding:20px 24px;">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="font-size:13px;color:#44403c;">
+      <tr><td style="padding:4px 0;color:#78716c;width:130px;">Email</td><td style="padding:4px 0;font-family:Menlo,Consolas,monospace;color:#1c1917;">${escapeHtml(email)}</td></tr>
+      ${firstName ? `<tr><td style="padding:4px 0;color:#78716c;">Nombre</td><td style="padding:4px 0;">${escapeHtml(firstName)}</td></tr>` : ''}
+      <tr><td style="padding:4px 0;color:#78716c;">Fuente</td><td style="padding:4px 0;">Formulario footer</td></tr>
+      <tr><td style="padding:4px 0;color:#78716c;">Hora (AST)</td><td style="padding:4px 0;">${escapeHtml(when)}</td></tr>
+    </table>
+  </td></tr>
+  <tr><td style="padding:0 24px 24px;">
+    <a href="https://kibay.com.do/admin/email/contacts" style="display:inline-block;padding:10px 16px;background:#1c1917;color:#ffffff;border-radius:6px;font-size:13px;font-weight:500;text-decoration:none;">Ver en /admin/email/contacts</a>
+  </td></tr>
+</table></td></tr></table>
+</body></html>`;
 }
 
 // ---------------------------------------------------------------------------
