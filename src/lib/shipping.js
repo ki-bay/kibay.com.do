@@ -1,43 +1,80 @@
-// Per-bottle shipping with a bulk-order jump. Experience products
-// (excursions, day passes) do NOT contribute to the count — the caller
-// passes only the shippable bottle count (sum of qty across type=physical
-// cart items).
+// Logistics-grade shipping for Kibay (DR).
 //
-// Brand policy (DOP):
-//   Bottle 1            → RD$200 standard, RD$400 express
-//   Bottles 2-11        → previous + RD$100 each additional
-//   Bottles 12+ (bulk)  → RD$1,600 flat, regardless of method
-// USD tier uses the same shape converted at ~60 DOP/USD.
+// Three methods at checkout:
+//   'standard'  → Vimenpaq/Domex 2-3 days, per-bottle scaling with bulk cap
+//   'express'   → Vimenpaq priority 24h, = standard + flat surcharge
+//   'pickup'    → Recogida en bodega Ocoa Bay, always free
+//
+// Bottle-count math (Estándar, DOP):
+//   1 bottle             RD$250
+//   Bottles 2-11         +RD$80 each
+//   12+ bottles (bulk)   RD$1,400 flat
+//   Subtotal ≥ RD$5,000  → Estándar free, Express still pays the surcharge
+//
+// USD tier mirrors at ~60 DOP/USD ($4.50 base, +$1.50 each, $24 bulk, $90 free).
+//
+// Experiences (excursions, day passes) DO NOT contribute to bottleCount — the
+// caller filters them out before calling.
+
 const DEFAULT_TIERS = {
-	DOP: { standard: 200, express: 400, perAdditional: 100, bulkThreshold: 12, bulkPrice: 1600 },
-	USD: { standard: 4, express: 8, perAdditional: 2, bulkThreshold: 12, bulkPrice: 30 },
+	DOP: {
+		standard: 250,
+		express: 450,
+		perAdditional: 80,
+		bulkThreshold: 12,
+		bulkPrice: 1400,
+		freeOver: 5000,
+	},
+	USD: {
+		standard: 4.5,
+		express: 8,
+		perAdditional: 1.5,
+		bulkThreshold: 12,
+		bulkPrice: 24,
+		freeOver: 90,
+	},
 };
 
 /**
  * Shipping cost in major currency units.
- * @param {number} bottleCount Number of shippable bottles (sum of variant qty
- *   over physical-type products only — experiences contribute 0). Pass 0 if
- *   the cart has nothing to ship → returns 0.
- * @param {'standard' | 'express'} method
- * @param {'DOP' | 'USD'} [currency='DOP']
- * @param {Record<string, {standard:number,express:number,perAdditional:number,bulkThreshold:number,bulkPrice:number}>} [tiers]
- *   Optional override loaded from shipping_rates. Same shape as DEFAULT_TIERS,
- *   in major units.
+ * @param {number} bottleCount Sum of qty across cart items where
+ *   product.type !== 'experience'. Pass 0 for experience-only carts.
+ * @param {'standard'|'express'|'pickup'} method
+ * @param {'DOP'|'USD'} [currency='DOP']
+ * @param {object} [tiers] Optional override loaded from shipping_rates.
+ * @param {number} [subtotalMajor=0] Cart subtotal in major units (used for
+ *   free-shipping threshold). Pass 0 to disable the free-shipping check.
  * @returns {number}
  */
-export function computeShippingMajor(bottleCount, method, currency = 'DOP', tiers) {
+export function computeShippingMajor(bottleCount, method, currency = 'DOP', tiers, subtotalMajor = 0) {
+	// Pickup at the winery is always free.
+	if (method === 'pickup') return 0;
+
 	const count = Math.max(0, Math.floor(Number(bottleCount) || 0));
 	if (count === 0) return 0;
 
 	const source = tiers && Object.keys(tiers).length ? tiers : DEFAULT_TIERS;
 	const tier = source[String(currency).toUpperCase()] || DEFAULT_TIERS.DOP;
 
+	const expressSurcharge = Number(tier.express || 0) - Number(tier.standard || 0);
+
+	// Free shipping over subtotal threshold. Estándar becomes 0; Express still
+	// pays the express surcharge (= express_base − standard_base).
+	const freeOver = Number.isFinite(tier.freeOver) && tier.freeOver > 0 ? tier.freeOver : Infinity;
+	if (Number(subtotalMajor) >= freeOver) {
+		if (method === 'express') return Math.max(0, expressSurcharge);
+		return 0;
+	}
+
 	const threshold = Number.isFinite(tier.bulkThreshold) && tier.bulkThreshold > 0
 		? tier.bulkThreshold : Infinity;
 	const bulkPrice = Number.isFinite(tier.bulkPrice) && tier.bulkPrice > 0
 		? tier.bulkPrice : null;
 
-	if (count >= threshold && bulkPrice != null) return bulkPrice;
+	// 12+ bottles: flat bulk price. Express adds the surcharge.
+	if (count >= threshold && bulkPrice != null) {
+		return method === 'express' ? bulkPrice + expressSurcharge : bulkPrice;
+	}
 
 	const base = method === 'express' ? tier.express : tier.standard;
 	const per = Number.isFinite(tier.perAdditional) ? tier.perAdditional : 0;
@@ -45,8 +82,8 @@ export function computeShippingMajor(bottleCount, method, currency = 'DOP', tier
 }
 
 /**
- * Convert the row shape returned by shipping_rates (cents columns) into the
- * major-units shape computeShippingMajor expects.
+ * Convert shipping_rates DB rows (cents columns) into the major-units shape
+ * computeShippingMajor expects.
  */
 export function tiersFromShippingRates(rows) {
 	const out = {};
@@ -58,6 +95,7 @@ export function tiersFromShippingRates(rows) {
 			perAdditional: (Number(row.per_additional_cents) || 0) / 100,
 			bulkThreshold: Number(row.bulk_threshold_count) || 0,
 			bulkPrice: (Number(row.max_cents) || 0) / 100,
+			freeOver: (Number(row.free_over_cents) || 0) / 100,
 		};
 	}
 	return out;

@@ -208,9 +208,17 @@ const CheckoutPage = () => {
 	);
 
 	const shippingMajor = useMemo(
-		() => computeShippingMajor(shippableBottleCount, shippingMethod, cartCurrency, shippingTiers),
-		[shippableBottleCount, shippingMethod, cartCurrency, shippingTiers],
+		() => computeShippingMajor(shippableBottleCount, shippingMethod, cartCurrency, shippingTiers, subtotalMajor),
+		[shippableBottleCount, shippingMethod, cartCurrency, shippingTiers, subtotalMajor],
 	);
+
+	// Free-shipping eligibility for the Estándar method, recomputed live as
+	// the cart and coupon change. Used to show "FREE" in the selector.
+	const freeOverThreshold = useMemo(() => {
+		const tier = (shippingTiers && shippingTiers[cartCurrency]) || null;
+		return tier && tier.freeOver > 0 ? tier.freeOver : null;
+	}, [shippingTiers, cartCurrency]);
+	const qualifiesForFreeShipping = freeOverThreshold != null && subtotalMajor >= freeOverThreshold;
 	const subtotalCents = Math.round(subtotalMajor * 100);
 	const shippingCents = Math.round(shippingMajor * 100);
 	const discountCents = appliedCoupon ? Math.max(0, Number(appliedCoupon.discountAmount) || 0) : 0;
@@ -627,14 +635,44 @@ const CheckoutPage = () => {
 												disabled={step === 'payment'}
 												className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground focus:border-mango-500 focus:outline-none font-light"
 											>
-												<option value="standard">{t('standard')} ({symbol}{shippingMajor.toFixed(2)})</option>
-												<option value="express">{t('express')} ({symbol}{computeShippingMajor(shippableBottleCount, 'express', cartCurrency, shippingTiers).toFixed(2)})</option>
+												<option value="standard">
+													{cartCurrency === 'USD' ? 'Standard (2-3 days)' : 'Estándar (2-3 días)'}
+													{' · '}
+													{computeShippingMajor(shippableBottleCount, 'standard', cartCurrency, shippingTiers, subtotalMajor) === 0
+														? (cartCurrency === 'USD' ? 'FREE' : 'GRATIS')
+														: `${symbol}${computeShippingMajor(shippableBottleCount, 'standard', cartCurrency, shippingTiers, subtotalMajor).toFixed(2)}`}
+												</option>
+												<option value="express">
+													{cartCurrency === 'USD' ? 'Express (24h)' : 'Express (24h)'}
+													{' · '}
+													{symbol}{computeShippingMajor(shippableBottleCount, 'express', cartCurrency, shippingTiers, subtotalMajor).toFixed(2)}
+												</option>
+												<option value="pickup">
+													{cartCurrency === 'USD' ? 'Pickup at the winery' : 'Recogida en bodega'}
+													{' · '}
+													{cartCurrency === 'USD' ? 'FREE' : 'GRATIS'}
+												</option>
 											</select>
-											<p className="text-xs text-foreground/50 font-light">
-												{cartCurrency === 'USD'
-													? `${shippableBottleCount} bottle${shippableBottleCount === 1 ? '' : 's'} · +${symbol}2 each additional up to 11; 12+ bottles flat ${symbol}30`
-													: `${shippableBottleCount} botella${shippableBottleCount === 1 ? '' : 's'} · +RD$100 por cada botella adicional hasta 11; 12+ botellas tarifa fija RD$1,600`}
-											</p>
+											{qualifiesForFreeShipping ? (
+												<p className="text-xs text-emerald-400 font-medium">
+													{cartCurrency === 'USD'
+														? `🎉 You unlocked free standard shipping (subtotal ≥ ${symbol}${freeOverThreshold})`
+														: `🎉 ¡Envío estándar gratis desbloqueado! (subtotal ≥ ${symbol}${freeOverThreshold.toFixed(0)})`}
+												</p>
+											) : (
+												<p className="text-xs text-foreground/50 font-light">
+													{cartCurrency === 'USD'
+														? `${shippableBottleCount} bottle${shippableBottleCount === 1 ? '' : 's'} · +${symbol}1.50 each up to 11; 12+ flat ${symbol}24 · Free standard over ${symbol}${freeOverThreshold || 90}`
+														: `${shippableBottleCount} botella${shippableBottleCount === 1 ? '' : 's'} · +RD$80 c/u hasta 11; 12+ tarifa fija RD$1,400 · Envío estándar gratis sobre RD$${(freeOverThreshold || 5000).toFixed(0)}`}
+												</p>
+											)}
+											{shippingMethod === 'pickup' && (
+												<p className="text-xs text-foreground/60 font-light bg-emerald-500/5 border border-emerald-500/20 rounded p-3 mt-2">
+													{cartCurrency === 'USD'
+														? '📍 Pickup at Casa Club Ocoa Bay, Bahía de Ocoa. We will email you to coordinate a time.'
+														: '📍 Recoge en Casa Club Ocoa Bay, Bahía de Ocoa. Te escribiremos para coordinar la hora.'}
+												</p>
+											)}
 										</div>
 									)}
 								</div>
