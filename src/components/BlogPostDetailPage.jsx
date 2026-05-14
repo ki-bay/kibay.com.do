@@ -14,6 +14,27 @@ import SchemaMarkup from '@/components/SchemaMarkup';
 import BreadcrumbNav from '@/components/BreadcrumbNav';
 import '@/styles/editor.css';
 
+// Strip the first <figure>...</figure> block in body HTML whose <img src>
+// matches the featured image URL. The Drive pipeline always uses image[0]
+// both as the hero (post.featured_image_url) AND as the body's first
+// {{IMAGE_1}} placeholder, so without this the same photo renders twice on
+// the detail page. Defensive: matches both quote styles, ignores any
+// trailing query string, and only strips the FIRST match (so multi-image
+// posts keep their gallery intact).
+function stripFirstMatchingFigure(html, imageUrl) {
+  if (!html || !imageUrl) return html;
+  // Match the URL up to ? so storage cache-busters don't defeat the match
+  const baseUrl = String(imageUrl).split('?')[0];
+  if (!baseUrl) return html;
+  const escaped = baseUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  // Find the first <figure>...</figure> whose inner <img src> begins with baseUrl
+  const re = new RegExp(
+    `<figure\\b[^>]*>[\\s\\S]*?<img\\b[^>]*\\bsrc=["']${escaped}(?:[^"']*)?["'][^>]*>[\\s\\S]*?<\\/figure>`,
+    'i',
+  );
+  return html.replace(re, '');
+}
+
 const BlogPostDetailPage = () => {
   const { t, i18n } = useTranslation('blogPostDetail');
   const { id } = useParams();
@@ -176,11 +197,18 @@ const BlogPostDetailPage = () => {
           </div>
         )}
 
-        {/* Content */}
+        {/* Content — strip the first inline <figure> whose <img src> matches
+            the featured image so it doesn't render twice (Drive pipeline
+            uses image[0] as both the hero and the body's first {{IMAGE_1}}
+            placeholder). Defensive against quote style + minor URL drift. */}
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <div
             className="blog-content-renderer"
-            dangerouslySetInnerHTML={{ __html: sanitizeHtmlContent(post.content) }}
+            dangerouslySetInnerHTML={{
+              __html: sanitizeHtmlContent(
+                stripFirstMatchingFigure(post.content, post.featured_image_url),
+              ),
+            }}
           />
 
           {/* Share Section */}
