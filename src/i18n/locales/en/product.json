@@ -30,5 +30,12 @@
   },
   "specs": {
     "heading": "Details"
+  },
+  "reservation": {
+    "heading": "Your reservation",
+    "dateLabel": "Date",
+    "timeLabel": "Time",
+    "availability": "Saturdays, Sundays, and holidays only",
+    "required": "Pick a date to continue"
   }
 }

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { m, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, X, Plus, Minus, Trash2, ArrowRight } from 'lucide-react';
-import { useCart } from '@/hooks/useCart';
+import { useCart, cartItemKey } from '@/hooks/useCart';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { resolveProductMediaUrl } from '@/config/mediaCdn';
@@ -126,27 +126,29 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                 </div>
               ) : (
                 <div className="space-y-6">
-                  {cartItems.map(item => (
-                    <m.div 
+                  {cartItems.map(item => {
+                    const itemKey = cartItemKey(item);
+                    return (
+                    <m.div
                       layout
-                      key={item.variant.id} 
+                      key={itemKey}
                       className="flex gap-4 bg-white p-4 rounded-xl shadow-sm border border-stone-100"
                     >
                       <div className="w-20 h-24 bg-stone-100 rounded-lg overflow-hidden flex-shrink-0">
-                        <img 
-                          src={resolveProductMediaUrl(item.product.image) || item.product.image} 
-                          alt={item.product.title} 
-                          className="w-full h-full object-cover" 
+                        <img
+                          src={resolveProductMediaUrl(item.product.image) || item.product.image}
+                          alt={item.product.title}
+                          className="w-full h-full object-cover"
                         />
                       </div>
-                      
+
                       <div className="flex-grow flex flex-col justify-between">
                         <div>
                           <div className="flex justify-between items-start">
                             <h3 className="font-medium text-stone-900 line-clamp-1">{item.product.title}</h3>
                             <button
                               type="button"
-                              onClick={() => removeFromCart(item.variant.id)}
+                              onClick={() => removeFromCart(itemKey)}
                               aria-label={t('remove', { defaultValue: 'Remove item' })}
                               className="text-stone-300 hover:text-red-400 transition-colors p-1"
                             >
@@ -154,17 +156,23 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                             </button>
                           </div>
                           <p className="text-sm text-stone-500 mb-2">{item.variant.title}</p>
+                          {item.metadata?.reservation_date && (
+                            <p className="text-xs text-[#D4A574] mb-1">
+                              {item.metadata.reservation_date}
+                              {item.metadata.reservation_time ? ` · ${item.metadata.reservation_time}` : ''}
+                            </p>
+                          )}
                         </div>
-                        
+
                         <div className="flex items-center justify-between">
                           <p className="font-serif font-medium text-[#D4A574]">
                             {item.variant.sale_price_formatted || item.variant.price_formatted}
                           </p>
-                          
+
                           <div className="flex items-center bg-stone-100 rounded-full p-1">
                             <button
                               type="button"
-                              onClick={() => updateQuantity(item.variant.id, Math.max(1, item.quantity - 1))}
+                              onClick={() => updateQuantity(itemKey, Math.max(1, item.quantity - 1))}
                               aria-label={t('decreaseQuantity', { defaultValue: 'Decrease quantity' })}
                               className="w-6 h-6 flex items-center justify-center rounded-full bg-white text-stone-600 shadow-sm hover:text-[#D4A574] transition-colors"
                             >
@@ -173,7 +181,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                             <span className="w-8 text-center text-sm font-medium text-stone-700">{item.quantity}</span>
                             <button
                               type="button"
-                              onClick={() => updateQuantity(item.variant.id, item.quantity + 1)}
+                              onClick={() => updateQuantity(itemKey, item.quantity + 1)}
                               aria-label={t('increaseQuantity', { defaultValue: 'Increase quantity' })}
                               className="w-6 h-6 flex items-center justify-center rounded-full bg-white text-stone-600 shadow-sm hover:text-[#D4A574] transition-colors"
                             >
@@ -183,7 +191,8 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                         </div>
                       </div>
                     </m.div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>

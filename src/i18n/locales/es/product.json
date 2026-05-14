@@ -30,5 +30,12 @@
   },
   "specs": {
     "heading": "Características"
+  },
+  "reservation": {
+    "heading": "Tu reserva",
+    "dateLabel": "Fecha",
+    "timeLabel": "Hora",
+    "availability": "Solo sábados, domingos y feriados",
+    "required": "Selecciona una fecha antes de continuar"
   }
 }

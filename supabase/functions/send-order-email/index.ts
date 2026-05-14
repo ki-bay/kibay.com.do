@@ -25,6 +25,11 @@ const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const anonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
 const brevoKey = Deno.env.get('BREVO_API_KEY');
 const fromAddress = Deno.env.get('ORDER_EMAIL_FROM') || '';
+// Calendar link signing — must match the Worker's EMAIL_LINK_SECRET so the
+// /calendar/order/:id.ics endpoint can verify the signature this email mints.
+// WORKER_BASE_URL is the public host of the drive-pipeline Worker.
+const emailLinkSecret = Deno.env.get('EMAIL_LINK_SECRET') || '';
+const workerBaseUrl = Deno.env.get('WORKER_BASE_URL') || '';
 // Optional admin notification BCC. When set, the admin receives a copy of every
 // customer 'confirmation' and 'refund' email. Default: 'info@kibay.com.do'.
 // Set to an empty string in Supabase secrets to disable.
@@ -116,6 +121,37 @@ serve(async (req) => {
 		.select('*')
 		.eq('order_id', order_id);
 
+	// Hydrate items[].metadata.duration_minutes from the products table so we
+	// can compute calendar end-times for experience reservations. Wine bottles
+	// have no product_id reservation needs — they no-op.
+	const reservationItems = (items || []).filter((i) => (i as Item).metadata?.reservation_date);
+	if (reservationItems.length > 0) {
+		const productIds = Array.from(
+			new Set(reservationItems.map((i) => (i as Item).product_id).filter(Boolean)),
+		) as string[];
+		if (productIds.length > 0) {
+			const { data: productRows } = await admin
+				.from('products')
+				.select('id, metadata')
+				.in('id', productIds);
+			const durationByProduct = new Map<string, number>();
+			for (const p of (productRows || []) as Array<{ id: string; metadata: { duration_minutes?: number } | null }>) {
+				if (typeof p.metadata?.duration_minutes === 'number') {
+					durationByProduct.set(p.id, p.metadata.duration_minutes);
+				}
+			}
+			for (const it of reservationItems) {
+				const i = it as Item;
+				if (i.product_id && durationByProduct.has(i.product_id)) {
+					i.metadata = {
+						...(i.metadata || {}),
+						duration_minutes: durationByProduct.get(i.product_id),
+					};
+				}
+			}
+		}
+	}
+
 	const ship = order.shipping_address || {};
 	const isAdminEmail = type === 'admin_new_order' || type === 'admin_refunded';
 	const to = isAdminEmail ? adminNotifyEmail : ship.email;
@@ -145,7 +181,7 @@ serve(async (req) => {
 		console.error('email_templates read failed, falling back to defaults', err);
 	}
 
-	const { subject, html } = renderEmail(type, order, items || [], renderLang, dbTpl);
+	const { subject, html } = await renderEmail(type, order, items || [], renderLang, dbTpl);
 
 	const recipientName = isAdminEmail
 		? 'Kibay Admin'
@@ -213,6 +249,15 @@ type Item = Record<string, unknown> & {
 	quantity: number;
 	price_per_item: number;
 	total_price: number;
+	product_id?: string;
+	// Per-line metadata. Experiences carry { reservation_date, reservation_time }
+	// (date is YYYY-MM-DD, time is HH:MM, both treated as AST=UTC-4). Other
+	// items have an empty {} default.
+	metadata?: {
+		reservation_date?: string;
+		reservation_time?: string;
+		duration_minutes?: number;
+	} | null;
 };
 
 // Row shape from public.email_templates. All copy fields are optional at the
@@ -339,15 +384,15 @@ const T = {
 	},
 };
 
-function renderEmail(
+async function renderEmail(
 	type: 'confirmation' | 'tracking' | 'refund' | 'abandoned_cart' | 'admin_new_order' | 'admin_refunded',
 	order: Order,
 	items: Item[],
 	lang: 'es' | 'en',
 	dbTpl: DbTemplate | null = null,
-): { subject: string; html: string } {
+): Promise<{ subject: string; html: string }> {
 	if (type === 'admin_new_order' || type === 'admin_refunded') {
-		return renderAdminEmail(type, order, items, dbTpl);
+		return await renderAdminEmail(type, order, items, dbTpl);
 	}
 	const defaults = T[type][lang] as Record<string, unknown>;
 	// Build a merged view: prefer DB value, fall back to hardcoded default.
@@ -378,6 +423,13 @@ function renderEmail(
 	const showCta = type === 'abandoned_cart';
 	const ctaLabel = showCta ? tpl.ctaLabel || 'Finish my order' : '';
 
+	// Reservation block — rendered for any order containing experience line items.
+	// Goes between the intro paragraph and the items table in the email body.
+	const reservationBlock =
+		type === 'confirmation' || type === 'abandoned_cart'
+			? await renderReservationBlock(items, lang, String(order.id || ''))
+			: '';
+
 	const taglineEs = 'Vino espumoso orgánico premium de la República Dominicana. Elaborado con pasión, sostenibilidad y los mejores frutos locales.';
 	const taglineEn = 'Premium organic sparkling wine from the Dominican Republic. Crafted with passion, sustainability, and the finest local fruits.';
 	const copyrightEs = '© Kibay · Hecho en la República Dominicana';
@@ -406,6 +458,7 @@ function renderEmail(
           <p style="margin:12px 0 0 0;font-size:15px;line-height:1.6;color:#555;">${escapeHtml(tpl.intro)}</p>
         </td></tr>
         <tr><td style="padding:24px 40px 0;">
+          ${reservationBlock}
           ${showItems ? renderItemsTable(items, fmt, tpl as Record<string, string>, order, symbol) : ''}
           ${type === 'tracking' ? renderTrackingBlock(order, tpl as Record<string, string>) : ''}
           ${showCta ? `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 24px 0;"><tr><td align="center"><a href="https://kibay.com.do/cart" style="display:inline-block;padding:14px 32px;background:#1a1a1a;color:#ffffff;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;letter-spacing:0.3px;">${escapeHtml(ctaLabel)}</a></td></tr></table>` : ''}
@@ -438,6 +491,177 @@ function renderEmail(
 	return { subject, html };
 }
 
+// ---------------------------------------------------------------------------
+// Reservation block (experience products only)
+// ---------------------------------------------------------------------------
+
+// AST (Atlantic Standard Time, used in Dominican Republic) is UTC-4 year-round.
+// Reservation dates/times are stored as YYYY-MM-DD + HH:MM in AST and converted
+// to UTC here for both the Google Calendar link and the ICS DTSTART.
+const AST_OFFSET_MINUTES = 4 * 60;
+
+function reservationToUtc(dateStr: string, timeStr: string): Date {
+	// dateStr 'YYYY-MM-DD', timeStr 'HH:MM' (24h, AST). Build a UTC Date by
+	// constructing the AST wall-clock time and shifting +4h.
+	const [y, m, d] = dateStr.split('-').map(Number);
+	const [hh, mm] = timeStr.split(':').map(Number);
+	// Date.UTC builds a UTC epoch from UTC components; add 4h so 11:00 AST -> 15:00 UTC.
+	return new Date(Date.UTC(y, (m || 1) - 1, d || 1, hh || 0, mm || 0) + AST_OFFSET_MINUTES * 60 * 1000);
+}
+
+function fmtIcsUtc(d: Date): string {
+	// YYYYMMDDTHHMMSSZ — used by both Google Calendar URL and ICS DTSTART/DTEND.
+	const pad = (n: number): string => String(n).padStart(2, '0');
+	return (
+		`${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}` +
+		`T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}Z`
+	);
+}
+
+function fmtReservationDisplay(dateStr: string, lang: 'es' | 'en'): string {
+	// Render the date in the customer's locale. Time is shown separately.
+	const [y, m, d] = dateStr.split('-').map(Number);
+	const dt = new Date(Date.UTC(y, (m || 1) - 1, d || 1, 12, 0, 0));
+	const locale = lang === 'es' ? 'es-DO' : 'en-US';
+	try {
+		return new Intl.DateTimeFormat(locale, {
+			weekday: 'long',
+			day: 'numeric',
+			month: 'long',
+			year: 'numeric',
+			timeZone: 'UTC',
+		}).format(dt);
+	} catch {
+		return dateStr;
+	}
+}
+
+async function hmacHex(secret: string, message: string): Promise<string> {
+	const key = await crypto.subtle.importKey(
+		'raw',
+		new TextEncoder().encode(secret),
+		{ name: 'HMAC', hash: 'SHA-256' },
+		false,
+		['sign'],
+	);
+	const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(message));
+	return Array.from(new Uint8Array(sig))
+		.map((b) => b.toString(16).padStart(2, '0'))
+		.join('');
+}
+
+// Sign a calendar URL the worker can verify. Payload `cal.<orderId>` mirrors the
+// `unsub.<email>` / `<id>.<action>.<exp>` pattern already used by the worker.
+async function signCalendarUrlForOrder(orderId: string): Promise<string | null> {
+	if (!emailLinkSecret || !workerBaseUrl) return null;
+	const sig = await hmacHex(emailLinkSecret, `cal.${orderId}`);
+	return `${workerBaseUrl}/calendar/order/${encodeURIComponent(orderId)}.ics?sig=${sig}`;
+}
+
+function googleCalendarUrl(
+	productName: string,
+	startUtc: Date,
+	endUtc: Date,
+	location: string,
+	details: string,
+): string {
+	const params = new URLSearchParams({
+		text: `Reserva Kibay: ${productName}`,
+		dates: `${fmtIcsUtc(startUtc)}/${fmtIcsUtc(endUtc)}`,
+		details,
+		location,
+	});
+	return `https://calendar.google.com/calendar/u/0/r/eventedit?${params.toString()}`;
+}
+
+const RESERVATION_LOCATION =
+	'Bahía de Ocoa, Carretera Hatillo Palmar de Ocoa Km 6/12, Hatillo, Azua 71003, DO';
+
+async function renderReservationBlock(
+	items: Item[],
+	lang: 'es' | 'en',
+	orderId: string,
+): Promise<string> {
+	const reservations = items.filter((i) => i.metadata?.reservation_date);
+	if (reservations.length === 0) return '';
+
+	const t = {
+		es: {
+			heading: 'Tu reserva',
+			date: 'Fecha',
+			time: 'Hora',
+			place: 'Lugar',
+			placeValue: 'Bahía de Ocoa',
+			gcal: 'Añadir a Google Calendar',
+			ics: 'Apple / Outlook (ICS)',
+			details: 'Detalles de tu reserva en Kibay (Bahía de Ocoa).',
+		},
+		en: {
+			heading: 'Your reservation',
+			date: 'Date',
+			time: 'Time',
+			place: 'Where',
+			placeValue: 'Bahía de Ocoa',
+			gcal: 'Add to Google Calendar',
+			ics: 'Apple / Outlook (ICS)',
+			details: 'Details for your Kibay reservation (Bahía de Ocoa).',
+		},
+	}[lang];
+
+	const cards = reservations
+		.map((i) => {
+			const date = i.metadata!.reservation_date!;
+			const time = i.metadata!.reservation_time || '11:00';
+			const dispDate = fmtReservationDisplay(date, lang);
+			return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#fafaf9;border-radius:10px;margin:0 0 12px 0;">
+				<tr><td style="padding:16px 18px;">
+					<div style="font-size:13px;font-weight:600;color:#1c1917;margin-bottom:8px;">${escapeHtml(i.product_name)}</div>
+					<div style="font-size:13px;color:#44403c;line-height:1.7;">
+						<div><span style="color:#78716c;">${escapeHtml(t.date)}:</span> ${escapeHtml(dispDate)}</div>
+						<div><span style="color:#78716c;">${escapeHtml(t.time)}:</span> ${escapeHtml(time)} (AST)</div>
+						<div><span style="color:#78716c;">${escapeHtml(t.place)}:</span> ${escapeHtml(t.placeValue)}</div>
+					</div>
+				</td></tr>
+			</table>`;
+		})
+		.join('');
+
+	// Use the FIRST reservation to build the Google Calendar URL — Google Calendar's
+	// event creator only handles one event at a time. The .ics file contains every
+	// VEVENT so the customer can import them all at once.
+	const first = reservations[0];
+	const startUtc = reservationToUtc(
+		first.metadata!.reservation_date!,
+		first.metadata!.reservation_time || '11:00',
+	);
+	const durationMin = first.metadata!.duration_minutes || 120;
+	const endUtc = new Date(startUtc.getTime() + durationMin * 60 * 1000);
+	const gcalHref = googleCalendarUrl(
+		first.product_name,
+		startUtc,
+		endUtc,
+		RESERVATION_LOCATION,
+		t.details,
+	);
+
+	const icsHref = await signCalendarUrlForOrder(orderId);
+
+	const buttons = `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 4px 0;">
+		<tr>
+			<td style="padding-right:8px;">
+				<a href="${gcalHref}" style="display:inline-block;padding:12px 20px;background:#1a73e8;color:#ffffff;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;">${escapeHtml(t.gcal)}</a>
+			</td>
+			${icsHref ? `<td><a href="${icsHref}" style="display:inline-block;padding:12px 20px;background:#1c1917;color:#ffffff;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;">${escapeHtml(t.ics)}</a></td>` : ''}
+		</tr>
+	</table>`;
+
+	return `<div style="margin:0 0 24px 0;">
+		<div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:#78716c;margin-bottom:10px;">${escapeHtml(t.heading)}</div>
+		${cards}
+		${buttons}
+	</div>`;
+}
+
 function renderItemsTable(
 	items: Item[],
 	fmt: (c: number) => string,
@@ -463,12 +687,12 @@ function renderItemsTable(
   </table>`;
 }
 
-function renderAdminEmail(
+async function renderAdminEmail(
 	type: 'admin_new_order' | 'admin_refunded',
 	order: Order,
 	items: Item[],
 	dbTpl: DbTemplate | null = null,
-): { subject: string; html: string } {
+): Promise<{ subject: string; html: string }> {
 	const defaults = (T as Record<string, Record<'en', { subject: (o: Order) => string; heading: string; intro: string }>>)[type].en;
 	const tpl = {
 		heading: dbTpl?.heading ?? defaults.heading,
@@ -490,6 +714,24 @@ function renderAdminEmail(
     </tr>`,
 		)
 		.join('');
+
+	// Compact reservation summary for admin: one row per experience line.
+	// Lets the owner see at-a-glance who's coming when, without the full block.
+	const reservations = items.filter((i) => i.metadata?.reservation_date);
+	const reservationRows = reservations
+		.map((i) => {
+			const date = i.metadata!.reservation_date!;
+			const time = i.metadata!.reservation_time || '11:00';
+			const dispDate = fmtReservationDisplay(date, 'en');
+			return `<tr><td style="padding:4px 0;color:#78716c;">Reservation</td><td style="padding:4px 0;"><strong>${escapeHtml(i.product_name)}</strong> — ${escapeHtml(dispDate)} at ${escapeHtml(time)} (AST)</td></tr>`;
+		})
+		.join('');
+
+	// Full block (with cards + buttons) — admin gets the same calendar links so they
+	// can also drop the event on their own calendar in one click.
+	const reservationBlock = reservations.length > 0
+		? await renderReservationBlock(items, 'en', String(order.id || ''))
+		: '';
 
 	const adminUrl = `https://kibay.com.do/admin/orders`;
 	const stripeUrl = (order as { stripe_payment_intent_id?: string }).stripe_payment_intent_id
@@ -521,8 +763,10 @@ function renderAdminEmail(
             <tr><td style="padding:4px 0;color:#78716c;vertical-align:top;">Ship to</td><td style="padding:4px 0;">${escapeHtml([ship.address, [ship.city, ship.zipCode].filter(Boolean).join(', '), ship.country].filter(Boolean).join(' · '))}</td></tr>
             ${order.shipping_method ? `<tr><td style="padding:4px 0;color:#78716c;">Shipping method</td><td style="padding:4px 0;">${escapeHtml(order.shipping_method)}</td></tr>` : ''}
             ${(order as { coupon_code?: string }).coupon_code ? `<tr><td style="padding:4px 0;color:#78716c;">Coupon</td><td style="padding:4px 0;">${escapeHtml((order as { coupon_code: string }).coupon_code)}</td></tr>` : ''}
+            ${reservationRows}
           </table>
         </td></tr>
+        ${reservationBlock ? `<tr><td style="padding:0 24px 20px;">${reservationBlock}</td></tr>` : ''}
         ${itemsRows ? `<tr><td style="padding:0 24px 20px;">
           <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#a8a29e;margin-bottom:8px;">Line items</div>
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-top:1px solid #e7e5e4;">

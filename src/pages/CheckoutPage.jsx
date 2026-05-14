@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import { useCart } from '@/hooks/useCart';
+import { useCart, cartItemKey } from '@/hooks/useCart';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
@@ -395,6 +395,9 @@ const CheckoutPage = () => {
 				price_per_item: item.variant.sale_price_in_cents ?? item.variant.price_in_cents,
 				total_price:
 					(item.variant.sale_price_in_cents ?? item.variant.price_in_cents) * item.quantity,
+				// Per-line metadata. Wine bottles ship with {}; experiences carry
+				// { reservation_date, reservation_time } set at /product/:slug add-to-cart.
+				metadata: item.metadata || {},
 			}));
 
 			const { error: itemsError } = await supabase.from('order_items').insert(orderItems);
@@ -740,7 +743,7 @@ const CheckoutPage = () => {
 										const variantTitle = item.variant?.title || '';
 										return (
 											<div
-												key={item.variant?.id || item.product?.id}
+												key={cartItemKey(item) || item.product?.id}
 												className="flex justify-between items-center py-2 border-b border-foreground/5 last:border-0"
 											>
 												<div className="flex items-center gap-4">

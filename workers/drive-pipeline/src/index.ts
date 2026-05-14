@@ -22,6 +22,7 @@ import {
 	signUnsubscribeUrl,
 	verifyUnsubscribeToken,
 	unsubscribeResultPage,
+	verifyCalendarToken,
 	escapeHtml,
 	EmailEnv,
 } from './email';
@@ -83,6 +84,17 @@ export default {
 		}
 
 		if (url.pathname === '/health') return new Response('ok');
+
+		// GET /calendar/order/:id.ics?sig=<hmac>
+		// Serves an .ics file containing one VEVENT per experience line item
+		// in the order. The send-order-email function mints these URLs and
+		// embeds them in the "Apple / Outlook (ICS)" button.
+		{
+			const m = url.pathname.match(/^\/calendar\/order\/([0-9a-f-]+)\.ics$/i);
+			if (m && req.method === 'GET') {
+				return handleCalendarIcs(env, m[1], url.searchParams.get('sig') || '');
+			}
+		}
 
 		if (url.pathname === '/approve' && req.method === 'GET') {
 			return handleAction(req, env, ctx, 'approve');
@@ -1248,6 +1260,213 @@ async function handleBrevoEvent(env: Env, ev: BrevoEvent): Promise<void> {
 			console.error(`brevo webhook: contact suppress (${alsoSuppressContact}) failed:`, e);
 		}
 	}
+}
+
+// ============================================================================
+// Calendar (.ics) handler
+// ============================================================================
+//
+// Returns a text/calendar response containing one VEVENT per experience line
+// item attached to the given order. AST (UTC-4, no DST) is the canonical zone
+// for reservation_date/reservation_time as stored on order_items.metadata.
+
+interface OrderRow {
+	id: string;
+	order_number: string;
+}
+
+interface OrderItemRow {
+	id: string;
+	product_id: string;
+	product_name: string;
+	metadata: {
+		reservation_date?: string;
+		reservation_time?: string;
+		duration_minutes?: number;
+	} | null;
+}
+
+interface ProductRow {
+	id: string;
+	metadata: { duration_minutes?: number } | null;
+}
+
+const AST_OFFSET_MIN_CAL = 4 * 60;
+
+function calReservationToUtc(dateStr: string, timeStr: string): Date {
+	const [y, m, d] = dateStr.split('-').map(Number);
+	const [hh, mm] = timeStr.split(':').map(Number);
+	return new Date(
+		Date.UTC(y, (m || 1) - 1, d || 1, hh || 0, mm || 0) + AST_OFFSET_MIN_CAL * 60 * 1000,
+	);
+}
+
+function calFmtIcsUtc(d: Date): string {
+	const pad = (n: number): string => String(n).padStart(2, '0');
+	return (
+		`${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}` +
+		`T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}Z`
+	);
+}
+
+// ICS allows arbitrary text in DESCRIPTION/SUMMARY/LOCATION but special chars
+// must be escaped: backslash, comma, semicolon, newline.
+function icsEscape(s: string): string {
+	return String(s)
+		.replace(/\\/g, '\\\\')
+		.replace(/\n/g, '\\n')
+		.replace(/,/g, '\\,')
+		.replace(/;/g, '\\;');
+}
+
+// RFC 5545: content lines MUST NOT exceed 75 octets. Long lines fold by
+// inserting CRLF + single space (or tab) before continuation. We count by
+// UTF-8 byte length, not JS string length, so emoji/accents fold correctly.
+function icsFoldLine(line: string): string {
+	const encoder = new TextEncoder();
+	const out: string[] = [];
+	let buf = '';
+	let len = 0;
+	for (const ch of line) {
+		const chLen = encoder.encode(ch).length;
+		if (len + chLen > 75) {
+			out.push(buf);
+			buf = ' ' + ch; // leading space marks continuation
+			len = 1 + chLen;
+		} else {
+			buf += ch;
+			len += chLen;
+		}
+	}
+	if (buf) out.push(buf);
+	return out.join('\r\n');
+}
+
+function buildIcs(orderNumber: string, events: Array<{
+	uid: string;
+	summary: string;
+	startUtc: Date;
+	endUtc: Date;
+	location: string;
+	description: string;
+}>): string {
+	const nowStamp = calFmtIcsUtc(new Date());
+	const lines: string[] = [
+		'BEGIN:VCALENDAR',
+		'VERSION:2.0',
+		'PRODID:-//Kibay//Reservations//EN',
+		'CALSCALE:GREGORIAN',
+		'METHOD:PUBLISH',
+	];
+	for (const ev of events) {
+		lines.push('BEGIN:VEVENT');
+		lines.push(`UID:${ev.uid}`);
+		lines.push(`DTSTAMP:${nowStamp}`);
+		lines.push(`DTSTART:${calFmtIcsUtc(ev.startUtc)}`);
+		lines.push(`DTEND:${calFmtIcsUtc(ev.endUtc)}`);
+		lines.push(`SUMMARY:${icsEscape(ev.summary)}`);
+		lines.push(`LOCATION:${icsEscape(ev.location)}`);
+		lines.push(`DESCRIPTION:${icsEscape(ev.description)}`);
+		lines.push('STATUS:CONFIRMED');
+		lines.push('END:VEVENT');
+	}
+	lines.push('END:VCALENDAR');
+	return lines.map(icsFoldLine).join('\r\n') + '\r\n';
+}
+
+async function handleCalendarIcs(env: Env, orderId: string, sig: string): Promise<Response> {
+	if (!sig) return new Response('missing sig', { status: 400 });
+	const ok = await verifyCalendarToken(env, orderId, sig);
+	if (!ok) return new Response('invalid signature', { status: 403 });
+
+	// Fetch order + items via service-role REST. We only need the basics here.
+	const headers = {
+		apikey: env.SUPABASE_SERVICE_ROLE_KEY,
+		Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+	};
+
+	const orderResp = await fetch(
+		`${env.SUPABASE_URL}/rest/v1/orders?id=eq.${encodeURIComponent(orderId)}&select=id,order_number&limit=1`,
+		{ headers },
+	);
+	if (!orderResp.ok) {
+		console.error('calendar: order fetch failed', orderResp.status, await orderResp.text());
+		return new Response('order lookup failed', { status: 500 });
+	}
+	const orders = (await orderResp.json()) as OrderRow[];
+	if (!orders.length) return new Response('order not found', { status: 404 });
+	const order = orders[0];
+
+	const itemsResp = await fetch(
+		`${env.SUPABASE_URL}/rest/v1/order_items?order_id=eq.${encodeURIComponent(orderId)}&select=id,product_id,product_name,metadata`,
+		{ headers },
+	);
+	if (!itemsResp.ok) {
+		console.error('calendar: items fetch failed', itemsResp.status, await itemsResp.text());
+		return new Response('items lookup failed', { status: 500 });
+	}
+	const items = (await itemsResp.json()) as OrderItemRow[];
+	const reservations = items.filter((i) => i.metadata?.reservation_date);
+	if (reservations.length === 0) {
+		// No experience lines on this order — return an empty (but valid) calendar
+		// rather than a 404. Keeps the email button benign for mixed orders.
+		const empty = buildIcs(order.order_number, []);
+		return new Response(empty, {
+			headers: {
+				'Content-Type': 'text/calendar; charset=utf-8',
+				'Content-Disposition': 'attachment; filename="kibay-reservation.ics"',
+			},
+		});
+	}
+
+	// Hydrate duration_minutes from products.metadata when the order_item didn't
+	// carry it. Default fallback is 120 minutes (2h) for any experience whose
+	// product row has no explicit duration.
+	const productIds = Array.from(new Set(reservations.map((r) => r.product_id).filter(Boolean)));
+	const durationByProduct = new Map<string, number>();
+	if (productIds.length > 0) {
+		const idList = productIds
+			.map((p) => `"${p.replace(/"/g, '\\"')}"`)
+			.join(',');
+		const prodResp = await fetch(
+			`${env.SUPABASE_URL}/rest/v1/products?id=in.(${encodeURIComponent(idList)})&select=id,metadata`,
+			{ headers },
+		);
+		if (prodResp.ok) {
+			const prodRows = (await prodResp.json()) as ProductRow[];
+			for (const p of prodRows) {
+				if (typeof p.metadata?.duration_minutes === 'number') {
+					durationByProduct.set(p.id, p.metadata.duration_minutes);
+				}
+			}
+		}
+	}
+
+	const location = 'Bahía de Ocoa, Km 6/12 Hatillo, Azua 71003, DO';
+	const events = reservations.map((r) => {
+		const date = r.metadata!.reservation_date!;
+		const time = r.metadata!.reservation_time || '11:00';
+		const startUtc = calReservationToUtc(date, time);
+		const durationMin =
+			r.metadata?.duration_minutes ?? durationByProduct.get(r.product_id) ?? 120;
+		const endUtc = new Date(startUtc.getTime() + durationMin * 60 * 1000);
+		return {
+			uid: `kibay-${order.id}-${r.id}@kibay.com.do`,
+			summary: `Reserva Kibay: ${r.product_name}`,
+			startUtc,
+			endUtc,
+			location,
+			description: `Orden ${order.order_number} — Kibay reservation at Bahía de Ocoa. Questions: info@kibay.com.do`,
+		};
+	});
+
+	const body = buildIcs(order.order_number, events);
+	return new Response(body, {
+		headers: {
+			'Content-Type': 'text/calendar; charset=utf-8',
+			'Content-Disposition': 'attachment; filename="kibay-reservation.ics"',
+		},
+	});
 }
 
 function firstSentenceFromHtml(html: string): string {

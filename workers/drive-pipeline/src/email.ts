@@ -104,6 +104,34 @@ export async function signUnsubscribeUrl(
 	return `${env.WORKER_BASE_URL}/unsubscribe?${qs.toString()}`;
 }
 
+// ---------------------------------------------------------------------------
+// HMAC-signed calendar (.ics) links. Used by the order email so customers
+// can click a button and import their reservation event into Apple Calendar /
+// Outlook / any ICS-compatible client. The HMAC prevents random visitors from
+// downloading other people's reservations by guessing order IDs.
+// ---------------------------------------------------------------------------
+export async function signCalendarUrl(
+	env: Pick<EmailEnv, 'EMAIL_LINK_SECRET' | 'WORKER_BASE_URL'>,
+	orderId: string,
+): Promise<string> {
+	const sig = await hmacHex(env.EMAIL_LINK_SECRET, `cal.${orderId}`);
+	return `${env.WORKER_BASE_URL}/calendar/order/${encodeURIComponent(orderId)}.ics?sig=${sig}`;
+}
+
+export async function verifyCalendarToken(
+	env: Pick<EmailEnv, 'EMAIL_LINK_SECRET'>,
+	orderId: string,
+	sig: string,
+): Promise<boolean> {
+	const expected = await hmacHex(env.EMAIL_LINK_SECRET, `cal.${orderId}`);
+	if (expected.length !== sig.length) return false;
+	let m = 0;
+	for (let i = 0; i < expected.length; i++) {
+		m |= expected.charCodeAt(i) ^ sig.charCodeAt(i);
+	}
+	return m === 0;
+}
+
 export async function verifyUnsubscribeToken(
 	env: Pick<EmailEnv, 'EMAIL_LINK_SECRET'>,
 	email: string,

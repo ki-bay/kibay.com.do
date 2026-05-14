@@ -1,5 +1,5 @@
 import React from 'react';
-import { useCart } from '@/hooks/useCart';
+import { useCart, cartItemKey } from '@/hooks/useCart';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Trash2, Plus, Minus, ArrowRight, ShoppingBag } from 'lucide-react';
@@ -40,9 +40,10 @@ const Cart = () => {
 						const unitMajor =
 							(item.variant.sale_price_in_cents ?? item.variant.price_in_cents) / 100;
 						const img = resolveProductMediaUrl(item.product.image) || item.product.image;
+						const itemKey = cartItemKey(item);
 						return (
 							<m.div
-								key={item.variant.id}
+								key={itemKey}
 								layout
 								initial={{ opacity: 0 }}
 								animate={{ opacity: 1 }}
@@ -64,7 +65,7 @@ const Cart = () => {
 										<button
 											type="button"
 											aria-label={t('decrease')}
-											onClick={() => updateQuantity(item.variant.id, Math.max(1, item.quantity - 1))}
+											onClick={() => updateQuantity(itemKey, Math.max(1, item.quantity - 1))}
 											className="p-2 text-foreground/70 hover:text-foreground transition-colors"
 											disabled={item.quantity <= 1}
 										>
@@ -74,7 +75,7 @@ const Cart = () => {
 										<button
 											type="button"
 											aria-label={t('increase')}
-											onClick={() => updateQuantity(item.variant.id, item.quantity + 1)}
+											onClick={() => updateQuantity(itemKey, item.quantity + 1)}
 											className="p-2 text-foreground/70 hover:text-foreground transition-colors"
 										>
 											<Plus className="w-4 h-4" />
@@ -91,7 +92,7 @@ const Cart = () => {
 										variant="ghost"
 										size="icon"
 										aria-label={t('remove')}
-										onClick={() => removeFromCart(item.variant.id)}
+										onClick={() => removeFromCart(itemKey)}
 										className="text-foreground/40 hover:text-red-400 hover:bg-red-400/10"
 									>
 										<Trash2 className="w-5 h-5" />

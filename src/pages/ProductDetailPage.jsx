@@ -10,7 +10,7 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import {
   Loader2, ArrowLeft, CheckCircle, Minus, Plus, AlertCircle,
-  ShoppingBag, ArrowDown, Sun, Wine, Sparkles, Leaf,
+  ShoppingBag, ArrowDown, Sun, Wine, Sparkles, Leaf, Calendar,
 } from 'lucide-react';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import SEOHead from '@/components/SEOHead';
@@ -72,8 +72,42 @@ function ProductDetailPage() {
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [reviewAggregate, setReviewAggregate] = useState(null);
+  // Reservation state — only relevant when product is an experience.
+  // Stored as 'YYYY-MM-DD' (date) and 'HH:MM' (24h, AST) strings.
+  const [reservationDate, setReservationDate] = useState('');
+  const [reservationTime, setReservationTime] = useState('');
   const { addToCart } = useCart();
   const { toast } = useToast();
+
+  // Product.type is delivered as { value: 'experience' } by EcommerceApi.mapProduct.
+  // The raw products row column is also `type` (string), so callers querying
+  // supabase directly use the flat form. We accept either to be safe.
+  const productTypeValue =
+    typeof product?.type === 'string' ? product.type : product?.type?.value || '';
+  const isExperience = productTypeValue === 'experience';
+  const timeslots = Array.isArray(product?.metadata?.timeslots)
+    ? product.metadata.timeslots
+    : [];
+  // Wine tour uses the three-timeslot picker; everything else (full experience,
+  // day pass) is single-time with a sensible default (11:00 AM, opening hour).
+  const needsTimePicker =
+    isExperience && product?.metadata?.duration_minutes === 90 && timeslots.length > 0;
+  // Min reservation date = today + 2 days, formatted YYYY-MM-DD for <input type="date">.
+  const minReservationDate = useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 2);
+    return d.toISOString().slice(0, 10);
+  }, []);
+
+  // Initialize default time when a timeslot picker is needed.
+  useEffect(() => {
+    if (needsTimePicker && !reservationTime) {
+      setReservationTime(timeslots[0]);
+    } else if (!needsTimePicker && isExperience) {
+      // Single-time experiences default to 11:00 AM (opening hour at Casa Club).
+      setReservationTime('11:00');
+    }
+  }, [needsTimePicker, timeslots, reservationTime, isExperience]);
 
   const productImgRef = useRef(null);
   const triggerFlyToCart = useFlyToCart(productImgRef, null);
@@ -81,9 +115,14 @@ function ProductDetailPage() {
   const handleAddToCart = useCallback(async () => {
     if (product && selectedVariant) {
       const availableQuantity = selectedVariant.inventory_quantity;
+      // Build line-item metadata only for experiences. Wine bottles keep
+      // an empty {} metadata to preserve their merge behavior.
+      const metadata = isExperience
+        ? { reservation_date: reservationDate, reservation_time: reservationTime || '11:00' }
+        : {};
       try {
         triggerFlyToCart();
-        await addToCart(product, selectedVariant, quantity, availableQuantity);
+        await addToCart(product, selectedVariant, quantity, availableQuantity, metadata);
         toast({
           title: t('addedToCart'),
           description: product.title,
@@ -97,7 +136,7 @@ function ProductDetailPage() {
         });
       }
     }
-  }, [product, selectedVariant, quantity, addToCart, toast, triggerFlyToCart, t]);
+  }, [product, selectedVariant, quantity, addToCart, toast, triggerFlyToCart, t, isExperience, reservationDate, reservationTime]);
 
   const handleQuantityChange = useCallback((amount) => {
     setQuantity(prevQuantity => {
@@ -278,7 +317,10 @@ function ProductDetailPage() {
   const originalPrice = selectedVariant?.price_formatted;
   const availableStock = selectedVariant ? selectedVariant.inventory_quantity : 0;
   const isStockManaged = selectedVariant?.manage_inventory ?? false;
-  const canAddToCart = !isStockManaged || quantity <= availableStock;
+  const stockOk = !isStockManaged || quantity <= availableStock;
+  // Experiences additionally require a reservation date.
+  const reservationOk = !isExperience || !!reservationDate;
+  const canAddToCart = stockOk && reservationOk;
   const isSoldOut = isStockManaged && availableStock <= 0;
 
   const seoImage = product.images?.[0];
@@ -578,6 +620,70 @@ function ProductDetailPage() {
                         </button>
                       ))}
                     </div>
+                  </div>
+                )}
+
+                {/* ------------------------------------------------------ */}
+                {/* Reservation block — only for experience-type products  */}
+                {/* ------------------------------------------------------ */}
+                {isExperience && (
+                  <div className="mb-8 p-6 rounded-2xl bg-stone-50 border border-stone-200">
+                    <h4 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-stone-700 mb-4">
+                      <Calendar size={16} className="text-[#D4A574]" />
+                      {t('reservation.heading')}
+                    </h4>
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label
+                          htmlFor="reservation-date"
+                          className="block text-xs font-medium uppercase tracking-wide text-stone-500"
+                        >
+                          {t('reservation.dateLabel')} *
+                        </label>
+                        <input
+                          id="reservation-date"
+                          name="reservationDate"
+                          type="date"
+                          value={reservationDate}
+                          min={minReservationDate}
+                          onChange={(e) => setReservationDate(e.target.value)}
+                          required
+                          className="w-full bg-white border border-stone-200 rounded-lg px-4 py-3 text-stone-900 focus:border-[#D4A574] focus:outline-none focus:ring-1 focus:ring-[#D4A574]"
+                        />
+                      </div>
+                      {needsTimePicker && (
+                        <div className="space-y-2">
+                          <label
+                            htmlFor="reservation-time"
+                            className="block text-xs font-medium uppercase tracking-wide text-stone-500"
+                          >
+                            {t('reservation.timeLabel')} *
+                          </label>
+                          <select
+                            id="reservation-time"
+                            name="reservationTime"
+                            value={reservationTime}
+                            onChange={(e) => setReservationTime(e.target.value)}
+                            required
+                            className="w-full bg-white border border-stone-200 rounded-lg px-4 py-3 text-stone-900 focus:border-[#D4A574] focus:outline-none focus:ring-1 focus:ring-[#D4A574]"
+                          >
+                            {timeslots.map((slot) => (
+                              <option key={slot} value={slot}>
+                                {slot}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
+                    </div>
+                    <p className="text-xs text-stone-500 mt-4 italic">
+                      {t('reservation.availability')}
+                    </p>
+                    {!reservationDate && (
+                      <p className="text-xs text-[#D4A574] mt-2">
+                        {t('reservation.required')}
+                      </p>
+                    )}
                   </div>
                 )}
 
