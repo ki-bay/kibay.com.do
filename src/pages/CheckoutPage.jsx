@@ -195,9 +195,21 @@ const CheckoutPage = () => {
 		[cartItems],
 	);
 
+	// Shippable bottle count: sum of qty across physical-type cart items.
+	// Experiences contribute 0. The new per-bottle rate function uses this
+	// (RD$200 first bottle + RD$100 each additional, capped at RD$1,600).
+	const shippableBottleCount = useMemo(
+		() =>
+			cartItems.reduce((sum, item) => {
+				if (item.product?.type === 'experience') return sum;
+				return sum + (Number(item.quantity) || 0);
+			}, 0),
+		[cartItems],
+	);
+
 	const shippingMajor = useMemo(
-		() => (cartIsAllExperience ? 0 : computeShippingMajor(subtotalMajor, shippingMethod, cartCurrency, shippingTiers)),
-		[cartIsAllExperience, subtotalMajor, shippingMethod, cartCurrency, shippingTiers],
+		() => computeShippingMajor(shippableBottleCount, shippingMethod, cartCurrency, shippingTiers),
+		[shippableBottleCount, shippingMethod, cartCurrency, shippingTiers],
 	);
 	const subtotalCents = Math.round(subtotalMajor * 100);
 	const shippingCents = Math.round(shippingMajor * 100);
@@ -591,7 +603,7 @@ const CheckoutPage = () => {
 										</div>
 									</div>
 
-									{cartIsAllExperience ? (
+									{shippableBottleCount === 0 ? (
 										<div className="space-y-2 bg-mango-500/5 border border-mango-500/20 rounded-lg p-4">
 											<div className="text-sm font-medium text-mango-300">
 												{cartCurrency === 'USD'
@@ -615,11 +627,13 @@ const CheckoutPage = () => {
 												disabled={step === 'payment'}
 												className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground focus:border-mango-500 focus:outline-none font-light"
 											>
-												<option value="standard">{t('standard')} (RD$200)</option>
-												<option value="express">{t('express')} (RD$400)</option>
+												<option value="standard">{t('standard')} ({symbol}{shippingMajor.toFixed(2)})</option>
+												<option value="express">{t('express')} ({symbol}{computeShippingMajor(shippableBottleCount, 'express', cartCurrency, shippingTiers).toFixed(2)})</option>
 											</select>
 											<p className="text-xs text-foreground/50 font-light">
-												{t('freeOver')}
+												{cartCurrency === 'USD'
+													? `${shippableBottleCount} bottle${shippableBottleCount === 1 ? '' : 's'} · +${symbol}2 each additional up to 11; 12+ bottles flat ${symbol}30`
+													: `${shippableBottleCount} botella${shippableBottleCount === 1 ? '' : 's'} · +RD$100 por cada botella adicional hasta 11; 12+ botellas tarifa fija RD$1,600`}
 											</p>
 										</div>
 									)}
@@ -811,7 +825,7 @@ const CheckoutPage = () => {
 											<span>-{symbol}{discountMajor.toFixed(2)}</span>
 										</div>
 									)}
-									{!cartIsAllExperience && (
+									{shippableBottleCount > 0 && (
 										<div className="flex justify-between text-foreground/60 font-light">
 											<span>{t('shipping')} ({t(shippingMethod)})</span>
 											<span>{symbol}{shippingMajor.toFixed(2)}</span>
