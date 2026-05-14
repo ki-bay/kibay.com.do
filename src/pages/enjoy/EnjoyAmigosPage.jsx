@@ -135,12 +135,12 @@ const EnjoyAmigosPage = () => {
         </section>
 
         {/* Gallery */}
-        <section className="py-16 px-4 sm:px-6 lg:px-8 bg-card">
+        <section className="py-16 px-0 sm:px-6 lg:px-8 bg-card">
           <div className="max-w-7xl mx-auto">
-            <m.h2 {...fadeIn} className="text-2xl sm:text-3xl font-serif text-foreground mb-10 text-center">
+            <m.h2 {...fadeIn} className="text-2xl sm:text-3xl font-serif text-foreground mb-10 text-center px-4 sm:px-0">
               {t('galleryHeading')}
             </m.h2>
-            <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 sm:gap-6 [column-fill:_balance]">
+            <div className="columns-1 sm:columns-2 lg:columns-3 gap-1 sm:gap-6 [column-fill:_balance]">
               {GALLERY.map((src, i) => (
                 <m.div
                   key={src}
@@ -148,7 +148,7 @@ const EnjoyAmigosPage = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: i * 0.05 }}
-                  className="mb-4 sm:mb-6 break-inside-avoid overflow-hidden rounded-2xl shadow-xl bg-background"
+                  className="mb-1 sm:mb-6 break-inside-avoid overflow-hidden rounded-none sm:rounded-2xl shadow-xl bg-background"
                 >
                   <img
                     src={src}
