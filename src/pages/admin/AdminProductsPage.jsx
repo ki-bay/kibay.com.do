@@ -26,6 +26,7 @@ const AdminProductsPage = () => {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const [deletingId, setDeletingId] = useState(null);
+	const [lowStockAlertCount, setLowStockAlertCount] = useState(0);
 	const { toast } = useToast();
 
 	const load = useCallback(async () => {
@@ -41,6 +42,14 @@ const AdminProductsPage = () => {
 				.order('sort_order', { ascending: true });
 			if (e) throw e;
 			setProducts(data || []);
+
+			// Count unresolved low-stock alerts. Best-effort: if the table
+			// doesn't exist yet (migration not applied) just skip silently.
+			const { count, error: alertErr } = await supabase
+				.from('inventory_alerts')
+				.select('*', { count: 'exact', head: true })
+				.is('resolved_at', null);
+			if (!alertErr) setLowStockAlertCount(count || 0);
 		} catch (err) {
 			setError(err.message || t('toast.loadFailed'));
 		} finally {
@@ -89,6 +98,16 @@ const AdminProductsPage = () => {
 							<p className="text-foreground/60 mt-2 font-light">
 								{t('header.subtitle')}
 							</p>
+							{lowStockAlertCount > 0 && (
+								<div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-yellow-500/10 border border-yellow-500/30 text-yellow-200 text-sm">
+									<AlertTriangle className="w-4 h-4" aria-hidden="true" />
+									<span>
+										{lowStockAlertCount === 1
+											? '1 low-stock alert · variant inventory ≤ 5'
+											: `${lowStockAlertCount} low-stock alerts · variants with inventory ≤ 5`}
+									</span>
+								</div>
+							)}
 						</div>
 						<div className="flex gap-3">
 							<Button onClick={load} variant="ghost" className="border border-foreground/10 text-foreground">

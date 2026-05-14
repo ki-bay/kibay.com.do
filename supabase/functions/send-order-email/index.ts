@@ -320,6 +320,13 @@ function renderEmail(
 	const showCta = type === 'abandoned_cart';
 	const ctaLabel = showCta ? (tpl as Record<string, string>).ctaLabel || 'Finish my order' : '';
 
+	const taglineEs = 'Vino espumoso orgánico premium de la República Dominicana. Elaborado con pasión, sostenibilidad y los mejores frutos locales.';
+	const taglineEn = 'Premium organic sparkling wine from the Dominican Republic. Crafted with passion, sustainability, and the finest local fruits.';
+	const copyrightEs = '© Kibay · Hecho en la República Dominicana';
+	const copyrightEn = '© Kibay · Made in the Dominican Republic';
+	const tagline = lang === 'es' ? taglineEs : taglineEn;
+	const copyright = lang === 'es' ? copyrightEs : copyrightEn;
+
 	const html = `<!DOCTYPE html>
 <html lang="${lang}">
 <head>
@@ -327,28 +334,43 @@ function renderEmail(
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>${escapeHtml(subject)}</title>
 </head>
-<body style="margin:0;padding:0;background:#fafaf9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#1c1917;">
-  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#fafaf9;padding:32px 16px;">
+<body style="margin:0;padding:0;background:#f4f4f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#1a1a1a;">
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f4f4f0;padding:32px 0;">
     <tr><td align="center">
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
-        <tr><td style="background:#FF7500;padding:24px 32px;color:#ffffff;font-size:22px;font-weight:600;letter-spacing:0.02em;">KIBAY</td></tr>
-        <tr><td style="padding:32px;">
-          <h1 style="margin:0 0 8px 0;font-size:22px;font-weight:600;color:#1c1917;">${escapeHtml(tpl.heading)}</h1>
-          <p style="margin:0 0 24px 0;font-size:15px;line-height:1.55;color:#44403c;">${escapeHtml(tpl.intro)}</p>
-          <p style="margin:0 0 24px 0;font-size:14px;color:#78716c;">${lang === 'es' ? 'Pedido' : 'Order'}: <strong style="color:#1c1917;">${escapeHtml(order.order_number)}</strong></p>
-
-          ${showItems ? renderItemsTable(items, fmt, tpl as Record<string, string>, order, symbol) : ''}
-
-          ${type === 'tracking' ? renderTrackingBlock(order, tpl as Record<string, string>) : ''}
-
-          ${showCta ? `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 24px 0;"><tr><td align="center"><a href="https://kibay.com.do/cart" style="display:inline-block;padding:14px 28px;background:#FF7500;color:#ffffff;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;letter-spacing:0.01em;">${escapeHtml(ctaLabel)}</a></td></tr></table>` : ''}
-
-          ${renderShipToBlock(ship, customerName, lang)}
-
-          <p style="margin:32px 0 0 0;font-size:14px;line-height:1.55;color:#78716c;">${escapeHtml(tpl.outro)}</p>
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06);">
+        <tr><td style="padding:32px 40px 0;" align="center">
+          <div style="font-family:Georgia,serif;font-size:30px;font-weight:600;letter-spacing:1.5px;color:#1a1a1a;">Kibay</div>
+          <div style="height:2px;width:56px;background:#D4A574;margin:12px auto 0;"></div>
         </td></tr>
-        <tr><td style="background:#fafaf9;padding:16px 32px;font-size:12px;color:#a8a29e;text-align:center;">
-          Kibay · República Dominicana · <a href="https://kibay.com.do" style="color:#a8a29e;text-decoration:underline;">kibay.com.do</a>
+        <tr><td style="padding:24px 40px 0;">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#999;">${lang === 'es' ? 'Pedido' : 'Order'} ${escapeHtml(order.order_number)}</div>
+          <h1 style="margin:8px 0 0 0;font-size:22px;font-weight:600;line-height:1.3;color:#1a1a1a;">${escapeHtml(tpl.heading)}</h1>
+          <p style="margin:12px 0 0 0;font-size:15px;line-height:1.6;color:#555;">${escapeHtml(tpl.intro)}</p>
+        </td></tr>
+        <tr><td style="padding:24px 40px 0;">
+          ${showItems ? renderItemsTable(items, fmt, tpl as Record<string, string>, order, symbol) : ''}
+          ${type === 'tracking' ? renderTrackingBlock(order, tpl as Record<string, string>) : ''}
+          ${showCta ? `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 24px 0;"><tr><td align="center"><a href="https://kibay.com.do/cart" style="display:inline-block;padding:14px 32px;background:#1a1a1a;color:#ffffff;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;letter-spacing:0.3px;">${escapeHtml(ctaLabel)}</a></td></tr></table>` : ''}
+          ${renderShipToBlock(ship, customerName, lang)}
+          <p style="margin:24px 0 0 0;font-size:14px;line-height:1.6;color:#666;">${escapeHtml(tpl.outro)}</p>
+        </td></tr>
+        <tr><td style="padding:28px 40px 0;">
+          <div style="height:1px;background:#eee;"></div>
+        </td></tr>
+        <tr><td style="padding:24px 40px 32px;text-align:center;">
+          <div style="font-family:Georgia,serif;font-size:18px;font-weight:600;color:#1a1a1a;letter-spacing:0.5px;">Kibay</div>
+          <div style="font-size:12px;color:#777;margin-top:6px;line-height:1.5;max-width:420px;margin-left:auto;margin-right:auto;">${escapeHtml(tagline)}</div>
+          <div style="font-size:11px;color:#999;margin-top:14px;">Bahía de Ocoa, Km 6 1/2 Hatillo, Azua 71003 · ${lang === 'es' ? 'República Dominicana' : 'Dominican Republic'}</div>
+          <div style="margin-top:16px;">
+            <a href="https://www.instagram.com/kibaywine" style="display:inline-block;margin:0 6px;color:#888;font-size:12px;text-decoration:none;">Instagram</a><span style="color:#ddd;">·</span>
+            <a href="https://www.facebook.com/profile.php?id=61589761255222" style="display:inline-block;margin:0 6px;color:#888;font-size:12px;text-decoration:none;">Facebook</a><span style="color:#ddd;">·</span>
+            <a href="https://www.tiktok.com/@kibaywine" style="display:inline-block;margin:0 6px;color:#888;font-size:12px;text-decoration:none;">TikTok</a><span style="color:#ddd;">·</span>
+            <a href="https://www.linkedin.com/company/116054911" style="display:inline-block;margin:0 6px;color:#888;font-size:12px;text-decoration:none;">LinkedIn</a>
+          </div>
+          <div style="font-size:11px;color:#aaa;margin-top:14px;">
+            <a href="mailto:info@kibay.com.do" style="color:#aaa;text-decoration:none;">info@kibay.com.do</a> · <a href="https://kibay.com.do" style="color:#aaa;text-decoration:none;">kibay.com.do</a>
+          </div>
+          <div style="font-size:10px;color:#bbb;margin-top:14px;letter-spacing:0.5px;text-transform:uppercase;">${escapeHtml(copyright)}</div>
         </td></tr>
       </table>
     </td></tr>
