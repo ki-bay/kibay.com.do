@@ -10,12 +10,12 @@
   },
   "fields": {
     "name": "Nombre de la campaña *",
-    "namePlaceholder": "Etiqueta interna, ej: Lanzamiento mayorista mayo 2026",
+    "namePlaceholder": "Etiqueta interna, ej: Lanzamiento mayo 2026",
     "subject": "Asunto *",
     "fromName": "Nombre del remitente",
     "fromEmail": "Email del remitente",
     "replyTo": "Reply-to (opcional)",
-    "replyToPlaceholder": "hello@kibay.com.do",
+    "replyToPlaceholder": "hello@example.com",
     "htmlBody": "Cuerpo HTML *"
   },
   "audience": {

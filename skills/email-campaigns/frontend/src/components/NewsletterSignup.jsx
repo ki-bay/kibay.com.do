@@ -8,6 +8,12 @@ import { subscribeToNewsletter } from '@/services/NewsletterService';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
 
+// Brand-portable. ALL user-facing copy is overridable from the parent:
+//   - <NewsletterSignup headline=... subtext=... buttonText=... successMessage="..." />
+// If you don't pass props, falls back to i18n namespace `newsletter`
+// (see frontend/src/i18n/locales/{es,en}/newsletter.json). Most consumers
+// should pass `successMessage` so the toast/confirmation reflects their
+// brand name (the default i18n value is generic on purpose).
 const NewsletterSignup = ({
   headline,
   subtext,

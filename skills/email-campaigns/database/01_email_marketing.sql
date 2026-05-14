@@ -1,12 +1,18 @@
 -- ============================================================================
 -- Email marketing module: contact lists, campaigns, per-recipient logs.
--- Owner: admin (info@kibay.com.do). Worker uses service role and bypasses RLS.
+-- Owner: admin (defaults to info@kibay.com.do — REPLACE for your vertical).
+-- Worker uses service role and bypasses RLS.
+--
+-- _consumer_note: the literal 'info@kibay.com.do' below is the brand owner's
+-- email. Search-and-replace it before applying the migration, OR after install
+-- run:  ALTER FUNCTION public.is_admin() ... and re-define with your address.
 -- ============================================================================
 
 -- ---------------------------------------------------------------------------
 -- Helper: is_admin() — used by RLS policies on the new tables.
 -- Returns true when JWT email matches the hardcoded admin OR when the user
 -- has role='admin' in public.users (mirrors ProtectedAdminRoute logic).
+-- REPLACE 'info@kibay.com.do' with your brand's admin email.
 -- ---------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION public.is_admin()
 RETURNS boolean
@@ -147,14 +153,17 @@ CREATE POLICY email_logs_admin_all ON public.email_logs
 -- Seed: a couple example contacts so the admin UI isn't empty on first load.
 -- (Safe-skip if already present.)
 -- ---------------------------------------------------------------------------
+-- _consumer_note: example seed rows. Two contacts so dashboards/segments show
+-- non-empty data on first install. Edit to match your vertical or DELETE before
+-- applying — they're safe to remove (ON CONFLICT DO NOTHING covers re-runs).
 INSERT INTO public.email_contacts (email, first_name, last_name, company_name, segment, subtype_tags, merge_vars, source)
 VALUES
-  ('hotelsantodomingo@example.com', 'Carlos', 'Méndez', 'Hotel Santo Domingo', 'b2b',
-   ARRAY['hotel','wholesale'],
-   '{"discount_code":"HOTEL10","wholesale_tier":"silver"}'::jsonb,
+  ('partner@example.com', 'Sample', 'Partner', 'Example Partner Co.', 'b2b',
+   ARRAY['wholesale'],
+   '{"discount_code":"PARTNER10","wholesale_tier":"silver"}'::jsonb,
    'seed'),
-  ('maria.rivera@example.com', 'María', 'Rivera', NULL, 'individual',
-   ARRAY['winery_visitor','online_shopper'],
-   '{"first_visit_offer":"15% off first bottle"}'::jsonb,
+  ('lead@example.com', 'Sample', 'Lead', NULL, 'individual',
+   ARRAY['new_signup','online_shopper'],
+   '{"first_visit_offer":"10% off first order"}'::jsonb,
    'seed')
 ON CONFLICT (email) DO NOTHING;

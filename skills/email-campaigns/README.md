@@ -3,6 +3,13 @@
 > Originally requested as "email companes" (typo for "campaigns"). Folder is
 > named `email-campaigns` for clarity.
 
+> **Default content is Kibay-themed (wine / winery).** For other verticals,
+> see [`examples/`](./examples/) and edit [`content-template.json`](./content-template.json)
+> after install. All body copy is decoupled from chrome — for a new vertical
+> you edit ONE config file (or use the live `/admin/email/templates` editor),
+> not 80+ scattered strings. The real-estate example at
+> `examples/real-estate/` shows exactly which values change.
+
 A drop-in admin email marketing stack for **Vite/React + Supabase + Cloudflare
 Worker** projects. Bundles every piece that makes Kibay's email system work:
 contact list management, campaign composer, dashboard analytics, transactional
@@ -99,11 +106,16 @@ skills/email-campaigns/
 │   │   ├── components/         (NewsletterSignup.jsx)
 │   │   └── i18n/locales/       (6 namespaces × 2 langs = 12 JSON files)
 │   └── README.md
+├── examples/
+│   └── real-estate/
+│       ├── content-template.json    (real-estate vertical reference values)
+│       └── README.md                (3-place install checklist for non-wine verticals)
 ├── README.md                    (this file)
 ├── skill-definition.md
 ├── process-blueprint.md
 ├── replication-guide.md
-└── configuration-template.json
+├── configuration-template.json
+└── content-template.json        (single source of truth for all body copy + chrome)
 ```
 
 ## What it does NOT do
@@ -119,18 +131,27 @@ does NOT include"):
 
 ## Brand-genericization
 
-This skill is Kibay-shaped by default. To rebrand:
+This skill is Kibay-shaped by default but fully vertical-portable. All body
+copy lives in `content-template.json` at the skill root. See
+`examples/real-estate/` for a full non-wine reference install.
 
-1. **Worker:** edit the `BRAND` const block at the top of `worker/index.ts`.
-2. **Edge Function:** search-and-replace `Kibay` / `kibay.com.do` (~12 hits)
-   OR introduce a `BRAND` const there too.
-3. **Frontend:** edit i18n JSON files (most copy is there) + change the gold
-   `#D4A574` colour in `NewsletterSignup.jsx`.
-4. **DB seed:** migration #3 has copy mentioning `kibay.com.do/cart` in the
-   abandoned-cart row — change before `supabase db push` OR
-   `UPDATE email_templates` afterwards.
+To rebrand, edit exactly three places:
 
-See `replication-guide.md` step 8 for the full search-list.
+1. **Worker `BRAND` + `CONTENT` consts** (top of `worker/index.ts`) — chrome
+   + welcome / admin-notice body copy.
+2. **Edge Function `BRAND_DEFAULTS` const** (top of
+   `edge-function/send-order-email/index.ts`) — chrome + order-email
+   fallback copy. Editable rows in `/admin/email/templates` take precedence
+   at runtime, so this is only a redeploy-time concern.
+3. **`content-template.json`** at the skill root — the canonical source of
+   truth. Copy values from here into 1 and 2 (or, in a fork, generate them
+   at build time).
+
+After install, admins edit transactional copy live at `/admin/email/templates`
+with no redeploy. The 10 starter rows seeded by migration #3 are intentionally
+brand-neutral so they're usable as-is until you customize.
+
+See `replication-guide.md` step 8 for the full vertical-port checklist.
 
 ## Stack assumptions
 

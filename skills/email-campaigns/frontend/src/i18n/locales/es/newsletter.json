@@ -2,7 +2,7 @@
   "firstNamePlaceholder": "Nombre",
   "emailPlaceholder": "Correo electrónico",
   "defaultButton": "Suscribirme",
-  "defaultSuccessMessage": "¡Bienvenido a la lista de Kibay!",
+  "defaultSuccessMessage": "¡Bienvenido a nuestra lista!",
   "successTitle": "¡Ya estás en la lista!",
   "toast": {
     "successTitle": "¡Listo!",

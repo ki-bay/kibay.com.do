@@ -47,9 +47,12 @@ export async function sendBrevoEmail(
 	input: SendBrevoEmailInput,
 ): Promise<BrevoSendResult> {
 	const defaultFromMatch = env.REVIEW_EMAIL_FROM.match(/^(.*)<(.+@.+)>\s*$/);
+	// Last-resort fallback when REVIEW_EMAIL_FROM is bare-email-only. Overridable
+	// per-send via input.fromName. For multi-brand workers, set REVIEW_EMAIL_FROM
+	// in the format `"Brand Name <addr@brand.com>"` so this never triggers.
 	const defaultFromName = defaultFromMatch
 		? defaultFromMatch[1].trim().replace(/"/g, '')
-		: 'Kibay';
+		: 'Sender';
 	const defaultFromEmail = defaultFromMatch
 		? defaultFromMatch[2].trim()
 		: env.REVIEW_EMAIL_FROM.trim();
@@ -146,14 +149,21 @@ export async function verifyUnsubscribeToken(
 	return m === 0;
 }
 
+// Brand-portable: the brand name + site URL are read from optional args.
+// If the worker doesn't pass them, falls back to the legacy Kibay-shaped defaults
+// (kept here so the running drive-pipeline worker keeps working without changes).
+// New installs should pass { brandName, siteUrl } from their BRAND const block.
 export function unsubscribeResultPage(
 	success: boolean,
 	email: string,
 	message: string,
+	opts: { brandName?: string; siteUrl?: string } = {},
 ): Response {
+	const brandName = opts.brandName ?? 'Kibay';
+	const siteUrl = opts.siteUrl ?? 'https://kibay.com.do/';
 	const color = success ? '#16a34a' : '#dc2626';
 	const heading = success ? "You're unsubscribed" : 'Unsubscribe failed';
-	const html = `<!doctype html><html><head><meta charset="utf-8"/><title>${heading} — Kibay</title>
+	const html = `<!doctype html><html><head><meta charset="utf-8"/><title>${heading} — ${escapeHtml(brandName)}</title>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <style>body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#f4f4f0;margin:0;padding:0;min-height:100vh;display:flex;align-items:center;justify-content:center;}
 .card{background:#fff;padding:48px 40px;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.08);max-width:480px;text-align:center;}
@@ -165,7 +175,7 @@ a{color:#888;font-size:13px;display:inline-block;margin-top:24px;}</style></head
 <h1>${heading}</h1>
 <div class="email">${escapeHtml(email)}</div>
 <p>${escapeHtml(message)}</p>
-<a href="https://kibay.com.do/">Back to Kibay</a>
+<a href="${escapeHtml(siteUrl)}">Back to ${escapeHtml(brandName)}</a>
 </div></body></html>`;
 	return new Response(html, {
 		status: success ? 200 : 400,

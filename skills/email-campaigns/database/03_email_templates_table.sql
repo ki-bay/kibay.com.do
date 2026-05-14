@@ -5,11 +5,23 @@
 -- using the service role; if no matching row exists (or query fails), the
 -- function falls back to the hardcoded defaults baked into its source.
 --
--- HTML chrome (Kibay brand wordmark, gold accent rule, footer with tagline,
+-- HTML chrome (brand wordmark, accent rule, footer with tagline,
 -- address, socials, copyright) stays in code — admins can only edit the
 -- per-type copy here, not the layout.
 --
 -- Subject supports a single mustache placeholder: {{order_number}}.
+--
+-- ============================================================================
+-- _consumer_note: These INSERT rows are STARTER VALUES, derived from the
+-- defaults in content-template.json at the skill root. They use the brand
+-- name "Kibay" and the domain "kibay.com.do" in the tracking outro and
+-- abandoned-cart links — those are the only two body strings that mention
+-- the brand by name.
+--
+-- After install, edit the rows in /admin/email/templates (no SQL, no
+-- redeploy needed). Or, before first apply, edit the literal strings here
+-- to match your brand. For a new vertical, see ../content-template.json
+-- and ../examples/real-estate/ for a full non-wine example.
 -- ============================================================================
 
 CREATE TABLE IF NOT EXISTS public.email_templates (
@@ -50,8 +62,12 @@ CREATE POLICY email_templates_admin_all ON public.email_templates
   USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 -- ---------------------------------------------------------------------------
--- Seed: current defaults verbatim from supabase/functions/send-order-email/index.ts
--- (the T = { ... } object). 6 types × 2 langs but admin_* are EN-only = 10 rows.
+-- Seed: starter defaults. Brand-name-bearing strings live in:
+--   - tracking outro    ("¡Gracias por elegir <brand>!")
+--   - abandoned_cart outro (mentions <brand>.com/cart)
+--   - admin_* subjects  ("[<brand>] ...")
+-- Edit these literals before applying, or update via /admin/email/templates
+-- after install. 10 rows = 5 customer types × 2 langs + 2 admin × en-only.
 -- ---------------------------------------------------------------------------
 
 INSERT INTO public.email_templates
@@ -82,7 +98,7 @@ VALUES
    'Tu pedido va en camino — {{order_number}}',
    'Tu pedido está en camino',
    'Acabamos de enviar tu pedido. Aquí tienes los detalles para seguirlo.',
-   'Te llegará pronto. ¡Gracias por elegir Kibay!',
+   'Te llegará pronto. ¡Gracias!',
    NULL, NULL, NULL, NULL, NULL,
    'Número de rastreo', 'Método', NULL),
 
@@ -91,7 +107,7 @@ VALUES
    'Your order is on its way — {{order_number}}',
    'Your order is on its way',
    'We just shipped your order. Here are the details to track it.',
-   'You''ll have it soon. Thanks for choosing Kibay!',
+   'You''ll have it soon. Thanks!',
    NULL, NULL, NULL, NULL, NULL,
    'Tracking number', 'Method', NULL),
 
@@ -118,7 +134,7 @@ VALUES
    '¿Olvidaste algo? — Pedido {{order_number}}',
    'Tu pedido te está esperando',
    'Vimos que empezaste un pedido pero no llegaste al pago. No te preocupes — está guardado por un rato más. Termina cuando puedas.',
-   'Si decides terminar la compra, vuelve a kibay.com.do/cart o responde a este correo si tienes alguna pregunta.',
+   'Si decides terminar la compra, vuelve a tu carrito o responde a este correo si tienes alguna pregunta.',
    'Productos en tu carrito', 'Subtotal', 'Envío', 'Total', 'Envío a',
    NULL, NULL, 'Terminar mi pedido'),
 
@@ -127,13 +143,13 @@ VALUES
    'Did you forget something? — Order {{order_number}}',
    'Your order is still waiting',
    'We saw you started an order but didn''t make it to payment. Don''t worry — it''s still saved for a little while. Finish when you can.',
-   'To finish your order, head to kibay.com.do/cart or reply to this email with any questions.',
+   'To finish your order, head to your cart or reply to this email with any questions.',
    'Items in your cart', 'Subtotal', 'Shipping', 'Total', 'Ship to',
    NULL, NULL, 'Finish my order'),
 
   -- admin_new_order / en (admin emails are en-only)
   ('admin_new_order', 'en',
-   '[Kibay] New order {{order_number}}',
+   '[Admin] New order {{order_number}}',
    'New paid order',
    'A customer just completed checkout. Details below.',
    NULL,
@@ -142,7 +158,7 @@ VALUES
 
   -- admin_refunded / en
   ('admin_refunded', 'en',
-   '[Kibay] Refunded {{order_number}}',
+   '[Admin] Refunded {{order_number}}',
    'Order refunded',
    'A refund was processed for the order below.',
    NULL,

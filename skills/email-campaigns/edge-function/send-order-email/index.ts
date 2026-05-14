@@ -8,6 +8,14 @@
 //
 // Body: { order_id: uuid, type: 'confirmation' | 'tracking' | 'refund' | 'abandoned_cart' | 'admin_new_order' | 'admin_refunded' }
 //
+// COPY EDITING (no redeploy needed): once installed, admins edit subject /
+// heading / intro / outro / labels at /admin/email/templates. The DEFAULTS
+// object below is only the FALLBACK used when a template row is missing.
+// Brand-portable chrome (wordmark, address, socials, copyright) lives in
+// the BRAND_DEFAULTS const block — see content-template.json at the skill
+// root for the canonical schema and examples/real-estate/ for a non-wine
+// reference install.
+//
 // Required Supabase secrets:
 //   BREVO_API_KEY        — from app.brevo.com/settings/keys/api
 //   ORDER_EMAIL_FROM     — must be a Brevo-verified sender. Format:
@@ -31,10 +39,66 @@ const fromAddress = Deno.env.get('ORDER_EMAIL_FROM') || '';
 const emailLinkSecret = Deno.env.get('EMAIL_LINK_SECRET') || '';
 const workerBaseUrl = Deno.env.get('WORKER_BASE_URL') || '';
 // Optional admin notification BCC. When set, the admin receives a copy of every
-// customer 'confirmation' and 'refund' email. Default: 'info@kibay.com.do'.
-// Set to an empty string in Supabase secrets to disable.
+// customer 'confirmation' and 'refund' email. Falls back to BRAND_DEFAULTS.supportEmail
+// (declared below). Set ADMIN_NOTIFY_EMAIL='' in Supabase secrets to disable.
+// Resolved AFTER BRAND_DEFAULTS via a getter helper.
+const adminNotifyEmailEnv = Deno.env.get('ADMIN_NOTIFY_EMAIL');
+
+// -----------------------------------------------------------------------------
+// BRAND_DEFAULTS — brand-portable chrome + body-copy fallbacks. Mirrors the
+// shape of content-template.json at the skill root. The Edge Function reads
+// editable copy from the public.email_templates table first; these constants
+// are the FALLBACK when a row is missing.
+//
+// Consumer install: edit this block + re-seed email_templates from
+// database/03_email_templates_table.sql, OR edit copy live at
+// /admin/email/templates (no redeploy needed). See content-template.json
+// at the skill root for the canonical schema and ../examples/real-estate/
+// for a non-wine example install.
+// -----------------------------------------------------------------------------
+const BRAND_DEFAULTS = {
+	name: 'Kibay',
+	domain: 'kibay.com.do',
+	siteUrl: 'https://kibay.com.do',
+	supportEmail: 'info@kibay.com.do',
+	accentColor: '#D4A574',
+	addressEs: 'Bahía de Ocoa, Km 6 1/2 Hatillo, Azua 71003 · República Dominicana',
+	addressEn: 'Bahía de Ocoa, Km 6 1/2 Hatillo, Azua 71003 · Dominican Republic',
+	taglineEs:
+		'Vino espumoso orgánico premium de la República Dominicana. Elaborado con pasión, sostenibilidad y los mejores frutos locales.',
+	taglineEn:
+		'Premium organic sparkling wine from the Dominican Republic. Crafted with passion, sustainability, and the finest local fruits.',
+	copyrightEs: '© Kibay · Hecho en la República Dominicana',
+	copyrightEn: '© Kibay · Made in the Dominican Republic',
+	adminLabel: 'Kibay admin',
+	adminRecipientName: 'Kibay Admin',
+	cartPath: '/cart',
+	adminOrdersPath: '/admin/orders',
+	reservation: {
+		location:
+			'Bahía de Ocoa, Carretera Hatillo Palmar de Ocoa Km 6/12, Hatillo, Azua 71003, DO',
+		placeLabelEs: 'Bahía de Ocoa',
+		placeLabelEn: 'Bahía de Ocoa',
+		qrCaptionEs: 'Muestra este código al llegar a Bahía de Ocoa',
+		qrCaptionEn: 'Show this code on arrival at Bahía de Ocoa',
+		headingEs: 'Tu reserva',
+		headingEn: 'Your reservation',
+	},
+	socials: {
+		instagram: 'https://www.instagram.com/kibaywine',
+		facebook: 'https://www.facebook.com/profile.php?id=61589761255222',
+		tiktok: 'https://www.tiktok.com/@kibaywine',
+		linkedin: 'https://www.linkedin.com/company/116054911',
+	},
+} as const;
+
+// Resolve admin notify email: env var takes precedence; empty string disables;
+// missing env falls back to BRAND_DEFAULTS.supportEmail. Computed once at module
+// load so we have a stable value to reference downstream.
 const adminNotifyEmail =
-	Deno.env.get('ADMIN_NOTIFY_EMAIL') ?? 'info@kibay.com.do';
+	adminNotifyEmailEnv === undefined
+		? BRAND_DEFAULTS.supportEmail
+		: adminNotifyEmailEnv;
 
 // Parse "Name <email>" format into Brevo's sender shape.
 function parseFrom(s: string): { name?: string; email: string } | null {
@@ -88,10 +152,13 @@ serve(async (req) => {
 			.select('role,email')
 			.eq('id', userData.user.id)
 			.maybeSingle();
+		// Admin check: role='admin' in public.users wins; otherwise the email must
+		// match BRAND_DEFAULTS.supportEmail (the brand's owner address). To override
+		// per-deploy, set the supportEmail value in the BRAND_DEFAULTS block above.
 		const isAdmin =
 			profile?.role === 'admin' ||
-			profile?.email === 'info@kibay.com.do' ||
-			userData.user.email === 'info@kibay.com.do';
+			profile?.email === BRAND_DEFAULTS.supportEmail ||
+			userData.user.email === BRAND_DEFAULTS.supportEmail;
 		if (!isAdmin) return json({ error: 'Admin only' }, 403);
 	}
 
@@ -184,7 +251,7 @@ serve(async (req) => {
 	const { subject, html } = await renderEmail(type, order, items || [], renderLang, dbTpl);
 
 	const recipientName = isAdminEmail
-		? 'Kibay Admin'
+		? BRAND_DEFAULTS.adminRecipientName
 		: `${ship.firstName || ''} ${ship.lastName || ''}`.trim() || undefined;
 
 	// BCC removed: admin gets dedicated admin_new_order / admin_refunded
@@ -207,7 +274,7 @@ serve(async (req) => {
 		body: JSON.stringify({
 			sender,
 			to: [{ email: to, ...(recipientName ? { name: recipientName } : {}) }],
-			...(wantsBcc ? { bcc: [{ email: adminNotifyEmail, name: 'Kibay Admin' }] } : {}),
+			...(wantsBcc ? { bcc: [{ email: adminNotifyEmail, name: BRAND_DEFAULTS.adminRecipientName }] } : {}),
 			subject,
 			htmlContent: html,
 		}),
@@ -285,7 +352,7 @@ function applySubjectVars(template: string, order: Order): string {
 	return String(template ?? '').replace(/\{\{\s*order_number\s*\}\}/g, String(order.order_number ?? ''));
 }
 
-const T = {
+const DEFAULTS = {
 	confirmation: {
 		es: {
 			subject: (o: Order) => `Pedido confirmado — ${o.order_number}`,
@@ -317,7 +384,7 @@ const T = {
 			intro: 'Acabamos de enviar tu pedido. Aquí tienes los detalles para seguirlo.',
 			trackingLabel: 'Número de rastreo',
 			methodLabel: 'Método',
-			outro: 'Te llegará pronto. ¡Gracias por elegir Kibay!',
+			outro: `Te llegará pronto. ¡Gracias por elegir ${BRAND_DEFAULTS.name}!`,
 		},
 		en: {
 			subject: (o: Order) => `Your order is on its way — ${o.order_number}`,
@@ -325,7 +392,7 @@ const T = {
 			intro: "We just shipped your order. Here are the details to track it.",
 			trackingLabel: 'Tracking number',
 			methodLabel: 'Method',
-			outro: "You'll have it soon. Thanks for choosing Kibay!",
+			outro: `You'll have it soon. Thanks for choosing ${BRAND_DEFAULTS.name}!`,
 		},
 	},
 	refund: {
@@ -352,7 +419,7 @@ const T = {
 			shippingLabel: 'Envío',
 			totalLabel: 'Total',
 			shipToLabel: 'Envío a',
-			outro: 'Si decides terminar la compra, vuelve a kibay.com.do/cart o responde a este correo si tienes alguna pregunta.',
+			outro: `Si decides terminar la compra, vuelve a ${BRAND_DEFAULTS.domain}${BRAND_DEFAULTS.cartPath} o responde a este correo si tienes alguna pregunta.`,
 			ctaLabel: 'Terminar mi pedido',
 		},
 		en: {
@@ -364,20 +431,20 @@ const T = {
 			shippingLabel: 'Shipping',
 			totalLabel: 'Total',
 			shipToLabel: 'Ship to',
-			outro: 'To finish your order, head to kibay.com.do/cart or reply to this email with any questions.',
+			outro: `To finish your order, head to ${BRAND_DEFAULTS.domain}${BRAND_DEFAULTS.cartPath} or reply to this email with any questions.`,
 			ctaLabel: 'Finish my order',
 		},
 	},
 	admin_new_order: {
 		en: {
-			subject: (o: Order) => `[Kibay] New order ${o.order_number}`,
+			subject: (o: Order) => `[${BRAND_DEFAULTS.name}] New order ${o.order_number}`,
 			heading: 'New paid order',
 			intro: 'A customer just completed checkout. Details below.',
 		},
 	},
 	admin_refunded: {
 		en: {
-			subject: (o: Order) => `[Kibay] Refunded ${o.order_number}`,
+			subject: (o: Order) => `[${BRAND_DEFAULTS.name}] Refunded ${o.order_number}`,
 			heading: 'Order refunded',
 			intro: 'A refund was processed for the order below.',
 		},
@@ -394,7 +461,7 @@ async function renderEmail(
 	if (type === 'admin_new_order' || type === 'admin_refunded') {
 		return await renderAdminEmail(type, order, items, dbTpl);
 	}
-	const defaults = T[type][lang] as Record<string, unknown>;
+	const defaults = DEFAULTS[type][lang] as Record<string, unknown>;
 	// Build a merged view: prefer DB value, fall back to hardcoded default.
 	const subject = dbTpl?.subject
 		? applySubjectVars(dbTpl.subject, order)
@@ -430,10 +497,10 @@ async function renderEmail(
 			? await renderReservationBlock(items, lang, String(order.id || ''), String(order.order_number || ''))
 			: '';
 
-	const taglineEs = 'Vino espumoso orgánico premium de la República Dominicana. Elaborado con pasión, sostenibilidad y los mejores frutos locales.';
-	const taglineEn = 'Premium organic sparkling wine from the Dominican Republic. Crafted with passion, sustainability, and the finest local fruits.';
-	const copyrightEs = '© Kibay · Hecho en la República Dominicana';
-	const copyrightEn = '© Kibay · Made in the Dominican Republic';
+	const taglineEs = BRAND_DEFAULTS.taglineEs;
+	const taglineEn = BRAND_DEFAULTS.taglineEn;
+	const copyrightEs = BRAND_DEFAULTS.copyrightEs;
+	const copyrightEn = BRAND_DEFAULTS.copyrightEn;
 	const tagline = lang === 'es' ? taglineEs : taglineEn;
 	const copyright = lang === 'es' ? copyrightEs : copyrightEn;
 
@@ -449,8 +516,8 @@ async function renderEmail(
     <tr><td align="center">
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06);">
         <tr><td style="padding:32px 40px 0;" align="center">
-          <div style="font-family:Georgia,serif;font-size:30px;font-weight:600;letter-spacing:1.5px;color:#1a1a1a;">Kibay</div>
-          <div style="height:2px;width:56px;background:#D4A574;margin:12px auto 0;"></div>
+          <div style="font-family:Georgia,serif;font-size:30px;font-weight:600;letter-spacing:1.5px;color:#1a1a1a;">${BRAND_DEFAULTS.name}</div>
+          <div style="height:2px;width:56px;background:${BRAND_DEFAULTS.accentColor};margin:12px auto 0;"></div>
         </td></tr>
         <tr><td style="padding:24px 40px 0;">
           <div style="font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#999;">${lang === 'es' ? 'Pedido' : 'Order'} ${escapeHtml(order.order_number)}</div>
@@ -461,7 +528,7 @@ async function renderEmail(
           ${reservationBlock}
           ${showItems ? renderItemsTable(items, fmt, tpl as Record<string, string>, order, symbol) : ''}
           ${type === 'tracking' ? renderTrackingBlock(order, tpl as Record<string, string>) : ''}
-          ${showCta ? `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 24px 0;"><tr><td align="center"><a href="https://kibay.com.do/cart" style="display:inline-block;padding:14px 32px;background:#1a1a1a;color:#ffffff;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;letter-spacing:0.3px;">${escapeHtml(ctaLabel)}</a></td></tr></table>` : ''}
+          ${showCta ? `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 24px 0;"><tr><td align="center"><a href="${BRAND_DEFAULTS.siteUrl}${BRAND_DEFAULTS.cartPath}" style="display:inline-block;padding:14px 32px;background:#1a1a1a;color:#ffffff;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;letter-spacing:0.3px;">${escapeHtml(ctaLabel)}</a></td></tr></table>` : ''}
           ${renderShipToBlock(ship, customerName, lang, tpl.shipToLabel)}
           <p style="margin:24px 0 0 0;font-size:14px;line-height:1.6;color:#666;">${escapeHtml(tpl.outro)}</p>
         </td></tr>
@@ -469,17 +536,17 @@ async function renderEmail(
           <div style="height:1px;background:#eee;"></div>
         </td></tr>
         <tr><td style="padding:24px 40px 32px;text-align:center;">
-          <div style="font-family:Georgia,serif;font-size:18px;font-weight:600;color:#1a1a1a;letter-spacing:0.5px;">Kibay</div>
+          <div style="font-family:Georgia,serif;font-size:18px;font-weight:600;color:#1a1a1a;letter-spacing:0.5px;">${BRAND_DEFAULTS.name}</div>
           <div style="font-size:12px;color:#777;margin-top:6px;line-height:1.5;max-width:420px;margin-left:auto;margin-right:auto;">${escapeHtml(tagline)}</div>
-          <div style="font-size:11px;color:#999;margin-top:14px;">Bahía de Ocoa, Km 6 1/2 Hatillo, Azua 71003 · ${lang === 'es' ? 'República Dominicana' : 'Dominican Republic'}</div>
+          <div style="font-size:11px;color:#999;margin-top:14px;">${lang === 'es' ? BRAND_DEFAULTS.addressEs : BRAND_DEFAULTS.addressEn}</div>
           <div style="margin-top:16px;">
-            <a href="https://www.instagram.com/kibaywine" style="display:inline-block;margin:0 6px;color:#888;font-size:12px;text-decoration:none;">Instagram</a><span style="color:#ddd;">·</span>
-            <a href="https://www.facebook.com/profile.php?id=61589761255222" style="display:inline-block;margin:0 6px;color:#888;font-size:12px;text-decoration:none;">Facebook</a><span style="color:#ddd;">·</span>
-            <a href="https://www.tiktok.com/@kibaywine" style="display:inline-block;margin:0 6px;color:#888;font-size:12px;text-decoration:none;">TikTok</a><span style="color:#ddd;">·</span>
-            <a href="https://www.linkedin.com/company/116054911" style="display:inline-block;margin:0 6px;color:#888;font-size:12px;text-decoration:none;">LinkedIn</a>
+            <a href="${BRAND_DEFAULTS.socials.instagram}" style="display:inline-block;margin:0 6px;color:#888;font-size:12px;text-decoration:none;">Instagram</a><span style="color:#ddd;">·</span>
+            <a href="${BRAND_DEFAULTS.socials.facebook}" style="display:inline-block;margin:0 6px;color:#888;font-size:12px;text-decoration:none;">Facebook</a><span style="color:#ddd;">·</span>
+            <a href="${BRAND_DEFAULTS.socials.tiktok}" style="display:inline-block;margin:0 6px;color:#888;font-size:12px;text-decoration:none;">TikTok</a><span style="color:#ddd;">·</span>
+            <a href="${BRAND_DEFAULTS.socials.linkedin}" style="display:inline-block;margin:0 6px;color:#888;font-size:12px;text-decoration:none;">LinkedIn</a>
           </div>
           <div style="font-size:11px;color:#aaa;margin-top:14px;">
-            <a href="mailto:info@kibay.com.do" style="color:#aaa;text-decoration:none;">info@kibay.com.do</a> · <a href="https://kibay.com.do" style="color:#aaa;text-decoration:none;">kibay.com.do</a>
+            <a href="mailto:${BRAND_DEFAULTS.supportEmail}" style="color:#aaa;text-decoration:none;">${BRAND_DEFAULTS.supportEmail}</a> · <a href="${BRAND_DEFAULTS.siteUrl}" style="color:#aaa;text-decoration:none;">${BRAND_DEFAULTS.domain}</a>
           </div>
           <div style="font-size:10px;color:#bbb;margin-top:14px;letter-spacing:0.5px;text-transform:uppercase;">${escapeHtml(copyright)}</div>
         </td></tr>
@@ -566,7 +633,7 @@ function googleCalendarUrl(
 	details: string,
 ): string {
 	const params = new URLSearchParams({
-		text: `Reserva Kibay: ${productName}`,
+		text: `${BRAND_DEFAULTS.name}: ${productName}`,
 		dates: `${fmtIcsUtc(startUtc)}/${fmtIcsUtc(endUtc)}`,
 		details,
 		location,
@@ -574,8 +641,7 @@ function googleCalendarUrl(
 	return `https://calendar.google.com/calendar/u/0/r/eventedit?${params.toString()}`;
 }
 
-const RESERVATION_LOCATION =
-	'Bahía de Ocoa, Carretera Hatillo Palmar de Ocoa Km 6/12, Hatillo, Azua 71003, DO';
+const RESERVATION_LOCATION = BRAND_DEFAULTS.reservation.location;
 
 async function renderReservationBlock(
 	items: Item[],
@@ -588,26 +654,26 @@ async function renderReservationBlock(
 
 	const t = {
 		es: {
-			heading: 'Tu reserva',
+			heading: BRAND_DEFAULTS.reservation.headingEs,
 			date: 'Fecha',
 			time: 'Hora',
 			place: 'Lugar',
-			placeValue: 'Bahía de Ocoa',
+			placeValue: BRAND_DEFAULTS.reservation.placeLabelEs,
 			gcal: 'Añadir a Google Calendar',
 			ics: 'Apple / Outlook (ICS)',
-			details: 'Detalles de tu reserva en Kibay (Bahía de Ocoa).',
-			qrCaption: 'Muestra este código al llegar a Bahía de Ocoa',
+			details: `Detalles de tu reserva en ${BRAND_DEFAULTS.name}.`,
+			qrCaption: BRAND_DEFAULTS.reservation.qrCaptionEs,
 		},
 		en: {
-			heading: 'Your reservation',
+			heading: BRAND_DEFAULTS.reservation.headingEn,
 			date: 'Date',
 			time: 'Time',
 			place: 'Where',
-			placeValue: 'Bahía de Ocoa',
+			placeValue: BRAND_DEFAULTS.reservation.placeLabelEn,
 			gcal: 'Add to Google Calendar',
 			ics: 'Apple / Outlook (ICS)',
-			details: 'Details for your Kibay reservation (Bahía de Ocoa).',
-			qrCaption: 'Show this code on arrival at Bahía de Ocoa',
+			details: `Details for your ${BRAND_DEFAULTS.name} reservation.`,
+			qrCaption: BRAND_DEFAULTS.reservation.qrCaptionEn,
 		},
 	}[lang];
 
@@ -663,8 +729,8 @@ async function renderReservationBlock(
 	// it opens the order in the admin dashboard (auth-gated). For the
 	// customer it's also a portable proof-of-reservation — show on arrival.
 	const qrTarget = orderNumber
-		? `https://kibay.com.do/admin/orders?order=${encodeURIComponent(orderNumber)}`
-		: `https://kibay.com.do/admin/orders?id=${encodeURIComponent(orderId)}`;
+		? `${BRAND_DEFAULTS.siteUrl}${BRAND_DEFAULTS.adminOrdersPath}?order=${encodeURIComponent(orderNumber)}`
+		: `${BRAND_DEFAULTS.siteUrl}${BRAND_DEFAULTS.adminOrdersPath}?id=${encodeURIComponent(orderId)}`;
 	const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=2&data=${encodeURIComponent(qrTarget)}`;
 	const qrBlock = `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 4px 0;background:#ffffff;border:1px solid #eee;border-radius:10px;">
 		<tr><td style="padding:18px;text-align:center;">
@@ -713,7 +779,7 @@ async function renderAdminEmail(
 	items: Item[],
 	dbTpl: DbTemplate | null = null,
 ): Promise<{ subject: string; html: string }> {
-	const defaults = (T as Record<string, Record<'en', { subject: (o: Order) => string; heading: string; intro: string }>>)[type].en;
+	const defaults = (DEFAULTS as Record<string, Record<'en', { subject: (o: Order) => string; heading: string; intro: string }>>)[type].en;
 	const tpl = {
 		heading: dbTpl?.heading ?? defaults.heading,
 		intro: dbTpl?.intro ?? defaults.intro,
@@ -753,7 +819,7 @@ async function renderAdminEmail(
 		? await renderReservationBlock(items, 'en', String(order.id || ''), String(order.order_number || ''))
 		: '';
 
-	const adminUrl = `https://kibay.com.do/admin/orders`;
+	const adminUrl = `${BRAND_DEFAULTS.siteUrl}${BRAND_DEFAULTS.adminOrdersPath}`;
 	const stripeUrl = (order as { stripe_payment_intent_id?: string }).stripe_payment_intent_id
 		? `https://dashboard.stripe.com/test/payments/${(order as { stripe_payment_intent_id: string }).stripe_payment_intent_id}`
 		: null;
@@ -770,7 +836,7 @@ async function renderAdminEmail(
     <tr><td align="center">
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="640" style="max-width:640px;background:#ffffff;border:1px solid #e7e5e4;border-radius:8px;">
         <tr><td style="padding:20px 24px;border-bottom:1px solid #e7e5e4;">
-          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#a8a29e;">Kibay admin</div>
+          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#a8a29e;">${BRAND_DEFAULTS.adminLabel}</div>
           <h1 style="margin:4px 0 0 0;font-size:18px;font-weight:600;color:#1c1917;">${escapeHtml(tpl.heading)} — ${escapeHtml(order.order_number)}</h1>
           <p style="margin:4px 0 0 0;font-size:13px;color:#78716c;">${escapeHtml(tpl.intro)}</p>
         </td></tr>

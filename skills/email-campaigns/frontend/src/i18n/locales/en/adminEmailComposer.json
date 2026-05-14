@@ -10,12 +10,12 @@
   },
   "fields": {
     "name": "Campaign name *",
-    "namePlaceholder": "Internal label, e.g. May 2026 wholesale launch",
+    "namePlaceholder": "Internal label, e.g. May 2026 launch",
     "subject": "Subject *",
     "fromName": "From name",
     "fromEmail": "From email",
     "replyTo": "Reply-to (optional)",
-    "replyToPlaceholder": "hello@kibay.com.do",
+    "replyToPlaceholder": "hello@example.com",
     "htmlBody": "HTML body *"
   },
   "audience": {

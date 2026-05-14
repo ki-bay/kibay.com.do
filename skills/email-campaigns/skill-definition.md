@@ -40,6 +40,13 @@ admin UI integrated with your product DB. **This skill is the glue.**
 
 ## Capabilities
 
+- **Brand and vertical portable** — full body copy lives in a single
+  config file (`content-template.json`) plus two const blocks in source
+  (`BRAND`/`CONTENT` in the Worker, `BRAND_DEFAULTS` in the Edge Function).
+  Order-email copy is additionally editable live at `/admin/email/templates`
+  with no redeploy. Wine-themed by default; see `examples/real-estate/`
+  for a complete non-wine reference install.
+
 What the skill gives you, route by route:
 
 - `POST /email/send` — send campaign by ID (with stored segment_filter), or

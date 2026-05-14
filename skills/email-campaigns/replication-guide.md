@@ -204,20 +204,69 @@ await fetch(`${SUPABASE_URL}/functions/v1/send-order-email`, {
 
 For refunds, fire `refund` to customer + `admin_refunded` to admin.
 
-## 8. Replace brand placeholders (5 min)
+## 8. Replace content for your vertical (5 min)
 
-Search-and-replace `Kibay` and `kibay.com.do` in the files below. (i18n
-JSON has the user-facing copy — the JSX rarely needs touching.)
+The default install is **Kibay-themed** (wine / sparkling wine / winery /
+Bahía de Ocoa). For any other vertical — real estate, hospitality, B2B
+SaaS, retail — body copy needs to change. After this skill's refactor,
+that's a **single config file plus two const blocks**, NOT a grep-and-replace
+of dozens of files.
 
-| File                                          | What's there                                                  |
-| --------------------------------------------- | ------------------------------------------------------------- |
-| `workers/email-campaigns/src/index.ts`        | `BRAND` constant block near the top                           |
-| `supabase/functions/send-order-email/index.ts` | ~12 references in HTML chrome + footer (wordmark / address / socials / copyright) |
-| `src/i18n/locales/{es,en}/*.json`             | All user-facing copy is here — `s/Kibay/<Brand>/g` is usually enough |
-| `src/components/NewsletterSignup.jsx`         | Gold accent `#D4A574` (4 occurrences) — change to your brand colour |
-| `supabase/migrations/03_email_templates_table.sql` | Abandoned-cart row mentions `kibay.com.do/cart` — change before applying OR `UPDATE email_templates SET outro = ...` after |
+### The single source of truth
 
-Two acceptable patterns for the `BRAND` block in the Worker:
+[`content-template.json`](./content-template.json) at the skill root holds
+every brand-specific string the skill emits at runtime — wordmark, tagline,
+address, socials, copyright, welcome-email bullets, order-email fallbacks,
+unsubscribe page copy. Everything.
+
+A complete non-wine reference is at
+[`examples/real-estate/content-template.json`](./examples/real-estate/content-template.json)
+with vertical-appropriate values:
+
+- "New listings in your saved areas"
+- "Open house weekend roundups"
+- "Local market reports + pricing trends"
+- "Off-market opportunities"
+- "Offer received" instead of "Order confirmed"
+- "Closing update" instead of "Tracking number"
+- "Deposit returned" instead of "Refund processed"
+
+### Three places to edit (per-install)
+
+| #   | File                                                      | What                                                                                 |
+| --- | --------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| 1   | `workers/email-campaigns/src/index.ts`                    | Top-of-file `BRAND` + `CONTENT` const blocks. Replace values from `content-template.json`. |
+| 2   | `supabase/functions/send-order-email/index.ts`            | Top-of-file `BRAND_DEFAULTS` const. Same pattern.                                    |
+| 3   | `supabase/migrations/03_email_templates_table.sql`        | Edit the 10 seed INSERTs OR apply as-is and edit live at `/admin/email/templates`.   |
+
+Optional fourth: pass `successMessage` prop to `<NewsletterSignup>` from
+your parent (or edit `frontend/src/i18n/locales/{es,en}/newsletter.json`
+to set the default toast text — already brand-neutral after this refactor).
+
+### Optional: env-var override for sender defaults
+
+If you fork the frontend and want admin-composer defaults from build env
+instead of touching JSX:
+
+```
+VITE_EMAIL_DEFAULT_FROM_NAME="Casa Caribe"
+VITE_EMAIL_DEFAULT_FROM_EMAIL="hello@casacaribe.com"
+```
+
+Set these in your `.env` / Vercel / Netlify build config and
+`EmailComposerPage.jsx` picks them up.
+
+### After install: edit live, no redeploy
+
+Once installed, **all order-email body copy is editable** at
+`/admin/email/templates` — no SQL, no code changes, no redeploy needed.
+The `BRAND_DEFAULTS` const in the Edge Function is only a fallback for
+rows that don't exist yet. See step 10 below.
+
+For a deeper walkthrough of the real-estate install specifically, see
+[`examples/real-estate/README.md`](./examples/real-estate/README.md).
+
+### Two acceptable patterns for the `BRAND` block in the Worker
 
 - **Constants (the default in `worker/index.ts`)** — `BRAND.name`,
   `BRAND.domain`, etc. One file, fully readable. Recommended.

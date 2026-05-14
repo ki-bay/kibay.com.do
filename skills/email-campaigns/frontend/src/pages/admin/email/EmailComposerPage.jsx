@@ -18,8 +18,13 @@ import { supabase } from '@/lib/customSupabaseClient';
 import { Button } from '@/components/ui/button';
 import { sendCampaign } from '@/services/EmailMarketingService';
 
-const DEFAULT_FROM_NAME = 'Kibay';
-const DEFAULT_FROM_EMAIL = 'info@kibay.com.do';
+// Brand-portable. After install, set these to your brand. Optionally, override
+// via Vite env vars at build time (so a fork doesn't have to edit the JSX):
+//   VITE_EMAIL_DEFAULT_FROM_NAME, VITE_EMAIL_DEFAULT_FROM_EMAIL.
+const DEFAULT_FROM_NAME =
+	import.meta.env?.VITE_EMAIL_DEFAULT_FROM_NAME || 'Kibay';
+const DEFAULT_FROM_EMAIL =
+	import.meta.env?.VITE_EMAIL_DEFAULT_FROM_EMAIL || 'info@kibay.com.do';
 
 const emptyForm = {
 	name: '',
