@@ -186,9 +186,18 @@ const CheckoutPage = () => {
 	const subtotalMajor = getCartTotal();
 	const cartCurrency = cartItems[0]?.variant?.currency || 'DOP';
 	const symbol = symbolFor(cartCurrency);
+
+	// Experiences (excursions / day passes) are not shipped — the customer
+	// shows up at Ocoa Bay on the reservation date. Skip the shipping selector
+	// and the shipping cost entirely when the cart contains ONLY experiences.
+	const cartIsAllExperience = useMemo(
+		() => cartItems.length > 0 && cartItems.every((item) => item.product?.type === 'experience'),
+		[cartItems],
+	);
+
 	const shippingMajor = useMemo(
-		() => computeShippingMajor(subtotalMajor, shippingMethod, cartCurrency, shippingTiers),
-		[subtotalMajor, shippingMethod, cartCurrency, shippingTiers],
+		() => (cartIsAllExperience ? 0 : computeShippingMajor(subtotalMajor, shippingMethod, cartCurrency, shippingTiers)),
+		[cartIsAllExperience, subtotalMajor, shippingMethod, cartCurrency, shippingTiers],
 	);
 	const subtotalCents = Math.round(subtotalMajor * 100);
 	const shippingCents = Math.round(shippingMajor * 100);
@@ -375,10 +384,14 @@ const CheckoutPage = () => {
 					currency: cartCurrency,
 					items_count: cartItems.length,
 					shipping_address: shippingInfo,
-					shipping_method: shippingMethod,
+					shipping_method: cartIsAllExperience ? 'pickup' : shippingMethod,
 					tax_id: shippingInfo.taxId || null,
 					payment_method: 'Stripe',
-					estimated_delivery_date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+					// All-experiences orders have no physical delivery — the
+					// "delivery date" is the reservation date on each line item.
+					estimated_delivery_date: cartIsAllExperience
+						? null
+						: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
 				})
 				.select()
 				.single();
@@ -578,23 +591,38 @@ const CheckoutPage = () => {
 										</div>
 									</div>
 
-									<div className="space-y-2">
-										<label htmlFor="checkout-shippingMethod" className="text-sm font-light text-foreground/80">{t('shippingMethod')}</label>
-										<select
-											id="checkout-shippingMethod"
-											name="shippingMethod"
-											value={shippingMethod}
-											onChange={(e) => setShippingMethod(e.target.value)}
-											disabled={step === 'payment'}
-											className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground focus:border-mango-500 focus:outline-none font-light"
-										>
-											<option value="standard">{t('standard')} (RD$200)</option>
-											<option value="express">{t('express')} (RD$400)</option>
-										</select>
-										<p className="text-xs text-foreground/50 font-light">
-											{t('freeOver')}
-										</p>
-									</div>
+									{cartIsAllExperience ? (
+										<div className="space-y-2 bg-mango-500/5 border border-mango-500/20 rounded-lg p-4">
+											<div className="text-sm font-medium text-mango-300">
+												{cartCurrency === 'USD'
+													? 'Reservation — no shipping'
+													: 'Reservación — sin envío'}
+											</div>
+											<p className="text-xs text-foreground/60 font-light">
+												{cartCurrency === 'USD'
+													? "You'll receive your reservation confirmation by email. Just show up at Bahía de Ocoa on the date you picked."
+													: 'Recibirás la confirmación de tu reserva por correo. Solo tienes que llegar a Bahía de Ocoa el día que elegiste.'}
+											</p>
+										</div>
+									) : (
+										<div className="space-y-2">
+											<label htmlFor="checkout-shippingMethod" className="text-sm font-light text-foreground/80">{t('shippingMethod')}</label>
+											<select
+												id="checkout-shippingMethod"
+												name="shippingMethod"
+												value={shippingMethod}
+												onChange={(e) => setShippingMethod(e.target.value)}
+												disabled={step === 'payment'}
+												className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground focus:border-mango-500 focus:outline-none font-light"
+											>
+												<option value="standard">{t('standard')} (RD$200)</option>
+												<option value="express">{t('express')} (RD$400)</option>
+											</select>
+											<p className="text-xs text-foreground/50 font-light">
+												{t('freeOver')}
+											</p>
+										</div>
+									)}
 								</div>
 
 								{step === 'shipping' && (
@@ -783,10 +811,12 @@ const CheckoutPage = () => {
 											<span>-{symbol}{discountMajor.toFixed(2)}</span>
 										</div>
 									)}
-									<div className="flex justify-between text-foreground/60 font-light">
-										<span>{t('shipping')} ({t(shippingMethod)})</span>
-										<span>{symbol}{shippingMajor.toFixed(2)}</span>
-									</div>
+									{!cartIsAllExperience && (
+										<div className="flex justify-between text-foreground/60 font-light">
+											<span>{t('shipping')} ({t(shippingMethod)})</span>
+											<span>{symbol}{shippingMajor.toFixed(2)}</span>
+										</div>
+									)}
 									<div className="flex justify-between text-foreground font-normal text-xl pt-2 mt-2 border-t border-foreground/10">
 										<span>{t('total')}</span>
 										<span className="text-mango-400">{symbol}{totalMajor.toFixed(2)}</span>

@@ -427,7 +427,7 @@ async function renderEmail(
 	// Goes between the intro paragraph and the items table in the email body.
 	const reservationBlock =
 		type === 'confirmation' || type === 'abandoned_cart'
-			? await renderReservationBlock(items, lang, String(order.id || ''))
+			? await renderReservationBlock(items, lang, String(order.id || ''), String(order.order_number || ''))
 			: '';
 
 	const taglineEs = 'Vino espumoso orgánico premium de la República Dominicana. Elaborado con pasión, sostenibilidad y los mejores frutos locales.';
@@ -581,6 +581,7 @@ async function renderReservationBlock(
 	items: Item[],
 	lang: 'es' | 'en',
 	orderId: string,
+	orderNumber: string = '',
 ): Promise<string> {
 	const reservations = items.filter((i) => i.metadata?.reservation_date);
 	if (reservations.length === 0) return '';
@@ -595,6 +596,7 @@ async function renderReservationBlock(
 			gcal: 'Añadir a Google Calendar',
 			ics: 'Apple / Outlook (ICS)',
 			details: 'Detalles de tu reserva en Kibay (Bahía de Ocoa).',
+			qrCaption: 'Muestra este código al llegar a Bahía de Ocoa',
 		},
 		en: {
 			heading: 'Your reservation',
@@ -605,6 +607,7 @@ async function renderReservationBlock(
 			gcal: 'Add to Google Calendar',
 			ics: 'Apple / Outlook (ICS)',
 			details: 'Details for your Kibay reservation (Bahía de Ocoa).',
+			qrCaption: 'Show this code on arrival at Bahía de Ocoa',
 		},
 	}[lang];
 
@@ -655,10 +658,27 @@ async function renderReservationBlock(
 		</tr>
 	</table>`;
 
+	// QR code: encodes a deep link to the admin order page. When staff at
+	// Ocoa Bay scans the code on the customer's phone (or printed email),
+	// it opens the order in the admin dashboard (auth-gated). For the
+	// customer it's also a portable proof-of-reservation — show on arrival.
+	const qrTarget = orderNumber
+		? `https://kibay.com.do/admin/orders?order=${encodeURIComponent(orderNumber)}`
+		: `https://kibay.com.do/admin/orders?id=${encodeURIComponent(orderId)}`;
+	const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=2&data=${encodeURIComponent(qrTarget)}`;
+	const qrBlock = `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 4px 0;background:#ffffff;border:1px solid #eee;border-radius:10px;">
+		<tr><td style="padding:18px;text-align:center;">
+			<img src="${qrSrc}" width="180" height="180" alt="${escapeHtml(t.qrCaption)}" style="display:block;margin:0 auto;border:0;outline:none;text-decoration:none;" />
+			<div style="font-size:11px;color:#999;margin-top:10px;">${escapeHtml(t.qrCaption)}</div>
+			${orderNumber ? `<div style="font-family:Menlo,Consolas,monospace;font-size:12px;color:#666;margin-top:6px;">${escapeHtml(orderNumber)}</div>` : ''}
+		</td></tr>
+	</table>`;
+
 	return `<div style="margin:0 0 24px 0;">
 		<div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:#78716c;margin-bottom:10px;">${escapeHtml(t.heading)}</div>
 		${cards}
 		${buttons}
+		${qrBlock}
 	</div>`;
 }
 
@@ -730,7 +750,7 @@ async function renderAdminEmail(
 	// Full block (with cards + buttons) — admin gets the same calendar links so they
 	// can also drop the event on their own calendar in one click.
 	const reservationBlock = reservations.length > 0
-		? await renderReservationBlock(items, 'en', String(order.id || ''))
+		? await renderReservationBlock(items, 'en', String(order.id || ''), String(order.order_number || ''))
 		: '';
 
 	const adminUrl = `https://kibay.com.do/admin/orders`;
