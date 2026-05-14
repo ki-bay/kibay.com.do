@@ -28,3 +28,7 @@
 - [Untitled Page](/login): No description available
 - [Untitled Page](/register): No description available
 - [Untitled Page](/verifyotp): No description available
+- [Untitled Page](/enjoyamigos): No description available
+- [Untitled Page](/enjoycocina): No description available
+- [Untitled Page](/enjoylectura): No description available
+- [Untitled Page](/enjoypiscina): No description available

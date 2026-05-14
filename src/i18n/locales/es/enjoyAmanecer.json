@@ -1,0 +1,33 @@
+{
+  "seo": {
+    "title": "Amanecer en el viñedo · Kibay en Bahía de Ocoa",
+    "description": "Caminar entre las viñas al amanecer con una copa de Kibay. La luz dorada, el silencio del valle y la brisa atlántica — la forma más íntima de empezar el día en Ocoa Bay."
+  },
+  "hero": {
+    "eyebrow": "Razón #1 · Forma de disfrutar Kibay",
+    "title": "Amanecer en el viñedo",
+    "lead": "Una copa, la luz dorada y el valle todavía dormido. Así empieza el día cuando lo empiezas en Bahía de Ocoa.",
+    "imageAlt": "Amanecer sobre el viñedo de Ocoa Bay — vino caribeño Kibay al alba",
+    "ctaBlog": "Lee el blog",
+    "ctaBook": "Reserva tu experiencia"
+  },
+  "story": {
+    "heading": "El valle todavía no se ha despertado del todo",
+    "p1": "Llegas temprano, con la frescura de la madrugada todavía pegada a la tierra. El cielo está cambiando de azul a dorado y las viñas, alineadas hacia la bahía, parecen contener el aliento. Ocoa Bay a esta hora no se parece a ninguna otra parte del Caribe — es un viñedo en silencio, con el mar al fondo.",
+    "p2": "Caminas despacio entre las hileras. Una copa de Kibay en la mano, todavía fría. El espumante tropical de mango y chinola se siente distinto al amanecer: más sutil, más limpio, más cercano a la fruta. Es el mismo vino — pero el contexto le devuelve cosas que en la noche se pierden.",
+    "p3": "No tienes que decir nada. No tienes que hacer fotos. Solo respirar, mirar, y dejar que el día empiece como empiezan los días buenos: sin prisa, con una copa, en un lugar que importa."
+  },
+  "galleryHeading": "Imágenes del amanecer en Ocoa Bay",
+  "experiences": {
+    "heading": "Experiencias en Ocoa Bay",
+    "subheading": "Reserva tu día en el viñedo del Caribe — tour, cata y cocina del campo a la mesa.",
+    "loading": "Cargando experiencias...",
+    "reserve": "Reservar",
+    "perPerson": "/ persona"
+  },
+  "closing": {
+    "heading": "¿Otra forma de disfrutar Kibay?",
+    "body": "Cinco razones para abrir una botella en Bahía de Ocoa. Esta es solo una.",
+    "cta": "Ver las 5 formas"
+  }
+}

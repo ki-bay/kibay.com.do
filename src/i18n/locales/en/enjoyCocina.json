@@ -1,0 +1,33 @@
+{
+  "seo": {
+    "title": "Pairing with Caribbean Cuisine · Kibay at Ocoa Bay",
+    "description": "Kibay pairs with ceviche, fresh seafood, soft cheeses, and farm-to-table cooking. Try the Casa Club menu at Ocoa Bay, at a table with a view over the valley."
+  },
+  "hero": {
+    "eyebrow": "Reason #3 · A Way to Enjoy Kibay",
+    "title": "The table, the wine, the Caribbean",
+    "lead": "Ceviche, seafood, fresh cheese, farm-to-table cooking. Kibay isn't a side note — it's part of the plate.",
+    "imageAlt": "Caribbean dish paired with a glass of Kibay sparkling at Casa Club",
+    "ctaBlog": "Read the blog",
+    "ctaBook": "Book your experience"
+  },
+  "story": {
+    "heading": "Caribbean wine, Caribbean food, same origin",
+    "p1": "Some wines were made for a cuisine they've never met. Kibay wasn't. The sparkling of mango and passion fruit grew on the same property where the ingredients on the Casa Club table are harvested — the same sun, the same soil, the same Atlantic wind. That's why it converses with the food instead of competing with it.",
+    "p2": "Try it with a fresh ceviche: the acidity of the Kibay clears the palate and the citrus in the dish stays bright. With a soft goat cheese, the fruit of the wine rounds out and turns almost creamy. With a baked mahi-mahi, the tropical aromatics sit beside the fish like family.",
+    "p3": "The menu shifts with the season because the property shifts with the season. That's part of the deal. Book a table, let the kitchen team choose, and taste a Caribbean that rarely makes it into a glass."
+  },
+  "galleryHeading": "Plates and pairings at Casa Club",
+  "experiences": {
+    "heading": "Experiences at Ocoa Bay",
+    "subheading": "Book your day at the Caribbean's working vineyard — tour, tasting, and farm-to-table dining.",
+    "loading": "Loading experiences...",
+    "reserve": "Book",
+    "perPerson": "/ person"
+  },
+  "closing": {
+    "heading": "Want a different way to enjoy Kibay?",
+    "body": "Five reasons to open a bottle at Ocoa Bay. This is just one of them.",
+    "cta": "View all 5 ways"
+  }
+}

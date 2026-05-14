@@ -1,0 +1,33 @@
+{
+  "seo": {
+    "title": "Lectura y silencio en el viñedo · Kibay en Ocoa Bay",
+    "description": "Una silla, un libro, una copa y la bahía al fondo. Retiro de tarde en la bodega de Ocoa Bay — el plan que no sabías que necesitabas."
+  },
+  "hero": {
+    "eyebrow": "Razón #5 · Forma de disfrutar Kibay",
+    "title": "Una silla, un libro, una copa",
+    "lead": "El viñedo en silencio, la bahía al fondo, una copa de Kibay que dura toda la tarde. Lo que necesitabas sin saberlo.",
+    "imageAlt": "Persona leyendo en el viñedo de Ocoa Bay con una copa de Kibay",
+    "ctaBlog": "Lee el blog",
+    "ctaBook": "Reserva tu experiencia"
+  },
+  "story": {
+    "heading": "El lujo de no hacer nada",
+    "p1": "Hay un punto del viñedo donde el ruido del mundo se desactiva. Está entre las hileras viejas, cerca de la bodega, donde el viento es constante y casi nadie llega. Una silla, una sombra, una mesita baja, y ya tienes el plan armado.",
+    "p2": "Abres el libro que llevas semanas posponiendo. Sirves la copa. El Kibay aquí no se bebe rápido — se queda contigo, se calienta un grado, se entrega de a poco. La acidez sostiene la tarde y los aromas de mango y chinola van apareciendo según va bajando el sol.",
+    "p3": "No hay programa. No hay reloj. No hay nadie esperándote. Solo el viñedo del Caribe haciendo lo suyo y tú haciendo lo tuyo — leer, mirar la bahía, no contestar el teléfono. Es la forma más subestimada de pasar un sábado en Ocoa Bay, y posiblemente la mejor."
+  },
+  "galleryHeading": "Tardes lentas en el viñedo",
+  "experiences": {
+    "heading": "Experiencias en Ocoa Bay",
+    "subheading": "Reserva tu día en el viñedo del Caribe — tour, cata y cocina del campo a la mesa.",
+    "loading": "Cargando experiencias...",
+    "reserve": "Reservar",
+    "perPerson": "/ persona"
+  },
+  "closing": {
+    "heading": "¿Otra forma de disfrutar Kibay?",
+    "body": "Cinco razones para abrir una botella en Bahía de Ocoa. Esta es solo una.",
+    "cta": "Ver las 5 formas"
+  }
+}

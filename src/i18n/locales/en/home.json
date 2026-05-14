@@ -60,13 +60,55 @@
     "body": "Kibay Sparkling is presented in a sleek 250ml aluminum can — a modern format that preserves freshness, protects quality, and fits today's lifestyle. Perfectly portioned, easy to chill, and effortless to enjoy, it's sparkling wine reimagined for beaches, rooftops, gatherings, and relaxed moments at home."
   },
   "enjoy": {
-    "heading": "How to Enjoy Kibay Sparkling",
-    "body": "Serve well chilled. Enjoy Kibay Sparkling on its own or paired with light dishes, seafood, fresh salads, tropical cuisine, or soft cheeses. Its natural acidity and gentle fruit character make it ideal for warm climates and social occasions — from casual afternoons to elegant evenings.",
-    "steps": {
-      "chill": "Chill",
-      "pop": "Pop",
-      "enjoy": "Enjoy"
-    }
+    "heading": "Five ways to enjoy Kibay",
+    "subheading": "Each with its own reason to open a bottle at Bahía de Ocoa.",
+    "ways": [
+      {
+        "slug": "amanecer",
+        "kicker": "Way #1",
+        "title": "Sunrise walk through the vineyard",
+        "lead": "Walking through the vines with a glass at sunrise. Golden light, the quiet of the valley, and a Kibay in hand — the most intimate way to start the day at Bahía de Ocoa.",
+        "image": "https://res.cloudinary.com/dwewurxla/image/upload/v1778724993/Babula_Shots_Rd_-75_doytfj.webp",
+        "imageAlt": "Couple walking through the Kibay vineyard at sunrise with glasses in hand",
+        "cta": "Read more"
+      },
+      {
+        "slug": "amigos",
+        "kicker": "Way #2",
+        "title": "Friends gathering at Casa Club",
+        "lead": "Bring your friends to Casa Club: à la carte food, glasses poured at a long table, and hours that slip away facing the bay. No rush, no pretense.",
+        "image": "https://res.cloudinary.com/dwewurxla/image/upload/v1778724134/Babula_Shots_Rd_-60_dbwlky.webp",
+        "imageAlt": "Friends toasting with Kibay at Casa Club Ocoa Bay",
+        "cta": "Read more"
+      },
+      {
+        "slug": "cocina",
+        "kicker": "Way #3",
+        "title": "Paired with Caribbean cuisine",
+        "lead": "Kibay pairs with ceviche, seafood, soft cheeses, and Caribbean cooking. Taste our menu at the winery, at a table with a view of the valley.",
+        "image": "https://res.cloudinary.com/dwewurxla/image/upload/v1778724491/Babula_Shots_Rd_-17_lmekvu.webp",
+        "imageAlt": "Caribbean cuisine plate paired with a glass of Kibay Sparkling",
+        "cta": "Read more"
+      },
+      {
+        "slug": "piscina",
+        "kicker": "Way #4",
+        "title": "Afternoon at the pool, can in hand",
+        "lead": "Stone floors, clear water, a cold can of Kibay Sparkling in your hand. The plan for doing nothing — done right.",
+        "image": "https://res.cloudinary.com/dwewurxla/image/upload/v1778724366/casa_Club_kibay_ocoa_bay_picina_fxtzv8.webp",
+        "imageAlt": "Casa Club pool at Ocoa Bay with Kibay Sparkling in a can",
+        "cta": "Read more"
+      },
+      {
+        "slug": "lectura",
+        "kicker": "Way #5",
+        "title": "Reading and quiet at the winery",
+        "lead": "A chair, a book, a glass, and the sea in the distance. What you needed without knowing. Book an afternoon retreat at the Ocoa Bay winery.",
+        "image": "https://res.cloudinary.com/dwewurxla/image/upload/v1778724587/Babula_Shots_Rd_-63_pronhr.webp",
+        "imageAlt": "Person reading with a glass of Kibay in the Ocoa Bay vineyard",
+        "cta": "Read more"
+      }
+    ]
   },
   "tropics": {
     "heading": "Inspired by the Tropics",

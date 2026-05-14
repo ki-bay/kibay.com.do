@@ -60,13 +60,55 @@
     "body": "Kibay Espumante se presenta en una elegante lata de aluminio de 250 ml — un formato moderno que preserva la frescura, protege la calidad y se adapta al estilo de vida actual. Perfectamente porcionado, fácil de enfriar y sin esfuerzo para disfrutar: espumante reinventado para playas, terrazas, reuniones y momentos relajados en casa."
   },
   "enjoy": {
-    "heading": "Cómo Disfrutar Kibay Espumante",
-    "body": "Servir bien frío. Disfruta Kibay Espumante solo o acompañado de platos ligeros, mariscos, ensaladas frescas, cocina tropical o quesos suaves. Su acidez natural y su carácter frutal lo hacen ideal para climas cálidos y ocasiones sociales — desde tardes informales hasta noches elegantes.",
-    "steps": {
-      "chill": "Enfría",
-      "pop": "Abre",
-      "enjoy": "Disfruta"
-    }
+    "heading": "Cinco formas de disfrutar Kibay",
+    "subheading": "Cada una con su propia razón para abrir una botella en Bahía de Ocoa.",
+    "ways": [
+      {
+        "slug": "amanecer",
+        "kicker": "Razón #1",
+        "title": "Paseo al amanecer en el viñedo",
+        "lead": "Caminar entre las viñas con una copa al amanecer. La luz dorada, el silencio del valle y un Kibay en la mano — la forma más íntima de empezar el día en Bahía de Ocoa.",
+        "image": "https://res.cloudinary.com/dwewurxla/image/upload/v1778724993/Babula_Shots_Rd_-75_doytfj.webp",
+        "imageAlt": "Pareja caminando por el viñedo de Kibay al amanecer con copas en la mano",
+        "cta": "Leer más"
+      },
+      {
+        "slug": "amigos",
+        "kicker": "Razón #2",
+        "title": "Reunión con amigos en Casa Club",
+        "lead": "Trae a tus amigos a Casa Club: comida a la carta, copas servidas en mesa larga y horas que se pierden frente a la bahía. Sin prisa, sin pretensiones.",
+        "image": "https://res.cloudinary.com/dwewurxla/image/upload/v1778724134/Babula_Shots_Rd_-60_dbwlky.webp",
+        "imageAlt": "Grupo de amigos brindando con Kibay en Casa Club Ocoa Bay",
+        "cta": "Leer más"
+      },
+      {
+        "slug": "cocina",
+        "kicker": "Razón #3",
+        "title": "Maridaje con cocina caribeña",
+        "lead": "Kibay marida con ceviche, mariscos, quesos suaves y cocina caribeña. Prueba nuestra carta en la bodega, en una mesa con vista al valle.",
+        "image": "https://res.cloudinary.com/dwewurxla/image/upload/v1778724491/Babula_Shots_Rd_-17_lmekvu.webp",
+        "imageAlt": "Plato de cocina caribeña maridado con copa de Kibay espumante",
+        "cta": "Leer más"
+      },
+      {
+        "slug": "piscina",
+        "kicker": "Razón #4",
+        "title": "Tarde en la piscina con lata fría",
+        "lead": "Pisos de piedra, agua cristalina, una lata fría de Kibay Espumante en la mano. El plan para no hacer nada — bien hecho.",
+        "image": "https://res.cloudinary.com/dwewurxla/image/upload/v1778724366/casa_Club_kibay_ocoa_bay_picina_fxtzv8.webp",
+        "imageAlt": "Piscina de Casa Club en Ocoa Bay con Kibay Espumante en lata",
+        "cta": "Leer más"
+      },
+      {
+        "slug": "lectura",
+        "kicker": "Razón #5",
+        "title": "Lectura y silencio en el viñedo",
+        "lead": "Una silla, un libro, una copa y el mar al fondo. Lo que necesitabas sin saberlo. Reserva una tarde de retiro en la bodega de Ocoa Bay.",
+        "image": "https://res.cloudinary.com/dwewurxla/image/upload/v1778724587/Babula_Shots_Rd_-63_pronhr.webp",
+        "imageAlt": "Persona leyendo con copa de Kibay en el viñedo de Ocoa Bay",
+        "cta": "Leer más"
+      }
+    ]
   },
   "tropics": {
     "heading": "Inspirado por los Trópicos",

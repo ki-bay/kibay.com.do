@@ -1,0 +1,33 @@
+{
+  "seo": {
+    "title": "Sunrise in the Vineyard · Kibay at Ocoa Bay",
+    "description": "Walking the vines at sunrise with a glass of Kibay. Golden light, the quiet of the valley, and the Atlantic breeze — the most intimate way to begin a day at Ocoa Bay."
+  },
+  "hero": {
+    "eyebrow": "Reason #1 · A Way to Enjoy Kibay",
+    "title": "Sunrise in the vineyard",
+    "lead": "A glass, the golden light, a valley still asleep. That's how the day begins when it begins at Ocoa Bay.",
+    "imageAlt": "Sunrise over the Ocoa Bay vineyard — Caribbean Kibay wine at dawn",
+    "ctaBlog": "Read the blog",
+    "ctaBook": "Book your experience"
+  },
+  "story": {
+    "heading": "The valley hasn't fully woken up yet",
+    "p1": "You arrive early, with the freshness of dawn still on the soil. The sky is turning from blue to gold, and the vines, lined toward the bay, seem to hold their breath. Ocoa Bay at this hour doesn't look like anywhere else in the Caribbean — it's a working vineyard in silence, with the sea behind it.",
+    "p2": "You walk slowly between the rows. A glass of Kibay in your hand, still cold. The tropical sparkling of mango and passion fruit tastes different at sunrise: subtler, cleaner, closer to the raw fruit. It's the same wine — but the moment gives it back what nighttime tends to take away.",
+    "p3": "You don't have to say anything. You don't have to take photos. Just breathe, look, and let the day start the way good days start: unhurried, with a glass, in a place that matters."
+  },
+  "galleryHeading": "Sunrise scenes at Ocoa Bay",
+  "experiences": {
+    "heading": "Experiences at Ocoa Bay",
+    "subheading": "Book your day at the Caribbean's working vineyard — tour, tasting, and farm-to-table dining.",
+    "loading": "Loading experiences...",
+    "reserve": "Book",
+    "perPerson": "/ person"
+  },
+  "closing": {
+    "heading": "Want a different way to enjoy Kibay?",
+    "body": "Five reasons to open a bottle at Ocoa Bay. This is just one of them.",
+    "cta": "View all 5 ways"
+  }
+}

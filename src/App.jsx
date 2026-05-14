@@ -21,6 +21,13 @@ const ContactPage = lazy(() => import('./pages/ContactPage'));
 const VineAndBarrelPage = lazy(() => import('./pages/VineAndBarrelPage'));
 const DiagnosticPage = lazy(() => import('./pages/DiagnosticPage'));
 
+// "Ways to Enjoy" experience landing pages
+const EnjoyAmanecerPage = lazy(() => import('./pages/enjoy/EnjoyAmanecerPage'));
+const EnjoyAmigosPage = lazy(() => import('./pages/enjoy/EnjoyAmigosPage'));
+const EnjoyCocinaPage = lazy(() => import('./pages/enjoy/EnjoyCocinaPage'));
+const EnjoyPiscinaPage = lazy(() => import('./pages/enjoy/EnjoyPiscinaPage'));
+const EnjoyLecturaPage = lazy(() => import('./pages/enjoy/EnjoyLecturaPage'));
+
 // Ingredient Pages
 const MangoPage = lazy(() => import('./pages/MangoPage'));
 const PassionFruitPage = lazy(() => import('./pages/PassionFruitPage'));
@@ -95,6 +102,13 @@ function App() {
               <Route path="/shop" element={<ShopPage />} />
               <Route path="/vine-and-barrel" element={<VineAndBarrelPage />} />
               <Route path="/diagnostic" element={<DiagnosticPage />} />
+
+              {/* "Ways to Enjoy" — narrative landing pages linked from HomePage */}
+              <Route path="/enjoy/amanecer" element={<EnjoyAmanecerPage />} />
+              <Route path="/enjoy/amigos" element={<EnjoyAmigosPage />} />
+              <Route path="/enjoy/cocina" element={<EnjoyCocinaPage />} />
+              <Route path="/enjoy/piscina" element={<EnjoyPiscinaPage />} />
+              <Route path="/enjoy/lectura" element={<EnjoyLecturaPage />} />
 
               <Route path="/mango" element={<MangoPage />} />
               <Route path="/passion-fruit" element={<PassionFruitPage />} />

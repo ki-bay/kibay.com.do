@@ -366,65 +366,69 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* How to Enjoy Section */}
-      <section className="relative z-10 py-24 px-4 sm:px-6 lg:px-8 bg-background font-lato">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-             <m.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="order-2 lg:order-1"
+      {/* How to Enjoy — 5 ways, full-width hero strips */}
+      <section className="relative z-10 bg-background font-lato">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12 text-center">
+          <m.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-foreground mb-4">
+              {t('enjoy.heading')}
+            </h2>
+            <div className="w-20 h-1 bg-[#D4A574] mx-auto mb-6"></div>
+            <p className="text-foreground/70 text-lg font-light max-w-2xl mx-auto">
+              {t('enjoy.subheading')}
+            </p>
+          </m.div>
+        </div>
+
+        <div className="space-y-0">
+          {(t('enjoy.ways', { returnObjects: true }) || []).map((way, idx) => (
+            <m.article
+              key={way.slug}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true, amount: 0.2 }}
+              className="relative w-full overflow-hidden"
             >
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-foreground mb-6">
-                {t('enjoy.heading')}
-              </h2>
-              <div className="w-20 h-1 bg-orange-500 mb-8"></div>
-              <p className="text-foreground/70 text-lg font-light leading-relaxed mb-6">
-                {t('enjoy.body')}
-              </p>
-              <div className="flex gap-6 mt-8">
-                <div className="flex flex-col items-center">
-                  <div className="w-12 h-12 rounded-full bg-foreground/5 flex items-center justify-center mb-2">
-                    <GlassWater className="w-6 h-6 text-orange-400" aria-hidden="true" />
+              <div className="relative w-full h-[70vh] sm:h-[60vh] lg:h-[80vh] min-h-[480px]">
+                <img
+                  src={way.image}
+                  alt={way.imageAlt}
+                  width="2400"
+                  height="1600"
+                  loading={idx < 2 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className={`absolute inset-0 bg-gradient-to-r ${idx % 2 === 0 ? 'from-black/75 via-black/40 to-transparent' : 'from-transparent via-black/40 to-black/75'}`}></div>
+
+                <div className={`relative h-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 flex flex-col justify-center ${idx % 2 === 0 ? 'items-start text-left' : 'items-start lg:items-end lg:text-right'}`}>
+                  <div className={`max-w-xl ${idx % 2 === 0 ? '' : 'lg:ml-auto'}`}>
+                    <span className="inline-block text-xs sm:text-sm uppercase tracking-[0.3em] text-[#D4A574] font-medium mb-4">
+                      {way.kicker}
+                    </span>
+                    <h3 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white leading-tight mb-5 drop-shadow-lg">
+                      {way.title}
+                    </h3>
+                    <p className="text-base sm:text-lg text-white/90 font-light leading-relaxed mb-8 drop-shadow">
+                      {way.lead}
+                    </p>
+                    <Link to={`/enjoy/${way.slug}`}>
+                      <span className="inline-flex items-center gap-2 px-6 py-3 bg-[#D4A574] text-foreground font-medium rounded-full hover:bg-[#c29462] transition-all shadow-lg hover:shadow-xl hover:scale-105">
+                        {way.cta}
+                        <ArrowRight className="w-4 h-4" />
+                      </span>
+                    </Link>
                   </div>
-                  <span className="text-xs text-foreground/50 uppercase tracking-widest">{t('enjoy.steps.chill')}</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <div className="w-12 h-12 rounded-full bg-foreground/5 flex items-center justify-center mb-2">
-                    <Zap className="w-6 h-6 text-orange-400" aria-hidden="true" />
-                  </div>
-                  <span className="text-xs text-foreground/50 uppercase tracking-widest">{t('enjoy.steps.pop')}</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <div className="w-12 h-12 rounded-full bg-foreground/5 flex items-center justify-center mb-2">
-                    <Leaf className="w-6 h-6 text-orange-400" aria-hidden="true" />
-                  </div>
-                  <span className="text-xs text-foreground/50 uppercase tracking-widest">{t('enjoy.steps.enjoy')}</span>
                 </div>
               </div>
-            </m.div>
-            
-            <m.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className="relative order-1 lg:order-2 h-[400px] lg:h-[500px] rounded-3xl overflow-hidden shadow-2xl"
-            >
-               <img
-                src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=2787&auto=format&fit=crop"
-                alt="Chilled sparkling wine glass in tropical setting"
-                width="1200"
-                height="900"
-                loading="lazy"
-                decoding="async"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent"></div>
-            </m.div>
-          </div>
+            </m.article>
+          ))}
         </div>
       </section>
 

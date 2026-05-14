@@ -1,0 +1,33 @@
+{
+  "seo": {
+    "title": "Pool Afternoon with Kibay in a Can · Ocoa Bay",
+    "description": "A pool overlooking the Bay of Ocoa, a cold can of Kibay Sparkling in your hand, and nothing to do. The simplest Caribbean plan, done right."
+  },
+  "hero": {
+    "eyebrow": "Reason #4 · A Way to Enjoy Kibay",
+    "title": "Pool, cold can, nothing else",
+    "lead": "Stone floor, clear water, a can of Kibay always within reach. The plan to do nothing — done right.",
+    "imageAlt": "Casa Club pool at Ocoa Bay with a can of Kibay Sparkling and Caribbean view",
+    "ctaBlog": "Read the blog",
+    "ctaBook": "Book your experience"
+  },
+  "story": {
+    "heading": "The easiest plan of the weekend",
+    "p1": "The Casa Club pool sits up high, looking out toward the bay. The water stays cold even at noon and the Atlantic wind slips through the palms. You don't need to dress up. You don't need a reservation to swim. It's that kind of place.",
+    "p2": "The Kibay can was made for exactly this. 250 ml, aluminum, chills in minutes, doesn't break, doesn't need a glass. You grab one from the cooler, slip into the water, climb out wet, and it's still there waiting, still cold. The tropical sparkling tastes different when you're floating — cleaner, closer to the raw passion fruit.",
+    "p3": "Spend the afternoon like that. Read a little. Talk less. Get back in the water. When the sun starts dropping and the bay turns pink, you'll still have time for one last can before Casa Club closes."
+  },
+  "galleryHeading": "Pool and bay at Casa Club",
+  "experiences": {
+    "heading": "Experiences at Ocoa Bay",
+    "subheading": "Book your day at the Caribbean's working vineyard — tour, tasting, and farm-to-table dining.",
+    "loading": "Loading experiences...",
+    "reserve": "Book",
+    "perPerson": "/ person"
+  },
+  "closing": {
+    "heading": "Want a different way to enjoy Kibay?",
+    "body": "Five reasons to open a bottle at Ocoa Bay. This is just one of them.",
+    "cta": "View all 5 ways"
+  }
+}

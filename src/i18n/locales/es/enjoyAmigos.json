@@ -1,0 +1,33 @@
+{
+  "seo": {
+    "title": "Reunión con amigos en Casa Club · Kibay en Ocoa Bay",
+    "description": "Trae a los tuyos a Casa Club: mesa larga frente a la bahía, copas servidas con calma y cocina caribeña sin pretensiones. La forma honesta de pasar el sábado en Bahía de Ocoa."
+  },
+  "hero": {
+    "eyebrow": "Razón #2 · Forma de disfrutar Kibay",
+    "title": "Tu gente, Casa Club, sin prisa",
+    "lead": "Mesa larga, copas que no se vacían, conversación que se alarga. Casa Club en Ocoa Bay fue hecha para que el sábado dure todo lo que tenga que durar.",
+    "imageAlt": "Grupo de amigos en Casa Club de Ocoa Bay brindando con Kibay frente a la bahía",
+    "ctaBlog": "Lee el blog",
+    "ctaBook": "Reserva tu experiencia"
+  },
+  "story": {
+    "heading": "Lo bueno de la mesa larga",
+    "p1": "Llegas con la gente con la que se puede no hablar de nada. La Casa Club tiene esa cosa que tienen pocos lugares en la Dominicana: te recibe sin protocolos. Te sientas, miras la bahía, alguien pide la primera botella de Kibay y ya no hace falta mucho más para que la tarde empiece.",
+    "p2": "La carta es honesta — cocina caribeña del campo a la mesa, lo que está bueno ese día, lo que llegó de la finca. Un ceviche, unos quesos, un plato fuerte para compartir. Las copas se sirven con calma, el espumante se mantiene frío, el sol baja sin que te enteres.",
+    "p3": "No es un brunch de Instagram. Es una mesa con tu gente, en un viñedo del Caribe, con vinos hechos a dos horas de Santo Domingo. Cuando te quieras dar cuenta, ya están planeando el próximo sábado."
+  },
+  "galleryHeading": "Sábados en Casa Club",
+  "experiences": {
+    "heading": "Experiencias en Ocoa Bay",
+    "subheading": "Reserva tu día en el viñedo del Caribe — tour, cata y cocina del campo a la mesa.",
+    "loading": "Cargando experiencias...",
+    "reserve": "Reservar",
+    "perPerson": "/ persona"
+  },
+  "closing": {
+    "heading": "¿Otra forma de disfrutar Kibay?",
+    "body": "Cinco razones para abrir una botella en Bahía de Ocoa. Esta es solo una.",
+    "cta": "Ver las 5 formas"
+  }
+}

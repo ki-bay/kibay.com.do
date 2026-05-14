@@ -1,0 +1,33 @@
+{
+  "seo": {
+    "title": "Tarde en la piscina con Kibay en lata · Ocoa Bay",
+    "description": "Piscina con vista a Bahía de Ocoa, una lata fría de Kibay Espumante en la mano y nada por hacer. El plan más sencillo del Caribe, bien hecho."
+  },
+  "hero": {
+    "eyebrow": "Razón #4 · Forma de disfrutar Kibay",
+    "title": "Piscina, lata fría, nada más",
+    "lead": "Piso de piedra, agua cristalina, una lata de Kibay siempre a mano. El plan para no hacer nada — bien hecho.",
+    "imageAlt": "Piscina de Casa Club en Ocoa Bay con lata de Kibay Espumante y vista al Caribe",
+    "ctaBlog": "Lee el blog",
+    "ctaBook": "Reserva tu experiencia"
+  },
+  "story": {
+    "heading": "El plan más fácil del fin de semana",
+    "p1": "La piscina de Casa Club queda en lo alto, mirando hacia la bahía. El agua está fría incluso al mediodía y el viento del Atlántico se cuela entre las palmas. No tienes que llegar elegante. No tienes que pedir reserva para nadar. Es ese tipo de lugar.",
+    "p2": "La lata de Kibay fue hecha exactamente para esto. 250 ml, aluminio, se enfría en minutos, no se rompe, no necesita copa. Tomas una de la nevera, te tiras al agua, sales mojado y sigue ahí, fría, esperándote. El espumante tropical sabe distinto cuando estás flotando — más limpio, más cercano a la chinola.",
+    "p3": "Pasa la tarde así. Lee un poco. Habla poco. Métete al agua de nuevo. Cuando el sol empiece a bajar y la bahía se ponga rosa, todavía vas a tener tiempo para una última lata antes de que cierre la Casa Club."
+  },
+  "galleryHeading": "Piscina y bahía en Casa Club",
+  "experiences": {
+    "heading": "Experiencias en Ocoa Bay",
+    "subheading": "Reserva tu día en el viñedo del Caribe — tour, cata y cocina del campo a la mesa.",
+    "loading": "Cargando experiencias...",
+    "reserve": "Reservar",
+    "perPerson": "/ persona"
+  },
+  "closing": {
+    "heading": "¿Otra forma de disfrutar Kibay?",
+    "body": "Cinco razones para abrir una botella en Bahía de Ocoa. Esta es solo una.",
+    "cta": "Ver las 5 formas"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "seo": {
+    "title": "Maridaje con cocina caribeña · Kibay en Ocoa Bay",
+    "description": "Kibay marida con ceviche, mariscos frescos, quesos suaves y cocina del campo a la mesa. Prueba la carta de Casa Club en Bahía de Ocoa, en una mesa con vista al valle."
+  },
+  "hero": {
+    "eyebrow": "Razón #3 · Forma de disfrutar Kibay",
+    "title": "La mesa, el vino, el Caribe",
+    "lead": "Ceviche, mariscos, queso fresco, cocina del campo a la mesa. Kibay no es un acompañante — es parte del plato.",
+    "imageAlt": "Plato de cocina caribeña maridado con copa de Kibay espumante en Casa Club",
+    "ctaBlog": "Lee el blog",
+    "ctaBook": "Reserva tu experiencia"
+  },
+  "story": {
+    "heading": "Vino caribeño, comida caribeña, mismo origen",
+    "p1": "Hay vinos que se hicieron para una cocina que no conocen. Kibay no. El espumante de mango y chinola creció en la misma finca donde se cosechan los ingredientes que llegan a la mesa de Casa Club — el mismo sol, la misma tierra, el mismo viento atlántico. Por eso conversa con la comida en vez de competir con ella.",
+    "p2": "Pruébalo con un ceviche fresco: la acidez del Kibay limpia el paladar y los cítricos del plato se quedan brillando. Con un queso de cabra suave, la fruta del vino se redondea y se vuelve casi cremosa. Con un mahi-mahi al horno, los aromas tropicales se sientan al lado del pescado como si fueran de la familia.",
+    "p3": "El menú cambia con la temporada porque la finca cambia con la temporada. Eso también es parte del trato. Reserva una mesa, deja que el equipo de la cocina escoja, y prueba un Caribe que rara vez se sirve en copa."
+  },
+  "galleryHeading": "Cocina y maridajes en Casa Club",
+  "experiences": {
+    "heading": "Experiencias en Ocoa Bay",
+    "subheading": "Reserva tu día en el viñedo del Caribe — tour, cata y cocina del campo a la mesa.",
+    "loading": "Cargando experiencias...",
+    "reserve": "Reservar",
+    "perPerson": "/ persona"
+  },
+  "closing": {
+    "heading": "¿Otra forma de disfrutar Kibay?",
+    "body": "Cinco razones para abrir una botella en Bahía de Ocoa. Esta es solo una.",
+    "cta": "Ver las 5 formas"
+  }
+}

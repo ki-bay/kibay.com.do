@@ -38,6 +38,11 @@ import esMango from './locales/es/mango.json';
 import esPassionFruit from './locales/es/passionFruit.json';
 import esWhyCans from './locales/es/whyCans.json';
 import esVineAndBarrel from './locales/es/vineAndBarrel.json';
+import esEnjoyAmanecer from './locales/es/enjoyAmanecer.json';
+import esEnjoyAmigos from './locales/es/enjoyAmigos.json';
+import esEnjoyCocina from './locales/es/enjoyCocina.json';
+import esEnjoyPiscina from './locales/es/enjoyPiscina.json';
+import esEnjoyLectura from './locales/es/enjoyLectura.json';
 
 // Ecommerce admin
 import esAdminOrders from './locales/es/adminOrders.json';
@@ -123,6 +128,11 @@ import enMango from './locales/en/mango.json';
 import enPassionFruit from './locales/en/passionFruit.json';
 import enWhyCans from './locales/en/whyCans.json';
 import enVineAndBarrel from './locales/en/vineAndBarrel.json';
+import enEnjoyAmanecer from './locales/en/enjoyAmanecer.json';
+import enEnjoyAmigos from './locales/en/enjoyAmigos.json';
+import enEnjoyCocina from './locales/en/enjoyCocina.json';
+import enEnjoyPiscina from './locales/en/enjoyPiscina.json';
+import enEnjoyLectura from './locales/en/enjoyLectura.json';
 
 import enAdminOrders from './locales/en/adminOrders.json';
 import enAdminProducts from './locales/en/adminProducts.json';
@@ -203,6 +213,11 @@ const resources = {
     passionFruit: esPassionFruit,
     whyCans: esWhyCans,
     vineAndBarrel: esVineAndBarrel,
+    enjoyAmanecer: esEnjoyAmanecer,
+    enjoyAmigos: esEnjoyAmigos,
+    enjoyCocina: esEnjoyCocina,
+    enjoyPiscina: esEnjoyPiscina,
+    enjoyLectura: esEnjoyLectura,
     adminOrders: esAdminOrders,
     adminProducts: esAdminProducts,
     adminProductForm: esAdminProductForm,
@@ -279,6 +294,11 @@ const resources = {
     passionFruit: enPassionFruit,
     whyCans: enWhyCans,
     vineAndBarrel: enVineAndBarrel,
+    enjoyAmanecer: enEnjoyAmanecer,
+    enjoyAmigos: enEnjoyAmigos,
+    enjoyCocina: enEnjoyCocina,
+    enjoyPiscina: enEnjoyPiscina,
+    enjoyLectura: enEnjoyLectura,
     adminOrders: enAdminOrders,
     adminProducts: enAdminProducts,
     adminProductForm: enAdminProductForm,
@@ -342,6 +362,7 @@ i18n
       'terms', 'privacy', 'shippingReturns',
       'productSparklingBottle', 'productSparklingCan', 'productSparklingMain', 'productWine',
       'mango', 'passionFruit', 'whyCans', 'vineAndBarrel',
+      'enjoyAmanecer', 'enjoyAmigos', 'enjoyCocina', 'enjoyPiscina', 'enjoyLectura',
       'adminOrders', 'adminProducts', 'adminProductForm', 'adminCustomers',
       'adminCoupons', 'adminAnalytics', 'adminShipping',
       'adminApiKeys', 'adminLogs', 'adminNewsletter',

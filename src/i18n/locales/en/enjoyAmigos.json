@@ -1,0 +1,33 @@
+{
+  "seo": {
+    "title": "Friends at Casa Club · Kibay at Ocoa Bay",
+    "description": "Bring your people to Casa Club: a long table facing the bay, glasses poured without rush, and unpretentious Caribbean cooking. The honest way to spend Saturday at Ocoa Bay."
+  },
+  "hero": {
+    "eyebrow": "Reason #2 · A Way to Enjoy Kibay",
+    "title": "Your people, Casa Club, no rush",
+    "lead": "A long table, glasses that don't stay empty, conversation that runs long. Casa Club at Ocoa Bay was built to let Saturday last as long as it needs to.",
+    "imageAlt": "Friends at Ocoa Bay's Casa Club toasting with Kibay overlooking the bay",
+    "ctaBlog": "Read the blog",
+    "ctaBook": "Book your experience"
+  },
+  "story": {
+    "heading": "The good thing about a long table",
+    "p1": "You arrive with the kind of people you can sit quiet with. Casa Club has that thing few places in the Dominican Republic have: it welcomes you without protocol. You sit down, you look at the bay, someone orders the first bottle of Kibay, and the afternoon doesn't need much more to begin.",
+    "p2": "The menu is honest — farm-to-table Caribbean cooking, whatever the kitchen is doing well that day, whatever came in fresh from the property. A ceviche, some cheeses, a shared main. Glasses are poured slowly, the sparkling stays cold, the sun goes down without you noticing.",
+    "p3": "This isn't an Instagram brunch. It's a table with your people, in a Caribbean vineyard, with wines made two hours from Santo Domingo. By the time you look up, you're already planning the next Saturday."
+  },
+  "galleryHeading": "Saturdays at Casa Club",
+  "experiences": {
+    "heading": "Experiences at Ocoa Bay",
+    "subheading": "Book your day at the Caribbean's working vineyard — tour, tasting, and farm-to-table dining.",
+    "loading": "Loading experiences...",
+    "reserve": "Book",
+    "perPerson": "/ person"
+  },
+  "closing": {
+    "heading": "Want a different way to enjoy Kibay?",
+    "body": "Five reasons to open a bottle at Ocoa Bay. This is just one of them.",
+    "cta": "View all 5 ways"
+  }
+}

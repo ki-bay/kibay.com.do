@@ -1,0 +1,33 @@
+{
+  "seo": {
+    "title": "Reading and Quiet in the Vineyard · Kibay at Ocoa Bay",
+    "description": "A chair, a book, a glass, and the bay in the distance. An afternoon retreat at the Ocoa Bay winery — the plan you didn't know you needed."
+  },
+  "hero": {
+    "eyebrow": "Reason #5 · A Way to Enjoy Kibay",
+    "title": "A chair, a book, a glass",
+    "lead": "The vineyard in silence, the bay in the distance, a glass of Kibay that lasts the whole afternoon. The thing you didn't know you needed.",
+    "imageAlt": "Person reading in the Ocoa Bay vineyard with a glass of Kibay",
+    "ctaBlog": "Read the blog",
+    "ctaBook": "Book your experience"
+  },
+  "story": {
+    "heading": "The luxury of doing nothing",
+    "p1": "There's a spot in the vineyard where the noise of the world switches off. It's between the older rows, near the winery, where the wind is constant and almost no one wanders through. A chair, a patch of shade, a low table — and the plan builds itself.",
+    "p2": "You open the book you've been putting off for weeks. You pour the glass. Kibay here isn't a drink you rush — it stays with you, warms a single degree, opens up slowly. The acidity holds the afternoon up, and the mango and passion fruit aromatics keep emerging as the sun drops.",
+    "p3": "No agenda. No clock. No one waiting on you. Just the Caribbean's working vineyard doing its thing and you doing yours — reading, watching the bay, ignoring your phone. It's the most underrated way to spend a Saturday at Ocoa Bay, and probably the best."
+  },
+  "galleryHeading": "Slow afternoons in the vineyard",
+  "experiences": {
+    "heading": "Experiences at Ocoa Bay",
+    "subheading": "Book your day at the Caribbean's working vineyard — tour, tasting, and farm-to-table dining.",
+    "loading": "Loading experiences...",
+    "reserve": "Book",
+    "perPerson": "/ person"
+  },
+  "closing": {
+    "heading": "Want a different way to enjoy Kibay?",
+    "body": "Five reasons to open a bottle at Ocoa Bay. This is just one of them.",
+    "cta": "View all 5 ways"
+  }
+}
