@@ -393,29 +393,61 @@ const HomePage = () => {
               whileInView={{ opacity: 1 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true, amount: 0.2 }}
-              className="relative w-full overflow-hidden"
+              className="relative w-full overflow-hidden bg-background"
             >
-              <div className="relative w-full h-[70vh] sm:h-[60vh] lg:h-[80vh] min-h-[480px]">
+              {/* Mobile (<lg): full-bleed cropped hero with text overlay.
+                  Desktop (lg+): split layout — image at its natural ratio
+                  on one side, text on the other. No crop, no ratio change. */}
+              <div className="lg:hidden relative w-full h-[70vh] sm:h-[60vh] min-h-[480px]">
                 <img
                   src={way.image}
                   alt={way.imageAlt}
-                  width="2400"
-                  height="1600"
                   loading={idx < 2 ? 'eager' : 'lazy'}
                   decoding="async"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
                 <div className={`absolute inset-0 bg-gradient-to-r ${idx % 2 === 0 ? 'from-black/75 via-black/40 to-transparent' : 'from-transparent via-black/40 to-black/75'}`}></div>
-
-                <div className={`relative h-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 flex flex-col justify-center ${idx % 2 === 0 ? 'items-start text-left' : 'items-start lg:items-end lg:text-right'}`}>
-                  <div className={`max-w-xl ${idx % 2 === 0 ? '' : 'lg:ml-auto'}`}>
+                <div className={`relative h-full max-w-7xl mx-auto px-6 sm:px-10 flex flex-col justify-center ${idx % 2 === 0 ? 'items-start text-left' : 'items-start'}`}>
+                  <div className="max-w-xl">
                     <span className="inline-block text-xs sm:text-sm uppercase tracking-[0.3em] text-[#D4A574] font-medium mb-4">
                       {way.kicker}
                     </span>
-                    <h3 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white leading-tight mb-5 drop-shadow-lg">
+                    <h3 className="text-3xl sm:text-4xl font-light text-white leading-tight mb-5 drop-shadow-lg">
                       {way.title}
                     </h3>
                     <p className="text-base sm:text-lg text-white/90 font-light leading-relaxed mb-8 drop-shadow">
+                      {way.lead}
+                    </p>
+                    <Link to={`/enjoy/${way.slug}`}>
+                      <span className="inline-flex items-center gap-2 px-6 py-3 bg-[#D4A574] text-foreground font-medium rounded-full hover:bg-[#c29462] transition-all shadow-lg hover:shadow-xl hover:scale-105">
+                        {way.cta}
+                        <ArrowRight className="w-4 h-4" />
+                      </span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              {/* Desktop: grid 2-col with natural-ratio image + text panel */}
+              <div className={`hidden lg:grid lg:grid-cols-2 lg:items-stretch ${idx % 2 === 0 ? '' : 'lg:[direction:rtl]'}`}>
+                <div className="relative bg-background flex items-center justify-center lg:[direction:ltr]">
+                  <img
+                    src={way.image}
+                    alt={way.imageAlt}
+                    loading={idx < 2 ? 'eager' : 'lazy'}
+                    decoding="async"
+                    className="w-full h-auto block"
+                  />
+                </div>
+                <div className="flex flex-col justify-center px-10 xl:px-16 py-12 lg:[direction:ltr]">
+                  <div className="max-w-xl">
+                    <span className="inline-block text-xs uppercase tracking-[0.3em] text-[#D4A574] font-medium mb-4">
+                      {way.kicker}
+                    </span>
+                    <h3 className="text-4xl xl:text-5xl font-light text-foreground leading-tight mb-5">
+                      {way.title}
+                    </h3>
+                    <p className="text-lg text-foreground/70 font-light leading-relaxed mb-8">
                       {way.lead}
                     </p>
                     <Link to={`/enjoy/${way.slug}`}>

@@ -25,8 +25,8 @@ const AboutPage = () => {
       <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden pt-20">
         <div className="absolute inset-0 z-0">
           <img
-            src="https://images.unsplash.com/photo-1602757205362-336105af9324"
-            alt="Lush vineyard showcasing organic agricultural heritage"
+            src="https://res.cloudinary.com/dwewurxla/image/upload/v1778724133/Babula_Shots_Rd_-52_kgalqt.webp"
+            alt="Reunión con amigos en Casa Club Ocoa Bay con Kibay"
             width="1920"
             height="1080"
             fetchPriority="high"
