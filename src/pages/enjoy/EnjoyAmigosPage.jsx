@@ -36,7 +36,7 @@ const EnjoyAmigosPage = () => {
       try {
         const { data, error } = await supabase
           .from('products')
-          .select('id, slug, title_es, title_en, subtitle_es, subtitle_en, thumbnail_url, sort_order, type, status, product_images(url, sort_order), product_variants(price_usd_cents, price_dop_cents, sort_order)')
+          .select('id, slug, title_es, title_en, subtitle_es, subtitle_en, thumbnail_url, sort_order, type, status, product_images(url, sort_order), metadata, product_variants(price_usd_cents, price_dop_cents, sort_order)')
           .eq('type', 'experience')
           .eq('status', 'published')
           .order('sort_order', { ascending: true });
@@ -50,12 +50,16 @@ const EnjoyAmigosPage = () => {
   }, []);
 
   const formatPrice = (p) => {
-    if (!p || !p.product_variants || !p.product_variants.length) return null;
+    if (!p) return null;
+    if (p.metadata?.price_by_consumption) {
+      return { display: lang === 'en' ? 'By consumption' : 'Por consumo', perPerson: false };
+    }
+    if (!p.product_variants || !p.product_variants.length) return null;
     const v = [...p.product_variants].sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))[0];
     const cents = lang === 'en' ? v.price_usd_cents : v.price_dop_cents;
-    if (cents == null) return null;
+    if (cents == null || cents === 0) return null;
     const symbol = lang === 'en' ? 'US$' : 'RD$';
-    return `${symbol}${(cents / 100).toFixed(0)}`;
+    return { display: `${symbol}${(cents / 100).toFixed(0)}`, perPerson: true };
   };
 
   return (
@@ -136,24 +140,22 @@ const EnjoyAmigosPage = () => {
             <m.h2 {...fadeIn} className="text-2xl sm:text-3xl font-serif text-foreground mb-10 text-center">
               {t('galleryHeading')}
             </m.h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+            <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 sm:gap-6 [column-fill:_balance]">
               {GALLERY.map((src, i) => (
                 <m.div
                   key={src}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: i * 0.1 }}
-                  className="relative aspect-[4/5] overflow-hidden rounded-2xl shadow-xl group"
+                  transition={{ duration: 0.6, delay: i * 0.05 }}
+                  className="mb-4 sm:mb-6 break-inside-avoid overflow-hidden rounded-2xl shadow-xl bg-background"
                 >
                   <img
                     src={src}
                     alt={`${t('hero.imageAlt')} — ${i + 1}`}
-                    width="1200"
-                    height="1500"
                     loading="lazy"
                     decoding="async"
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    className="w-full h-auto block hover:scale-[1.02] transition-transform duration-700"
                   />
                 </m.div>
               ))}
@@ -208,7 +210,7 @@ const EnjoyAmigosPage = () => {
                         {subtitle && <p className="text-foreground/60 font-light text-sm mb-4 flex-1">{subtitle}</p>}
                         {price && (
                           <div className="text-2xl font-serif text-foreground mb-4">
-                            {price} <span className="text-xs font-light text-foreground/50">{t('experiences.perPerson')}</span>
+                            {price.display} {price.perPerson && <span className="text-xs font-light text-foreground/50">{t('experiences.perPerson')}</span>}
                           </div>
                         )}
                         <Link to={`/product/${p.slug}`} className="mt-auto">
