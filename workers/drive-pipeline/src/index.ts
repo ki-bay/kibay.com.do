@@ -450,6 +450,11 @@ async function runPipeline(env: Env): Promise<void> {
 	const groups = await listImageGroups(sa, env.GOOGLE_DRIVE_FOLDER_ID);
 	console.log(`pipeline: scanning ${groups.length} groups (${groups.reduce((a, g) => a + g.images.length, 0)} images total)`);
 
+	// ONE blog post per cron run. We iterate the groups in Drive order, skip
+	// anything already processed (incl. failed), and stop after the first
+	// unprocessed group — success or failure. If today's pick errors out,
+	// the next cron picks the next group; we never spam multiple drafts in
+	// a single run.
 	for (const g of groups) {
 		try {
 			if (await isFileProcessed(env, g.key)) continue;
@@ -549,7 +554,12 @@ async function runPipeline(env: Env): Promise<void> {
 				/* swallow */
 			}
 		}
+		// One per run, success or failure. Stop after the first unprocessed
+		// group is handled so a Drive folder with a backlog only drains at
+		// the rate of one post per day.
+		return;
 	}
+	console.log('pipeline: no unprocessed groups remaining in Drive folder — cron is a no-op');
 }
 
 function substitutePlaceholders(html: string, urls: string[], altBase: string): string {
