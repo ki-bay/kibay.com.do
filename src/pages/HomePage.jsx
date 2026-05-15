@@ -10,7 +10,6 @@ import { Button } from '@/components/ui/button';
 import { getProducts } from '@/api/EcommerceApi';
 import SEOHead from '@/components/SEOHead';
 import SchemaMarkup from '@/components/SchemaMarkup';
-import MediaImage from '@/components/MediaImage';
 import { mediaUrl } from '@/config/mediaCdn';
 
 const HomePage = () => {
@@ -67,90 +66,78 @@ const HomePage = () => {
       <Navigation />
 
       <main id="main" role="main">
-      {/* Hero Section */}
-      <section className="relative min-h-screen lg:min-h-[90vh] flex items-center bg-background pt-24 pb-12 lg:pt-32 lg:pb-20 overflow-hidden font-lato">
-        {/* Background Atmosphere */}
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-5 blur-sm"
-          style={{ backgroundImage: `url(${mediaUrl('09a4757f8d6894f3f809efc283dcd8d9.jpg')})` }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background to-background lg:bg-gradient-to-r lg:from-background lg:via-background/95 lg:to-background/50"></div>
+      {/* Hero Section — wide cinematic full-bleed image with text overlay */}
+      <section className="relative min-h-[88vh] lg:min-h-screen flex items-center overflow-hidden font-lato">
+        {/* Background image — fills the section, served from Cloudinary
+            with f_auto for AVIF/WebP, q_auto for quality, and a 2400px cap.
+            object-cover keeps the framing intact across viewports. */}
+        <picture className="absolute inset-0 w-full h-full">
+          <source
+            media="(min-width: 1024px)"
+            srcSet="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_2400/v1778855807/kibay_-vino_iss9fv.webp"
+          />
+          <img
+            src="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_1200/v1778855807/kibay_-vino_iss9fv.webp"
+            alt={t('hero.imgAlt')}
+            width="2428"
+            height="1366"
+            fetchPriority="high"
+            decoding="async"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        </picture>
 
-        {/* Decorative Glows */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-orange-500/10 rounded-full blur-[100px] pointer-events-none translate-x-1/2 -translate-y-1/2"></div>
+        {/* Legibility gradient — heavier on the left (where the text lives)
+            on desktop; vertical fade on mobile so the whole image stays visible. */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/55 to-black/80 lg:bg-gradient-to-r lg:from-black/80 lg:via-black/55 lg:to-transparent"></div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
-
-            {/* Left Column: Content */}
-            <m.div
-              initial="hidden"
-              animate="visible"
-              variants={stagger}
-              className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-6 lg:space-y-8 order-1"
-            >
-              <m.div variants={fadeIn} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-sm font-medium tracking-wider uppercase mb-2">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
-                </span>
-                {t('hero.badge')}
-              </m.div>
-
-              <m.h1 variants={fadeIn} className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-light text-foreground leading-[1.1] tracking-tight">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600 font-normal">
-                  {t('hero.h1')}
-                </span>
-              </m.h1>
-
-              <m.div variants={fadeIn} className="space-y-4 max-w-lg">
-                <p className="text-lg sm:text-xl text-foreground/90 font-light">
-                  {t('hero.tagline')}
-                </p>
-                <p className="text-base text-foreground/60 font-light leading-relaxed">
-                  {t('hero.description')}
-                </p>
-                <p className="text-sm text-foreground/50 font-light italic">
-                  {t('hero.origin')}
-                </p>
-              </m.div>
-
-              <m.div variants={fadeIn} className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto pt-4">
-                <Link to="/shop" className="w-full sm:w-auto">
-                  <Button size="lg" className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white font-normal rounded-full px-8 py-6 text-lg shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_30px_rgba(249,115,22,0.5)] transition-all hover:scale-105">
-                    <ShoppingBag className="mr-2 h-5 w-5" />
-                    {t('hero.ctaShop')}
-                  </Button>
-                </Link>
-                <Link to="/about" className="w-full sm:w-auto">
-                  <Button variant="outline" size="lg" className="w-full sm:w-auto border-foreground/20 hover:bg-foreground/10 text-foreground hover:text-orange-400 font-normal rounded-full px-8 py-6 text-lg">
-                    {t('hero.ctaAbout')}
-                  </Button>
-                </Link>
-              </m.div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full pt-28 pb-16 lg:py-32">
+          <m.div
+            initial="hidden"
+            animate="visible"
+            variants={stagger}
+            className="flex flex-col items-start text-left space-y-6 lg:space-y-8 max-w-2xl"
+          >
+            <m.div variants={fadeIn} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/15 border border-orange-400/30 text-orange-300 text-sm font-medium tracking-wider uppercase">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+              </span>
+              {t('hero.badge')}
             </m.div>
 
-            {/* Right Column: Visual */}
-            <m.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="relative order-2 lg:order-2 flex justify-center items-center"
+            <m.h1
+              variants={fadeIn}
+              className="text-6xl sm:text-7xl lg:text-8xl xl:text-9xl font-light text-white leading-none tracking-tight drop-shadow-[0_4px_20px_rgba(0,0,0,0.6)]"
             >
-              {/* Abstract shapes behind bottle */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px] sm:w-[400px] sm:h-[400px] bg-gradient-to-tr from-orange-500/20 to-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-300 to-orange-500 font-normal">
+                {t('hero.h1')}
+              </span>
+            </m.h1>
 
-              <MediaImage
-                src={mediaUrl('bc5a0b64ce661332da23e928299b7c41.jpg')}
-                alt={t('hero.imgAlt')}
-                width="650"
-                height="650"
-                fetchPriority="high"
-                decoding="async"
-                className="relative z-10 w-auto h-[350px] sm:h-[450px] lg:h-[650px] object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-700"
-              />
+            <m.div variants={fadeIn} className="space-y-4 max-w-xl">
+              <p className="text-xl sm:text-2xl lg:text-3xl text-white font-light leading-snug drop-shadow-[0_2px_10px_rgba(0,0,0,0.7)]">
+                {t('hero.tagline')}
+              </p>
+              <p className="text-base sm:text-lg text-white/85 font-light leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
+                {t('hero.description')}
+              </p>
             </m.div>
-          </div>
+
+            <m.div variants={fadeIn} className="flex flex-col sm:flex-row gap-4 pt-2">
+              <Link to="/shop" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white font-normal rounded-full px-8 py-6 text-lg shadow-[0_0_30px_rgba(249,115,22,0.4)] hover:shadow-[0_0_40px_rgba(249,115,22,0.6)] transition-all hover:scale-105">
+                  <ShoppingBag className="mr-2 h-5 w-5" />
+                  {t('hero.ctaShop')}
+                </Button>
+              </Link>
+              <Link to="/about" className="w-full sm:w-auto">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto border-white/40 bg-white/5 hover:bg-white/15 text-white hover:text-white backdrop-blur-sm font-normal rounded-full px-8 py-6 text-lg">
+                  {t('hero.ctaAbout')}
+                </Button>
+              </Link>
+            </m.div>
+          </m.div>
         </div>
 
         {/* Scroll Indicator */}
@@ -158,10 +145,10 @@ const HomePage = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1, duration: 1 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-foreground/30 hidden lg:flex"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/60 hidden lg:flex"
         >
           <span className="text-xs uppercase tracking-widest font-light">{t('hero.scroll')}</span>
-          <div className="w-px h-12 bg-gradient-to-b from-white/30 to-transparent"></div>
+          <div className="w-px h-12 bg-gradient-to-b from-white/50 to-transparent"></div>
         </m.div>
       </section>
 
