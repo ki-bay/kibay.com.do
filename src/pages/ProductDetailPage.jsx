@@ -93,10 +93,10 @@ function ProductDetailPage() {
   // Any experience that declares a `timeslots` array in metadata gets the
   // time picker. Casa Club Day Pass has no timeslots → defaults to 11:00 AM.
   const needsTimePicker = isExperience && timeslots.length > 0;
-  // Min reservation date = today + 2 days, formatted YYYY-MM-DD for <input type="date">.
+  // Min reservation date = today. Same-day and next-day bookings are allowed
+  // (Ocoa Bay confirms by phone if the window is tight). YYYY-MM-DD format.
   const minReservationDate = useMemo(() => {
     const d = new Date();
-    d.setDate(d.getDate() + 2);
     return d.toISOString().slice(0, 10);
   }, []);
 
