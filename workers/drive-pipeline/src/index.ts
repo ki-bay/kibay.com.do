@@ -36,6 +36,8 @@ interface Env extends SupabaseEnv, EmailEnv, SocialEnv {
 	ANTHROPIC_MODEL: string;
 	LINKEDIN_CLIENT_ID?: string;
 	LINKEDIN_CLIENT_SECRET?: string;
+	// "true" → skip the review email and publish immediately on cron.
+	AUTO_PUBLISH?: string;
 	// Email marketing module (added 2026-05-12)
 	BREVO_WEBHOOK_SECRET?: string;
 }
@@ -470,6 +472,19 @@ h1{margin:0 0 12px;color:#16a34a;}
 			return new Response('queued', { status: 202 });
 		}
 
+		// Retry BOTH Facebook and Instagram after a Meta token refresh.
+		// Same protect-token convention as /retry-ig.
+		if (url.pathname === '/retry-meta' && req.method === 'POST') {
+			const token = url.searchParams.get('token');
+			if (token !== env.SUPABASE_SERVICE_ROLE_KEY.slice(0, 24)) {
+				return new Response('forbidden', { status: 403 });
+			}
+			const postId = url.searchParams.get('post_id');
+			if (!postId) return new Response('post_id required', { status: 400 });
+			ctx.waitUntil(retryMeta(env, postId).catch((e) => console.error('retry-meta:', e)));
+			return new Response('queued', { status: 202 });
+		}
+
 		// Diagnostics: probe the Meta Page state (IG linkage, etc.). Same protect token as /run.
 		if (url.pathname === '/meta/status' && req.method === 'GET') {
 			const token = url.searchParams.get('token');
@@ -589,24 +604,41 @@ async function runPipeline(env: Env): Promise<void> {
 			};
 
 			const inserted = await insertBlogPost(env, blogRow);
-			await recordProcessed(env, {
-				file_id: g.key,
-				drive_modified_time: g.latestModified,
-				blog_post_id: inserted.id,
-				status: 'draft_pending',
-			});
 
-			await sendReviewEmail(env, {
-				postId: inserted.id,
-				titleEn: post.en.title,
-				titleEs: post.es.title,
-				slug,
-				imageUrl: heroUrl,
-				galleryUrls,
-				bodyExcerptEn: firstSentenceFromHtml(bodyEn),
-				bodyExcerptEs: firstSentenceFromHtml(bodyEs),
-				driveFilename: g.name,
-			});
+			// AUTO_PUBLISH=true → skip the human-in-the-loop email and ship
+			// straight to the blog + social. A cross-post results email still
+			// fires at the end of runCrossPost so the operator can see what
+			// happened. The /approve and /reject routes stay live in case
+			// AUTO_PUBLISH is flipped back to "false" later.
+			if ((env.AUTO_PUBLISH || '').toLowerCase() === 'true') {
+				await recordProcessed(env, {
+					file_id: g.key,
+					drive_modified_time: g.latestModified,
+					blog_post_id: inserted.id,
+					status: 'approved',
+				});
+				await setPostPublished(env, inserted.id, true);
+				await runCrossPost(env, inserted.id);
+				console.log(`pipeline: auto-published ${inserted.id} (slug=${slug})`);
+			} else {
+				await recordProcessed(env, {
+					file_id: g.key,
+					drive_modified_time: g.latestModified,
+					blog_post_id: inserted.id,
+					status: 'draft_pending',
+				});
+				await sendReviewEmail(env, {
+					postId: inserted.id,
+					titleEn: post.en.title,
+					titleEs: post.es.title,
+					slug,
+					imageUrl: heroUrl,
+					galleryUrls,
+					bodyExcerptEn: firstSentenceFromHtml(bodyEn),
+					bodyExcerptEs: firstSentenceFromHtml(bodyEs),
+					driveFilename: g.name,
+				});
+			}
 		} catch (e) {
 			console.error(`pipeline: failed for group ${g.key} (${g.name}):`, e);
 			try {
@@ -764,6 +796,45 @@ async function retryInstagram(env: Env, blogPostId: string): Promise<void> {
 		});
 	} catch (e) {
 		console.error('retry-ig: job patch failed:', e);
+	}
+}
+
+// Retry both Facebook and Instagram for a post whose Meta tokens were stale
+// at the time of the original cross-post run. LinkedIn is intentionally
+// skipped (it goes through a separate token + usually succeeded already).
+async function retryMeta(env: Env, blogPostId: string): Promise<void> {
+	const post = await getBlogPostForCrossPost(env, blogPostId);
+	if (!post) {
+		console.error(`retry-meta: blog_post ${blogPostId} not found`);
+		return;
+	}
+	const meta = post.auto_draft_meta as
+		| { social?: { facebook?: string; instagram?: string; linkedin?: string }; gallery_urls?: string[] }
+		| null;
+	const social = meta?.social || {};
+	const gallery = meta?.gallery_urls && meta.gallery_urls.length > 0 ? meta.gallery_urls : [post.featured_image_url];
+	const linkUrl = `https://kibay.com.do/blog/${post.slug}`;
+
+	const { postToFacebook, postToInstagram } = await import('./social');
+	const [fb, ig] = await Promise.all([
+		postToFacebook(env, { caption: social.facebook || post.title, imageUrls: gallery, linkUrl }),
+		postToInstagram(env, { caption: social.instagram || post.title, imageUrls: gallery, linkUrl }),
+	]);
+	console.log(`retry-meta fb: ${fb.status} ${fb.platform_post_id || fb.error_msg || ''}`);
+	console.log(`retry-meta ig: ${ig.status} ${ig.platform_post_id || ig.error_msg || ''}`);
+	try {
+		await updateCrossPostJob(env, blogPostId, 'fb', {
+			status: fb.status,
+			platform_post_id: fb.platform_post_id ?? null,
+			error_msg: fb.error_msg ?? null,
+		});
+		await updateCrossPostJob(env, blogPostId, 'ig', {
+			status: ig.status,
+			platform_post_id: ig.platform_post_id ?? null,
+			error_msg: ig.error_msg ?? null,
+		});
+	} catch (e) {
+		console.error('retry-meta: job patch failed:', e);
 	}
 }
 
