@@ -90,10 +90,9 @@ function ProductDetailPage() {
   const timeslots = Array.isArray(product?.metadata?.timeslots)
     ? product.metadata.timeslots
     : [];
-  // Wine tour uses the three-timeslot picker; everything else (full experience,
-  // day pass) is single-time with a sensible default (11:00 AM, opening hour).
-  const needsTimePicker =
-    isExperience && product?.metadata?.duration_minutes === 90 && timeslots.length > 0;
+  // Any experience that declares a `timeslots` array in metadata gets the
+  // time picker. Casa Club Day Pass has no timeslots → defaults to 11:00 AM.
+  const needsTimePicker = isExperience && timeslots.length > 0;
   // Min reservation date = today + 2 days, formatted YYYY-MM-DD for <input type="date">.
   const minReservationDate = useMemo(() => {
     const d = new Date();
@@ -726,25 +725,38 @@ function ProductDetailPage() {
                   </div>
                 )}
 
-                <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                  <div className="flex items-center bg-white border border-stone-200 rounded-full p-1 w-fit shadow-sm">
-                    <button
-                      onClick={() => handleQuantityChange(-1)}
-                      disabled={quantity <= 1 || isSoldOut}
-                      aria-label={t('decrease')}
-                      className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-stone-100 text-stone-600 transition-colors disabled:opacity-50"
+                <div className="flex flex-col sm:flex-row gap-4 mb-8 sm:items-end">
+                  <div className="flex flex-col gap-2">
+                    {isExperience && (
+                      <label
+                        htmlFor="adults-stepper"
+                        className="block text-xs font-medium uppercase tracking-wide text-stone-500"
+                      >
+                        {t('adultsLabel')}
+                      </label>
+                    )}
+                    <div
+                      id={isExperience ? 'adults-stepper' : undefined}
+                      className="flex items-center bg-white border border-stone-200 rounded-full p-1 w-fit shadow-sm"
                     >
-                      <Minus size={16} />
-                    </button>
-                    <span className="w-12 text-center text-lg font-medium text-stone-900">{quantity}</span>
-                    <button
-                      onClick={() => handleQuantityChange(1)}
-                      disabled={isSoldOut}
-                      aria-label={t('increase')}
-                      className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-stone-100 text-stone-600 transition-colors disabled:opacity-50"
-                    >
-                      <Plus size={16} />
-                    </button>
+                      <button
+                        onClick={() => handleQuantityChange(-1)}
+                        disabled={quantity <= 1 || isSoldOut}
+                        aria-label={t('decrease')}
+                        className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-stone-100 text-stone-600 transition-colors disabled:opacity-50"
+                      >
+                        <Minus size={16} />
+                      </button>
+                      <span className="w-12 text-center text-lg font-medium text-stone-900">{quantity}</span>
+                      <button
+                        onClick={() => handleQuantityChange(1)}
+                        disabled={isSoldOut}
+                        aria-label={t('increase')}
+                        className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-stone-100 text-stone-600 transition-colors disabled:opacity-50"
+                      >
+                        <Plus size={16} />
+                      </button>
+                    </div>
                   </div>
 
                   <Button

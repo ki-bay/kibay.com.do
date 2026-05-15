@@ -7,6 +7,7 @@
   "inStock": "En existencia",
   "lowStock": "Pocas unidades",
   "quantity": "Cantidad",
+  "adultsLabel": "Cuántos adultos",
   "increase": "Aumentar",
   "decrease": "Disminuir",
   "selectVariant": "Selecciona una opción",
