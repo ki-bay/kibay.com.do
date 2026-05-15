@@ -345,3 +345,4 @@ This skill **never modifies** files in your project. Everything is copy-in:
 - `src/App.jsx`, `src/i18n/index.js`, `Navigation.jsx` are the only **edits**
   you make — adding routes / namespaces / nav links — and the snippets are
   in `frontend/README.md`.
+When you're ready to install on the real estate site: clone the skill folder, replace those 3 const blocks with the real estate config, apply migrations, deploy worker + Edge Function, wire frontend. Should be ~30 minutes of mechanical work.

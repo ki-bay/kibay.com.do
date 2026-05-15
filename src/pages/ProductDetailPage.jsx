@@ -19,6 +19,8 @@ import { useFlyToCart } from '@/hooks/useFlyToCart';
 import ProductImageGallery from '@/components/ProductImageGallery';
 import ProductReviews from '@/components/ProductReviews';
 import RelatedProducts from '@/components/RelatedProducts';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar as CalendarPicker } from '@/components/ui/calendar';
 
 const placeholderImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjVmNWY0Ii8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2E4YTJhMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K";
 
@@ -640,16 +642,53 @@ function ProductDetailPage() {
                         >
                           {t('reservation.dateLabel')} *
                         </label>
-                        <input
-                          id="reservation-date"
-                          name="reservationDate"
-                          type="date"
-                          value={reservationDate}
-                          min={minReservationDate}
-                          onChange={(e) => setReservationDate(e.target.value)}
-                          required
-                          className="w-full bg-white border border-stone-200 rounded-lg px-4 py-3 text-stone-900 focus:border-[#D4A574] focus:outline-none focus:ring-1 focus:ring-[#D4A574]"
-                        />
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <button
+                              id="reservation-date"
+                              type="button"
+                              className="w-full bg-white border border-stone-200 rounded-lg px-4 py-3 text-left text-stone-900 hover:border-[#D4A574] focus:border-[#D4A574] focus:outline-none focus:ring-1 focus:ring-[#D4A574] flex items-center justify-between transition-colors"
+                            >
+                              <span className={reservationDate ? 'text-stone-900' : 'text-stone-400'}>
+                                {reservationDate
+                                  ? new Date(reservationDate + 'T00:00:00').toLocaleDateString(
+                                      i18n.language === 'en' ? 'en-US' : 'es-DO',
+                                      { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' },
+                                    )
+                                  : t('reservation.dateLabel')}
+                              </span>
+                              <Calendar size={16} className="text-[#D4A574] flex-shrink-0 ml-3" />
+                            </button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <CalendarPicker
+                              mode="single"
+                              selected={reservationDate ? new Date(reservationDate + 'T00:00:00') : undefined}
+                              onSelect={(d) => {
+                                if (!d) {
+                                  setReservationDate('');
+                                  return;
+                                }
+                                // Format YYYY-MM-DD in local time (no timezone shift)
+                                const y = d.getFullYear();
+                                const m = String(d.getMonth() + 1).padStart(2, '0');
+                                const day = String(d.getDate()).padStart(2, '0');
+                                setReservationDate(`${y}-${m}-${day}`);
+                              }}
+                              disabled={(d) => {
+                                // Block past + lead-time minimum
+                                const min = new Date(minReservationDate + 'T00:00:00');
+                                if (d < min) return true;
+                                // Saturdays (6) and Sundays (0) only — Ocoa Bay opens weekends + holidays.
+                                // Holidays would need a holiday calendar; for now Sat/Sun only.
+                                const day = d.getDay();
+                                return day !== 0 && day !== 6;
+                              }}
+                              initialFocus
+                              showOutsideDays={false}
+                            />
+                          </PopoverContent>
+                        </Popover>
                       </div>
                       {needsTimePicker && (
                         <div className="space-y-2">
