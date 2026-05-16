@@ -61,9 +61,11 @@ const Footer = () => {
           <div className="space-y-6">
             <Link to="/" className="flex items-center gap-2 group w-fit">
               <img
-                src={mediaUrl('528dc5649d4cfca8e6282f7759bb1460.png')}
-                alt="Ki-bay logo"
-                className="w-8 h-8 group-hover:text-foreground transition-colors"
+                src="/logo.webp"
+                alt="Kibay logo"
+                width="40"
+                height="30"
+                className="h-8 w-auto object-contain group-hover:text-foreground transition-colors"
               />
               <span className="text-2xl font-bold bg-gradient-to-r from-[#D4A574] to-[#f3dcb8] bg-clip-text text-transparent font-lato">
                 Kibay

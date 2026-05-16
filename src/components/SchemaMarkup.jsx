@@ -22,7 +22,7 @@ const SchemaMarkup = ({ type, data }) => {
         "name": "Kibay",
         "logo": {
           "@type": "ImageObject",
-          "url": `${window.location.origin}/logo.png`
+          "url": `${window.location.origin}/favicon.png`
         }
       },
       "mainEntityOfPage": {
@@ -47,7 +47,7 @@ const SchemaMarkup = ({ type, data }) => {
       "@type": "Organization",
       "name": "Kibay",
       "url": window.location.origin,
-      "logo": `${window.location.origin}/logo.png`,
+      "logo": `${window.location.origin}/favicon.png`,
       "sameAs": [
         "https://www.facebook.com/profile.php?id=61589761255222",
         "https://www.instagram.com/kibaywine",
@@ -72,7 +72,7 @@ const SchemaMarkup = ({ type, data }) => {
       },
       "url": (data && data.url) || origin,
       "image": (data && data.image) || `${origin}/og-default.jpg`,
-      "logo": `${origin}/logo.png`,
+      "logo": `${origin}/favicon.png`,
       "description": (data && data.description) || "Kibay crafts organic Caribbean sparkling wine in the Dominican Republic — made with mango and passion fruit at Ocoa Bay.",
       "priceRange": "$$",
       "areaServed": "Caribbean",

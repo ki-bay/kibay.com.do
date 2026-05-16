@@ -50,9 +50,11 @@ const EmailTemplate = ({ children }) => {
     <div style={styles.container}>
       {/* Header with Kibay Logo */}
       <div style={styles.header}>
-        <img 
-          src={mediaUrl('e711380acfce17f0bc86832982651aea.png')} 
-          alt="Kibay" 
+        <img
+          src="https://kibay.com.do/icon-192.png"
+          alt="Kibay"
+          width="80"
+          height="60"
           style={styles.logo}
         />
       </div>
