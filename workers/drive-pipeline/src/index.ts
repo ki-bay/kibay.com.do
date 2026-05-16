@@ -26,7 +26,7 @@ import {
 	escapeHtml,
 	EmailEnv,
 } from './email';
-import { crossPostAll, SocialEnv } from './social';
+import { crossPostAll, SocialEnv, SocialResult } from './social';
 import type { ServiceAccount } from './jwt';
 
 interface Env extends SupabaseEnv, EmailEnv, SocialEnv {
@@ -802,6 +802,9 @@ async function retryInstagram(env: Env, blogPostId: string): Promise<void> {
 // Retry both Facebook and Instagram for a post whose Meta tokens were stale
 // at the time of the original cross-post run. LinkedIn is intentionally
 // skipped (it goes through a separate token + usually succeeded already).
+//
+// Idempotency: a platform whose existing cross_post_jobs row is already
+// `posted` is skipped so we don't create duplicate posts on a re-trigger.
 async function retryMeta(env: Env, blogPostId: string): Promise<void> {
 	const post = await getBlogPostForCrossPost(env, blogPostId);
 	if (!post) {
@@ -815,26 +818,60 @@ async function retryMeta(env: Env, blogPostId: string): Promise<void> {
 	const gallery = meta?.gallery_urls && meta.gallery_urls.length > 0 ? meta.gallery_urls : [post.featured_image_url];
 	const linkUrl = `https://kibay.com.do/blog/${post.slug}`;
 
+	// Read existing job statuses so we only retry the failed/missing platforms.
+	const jobsUrl = `${env.SUPABASE_URL}/rest/v1/cross_post_jobs?blog_post_id=eq.${encodeURIComponent(
+		blogPostId,
+	)}&select=platform,status`;
+	const jobsR = await fetch(jobsUrl, {
+		headers: {
+			apikey: env.SUPABASE_SERVICE_ROLE_KEY,
+			Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+		},
+	});
+	const jobs = (await jobsR.json()) as Array<{ platform: string; status: string }>;
+	const fbPosted = jobs.some((j) => j.platform === 'fb' && j.status === 'posted');
+	const igPosted = jobs.some((j) => j.platform === 'ig' && j.status === 'posted');
+
+	if (fbPosted && igPosted) {
+		console.log('retry-meta: both fb+ig already posted, nothing to do');
+		return;
+	}
+
 	const { postToFacebook, postToInstagram } = await import('./social');
-	const [fb, ig] = await Promise.all([
-		postToFacebook(env, { caption: social.facebook || post.title, imageUrls: gallery, linkUrl }),
-		postToInstagram(env, { caption: social.instagram || post.title, imageUrls: gallery, linkUrl }),
-	]);
-	console.log(`retry-meta fb: ${fb.status} ${fb.platform_post_id || fb.error_msg || ''}`);
-	console.log(`retry-meta ig: ${ig.status} ${ig.platform_post_id || ig.error_msg || ''}`);
-	try {
-		await updateCrossPostJob(env, blogPostId, 'fb', {
-			status: fb.status,
-			platform_post_id: fb.platform_post_id ?? null,
-			error_msg: fb.error_msg ?? null,
-		});
-		await updateCrossPostJob(env, blogPostId, 'ig', {
-			status: ig.status,
-			platform_post_id: ig.platform_post_id ?? null,
-			error_msg: ig.error_msg ?? null,
-		});
-	} catch (e) {
-		console.error('retry-meta: job patch failed:', e);
+	const tasks: Array<Promise<{ platform: 'fb' | 'ig'; result: SocialResult }>> = [];
+	if (!fbPosted) {
+		tasks.push(
+			postToFacebook(env, { caption: social.facebook || post.title, imageUrls: gallery, linkUrl }).then((r) => ({
+				platform: 'fb' as const,
+				result: r,
+			})),
+		);
+	} else {
+		console.log('retry-meta: fb already posted, skipping');
+	}
+	if (!igPosted) {
+		tasks.push(
+			postToInstagram(env, { caption: social.instagram || post.title, imageUrls: gallery, linkUrl }).then((r) => ({
+				platform: 'ig' as const,
+				result: r,
+			})),
+		);
+	} else {
+		console.log('retry-meta: ig already posted, skipping');
+	}
+
+	const results = await Promise.all(tasks);
+	for (const { platform, result } of results) {
+		console.log(`retry-meta ${platform}: ${result.status} ${result.platform_post_id || result.error_msg || ''}`);
+		try {
+			await updateCrossPostJob(env, blogPostId, platform, {
+				status: result.status,
+				platform_post_id: result.platform_post_id ?? null,
+				error_msg: result.error_msg ?? null,
+			});
+		} catch (e) {
+			console.error(`retry-meta: ${platform} job patch failed:`, e);
+		}
 	}
 }
 

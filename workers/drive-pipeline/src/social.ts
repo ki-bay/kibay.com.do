@@ -108,8 +108,24 @@ export async function postToFacebook(
 					access_token: token,
 				}),
 			});
-			const j = (await r.json()) as { id?: string; post_id?: string; error?: { message: string } };
-			if (j.error) return { platform: 'fb', status: 'failed', error_msg: j.error.message };
+			const raw = await r.text();
+			let j: {
+				id?: string;
+				post_id?: string;
+				error?: { message: string; code?: number; error_subcode?: number; fbtrace_id?: string };
+			} = {};
+			try {
+				j = JSON.parse(raw);
+			} catch {
+				console.error('fb /photos: non-JSON response', r.status, raw.slice(0, 300));
+				return { platform: 'fb', status: 'failed', error_msg: `non-JSON ${r.status}: ${raw.slice(0, 120)}` };
+			}
+			if (j.error) {
+				console.error('fb /photos failed', r.status, JSON.stringify(j.error));
+				const e = j.error;
+				const detail = `code=${e.code ?? '?'} sub=${e.error_subcode ?? '?'} trace=${e.fbtrace_id ?? '?'}`;
+				return { platform: 'fb', status: 'failed', error_msg: `${e.message} [${detail}]` };
+			}
 			return { platform: 'fb', status: 'posted', platform_post_id: j.post_id || j.id };
 		}
 
