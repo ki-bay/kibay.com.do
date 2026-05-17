@@ -434,7 +434,7 @@ const BlogPostForm = () => {
                                 <div className="bg-white p-4 rounded-lg font-sans">
                                     <div className="flex items-center gap-1 text-[#202124] text-sm mb-1">
                                         <div className="w-7 h-7 bg-slate-200 rounded-full flex items-center justify-center text-[10px] overflow-hidden">
-                                            <img src="/logo.webp" alt={t('preview.logoAlt')} className="w-full h-full object-cover" onError={(e) => e.target.style.display = 'none'} />
+                                            <img src="/logo.png" alt={t('preview.logoAlt')} className="w-full h-full object-cover" onError={(e) => e.target.style.display = 'none'} />
                                         </div>
                                         <div className="flex flex-col leading-tight">
                                             <span className="text-[#202124]">Kibay</span>

@@ -106,7 +106,7 @@ const Navigation = () => {
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center gap-2 group z-50">
               <img
-                src="/logo.webp"
+                src="/logo.png"
                 alt="Kibay logo"
                 width="180"
                 height="135"

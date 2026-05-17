@@ -61,7 +61,7 @@ const Footer = () => {
           <div className="space-y-6">
             <Link to="/" className="flex items-center gap-2 group w-fit">
               <img
-                src="/logo.webp"
+                src="/logo.png"
                 alt="Kibay logo"
                 width="40"
                 height="30"
