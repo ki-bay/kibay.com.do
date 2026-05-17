@@ -74,10 +74,10 @@ const HomePage = () => {
         <picture className="absolute inset-0 w-full h-full">
           <source
             media="(min-width: 1024px)"
-            srcSet="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_2400/v1778855807/kibay_-vino_iss9fv.webp"
+            srcSet="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_2400/v1779053427/kibay_-vino_copy_q9mvz8.webp"
           />
           <img
-            src="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_1200/v1778855807/kibay_-vino_iss9fv.webp"
+            src="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_1200/v1779053427/kibay_-vino_copy_q9mvz8.webp"
             alt={t('hero.imgAlt')}
             width="2428"
             height="1366"

@@ -17,6 +17,10 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.1';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+// Dedicated cron token — decoupled from the auto-injected service-role
+// key (which Supabase rotates independently). Set via:
+//   supabase secrets set ABANDONED_CART_CRON_TOKEN=<hex>
+const cronToken = Deno.env.get('ABANDONED_CART_CRON_TOKEN') || '';
 
 serve(async (req) => {
 	if (req.method !== 'POST') {
@@ -26,10 +30,11 @@ serve(async (req) => {
 		return json({ error: 'Missing configuration' }, 500);
 	}
 
-	// Only the service-role token (used by cron / admin) can invoke.
+	// Only the cron token (or service-role token, for manual admin
+	// invocations) can run this. The cron job uses ABANDONED_CART_CRON_TOKEN.
 	const auth = req.headers.get('authorization') || '';
 	const token = auth.replace(/^Bearer\s+/i, '');
-	if (token !== serviceKey) {
+	if (token !== serviceKey && (!cronToken || token !== cronToken)) {
 		return json({ error: 'Unauthorized' }, 401);
 	}
 
