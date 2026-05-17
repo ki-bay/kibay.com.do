@@ -262,6 +262,28 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* Full-bleed cinematic band — sits between "Wine First. Always." and
+          "The Kibay Difference". Mobile gets a 4:3 crop so the photo feels
+          immersive; desktop drops to a 21:9 letterbox so it reads as a
+          wide brand band. */}
+      <section className="relative w-full overflow-hidden bg-background">
+        <picture>
+          <source
+            media="(min-width: 1024px)"
+            srcSet="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_2400/v1779051339/bc5a0b64ce661332da23e928299b7c41_ey4vsd.webp"
+          />
+          <img
+            src="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_1200/v1779051339/bc5a0b64ce661332da23e928299b7c41_ey4vsd.webp"
+            alt={t('hero.imgAlt')}
+            width="1600"
+            height="900"
+            loading="lazy"
+            decoding="async"
+            className="block w-full h-auto aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9] object-cover"
+          />
+        </picture>
+      </section>
+
       {/* Features Section (The Kibay Difference) */}
       <section className="relative z-10 py-24 px-4 sm:px-6 lg:px-8 bg-background font-lato">
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
