@@ -95,9 +95,13 @@ const Navigation = () => {
   const handleSignOut = async () => { await signOut(); setIsOpen(false); };
   
   const isTransparent = isHomePage && !scrolled;
-  const navBackgroundClass = isTransparent ? 'bg-transparent' : 'bg-card/95 backdrop-blur-md shadow-lg border-b border-border'; 
-  const textColorClass = 'text-foreground';
-  const iconColorClass = 'text-foreground';
+  const navBackgroundClass = isTransparent ? 'bg-transparent' : 'bg-card/95 backdrop-blur-md shadow-lg border-b border-border';
+  // When transparent, force white text — the home-page hero is a dark
+  // cinematic photo regardless of theme, so dark text in light mode would
+  // wash out against it. When scrolled, defer to the theme's foreground
+  // token so the nav flips white→dark on light mode.
+  const textColorClass = isTransparent ? 'text-white' : 'text-foreground';
+  const iconColorClass = isTransparent ? 'text-white' : 'text-foreground';
 
   return (
     <>
@@ -146,9 +150,11 @@ const Navigation = () => {
 
             <div className="hidden lg:flex items-center gap-4">
               <SearchBar />
-              <div className={cn("transition-colors cursor-pointer hover:text-[#D4A574] p-1", iconColorClass)}>
+              <div className="transition-colors cursor-pointer text-[#D4A574] hover:text-[#c29462] p-1">
                  <ShoppingCartIcon onClick={handleCartClick} className="w-5 h-5" />
               </div>
+              <LanguageSwitcher size="sm" />
+              <ThemeToggle size="sm" />
               
               {user ? (
                 <div className="flex items-center gap-2">
@@ -208,7 +214,8 @@ const Navigation = () => {
             </div>
 
             <div className="flex items-center gap-4 lg:hidden">
-              <div className={cn("transition-colors cursor-pointer hover:text-[#D4A574]", iconColorClass)}><ShoppingCartIcon onClick={handleCartClick} className="w-6 h-6" /></div>
+              <ThemeToggle size="sm" />
+              <div className="transition-colors cursor-pointer text-[#D4A574] hover:text-[#c29462]"><ShoppingCartIcon onClick={handleCartClick} className="w-6 h-6" /></div>
               <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
