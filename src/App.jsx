@@ -14,6 +14,8 @@ const ShopPage = lazy(() => import('./pages/ShopPage'));
 const CartPage = lazy(() => import('./pages/CartPage'));
 const CheckoutPage = lazy(() => import('./pages/CheckoutPage'));
 const CheckoutSuccessPage = lazy(() => import('./pages/CheckoutSuccessPage'));
+const CheckoutCardnetReturn = lazy(() => import('./pages/CheckoutCardnetReturn'));
+const CheckoutCardnetCancel = lazy(() => import('./pages/CheckoutCardnetCancel'));
 const WhyCansPage = lazy(() => import('./pages/WhyCansPage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const WhitepaperPage = lazy(() => import('./pages/WhitepaperPage'));
@@ -121,6 +123,8 @@ function App() {
               <Route path="/cart" element={<CartPage />} />
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/checkout-success" element={<CheckoutSuccessPage />} />
+              <Route path="/checkout/cardnet/return" element={<CheckoutCardnetReturn />} />
+              <Route path="/checkout/cardnet/cancel" element={<CheckoutCardnetCancel />} />
 
               {/* Legal Routes */}
               <Route path="/terms" element={<TermsAndConditionsPage />} />

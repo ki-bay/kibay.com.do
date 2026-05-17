@@ -29,6 +29,11 @@ const hasStripePublishableKey = !!(
 	import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || import.meta.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 );
 
+// CARDNET alternative payment method. Hidden until the owner flips the
+// feature flag in env (after live merchant credentials are configured on
+// the Supabase Edge Function side).
+const cardnetEnabled = String(import.meta.env.VITE_CARDNET_ENABLED || '').toLowerCase() === 'true';
+
 const CheckoutForm = ({
 	orderId,
 	totalAmountMajor,
@@ -807,6 +812,39 @@ const CheckoutPage = () => {
 										{step === 'shipping'
 											? 'Complete shipping above, then continue to enter card details securely.'
 											: null}
+									</div>
+								)}
+
+								{cardnetEnabled && step === 'payment' && pendingOrderId && (
+									<div className="mt-6 pt-6 border-t border-foreground/10">
+										<p className="text-xs uppercase tracking-widest text-foreground/50 font-light mb-3">
+											{t('cardnet.alt', '¿Tarjeta dominicana? Paga con CARDNET')}
+										</p>
+										<Button
+											type="button"
+											onClick={async () => {
+												try {
+													const { data: { session } } = await supabase.auth.getSession();
+													const accessToken = session?.access_token;
+													const { data, error } = await supabase.functions.invoke('create-cardnet-session', {
+														body: { order_id: pendingOrderId },
+														headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+													});
+													if (error) throw error;
+													if (data?.redirect_url) {
+														window.location.href = data.redirect_url;
+													} else {
+														setInitError('CARDNET no devolvió URL de redirección.');
+													}
+												} catch (e) {
+													setInitError(e.message || 'CARDNET error');
+												}
+											}}
+											variant="outline"
+											className="w-full border-[#D4A574] text-[#D4A574] hover:bg-[#D4A574]/10 rounded-full py-5"
+										>
+											{t('cardnet.payButton', 'Pagar con CARDNET (RD)')}
+										</Button>
 									</div>
 								)}
 							</div>
