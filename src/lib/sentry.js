@@ -1,19 +1,19 @@
-// Sentry initialization — no-op until VITE_SENTRY_DSN is set in env. This
-// means the SDK ships in the bundle but does nothing during local dev or
-// before the owner creates a Sentry project. To enable:
-//
-//   1. https://sentry.io/signup/ — create a project, type "React".
-//   2. Copy the DSN (looks like `https://<key>@o<org>.ingest.sentry.io/<proj>`).
-//   3. Set `VITE_SENTRY_DSN=<dsn>` in Cloudflare Pages env (Production + Preview).
-//   4. Optional: `VITE_SENTRY_TRACES_SAMPLE_RATE=0.1` (10% perf samples).
-//   5. Redeploy.
+// Sentry initialization. DSN is intentionally hardcoded as a fallback —
+// Sentry DSNs are public by design (they end up in the browser JS bundle
+// regardless of how they're delivered) and Sentry rate-limits per-DSN, so
+// there's no value in treating it as a secret. Setting VITE_SENTRY_DSN in
+// env overrides the hardcoded value (useful if we ever spin up a second
+// Sentry project for preview deploys).
+
+const KIBAY_PRODUCTION_DSN =
+  'https://09c5b62bec647b401a1fdad794acce52@o4511407614787584.ingest.us.sentry.io/4511407631433728';
 
 let initialized = false;
 let sentryRef = null;
 
 export async function initSentry() {
   if (initialized) return;
-  const dsn = import.meta.env.VITE_SENTRY_DSN;
+  const dsn = import.meta.env.VITE_SENTRY_DSN || KIBAY_PRODUCTION_DSN;
   if (!dsn) return; // not configured — stay silent
 
   try {
