@@ -47,6 +47,15 @@ import { AuthProvider } from '@/contexts/SupabaseAuthContext';
 import { CartProvider } from '@/hooks/useCart';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as SonnerToaster } from '@/components/ui/sonner';
+import { initSentry } from '@/lib/sentry';
+import { initAnalytics } from '@/lib/analytics';
+
+// Both are no-ops until the corresponding env var is set, so safe to always
+// call. Sentry dynamically imports the SDK so unconfigured browsers don't
+// pay for it. Analytics defers the beacon to requestIdleCallback to avoid
+// blocking paint.
+initSentry();
+initAnalytics();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} storageKey="kibay_theme">

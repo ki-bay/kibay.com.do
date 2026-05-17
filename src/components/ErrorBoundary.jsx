@@ -1,7 +1,9 @@
 import React from 'react';
+import { reportError } from '@/lib/sentry';
 
 // Global error boundary so a thrown render error doesn't blank the whole site.
-// Shows a friendly recover UI, logs to console for triage, and offers a reload.
+// Shows a friendly recover UI, logs to console for triage, forwards to Sentry
+// when VITE_SENTRY_DSN is configured, and offers a reload.
 export default class ErrorBoundary extends React.Component {
 	constructor(props) {
 		super(props);
@@ -14,6 +16,7 @@ export default class ErrorBoundary extends React.Component {
 
 	componentDidCatch(error, info) {
 		console.error('Render error:', error, info?.componentStack);
+		reportError(error, { componentStack: info?.componentStack });
 	}
 
 	render() {
