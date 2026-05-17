@@ -10,7 +10,20 @@ const InvoiceDownload = ({ order, orderItems, className }) => {
   const { t, i18n } = useTranslation('invoiceDownload');
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const generatePDF = () => {
+  // Fetch a same-origin image and turn it into a base64 dataURL — jsPDF's
+  // addImage() works most reliably when given a dataURL.
+  const fetchImageAsDataUrl = async (url) => {
+    const r = await fetch(url, { cache: 'force-cache' });
+    const blob = await r.blob();
+    return new Promise((resolve, reject) => {
+      const fr = new FileReader();
+      fr.onload = () => resolve(fr.result);
+      fr.onerror = reject;
+      fr.readAsDataURL(blob);
+    });
+  };
+
+  const generatePDF = async () => {
     setIsGenerating(true);
 
     try {
@@ -26,14 +39,25 @@ const InvoiceDownload = ({ order, orderItems, className }) => {
       doc.setFillColor(...darkColor);
       doc.rect(0, 0, 210, 40, 'F');
 
+      // Logo (20% larger than previous text-block: ~36mm wide). Fall back to
+      // a text wordmark if the image can't be loaded for any reason.
+      try {
+        const logoData = await fetchImageAsDataUrl('/logo.png');
+        // 4:3 aspect → 36mm wide × 27mm tall, but the header is 40mm tall so
+        // we limit height to ~26mm and let the width derive from that.
+        doc.addImage(logoData, 'PNG', 20, 7, 36, 26);
+      } catch (e) {
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(29);
+        doc.text("KIBAY", 20, 22);
+      }
+
       doc.setTextColor(255, 255, 255);
-      doc.setFontSize(24);
-      doc.text("KIBAY", 20, 20);
       doc.setFontSize(12);
       doc.text(t('pdf.invoice'), 180, 20, { align: 'right' });
       doc.setFontSize(10);
       doc.setTextColor(200, 200, 200);
-      doc.text(t('pdf.tagline'), 20, 28);
+      doc.text(t('pdf.tagline'), 60, 22);
 
       // Order Info
       doc.setTextColor(...darkColor);

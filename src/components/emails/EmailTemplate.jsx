@@ -17,7 +17,7 @@ const styles = {
     backgroundColor: '#ffffff',
   },
   logo: {
-    width: '180px',
+    width: '216px',
     height: 'auto',
     display: 'block',
     margin: '0 auto',
@@ -53,8 +53,8 @@ const EmailTemplate = ({ children }) => {
         <img
           src="https://kibay.com.do/icon-192.png"
           alt="Kibay"
-          width="80"
-          height="60"
+          width="96"
+          height="72"
           style={styles.logo}
         />
       </div>

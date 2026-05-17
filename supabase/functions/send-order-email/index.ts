@@ -449,7 +449,7 @@ async function renderEmail(
     <tr><td align="center">
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06);">
         <tr><td style="padding:32px 40px 0;" align="center">
-          <div style="font-family:Georgia,serif;font-size:30px;font-weight:600;letter-spacing:1.5px;color:#1a1a1a;">Kibay</div>
+          <img src="https://kibay.com.do/logo.png" alt="Kibay" width="96" height="72" style="display:block;margin:0 auto;border:0;height:auto;max-width:96px;" />
           <div style="height:2px;width:56px;background:#D4A574;margin:12px auto 0;"></div>
         </td></tr>
         <tr><td style="padding:24px 40px 0;">
@@ -770,9 +770,14 @@ async function renderAdminEmail(
     <tr><td align="center">
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="640" style="max-width:640px;background:#ffffff;border:1px solid #e7e5e4;border-radius:8px;">
         <tr><td style="padding:20px 24px;border-bottom:1px solid #e7e5e4;">
-          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#a8a29e;">Kibay admin</div>
-          <h1 style="margin:4px 0 0 0;font-size:18px;font-weight:600;color:#1c1917;">${escapeHtml(tpl.heading)} — ${escapeHtml(order.order_number)}</h1>
-          <p style="margin:4px 0 0 0;font-size:13px;color:#78716c;">${escapeHtml(tpl.intro)}</p>
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+            <td style="vertical-align:middle;width:64px;"><img src="https://kibay.com.do/logo.png" alt="Kibay" width="56" height="42" style="display:block;border:0;height:auto;max-width:56px;" /></td>
+            <td style="vertical-align:middle;padding-left:12px;">
+              <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#a8a29e;">Kibay admin</div>
+              <h1 style="margin:4px 0 0 0;font-size:18px;font-weight:600;color:#1c1917;">${escapeHtml(tpl.heading)} — ${escapeHtml(order.order_number)}</h1>
+              <p style="margin:4px 0 0 0;font-size:13px;color:#78716c;">${escapeHtml(tpl.intro)}</p>
+            </td>
+          </tr></table>
         </td></tr>
         <tr><td style="padding:20px 24px;">
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="font-size:13px;color:#44403c;">

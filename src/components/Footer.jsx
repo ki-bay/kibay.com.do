@@ -63,9 +63,9 @@ const Footer = () => {
               <img
                 src="/logo.png"
                 alt="Kibay logo"
-                width="40"
-                height="30"
-                className="h-8 w-auto object-contain group-hover:text-foreground transition-colors"
+                width="48"
+                height="36"
+                className="h-[38px] w-auto object-contain group-hover:text-foreground transition-colors"
               />
               <span className="text-2xl font-bold bg-gradient-to-r from-[#D4A574] to-[#f3dcb8] bg-clip-text text-transparent font-lato">
                 Kibay

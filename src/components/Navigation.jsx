@@ -108,9 +108,9 @@ const Navigation = () => {
               <img
                 src="/logo.png"
                 alt="Kibay logo"
-                width="180"
-                height="135"
-                className="h-[45px] w-auto object-contain"
+                width="216"
+                height="162"
+                className="h-[54px] w-auto object-contain"
               />
               <span className={cn("text-2xl font-light tracking-tight transition-colors", textColorClass)}>Ki-BAY</span>
             </Link>
