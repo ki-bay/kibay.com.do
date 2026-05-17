@@ -33,6 +33,12 @@ export async function initSentry() {
         'AbortError',
       ],
     });
+    // Expose the namespace so we can fire test events from DevTools and so
+    // any other module can call Sentry.captureException() without re-importing.
+    if (typeof window !== 'undefined') {
+      window.Sentry = Sentry;
+    }
+    console.log('[sentry] initialized');
     initialized = true;
   } catch (e) {
     // Sentry import failing should never break the app.
