@@ -28,6 +28,12 @@
   "shipping": "Shipping",
   "total": "Total",
   "secure": "Secure payment via Stripe.",
+  "trust": {
+    "secure": "100% secure payment via Stripe + 3D Secure. We never see your card.",
+    "guarantee": "Breakage guarantee: if a bottle arrives broken, we'll send a replacement at no cost.",
+    "organic": "Organic wines, natural fermentation, zero artificial additives.",
+    "origin": "Produced at Bahía de Ocoa, Azua, Dominican Republic."
+  },
   "errors": {
     "required": "This field is required.",
     "invalidEmail": "Invalid email address.",

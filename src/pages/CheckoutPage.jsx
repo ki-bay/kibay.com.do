@@ -10,7 +10,7 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import { Loader2, CheckCircle, AlertCircle, Lock, Shield, Leaf, MapPin } from 'lucide-react';
 import { supabase } from '@/lib/customSupabaseClient';
 import { computeShippingMajor, tiersFromShippingRates } from '@/lib/shipping';
 
@@ -918,6 +918,26 @@ const CheckoutPage = () => {
 										{t('secure')}
 									</p>
 								)}
+
+								{/* Trust signals — visible in both shipping and payment steps. */}
+								<div className="mt-6 pt-6 border-t border-foreground/10 space-y-3">
+									<div className="flex items-start gap-3 text-xs font-light text-foreground/70">
+										<Lock className="w-4 h-4 mt-0.5 text-[#D4A574] flex-shrink-0" aria-hidden="true" />
+										<span>{t('trust.secure', 'Pago 100% seguro vía Stripe + 3D Secure. Nunca vemos tu tarjeta.')}</span>
+									</div>
+									<div className="flex items-start gap-3 text-xs font-light text-foreground/70">
+										<Shield className="w-4 h-4 mt-0.5 text-[#D4A574] flex-shrink-0" aria-hidden="true" />
+										<span>{t('trust.guarantee', 'Garantía: si la botella llega rota, te enviamos otra sin cargo.')}</span>
+									</div>
+									<div className="flex items-start gap-3 text-xs font-light text-foreground/70">
+										<Leaf className="w-4 h-4 mt-0.5 text-[#D4A574] flex-shrink-0" aria-hidden="true" />
+										<span>{t('trust.organic', 'Vinos orgánicos, fermentación natural, sin aditivos artificiales.')}</span>
+									</div>
+									<div className="flex items-start gap-3 text-xs font-light text-foreground/70">
+										<MapPin className="w-4 h-4 mt-0.5 text-[#D4A574] flex-shrink-0" aria-hidden="true" />
+										<span>{t('trust.origin', 'Producido en Bahía de Ocoa, Azua, República Dominicana.')}</span>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
