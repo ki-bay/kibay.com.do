@@ -1,10 +1,20 @@
 import React, { useState } from 'react';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
 import { Download, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { formatDopFromCents } from '@/lib/formatMoney';
+
+// jspdf is ~620 KB gzipped and only needed when a customer actually clicks
+// "Download invoice". Static-imported it would pay that cost for every
+// logged-in user who opens an order details modal. Dynamic-import inside
+// the click handler defers it.
+const loadJsPdf = async () => {
+  const [{ default: jsPDF }] = await Promise.all([
+    import('jspdf'),
+    import('jspdf-autotable'),
+  ]);
+  return jsPDF;
+};
 
 const InvoiceDownload = ({ order, orderItems, className }) => {
   const { t, i18n } = useTranslation('invoiceDownload');
@@ -27,6 +37,7 @@ const InvoiceDownload = ({ order, orderItems, className }) => {
     setIsGenerating(true);
 
     try {
+      const jsPDF = await loadJsPdf();
       const doc = new jsPDF();
 
       // Brand Colors

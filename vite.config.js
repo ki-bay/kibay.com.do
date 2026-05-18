@@ -305,6 +305,17 @@ export default defineConfig({
 		},
 	},
 	build: {
+		// Filter out heavy admin/invoice-only chunks from the entry's
+		// modulepreload list. They're dynamically imported at click time,
+		// but Vite by default preloads everything in the dep graph — which
+		// would fetch ~870 KB of jspdf+recharts on every anonymous page
+		// visit. We keep only the chunks that the customer-facing first
+		// paint actually needs.
+		modulePreload: {
+			polyfill: true,
+			resolveDependencies: (_filename, deps) =>
+				deps.filter((d) => !/\/(pdf|recharts|tiptap)-[a-f0-9]+\.js$/.test(d)),
+		},
 		rollupOptions: {
 			external: [
 				'@babel/parser',
@@ -334,13 +345,18 @@ export default defineConfig({
 						// properties of undefined (reading 'createContext')").
 						pkg === 'i18next' ||
 						pkg === 'react-i18next' ||
-						pkg === 'i18next-browser-languagedetector' ||
-						// recharts calls React.forwardRef at module init — same
-						// timing race as i18n, same fix: fold into the React
-						// chunk so React is always evaluated first.
-						pkg === 'recharts'
+						pkg === 'i18next-browser-languagedetector'
 					) {
 						return 'react-vendor';
+					}
+
+					// recharts is ~250 KB and only used on admin analytics pages.
+					// Keep it in its own chunk so customer-facing pages don't
+					// download it. Lives outside react-vendor as long as the
+					// admin pages that import recharts are themselves lazy-loaded
+					// (they are — see App.jsx).
+					if (pkg === 'recharts' || pkg.startsWith('victory-')) {
+						return 'recharts';
 					}
 
 					if (pkg.startsWith('@radix-ui/')) {
