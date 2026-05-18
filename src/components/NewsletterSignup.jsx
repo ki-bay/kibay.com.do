@@ -70,12 +70,12 @@ const NewsletterSignup = ({
         animate={{ opacity: 1, scale: 1 }}
         className={cn(
           "text-center p-8 rounded-2xl border",
-          variant === 'hero' ? "bg-foreground/10 backdrop-blur-md border-foreground/20 text-foreground" : "bg-stone-50 border-stone-100 text-stone-900"
+          variant === 'hero' ? "bg-foreground/10 backdrop-blur-md border-foreground/20 text-foreground" : "bg-foreground/5 border-foreground/10 text-foreground"
         )}
       >
         <CheckCircle2 className={cn("w-12 h-12 mx-auto mb-4", variant === 'hero' ? "text-[#D4A574]" : "text-[#D4A574]")} />
         <h3 className="text-2xl font-normal mb-2">{t('successTitle')}</h3>
-        <p className={variant === 'hero' ? "text-foreground/80 font-normal" : "text-stone-600 font-normal"}>{resolvedSuccessMessage}</p>
+        <p className={variant === 'hero' ? "text-foreground/80 font-normal" : "text-foreground/75 font-normal"}>{resolvedSuccessMessage}</p>
       </m.div>
     );
   }
@@ -91,7 +91,7 @@ const NewsletterSignup = ({
       {headline && (
         <h2 className={cn(
           "font-normal mb-3",
-          isHero ? "text-3xl md:text-4xl text-foreground leading-tight" : "text-2xl md:text-3xl text-stone-900",
+          isHero ? "text-3xl md:text-4xl text-foreground leading-tight" : "text-2xl md:text-3xl text-foreground",
           isFooter && "text-lg text-foreground mb-2"
         )}>
           {headline}
@@ -101,7 +101,7 @@ const NewsletterSignup = ({
       {subtext && (
         <p className={cn(
           "mb-6 font-light",
-          isHero ? "text-lg text-foreground/90" : "text-stone-600",
+          isHero ? "text-lg text-foreground/90" : "text-foreground/70",
           isFooter && "text-sm text-foreground/70 mb-4"
         )}>
           {subtext}
@@ -171,7 +171,7 @@ const NewsletterSignup = ({
 
       <p className={cn(
         "mt-4 text-xs font-light",
-        isHero ? "text-foreground/50" : "text-stone-400",
+        isHero ? "text-foreground/50" : "text-foreground/55",
         isFooter && "text-foreground/30"
       )}>
         {t('consent.prefix')}<Link to="/privacy" className="underline hover:text-[#D4A574]">{t('consent.privacyLink')}</Link>{t('consent.suffix')}
