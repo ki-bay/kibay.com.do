@@ -155,11 +155,11 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-foreground/10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-foreground/40 text-xs text-center md:text-left font-light font-lato">
+            <p className="text-foreground/60 text-xs text-center md:text-left font-light font-lato">
               {t('rights', { year: currentYear })}
             </p>
             <div className="flex items-center gap-4">
-              <span className="text-foreground/40 text-xs font-light font-lato">{t('country')}</span>
+              <span className="text-foreground/60 text-xs font-light font-lato">{t('country')}</span>
               <LanguageSwitcher size="sm" />
               <ThemeToggle size="sm" />
             </div>

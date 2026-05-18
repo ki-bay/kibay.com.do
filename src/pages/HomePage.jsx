@@ -428,7 +428,7 @@ const HomePage = () => {
                     <p className="text-base sm:text-lg text-white/90 font-light leading-relaxed mb-8 drop-shadow">
                       {way.lead}
                     </p>
-                    <Link to={`/enjoy/${way.slug}`}>
+                    <Link to={`/enjoy/${way.slug}`} aria-label={`${way.cta}: ${way.title}`}>
                       <span className="inline-flex items-center gap-2 px-6 py-3 bg-[#D4A574] text-foreground font-medium rounded-full hover:bg-[#c29462] transition-all shadow-lg hover:shadow-xl hover:scale-105">
                         {way.cta}
                         <ArrowRight className="w-4 h-4" />
@@ -460,7 +460,7 @@ const HomePage = () => {
                     <p className="text-lg text-foreground/70 font-light leading-relaxed mb-8">
                       {way.lead}
                     </p>
-                    <Link to={`/enjoy/${way.slug}`}>
+                    <Link to={`/enjoy/${way.slug}`} aria-label={`${way.cta}: ${way.title}`}>
                       <span className="inline-flex items-center gap-2 px-6 py-3 bg-[#D4A574] text-foreground font-medium rounded-full hover:bg-[#c29462] transition-all shadow-lg hover:shadow-xl hover:scale-105">
                         {way.cta}
                         <ArrowRight className="w-4 h-4" />
@@ -555,7 +555,7 @@ const HomePage = () => {
                         {t('products.buyNow')}
                       </Button>
                     </Link>
-                    <Link to="/kibay-sparkling" className="flex-1">
+                    <Link to="/kibay-sparkling" className="flex-1" aria-label={`${t('products.learnMore')}: ${t('products.sparkling.title')}`}>
                       <Button variant="outline" className="w-full border-foreground/20 hover:bg-foreground/10 text-foreground font-normal rounded-xl py-6">
                         {t('products.learnMore')}
                       </Button>
@@ -598,7 +598,7 @@ const HomePage = () => {
                         {t('products.buyNow')}
                       </Button>
                     </Link>
-                    <Link to="/kibay-wine" className="flex-1">
+                    <Link to="/kibay-wine" className="flex-1" aria-label={`${t('products.learnMore')}: ${t('products.wine.title')}`}>
                       <Button variant="outline" className="w-full border-foreground/20 hover:bg-foreground/10 text-foreground font-normal rounded-xl py-6">
                         {t('products.learnMore')}
                       </Button>
