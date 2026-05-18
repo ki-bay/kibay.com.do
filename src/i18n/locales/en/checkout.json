@@ -46,6 +46,32 @@
     "orderNumber": "Order number",
     "downloadInvoice": "Download invoice",
     "continueShopping": "Continue shopping",
-    "viewOrder": "View order"
+    "viewOrder": "View order",
+    "itemsTitle": "Your order",
+    "emailSentTo": "Confirmation sent to {{email}}",
+    "nextWine": {
+      "title": "What's next?",
+      "step1": "We pack your order within the next 24 business hours.",
+      "step2": "We'll email you the tracking number the moment it ships.",
+      "step3": "Home delivery anywhere in the Dominican Republic in 1–3 days."
+    },
+    "nextExperience": {
+      "title": "Your reservation",
+      "step1": "See you on {{date}} at {{time}}.",
+      "step2": "Location: Bahía de Ocoa, Km 6½ Hatillo, Azua.",
+      "step3": "We call you the day before to confirm. Questions? Email info@kibay.com.do."
+    },
+    "shareTitle": "Share your Kibay",
+    "shareCaption": "Tag us @kibaywine — we love seeing your moments."
+  },
+  "statusLabel": {
+    "paid": "Payment confirmed",
+    "awaiting_payment": "Awaiting payment",
+    "shipped": "Shipped",
+    "delivered": "Delivered",
+    "refunded": "Refunded",
+    "cancelled": "Cancelled",
+    "canceled": "Cancelled",
+    "payment_failed": "Payment failed"
   }
 }

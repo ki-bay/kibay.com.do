@@ -10,7 +10,8 @@ import { useCart } from '@/hooks/useCart';
 // Landing page after CARDNET redirects the customer back from its hosted
 // payment form. We call cardnet-verify on the Edge Function side — it queries
 // CARDNET server-side, validates the amount, and flips the order to 'paid'.
-// On success we clear the cart and redirect to /order-confirmation/:orderId.
+// On success we clear the cart and redirect to /checkout-success?order_id=…
+// (the same destination Stripe's flow lands on).
 const CheckoutCardnetReturn = () => {
   const [params] = useSearchParams();
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ const CheckoutCardnetReturn = () => {
         }
         if (data?.status === 'paid') {
           clearCart();
-          setTimeout(() => navigate(`/order-confirmation/${orderId}`, { replace: true }), 1000);
+          setTimeout(() => navigate(`/checkout-success?order_id=${orderId}`, { replace: true }), 1000);
           setState({ status: 'paid', message: '' });
         } else {
           setState({
