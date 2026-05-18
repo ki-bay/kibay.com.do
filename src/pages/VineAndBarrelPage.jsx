@@ -307,7 +307,7 @@ const VineAndBarrelPage = () => {
         </section>
 
         {/* Experiences — purchasable */}
-        <section id="experiences" className="py-24 bg-white">
+        <section id="experiences" className="py-24 bg-card">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <m.div {...fadeInUp} className="text-center mb-16">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#D4A574]/10 text-[#D4A574] rounded-full text-sm font-medium tracking-wide uppercase mb-6">
@@ -457,7 +457,7 @@ const VineAndBarrelPage = () => {
         </section>
 
         {/* Tasting Notes */}
-        <section className="py-24 bg-white">
+        <section className="py-24 bg-card">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <m.div {...fadeInUp} className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-serif text-foreground mb-6">{t('tasting.heading')}</h2>
@@ -477,7 +477,7 @@ const VineAndBarrelPage = () => {
                   className={`bg-background p-8 rounded-2xl shadow-lg border border-stone-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group relative ${wine.outOfStock ? 'opacity-90' : ''}`}
                 >
                   {wine.outOfStock && (
-                    <span className="absolute top-4 right-4 inline-block text-[10px] uppercase tracking-widest font-medium text-foreground/70 bg-stone-200 px-2 py-1 rounded-full">
+                    <span className="absolute top-4 right-4 inline-block text-[10px] uppercase tracking-widest font-medium text-foreground/70 bg-foreground/10 px-2 py-1 rounded-full">
                       {t('tasting.outOfStockLabel')}
                     </span>
                   )}

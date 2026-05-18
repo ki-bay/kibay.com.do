@@ -145,7 +145,7 @@ const WhitepaperPage = () => {
             </m.section>
 
             {/* Conclusion */}
-            <m.section {...fadeInUp} className="bg-stone-100 p-8 rounded-2xl border border-stone-200">
+            <m.section {...fadeInUp} className="bg-card border border-foreground/10 p-8 rounded-2xl">
               <h2 className="text-3xl font-serif text-foreground mb-4">{t('conclusion.heading')}</h2>
               <p className="mb-0">
                 {t('conclusion.p1')}

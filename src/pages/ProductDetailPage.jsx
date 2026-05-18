@@ -479,7 +479,7 @@ function ProductDetailPage() {
         {/* Tasting Notes — only if metadata.tasting exists                  */}
         {/* ---------------------------------------------------------------- */}
         {tastingEntries.length > 0 && (
-          <section className="py-20 bg-white border-t border-stone-100">
+          <section className="py-20 bg-card border-t border-foreground/10">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <m.div
                 initial={{ opacity: 0, y: 20 }}
@@ -562,7 +562,7 @@ function ProductDetailPage() {
         {/* ---------------------------------------------------------------- */}
         {/* Commerce — gallery + buy box                                     */}
         {/* ---------------------------------------------------------------- */}
-        <section id="buy" className="py-20 bg-white border-t border-stone-100 scroll-mt-24">
+        <section id="buy" className="py-20 bg-card border-t border-foreground/10 scroll-mt-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 xl:gap-20">
               <m.div
@@ -819,7 +819,7 @@ function ProductDetailPage() {
 
           <RelatedProducts excludeId={product.id} />
 
-          <div className="mt-20 bg-stone-100 rounded-3xl p-8 md:p-12">
+          <div className="mt-20 bg-card border border-foreground/10 rounded-3xl p-8 md:p-12">
             <div className="max-w-3xl mx-auto text-center">
               <NewsletterSignup
                 headline={i18n.t('shop:newsletterHeadline')}

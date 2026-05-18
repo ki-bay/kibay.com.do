@@ -98,7 +98,7 @@ const KibayEspumanteCan = () => {
         </section>
 
         {/* Editorial Content Sections */}
-        <div className="bg-white py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div className="bg-card py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
           {/* Background Decorative Elements */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-mango-50 rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
 

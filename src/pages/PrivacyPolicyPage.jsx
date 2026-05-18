@@ -60,7 +60,7 @@ const PrivacyPolicyPage = () => {
                   <p>{section.content}</p>
                 </div>
                 {index < sections.length - 1 && (
-                  <div className="h-px bg-stone-100 mt-12 w-full" />
+                  <div className="h-px bg-foreground/10 mt-12 w-full" />
                 )}
               </div>
             ))}
