@@ -265,20 +265,20 @@ export default function ProductReviews({ productId, onAggregateChange }) {
     >
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
         <div>
-          <h2 id="reviews-heading" className="text-3xl md:text-4xl font-serif text-stone-900 mb-2">
+          <h2 id="reviews-heading" className="text-3xl md:text-4xl font-serif text-foreground mb-2">
             {t('heading')}
           </h2>
           {loading ? (
-            <p className="text-stone-400 text-sm flex items-center gap-2">
+            <p className="text-foreground/50 text-sm flex items-center gap-2">
               <Loader2 size={14} className="animate-spin" /> {t('loading')}
             </p>
           ) : aggregate.count === 0 ? (
-            <p className="text-stone-500">{t('beFirst')}</p>
+            <p className="text-foreground/60">{t('beFirst')}</p>
           ) : (
-            <div className="flex items-center gap-3 text-stone-600">
+            <div className="flex items-center gap-3 text-foreground/70">
               <StarRow value={aggregate.avg} size={20} ariaLabel={t('starsAria', { value: aggregate.avg, max: 5 })} />
-              <span className="text-stone-900 font-medium">{aggregate.avg.toFixed(1)}</span>
-              <span className="text-stone-400">·</span>
+              <span className="text-foreground font-medium">{aggregate.avg.toFixed(1)}</span>
+              <span className="text-foreground/50">·</span>
               <span>
                 {t('reviewCount', { count: aggregate.count })}
               </span>
@@ -308,7 +308,7 @@ export default function ProductReviews({ productId, onAggregateChange }) {
               <Button
                 type="button"
                 variant="outline"
-                className="rounded-full border-stone-300 text-stone-700 hover:border-[#D4A574] hover:text-[#D4A574]"
+                className="rounded-full border-stone-300 text-foreground/90 hover:border-[#D4A574] hover:text-[#D4A574]"
               >
                 {t('signInToReview')}
               </Button>
@@ -324,15 +324,15 @@ export default function ProductReviews({ productId, onAggregateChange }) {
           className="bg-white border border-stone-200 rounded-2xl p-6 md:p-8 shadow-sm mb-10"
         >
           <div className="mb-6">
-            <Label className="block text-sm font-medium text-stone-900 mb-2">
+            <Label className="block text-sm font-medium text-foreground mb-2">
               {t('yourRating')}
             </Label>
             <StarPicker value={rating} onChange={setRating} disabled={submitting} t={t} />
           </div>
 
           <div className="mb-5">
-            <Label htmlFor="review-title" className="block text-sm font-medium text-stone-900 mb-2">
-              {t('title')} <span className="text-stone-400 font-normal">{t('optional')}</span>
+            <Label htmlFor="review-title" className="block text-sm font-medium text-foreground mb-2">
+              {t('title')} <span className="text-foreground/50 font-normal">{t('optional')}</span>
             </Label>
             <Input
               id="review-title"
@@ -343,13 +343,13 @@ export default function ProductReviews({ productId, onAggregateChange }) {
               placeholder={t('titlePlaceholder')}
               disabled={submitting}
             />
-            <p className="text-xs text-stone-400 mt-1">
+            <p className="text-xs text-foreground/50 mt-1">
               {title.length}/{TITLE_MAX}
             </p>
           </div>
 
           <div className="mb-6">
-            <Label htmlFor="review-comment" className="block text-sm font-medium text-stone-900 mb-2">
+            <Label htmlFor="review-comment" className="block text-sm font-medium text-foreground mb-2">
               {t('yourReview')}
             </Label>
             <Textarea
@@ -362,7 +362,7 @@ export default function ProductReviews({ productId, onAggregateChange }) {
               disabled={submitting}
               required
             />
-            <p className="text-xs text-stone-400 mt-1">
+            <p className="text-xs text-foreground/50 mt-1">
               {comment.length}/{COMMENT_MAX}
             </p>
           </div>
@@ -408,11 +408,11 @@ export default function ProductReviews({ productId, onAggregateChange }) {
               <div className="flex flex-wrap items-center gap-3 mb-2">
                 <StarRow value={r.rating || 0} size={16} ariaLabel={t('starsAria', { value: r.rating || 0, max: 5 })} />
                 {r.title && (
-                  <h3 className="text-lg font-serif text-stone-900">{r.title}</h3>
+                  <h3 className="text-lg font-serif text-foreground">{r.title}</h3>
                 )}
               </div>
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-stone-500 mb-3">
-                <span className="font-medium text-stone-700">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-foreground/60 mb-3">
+                <span className="font-medium text-foreground/90">
                   {r.reviewer_name?.trim() || t('anonymous')}
                 </span>
                 <span aria-hidden="true">·</span>
@@ -424,7 +424,7 @@ export default function ProductReviews({ productId, onAggregateChange }) {
                 )}
               </div>
               {r.comment && (
-                <p className="text-stone-600 leading-relaxed whitespace-pre-line">
+                <p className="text-foreground/70 leading-relaxed whitespace-pre-line">
                   {r.comment}
                 </p>
               )}

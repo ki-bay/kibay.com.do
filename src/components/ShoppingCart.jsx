@@ -94,7 +94,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
             <div className="flex items-center justify-between p-6 border-b border-stone-100 bg-white">
               <div className="flex items-center gap-3">
                 <ShoppingBag className="w-5 h-5 text-[#D4A574]" aria-hidden="true" />
-                <h2 id="cart-title" className="text-xl font-serif font-medium text-stone-900">{t('title')}</h2>
+                <h2 id="cart-title" className="text-xl font-serif font-medium text-foreground">{t('title')}</h2>
               </div>
               <Button
                 ref={closeButtonRef}
@@ -102,20 +102,20 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                 variant="ghost"
                 size="icon"
                 aria-label={t('close', { defaultValue: 'Close' })}
-                className="text-stone-400 hover:text-stone-900 hover:bg-stone-50 rounded-full"
+                className="text-foreground/50 hover:text-foreground hover:bg-background rounded-full"
               >
                 <X className="w-5 h-5" aria-hidden="true" />
               </Button>
             </div>
 
             {/* Cart Items */}
-            <div className="flex-grow p-6 overflow-y-auto bg-stone-50/50">
+            <div className="flex-grow p-6 overflow-y-auto bg-background/50">
               {cartItems.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
                   <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center">
                     <ShoppingBag className="w-8 h-8 text-stone-300" aria-hidden="true" />
                   </div>
-                  <p className="text-stone-500 text-lg">{t('empty')}</p>
+                  <p className="text-foreground/60 text-lg">{t('empty')}</p>
                   <Button
                     onClick={() => setIsCartOpen(false)}
                     variant="link"
@@ -145,7 +145,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                       <div className="flex-grow flex flex-col justify-between">
                         <div>
                           <div className="flex justify-between items-start">
-                            <h3 className="font-medium text-stone-900 line-clamp-1">{item.product.title}</h3>
+                            <h3 className="font-medium text-foreground line-clamp-1">{item.product.title}</h3>
                             <button
                               type="button"
                               onClick={() => removeFromCart(itemKey)}
@@ -155,7 +155,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                               <Trash2 className="w-4 h-4" aria-hidden="true" />
                             </button>
                           </div>
-                          <p className="text-sm text-stone-500 mb-2">{item.variant.title}</p>
+                          <p className="text-sm text-foreground/60 mb-2">{item.variant.title}</p>
                           {item.metadata?.reservation_date && (
                             <p className="text-xs text-[#D4A574] mb-1">
                               {item.metadata.reservation_date}
@@ -174,16 +174,16 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                               type="button"
                               onClick={() => updateQuantity(itemKey, Math.max(1, item.quantity - 1))}
                               aria-label={t('decreaseQuantity', { defaultValue: 'Decrease quantity' })}
-                              className="w-6 h-6 flex items-center justify-center rounded-full bg-white text-stone-600 shadow-sm hover:text-[#D4A574] transition-colors"
+                              className="w-6 h-6 flex items-center justify-center rounded-full bg-white text-foreground/70 shadow-sm hover:text-[#D4A574] transition-colors"
                             >
                               <Minus className="w-3 h-3" aria-hidden="true" />
                             </button>
-                            <span className="w-8 text-center text-sm font-medium text-stone-700">{item.quantity}</span>
+                            <span className="w-8 text-center text-sm font-medium text-foreground/90">{item.quantity}</span>
                             <button
                               type="button"
                               onClick={() => updateQuantity(itemKey, item.quantity + 1)}
                               aria-label={t('increaseQuantity', { defaultValue: 'Increase quantity' })}
-                              className="w-6 h-6 flex items-center justify-center rounded-full bg-white text-stone-600 shadow-sm hover:text-[#D4A574] transition-colors"
+                              className="w-6 h-6 flex items-center justify-center rounded-full bg-white text-foreground/70 shadow-sm hover:text-[#D4A574] transition-colors"
                             >
                               <Plus className="w-3 h-3" aria-hidden="true" />
                             </button>
@@ -201,8 +201,8 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
             {cartItems.length > 0 && (
               <div className="p-6 bg-white border-t border-stone-100 shadow-[0_-10px_40px_rgba(0,0,0,0.03)]">
                 <div className="flex justify-between items-center mb-6">
-                  <span className="text-stone-500">{t('subtotal')}</span>
-                  <span className="text-2xl font-serif font-medium text-stone-900">
+                  <span className="text-foreground/60">{t('subtotal')}</span>
+                  <span className="text-2xl font-serif font-medium text-foreground">
                     {symbol}{getCartTotal().toFixed(2)}
                   </span>
                 </div>
@@ -213,7 +213,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                   {t('checkout')}
                   <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
                 </Button>
-                <p className="text-center text-xs text-stone-400 mt-4">
+                <p className="text-center text-xs text-foreground/50 mt-4">
                   {t('shippingCalculated')}
                 </p>
               </div>

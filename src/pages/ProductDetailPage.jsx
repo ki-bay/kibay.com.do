@@ -289,7 +289,7 @@ function ProductDetailPage() {
     return (
       <>
         <Navigation />
-        <main id="main" role="main" className="flex justify-center items-center h-screen bg-stone-50">
+        <main id="main" role="main" className="flex justify-center items-center h-screen bg-background">
           <Loader2 className="h-16 w-16 text-[#D4A574] animate-spin" />
         </main>
         <Footer />
@@ -301,10 +301,10 @@ function ProductDetailPage() {
     return (
       <>
         <Navigation />
-        <main id="main" role="main" className="min-h-screen bg-stone-50 pt-32 px-4 flex flex-col items-center justify-center">
+        <main id="main" role="main" className="min-h-screen bg-background pt-32 px-4 flex flex-col items-center justify-center">
           <AlertCircle className="h-16 w-16 text-stone-300 mb-4" />
-          <h1 className="text-2xl font-serif text-stone-900 mb-4">{t('notFound')}</h1>
-          <p className="text-stone-500 mb-8">{error}</p>
+          <h1 className="text-2xl font-serif text-foreground mb-4">{t('notFound')}</h1>
+          <p className="text-foreground/60 mb-8">{error}</p>
           <Link to="/shop">
             <Button className="bg-[#D4A574] hover:bg-[#c29462] text-white">{t('backToShop')}</Button>
           </Link>
@@ -398,13 +398,13 @@ function ProductDetailPage() {
 
       <Navigation />
 
-      <main id="main" role="main" className="bg-stone-50 min-h-screen">
+      <main id="main" role="main" className="bg-background min-h-screen">
         {/* ---------------------------------------------------------------- */}
         {/* Hero — editorial, brand-rich                                     */}
         {/* ---------------------------------------------------------------- */}
         <section className="relative pt-32 pb-16 lg:pb-24 overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <Link to="/shop" className="inline-flex items-center gap-2 text-stone-500 hover:text-[#D4A574] transition-colors mb-10 group">
+            <Link to="/shop" className="inline-flex items-center gap-2 text-foreground/60 hover:text-[#D4A574] transition-colors mb-10 group">
               <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
               {t('backToShop')}
             </Link>
@@ -421,7 +421,7 @@ function ProductDetailPage() {
                     {hero.eyebrow}
                   </span>
                 )}
-                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-light font-serif text-stone-900 leading-[1.05]">
+                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-light font-serif text-foreground leading-[1.05]">
                   {hero?.accent ? (
                     <>
                       {hero.lead} <br />
@@ -433,13 +433,13 @@ function ProductDetailPage() {
                 </h1>
 
                 {displaySubtitle && (
-                  <h2 className="text-xl md:text-2xl text-stone-600 font-light leading-relaxed">
+                  <h2 className="text-xl md:text-2xl text-foreground/70 font-light leading-relaxed">
                     {displaySubtitle}
                   </h2>
                 )}
 
                 {hero?.leadCopy && (
-                  <p className="text-lg text-stone-600 max-w-xl font-light leading-relaxed">
+                  <p className="text-lg text-foreground/70 max-w-xl font-light leading-relaxed">
                     {hero.leadCopy}
                   </p>
                 )}
@@ -488,7 +488,7 @@ function ProductDetailPage() {
                 transition={{ duration: 0.6 }}
                 className="text-center mb-14"
               >
-                <h2 className="text-4xl md:text-5xl font-serif text-stone-900 mb-4">
+                <h2 className="text-4xl md:text-5xl font-serif text-foreground mb-4">
                   {t('tasting.heading')}
                 </h2>
                 <div className="w-16 h-px bg-[#D4A574] mx-auto" />
@@ -508,15 +508,15 @@ function ProductDetailPage() {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ delay: i * 0.08 }}
-                      className="bg-stone-50 p-8 rounded-2xl border border-stone-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+                      className="bg-background p-8 rounded-2xl border border-stone-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
                     >
                       <div className="w-12 h-12 bg-[#D4A574]/10 rounded-full flex items-center justify-center mb-5">
                         <Icon className="w-5 h-5 text-[#D4A574]" />
                       </div>
-                      <span className="block text-xs uppercase text-stone-500 tracking-widest mb-2">
+                      <span className="block text-xs uppercase text-foreground/60 tracking-widest mb-2">
                         {label}
                       </span>
-                      <p className="text-stone-700 font-medium leading-relaxed">
+                      <p className="text-foreground/90 font-medium leading-relaxed">
                         {entry.value}
                       </p>
                     </m.div>
@@ -531,9 +531,9 @@ function ProductDetailPage() {
         {/* Specs panel — only if metadata.specs exists                      */}
         {/* ---------------------------------------------------------------- */}
         {specsEntries.length > 0 && (
-          <section className="py-20 bg-stone-50 border-t border-stone-100">
+          <section className="py-20 bg-background border-t border-stone-100">
             <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-              <h2 className="text-2xl md:text-3xl font-serif text-stone-900 mb-10 text-center">
+              <h2 className="text-2xl md:text-3xl font-serif text-foreground mb-10 text-center">
                 {t('specs.heading')}
               </h2>
               <div className="grid gap-1">
@@ -546,10 +546,10 @@ function ProductDetailPage() {
                     transition={{ delay: idx * 0.04 }}
                     className="flex justify-between items-center gap-6 py-4 border-b border-stone-200 last:border-0"
                   >
-                    <span className="text-stone-500 font-light uppercase tracking-wide text-xs sm:text-sm">
+                    <span className="text-foreground/60 font-light uppercase tracking-wide text-xs sm:text-sm">
                       {row.label}
                     </span>
-                    <span className="text-stone-900 font-medium text-right text-sm sm:text-base">
+                    <span className="text-foreground font-medium text-right text-sm sm:text-base">
                       {row.value}
                     </span>
                   </m.div>
@@ -587,11 +587,11 @@ function ProductDetailPage() {
                 transition={{ duration: 0.6, delay: 0.1 }}
                 className="flex flex-col pt-4"
               >
-                <h3 className="text-3xl md:text-4xl font-serif text-stone-900 mb-3 leading-tight font-light">
+                <h3 className="text-3xl md:text-4xl font-serif text-foreground mb-3 leading-tight font-light">
                   {displayTitle}
                 </h3>
                 {displaySubtitle && (
-                  <p className="text-lg text-stone-500 font-light mb-8 leading-relaxed">
+                  <p className="text-lg text-foreground/60 font-light mb-8 leading-relaxed">
                     {displaySubtitle}
                   </p>
                 )}
@@ -599,13 +599,13 @@ function ProductDetailPage() {
                 <div className="flex items-baseline gap-4 mb-8 pb-8 border-b border-stone-100">
                   <span className="text-3xl font-light text-[#D4A574]">{price}</span>
                   {selectedVariant?.sale_price_in_cents && (
-                    <span className="text-xl text-stone-400 line-through decoration-stone-300">{originalPrice}</span>
+                    <span className="text-xl text-foreground/50 line-through decoration-stone-300">{originalPrice}</span>
                   )}
                 </div>
 
                 {product.variants.length > 1 && (
                   <div className="mb-8">
-                    <h4 className="text-xs font-medium uppercase tracking-widest text-stone-500 mb-4">{t('selectVariant')}</h4>
+                    <h4 className="text-xs font-medium uppercase tracking-widest text-foreground/60 mb-4">{t('selectVariant')}</h4>
                     <div className="flex flex-wrap gap-3">
                       {product.variants.map(variant => (
                         <button
@@ -614,7 +614,7 @@ function ProductDetailPage() {
                           className={`px-6 py-3 rounded-full border transition-all duration-300 text-sm font-medium ${
                             selectedVariant?.id === variant.id
                               ? 'bg-card text-foreground border-border shadow-md'
-                              : 'bg-white text-stone-600 border-stone-200 hover:border-[#D4A574] hover:text-[#D4A574]'
+                              : 'bg-white text-foreground/70 border-stone-200 hover:border-[#D4A574] hover:text-[#D4A574]'
                           }`}
                         >
                           {variant.title}
@@ -628,8 +628,8 @@ function ProductDetailPage() {
                 {/* Reservation block — only for experience-type products  */}
                 {/* ------------------------------------------------------ */}
                 {isExperience && (
-                  <div className="mb-8 p-6 rounded-2xl bg-stone-50 border border-stone-200">
-                    <h4 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-stone-700 mb-4">
+                  <div className="mb-8 p-6 rounded-2xl bg-background border border-stone-200">
+                    <h4 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-foreground/90 mb-4">
                       <Calendar size={16} className="text-[#D4A574]" />
                       {t('reservation.heading')}
                     </h4>
@@ -637,7 +637,7 @@ function ProductDetailPage() {
                       <div className="space-y-2">
                         <label
                           htmlFor="reservation-date"
-                          className="block text-xs font-medium uppercase tracking-wide text-stone-500"
+                          className="block text-xs font-medium uppercase tracking-wide text-foreground/60"
                         >
                           {t('reservation.dateLabel')} *
                         </label>
@@ -646,9 +646,9 @@ function ProductDetailPage() {
                             <button
                               id="reservation-date"
                               type="button"
-                              className="w-full bg-white border border-stone-200 rounded-lg px-4 py-3 text-left text-stone-900 hover:border-[#D4A574] focus:border-[#D4A574] focus:outline-none focus:ring-1 focus:ring-[#D4A574] flex items-center justify-between transition-colors"
+                              className="w-full bg-white border border-stone-200 rounded-lg px-4 py-3 text-left text-foreground hover:border-[#D4A574] focus:border-[#D4A574] focus:outline-none focus:ring-1 focus:ring-[#D4A574] flex items-center justify-between transition-colors"
                             >
-                              <span className={reservationDate ? 'text-stone-900' : 'text-stone-400'}>
+                              <span className={reservationDate ? 'text-foreground' : 'text-foreground/50'}>
                                 {reservationDate
                                   ? new Date(reservationDate + 'T00:00:00').toLocaleDateString(
                                       i18n.language === 'en' ? 'en-US' : 'es-DO',
@@ -693,7 +693,7 @@ function ProductDetailPage() {
                         <div className="space-y-2">
                           <label
                             htmlFor="reservation-time"
-                            className="block text-xs font-medium uppercase tracking-wide text-stone-500"
+                            className="block text-xs font-medium uppercase tracking-wide text-foreground/60"
                           >
                             {t('reservation.timeLabel')} *
                           </label>
@@ -703,7 +703,7 @@ function ProductDetailPage() {
                             value={reservationTime}
                             onChange={(e) => setReservationTime(e.target.value)}
                             required
-                            className="w-full bg-white border border-stone-200 rounded-lg px-4 py-3 text-stone-900 focus:border-[#D4A574] focus:outline-none focus:ring-1 focus:ring-[#D4A574]"
+                            className="w-full bg-white border border-stone-200 rounded-lg px-4 py-3 text-foreground focus:border-[#D4A574] focus:outline-none focus:ring-1 focus:ring-[#D4A574]"
                           >
                             {timeslots.map((slot) => (
                               <option key={slot} value={slot}>
@@ -714,7 +714,7 @@ function ProductDetailPage() {
                         </div>
                       )}
                     </div>
-                    <p className="text-xs text-stone-500 mt-4 italic">
+                    <p className="text-xs text-foreground/60 mt-4 italic">
                       {t('reservation.availability')}
                     </p>
                     {!reservationDate && (
@@ -730,7 +730,7 @@ function ProductDetailPage() {
                     {isExperience && (
                       <label
                         htmlFor="adults-stepper"
-                        className="block text-xs font-medium uppercase tracking-wide text-stone-500"
+                        className="block text-xs font-medium uppercase tracking-wide text-foreground/60"
                       >
                         {t('adultsLabel')}
                       </label>
@@ -743,16 +743,16 @@ function ProductDetailPage() {
                         onClick={() => handleQuantityChange(-1)}
                         disabled={quantity <= 1 || isSoldOut}
                         aria-label={t('decrease')}
-                        className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-stone-100 text-stone-600 transition-colors disabled:opacity-50"
+                        className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-stone-100 text-foreground/70 transition-colors disabled:opacity-50"
                       >
                         <Minus size={16} />
                       </button>
-                      <span className="w-12 text-center text-lg font-medium text-stone-900">{quantity}</span>
+                      <span className="w-12 text-center text-lg font-medium text-foreground">{quantity}</span>
                       <button
                         onClick={() => handleQuantityChange(1)}
                         disabled={isSoldOut}
                         aria-label={t('increase')}
-                        className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-stone-100 text-stone-600 transition-colors disabled:opacity-50"
+                        className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-stone-100 text-foreground/70 transition-colors disabled:opacity-50"
                       >
                         <Plus size={16} />
                       </button>
@@ -762,7 +762,7 @@ function ProductDetailPage() {
                   <Button
                     onClick={handleAddToCart}
                     disabled={!canAddToCart || isSoldOut || !product.purchasable}
-                    className="flex-1 bg-[#D4A574] hover:bg-[#c29462] text-white rounded-full py-7 text-lg shadow-lg shadow-[#D4A574]/20 transition-all duration-300 disabled:bg-stone-200 disabled:text-stone-400 disabled:shadow-none disabled:cursor-not-allowed"
+                    className="flex-1 bg-[#D4A574] hover:bg-[#c29462] text-white rounded-full py-7 text-lg shadow-lg shadow-[#D4A574]/20 transition-all duration-300 disabled:bg-stone-200 disabled:text-foreground/50 disabled:shadow-none disabled:cursor-not-allowed"
                   >
                     <ShoppingBag className="mr-2 h-5 w-5" />
                     {isSoldOut ? t('outOfStock') : t('addToCart')}
@@ -772,7 +772,7 @@ function ProductDetailPage() {
                 {isStockManaged && product.purchasable && !isSoldOut && (
                   <div className="mb-8">
                     {canAddToCart ? (
-                      <p className="text-sm text-stone-500 flex items-center gap-2">
+                      <p className="text-sm text-foreground/60 flex items-center gap-2">
                         <CheckCircle size={14} className="text-green-500" /> {t('inStock')}
                         {availableStock < 10 && <span className="text-[#D4A574]">({availableStock})</span>}
                       </p>
@@ -785,7 +785,7 @@ function ProductDetailPage() {
                 )}
 
                 {/* Softer, smaller description treatment now that hero carries the lead */}
-                <div className="prose prose-stone prose-base max-w-none text-stone-500 leading-relaxed font-light mb-10">
+                <div className="prose prose-stone prose-base max-w-none text-foreground/60 leading-relaxed font-light mb-10">
                   <div dangerouslySetInnerHTML={{ __html: displayDescription }} />
                 </div>
 
@@ -795,8 +795,8 @@ function ProductDetailPage() {
                       .sort((a, b) => a.order - b.order)
                       .map((info) => (
                         <div key={info.id}>
-                          <h4 className="text-lg font-serif text-stone-900 mb-2">{info.title}</h4>
-                          <div className="text-stone-500 leading-relaxed font-light" dangerouslySetInnerHTML={{ __html: info.description || '' }} />
+                          <h4 className="text-lg font-serif text-foreground mb-2">{info.title}</h4>
+                          <div className="text-foreground/60 leading-relaxed font-light" dangerouslySetInnerHTML={{ __html: info.description || '' }} />
                         </div>
                       ))}
                   </div>

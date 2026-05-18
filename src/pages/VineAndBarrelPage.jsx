@@ -79,9 +79,9 @@ const VineAndBarrelPage = () => {
           exit={{ opacity: 0, scale: 0.95 }}
           className="bg-white rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl"
         >
-          <div className="flex justify-between items-center p-6 border-b border-gray-100 bg-stone-50">
-            <h3 className="text-xl font-serif text-stone-900">{t('modal.heading')}</h3>
-            <button onClick={() => setIsModalOpen(false)} className="text-stone-400 hover:text-stone-600 transition-colors">
+          <div className="flex justify-between items-center p-6 border-b border-gray-100 bg-background">
+            <h3 className="text-xl font-serif text-foreground">{t('modal.heading')}</h3>
+            <button onClick={() => setIsModalOpen(false)} className="text-foreground/50 hover:text-foreground/70 transition-colors">
               <X size={24} />
             </button>
           </div>
@@ -92,8 +92,8 @@ const VineAndBarrelPage = () => {
                 <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Send size={32} />
                 </div>
-                <h4 className="text-2xl font-serif text-stone-900 mb-2">{t('modal.successTitle')}</h4>
-                <p className="text-stone-600 mb-6">{t('modal.successBody')}</p>
+                <h4 className="text-2xl font-serif text-foreground mb-2">{t('modal.successTitle')}</h4>
+                <p className="text-foreground/70 mb-6">{t('modal.successBody')}</p>
                 <Button onClick={() => setIsModalOpen(false)} className="bg-card hover:bg-card text-foreground w-full py-6">
                   {t('modal.close')}
                 </Button>
@@ -102,7 +102,7 @@ const VineAndBarrelPage = () => {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-stone-600">{t('modal.name')}</label>
+                    <label className="text-sm font-medium text-foreground/70">{t('modal.name')}</label>
                     <input
                       required
                       type="text"
@@ -112,7 +112,7 @@ const VineAndBarrelPage = () => {
                     />
                   </div>
                    <div className="space-y-2">
-                    <label className="text-sm font-medium text-stone-600">{t('modal.phone')}</label>
+                    <label className="text-sm font-medium text-foreground/70">{t('modal.phone')}</label>
                     <input
                       required
                       type="tel"
@@ -124,7 +124,7 @@ const VineAndBarrelPage = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-stone-600">{t('modal.email')}</label>
+                  <label className="text-sm font-medium text-foreground/70">{t('modal.email')}</label>
                   <input
                     required
                     type="email"
@@ -136,7 +136,7 @@ const VineAndBarrelPage = () => {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-stone-600">{t('modal.date')}</label>
+                    <label className="text-sm font-medium text-foreground/70">{t('modal.date')}</label>
                     <input
                       required
                       type="date"
@@ -146,7 +146,7 @@ const VineAndBarrelPage = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-stone-600">{t('modal.guests')}</label>
+                    <label className="text-sm font-medium text-foreground/70">{t('modal.guests')}</label>
                     <select
                       className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:outline-none focus:ring-2 focus:ring-[#D4A574]/50 focus:border-[#D4A574] transition-all"
                       value={formData.guests}
@@ -161,7 +161,7 @@ const VineAndBarrelPage = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-stone-600">{t('modal.requests')}</label>
+                  <label className="text-sm font-medium text-foreground/70">{t('modal.requests')}</label>
                   <textarea
                     rows={3}
                     className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:outline-none focus:ring-2 focus:ring-[#D4A574]/50 focus:border-[#D4A574] transition-all resize-none"
@@ -205,7 +205,7 @@ const VineAndBarrelPage = () => {
       <Navigation />
       <BookingModal />
 
-      <main id="main" role="main" className="bg-stone-50 min-h-screen">
+      <main id="main" role="main" className="bg-background min-h-screen">
 
         {/* Hero Section */}
         <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
@@ -275,31 +275,31 @@ const VineAndBarrelPage = () => {
                 <MapPin size={14} /> {t('about.location')}
               </div>
 
-              <h2 className="text-5xl md:text-6xl font-serif text-stone-900 leading-none">
+              <h2 className="text-5xl md:text-6xl font-serif text-foreground leading-none">
                 {t('about.heading')}
-                <span className="block text-3xl md:text-4xl text-stone-600 mt-2 font-light italic">{t('about.headingAccent')}</span>
+                <span className="block text-3xl md:text-4xl text-foreground/70 mt-2 font-light italic">{t('about.headingAccent')}</span>
               </h2>
 
-              <p className="text-lg text-stone-600 leading-relaxed font-light">
+              <p className="text-lg text-foreground/70 leading-relaxed font-light">
                 {t('about.p1')}
               </p>
 
-              <p className="text-lg text-stone-600 leading-relaxed font-light">
+              <p className="text-lg text-foreground/70 leading-relaxed font-light">
                 {t('about.p2')}
               </p>
 
               <div className="grid grid-cols-3 gap-6 pt-4 border-t border-stone-200">
                 <div className="text-center">
-                  <span className="block text-2xl font-serif text-stone-900">{t('about.stats.duration')}</span>
-                  <span className="text-xs uppercase text-stone-500 tracking-wider">{t('about.stats.durationLabel')}</span>
+                  <span className="block text-2xl font-serif text-foreground">{t('about.stats.duration')}</span>
+                  <span className="text-xs uppercase text-foreground/60 tracking-wider">{t('about.stats.durationLabel')}</span>
                 </div>
                 <div className="text-center border-l border-stone-200">
-                  <span className="block text-2xl font-serif text-stone-900">{t('about.stats.days')}</span>
-                  <span className="text-xs uppercase text-stone-500 tracking-wider">{t('about.stats.daysLabel')}</span>
+                  <span className="block text-2xl font-serif text-foreground">{t('about.stats.days')}</span>
+                  <span className="text-xs uppercase text-foreground/60 tracking-wider">{t('about.stats.daysLabel')}</span>
                 </div>
                 <div className="text-center border-l border-stone-200">
-                  <span className="block text-2xl font-serif text-stone-900">{t('about.stats.distance')}</span>
-                  <span className="text-xs uppercase text-stone-500 tracking-wider">{t('about.stats.distanceLabel')}</span>
+                  <span className="block text-2xl font-serif text-foreground">{t('about.stats.distance')}</span>
+                  <span className="text-xs uppercase text-foreground/60 tracking-wider">{t('about.stats.distanceLabel')}</span>
                 </div>
               </div>
             </div>
@@ -313,8 +313,8 @@ const VineAndBarrelPage = () => {
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#D4A574]/10 text-[#D4A574] rounded-full text-sm font-medium tracking-wide uppercase mb-6">
                 <Grape size={14} /> {t('experiences.eyebrow')}
               </div>
-              <h2 className="text-4xl md:text-5xl font-serif text-stone-900 mb-6">{t('experiences.heading')}</h2>
-              <p className="text-stone-500 max-w-2xl mx-auto text-lg font-light">
+              <h2 className="text-4xl md:text-5xl font-serif text-foreground mb-6">{t('experiences.heading')}</h2>
+              <p className="text-foreground/60 max-w-2xl mx-auto text-lg font-light">
                 {t('experiences.subheading')}
               </p>
             </m.div>
@@ -328,7 +328,7 @@ const VineAndBarrelPage = () => {
               {/* Wine Tour */}
               <m.div
                 variants={fadeInUp}
-                className="bg-stone-50 rounded-2xl shadow-lg border border-stone-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col overflow-hidden"
+                className="bg-background rounded-2xl shadow-lg border border-stone-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col overflow-hidden"
               >
                 <img
                   src="/media/ocoabay-degustacion-vino-dominicano.webp"
@@ -343,13 +343,13 @@ const VineAndBarrelPage = () => {
                 <div className="w-12 h-12 bg-[#D4A574]/10 rounded-full flex items-center justify-center mb-6">
                   <Wine className="text-[#D4A574]" />
                 </div>
-                <h3 className="text-2xl font-serif text-stone-900 mb-1">{t('experiences.tour.title')}</h3>
-                <p className="text-stone-600 italic mb-4 font-serif">{t('experiences.tour.schedule')}</p>
-                <p className="text-stone-600 leading-relaxed font-light mb-6 flex-1">
+                <h3 className="text-2xl font-serif text-foreground mb-1">{t('experiences.tour.title')}</h3>
+                <p className="text-foreground/70 italic mb-4 font-serif">{t('experiences.tour.schedule')}</p>
+                <p className="text-foreground/70 leading-relaxed font-light mb-6 flex-1">
                   {t('experiences.tour.body')}
                 </p>
-                <div className="text-3xl font-serif text-stone-900 mb-6">
-                  {t('experiences.tour.price')} <span className="text-sm text-stone-600 font-light">{t('experiences.perPerson')}</span>
+                <div className="text-3xl font-serif text-foreground mb-6">
+                  {t('experiences.tour.price')} <span className="text-sm text-foreground/70 font-light">{t('experiences.perPerson')}</span>
                 </div>
                 <div className="flex flex-col gap-3">
                   <Link to="/product/ocoa-bay-wine-tour" className="w-full">
@@ -357,7 +357,7 @@ const VineAndBarrelPage = () => {
                       {t('experiences.buyOnKibay')} <ArrowRight className="ml-2 w-4 h-4" />
                     </Button>
                   </Link>
-                  <a href="https://ocoabay.com/reservacion/" target="_blank" rel="noopener noreferrer" className="text-sm text-stone-500 hover:text-[#D4A574] inline-flex items-center justify-center gap-1">
+                  <a href="https://ocoabay.com/reservacion/" target="_blank" rel="noopener noreferrer" className="text-sm text-foreground/60 hover:text-[#D4A574] inline-flex items-center justify-center gap-1">
                     {t('experiences.bookAtOcoa')} <ExternalLink className="w-3 h-3" />
                   </a>
                 </div>
@@ -379,7 +379,7 @@ const VineAndBarrelPage = () => {
                   decoding="async"
                 />
                 <div className="p-10 flex flex-col flex-1">
-                <div className="absolute top-4 right-4 px-3 py-1 bg-[#D4A574] text-stone-900 rounded-full text-xs font-medium uppercase tracking-wider">
+                <div className="absolute top-4 right-4 px-3 py-1 bg-[#D4A574] text-foreground rounded-full text-xs font-medium uppercase tracking-wider">
                   {t('experiences.complete.badge')}
                 </div>
                 <div className="w-12 h-12 bg-[#D4A574]/20 rounded-full flex items-center justify-center mb-6">
@@ -395,7 +395,7 @@ const VineAndBarrelPage = () => {
                 </div>
                 <div className="flex flex-col gap-3">
                   <Link to="/product/ocoa-bay-complete-experience" className="w-full">
-                    <Button className="w-full bg-[#D4A574] hover:bg-[#c29462] text-stone-900 py-6">
+                    <Button className="w-full bg-[#D4A574] hover:bg-[#c29462] text-foreground py-6">
                       {t('experiences.buyOnKibay')} <ArrowRight className="ml-2 w-4 h-4" />
                     </Button>
                   </Link>
@@ -409,7 +409,7 @@ const VineAndBarrelPage = () => {
               {/* Casa Club à la carte */}
               <m.div
                 variants={fadeInUp}
-                className="bg-stone-50 rounded-2xl shadow-lg border border-stone-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col overflow-hidden"
+                className="bg-background rounded-2xl shadow-lg border border-stone-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col overflow-hidden"
               >
                 <img
                   src="/media/kibay-vino-ocoa-bay.webp"
@@ -424,13 +424,13 @@ const VineAndBarrelPage = () => {
                 <div className="w-12 h-12 bg-[#D4A574]/10 rounded-full flex items-center justify-center mb-6">
                   <Utensils className="text-[#D4A574]" />
                 </div>
-                <h3 className="text-2xl font-serif text-stone-900 mb-1">{t('experiences.casaClub.title')}</h3>
-                <p className="text-stone-600 italic mb-4 font-serif">{t('experiences.casaClub.schedule')}</p>
-                <p className="text-stone-600 leading-relaxed font-light mb-6 flex-1">
+                <h3 className="text-2xl font-serif text-foreground mb-1">{t('experiences.casaClub.title')}</h3>
+                <p className="text-foreground/70 italic mb-4 font-serif">{t('experiences.casaClub.schedule')}</p>
+                <p className="text-foreground/70 leading-relaxed font-light mb-6 flex-1">
                   {t('experiences.casaClub.body')}
                 </p>
-                <div className="text-3xl font-serif text-stone-900 mb-6">
-                  {t('experiences.casaClub.price')} <span className="text-sm text-stone-600 font-light">{t('experiences.casaClub.priceSuffix')}</span>
+                <div className="text-3xl font-serif text-foreground mb-6">
+                  {t('experiences.casaClub.price')} <span className="text-sm text-foreground/70 font-light">{t('experiences.casaClub.priceSuffix')}</span>
                 </div>
                 <div className="flex flex-col gap-3">
                   <a href="https://ocoabay.com/reservacion/" target="_blank" rel="noopener noreferrer" className="w-full">
@@ -438,13 +438,13 @@ const VineAndBarrelPage = () => {
                       {t('experiences.reserveAtOcoa')} <ExternalLink className="ml-2 w-4 h-4" />
                     </Button>
                   </a>
-                  <p className="text-xs text-stone-600 text-center">{t('experiences.casaClub.note')}</p>
+                  <p className="text-xs text-foreground/70 text-center">{t('experiences.casaClub.note')}</p>
                 </div>
                 </div>
               </m.div>
             </m.div>
 
-            <m.div {...fadeInUp} className="mt-12 text-center text-sm text-stone-500 max-w-3xl mx-auto">
+            <m.div {...fadeInUp} className="mt-12 text-center text-sm text-foreground/60 max-w-3xl mx-auto">
               <p>
                 {t('experiences.footnote1')}
               </p>
@@ -460,8 +460,8 @@ const VineAndBarrelPage = () => {
         <section className="py-24 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <m.div {...fadeInUp} className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-serif text-stone-900 mb-6">{t('tasting.heading')}</h2>
-              <p className="text-stone-500 max-w-2xl mx-auto text-lg font-light">{t('tasting.subheading')}</p>
+              <h2 className="text-4xl md:text-5xl font-serif text-foreground mb-6">{t('tasting.heading')}</h2>
+              <p className="text-foreground/60 max-w-2xl mx-auto text-lg font-light">{t('tasting.subheading')}</p>
             </m.div>
 
             <m.div
@@ -474,31 +474,31 @@ const VineAndBarrelPage = () => {
                 <m.div
                   key={i}
                   variants={fadeInUp}
-                  className={`bg-stone-50 p-8 rounded-2xl shadow-lg border border-stone-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group relative ${wine.outOfStock ? 'opacity-90' : ''}`}
+                  className={`bg-background p-8 rounded-2xl shadow-lg border border-stone-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group relative ${wine.outOfStock ? 'opacity-90' : ''}`}
                 >
                   {wine.outOfStock && (
-                    <span className="absolute top-4 right-4 inline-block text-[10px] uppercase tracking-widest font-medium text-stone-600 bg-stone-200 px-2 py-1 rounded-full">
+                    <span className="absolute top-4 right-4 inline-block text-[10px] uppercase tracking-widest font-medium text-foreground/70 bg-stone-200 px-2 py-1 rounded-full">
                       {t('tasting.outOfStockLabel')}
                     </span>
                   )}
                   <div className="w-12 h-12 bg-[#D4A574]/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-[#D4A574] transition-colors duration-300">
                     <Wine className="text-[#D4A574] group-hover:text-foreground transition-colors" />
                   </div>
-                  <h3 className="text-2xl font-serif text-stone-900 mb-1">{wine.name}</h3>
-                  <p className="text-stone-600 italic mb-6 font-serif">{wine.year}</p>
+                  <h3 className="text-2xl font-serif text-foreground mb-1">{wine.name}</h3>
+                  <p className="text-foreground/70 italic mb-6 font-serif">{wine.year}</p>
 
                   <div className="space-y-4">
                     <div>
-                      <span className="block text-xs uppercase text-stone-600 tracking-wider mb-1">{t('tasting.labelAroma')}</span>
-                      <p className="text-stone-700 font-medium">{wine.aroma}</p>
+                      <span className="block text-xs uppercase text-foreground/70 tracking-wider mb-1">{t('tasting.labelAroma')}</span>
+                      <p className="text-foreground/90 font-medium">{wine.aroma}</p>
                     </div>
                     <div>
-                      <span className="block text-xs uppercase text-stone-600 tracking-wider mb-1">{t('tasting.labelFlavor')}</span>
-                      <p className="text-stone-700 font-medium">{wine.flavor}</p>
+                      <span className="block text-xs uppercase text-foreground/70 tracking-wider mb-1">{t('tasting.labelFlavor')}</span>
+                      <p className="text-foreground/90 font-medium">{wine.flavor}</p>
                     </div>
                     <div>
-                      <span className="block text-xs uppercase text-stone-600 tracking-wider mb-1">{t('tasting.labelFinish')}</span>
-                      <p className="text-stone-700 font-medium">{wine.finish}</p>
+                      <span className="block text-xs uppercase text-foreground/70 tracking-wider mb-1">{t('tasting.labelFinish')}</span>
+                      <p className="text-foreground/90 font-medium">{wine.finish}</p>
                     </div>
                   </div>
                 </m.div>
@@ -512,7 +512,7 @@ const VineAndBarrelPage = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <m.div {...fadeInUp} className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-serif mb-6">{t('pairings.heading')}</h2>
-              <p className="text-stone-400 max-w-2xl mx-auto text-lg font-light">{t('pairings.subheading')}</p>
+              <p className="text-foreground/50 max-w-2xl mx-auto text-lg font-light">{t('pairings.subheading')}</p>
             </m.div>
 
             <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -551,7 +551,7 @@ const VineAndBarrelPage = () => {
                     </div>
                     <div>
                       <h4 className="text-xl font-serif mb-2 text-[#D4A574]">{item.dish}</h4>
-                      <p className="text-stone-400 font-light leading-relaxed">{item.desc}</p>
+                      <p className="text-foreground/50 font-light leading-relaxed">{item.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -576,7 +576,7 @@ const VineAndBarrelPage = () => {
               {t('booking.body')}
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12 text-stone-400 text-sm tracking-wider uppercase">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12 text-foreground/50 text-sm tracking-wider uppercase">
               <span className="flex items-center gap-2"><Clock size={16} /> {t('booking.infoDays')}</span>
               <span className="hidden sm:inline">•</span>
               <span className="flex items-center gap-2"><Utensils size={16} /> {t('booking.infoDining')}</span>

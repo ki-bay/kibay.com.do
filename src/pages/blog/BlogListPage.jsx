@@ -64,7 +64,7 @@ const BlogListPage = () => {
       
       <Navigation />
       
-      <main id="main" role="main" className="min-h-screen bg-stone-50 pt-24 pb-16 font-lato">
+      <main id="main" role="main" className="min-h-screen bg-background pt-24 pb-16 font-lato">
         <div className="container mx-auto px-4">
           
           {/* Header Section */}
@@ -72,7 +72,7 @@ const BlogListPage = () => {
             <m.h1 
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-4xl md:text-5xl font-bold text-stone-900 mb-4"
+              className="text-4xl md:text-5xl font-bold text-foreground mb-4"
             >
               The Kibay Journal
             </m.h1>
@@ -80,32 +80,32 @@ const BlogListPage = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="text-lg text-stone-600 max-w-2xl mx-auto font-light"
+              className="text-lg text-foreground/70 max-w-2xl mx-auto font-light"
             >
               Stories about our journey, winemaking, and the sparkling lifestyle.
             </m.p>
           </div>
 
           {/* Search and Filter Section */}
-          <div className="sticky top-20 z-30 bg-stone-50/95 backdrop-blur-sm py-4 mb-8">
+          <div className="sticky top-20 z-30 bg-background/95 backdrop-blur-sm py-4 mb-8">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 max-w-5xl mx-auto p-4 bg-white rounded-2xl shadow-sm border border-stone-200">
               <div className="relative w-full md:w-1/3">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-stone-400 h-4 w-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-foreground/50 h-4 w-4" />
                 <input 
                   type="text" 
                   placeholder="Search articles..." 
-                  className="w-full pl-10 pr-4 py-2 bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-mango-500 transition-all text-sm"
+                  className="w-full pl-10 pr-4 py-2 bg-background border border-stone-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-mango-500 transition-all text-sm"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
               
               <div className="flex gap-2 overflow-x-auto pb-1 w-full md:w-auto no-scrollbar items-center">
-                <span className="text-sm text-stone-400 flex items-center gap-1 mr-2"><Filter className="w-3 h-3" /> Filters:</span>
+                <span className="text-sm text-foreground/50 flex items-center gap-1 mr-2"><Filter className="w-3 h-3" /> Filters:</span>
                 <Button 
                   variant={selectedCategory === 'All' ? "default" : "outline"}
                   onClick={() => setSelectedCategory('All')}
-                  className={`whitespace-nowrap rounded-full px-4 h-8 text-xs ${selectedCategory === 'All' ? 'bg-mango-500 hover:bg-mango-600' : 'text-stone-600'}`}
+                  className={`whitespace-nowrap rounded-full px-4 h-8 text-xs ${selectedCategory === 'All' ? 'bg-mango-500 hover:bg-mango-600' : 'text-foreground/70'}`}
                 >
                   All
                 </Button>
@@ -114,7 +114,7 @@ const BlogListPage = () => {
                     key={cat.id}
                     variant={selectedCategory === cat.slug ? "default" : "outline"}
                     onClick={() => setSelectedCategory(cat.slug)}
-                    className={`whitespace-nowrap rounded-full px-4 h-8 text-xs ${selectedCategory === cat.slug ? 'bg-mango-500 hover:bg-mango-600' : 'text-stone-600'}`}
+                    className={`whitespace-nowrap rounded-full px-4 h-8 text-xs ${selectedCategory === cat.slug ? 'bg-mango-500 hover:bg-mango-600' : 'text-foreground/70'}`}
                   >
                     {cat.name}
                   </Button>
@@ -161,14 +161,14 @@ const BlogListPage = () => {
                               </div>
                             )}
                             {post.category && (
-                              <Badge className="absolute top-4 right-4 bg-foreground/95 backdrop-blur-sm text-stone-900 shadow-sm font-normal">
+                              <Badge className="absolute top-4 right-4 bg-foreground/95 backdrop-blur-sm text-foreground shadow-sm font-normal">
                                 {post.category.name}
                               </Badge>
                             )}
                           </div>
                           
                           <div className="p-6 flex flex-col flex-grow">
-                            <div className="flex items-center gap-4 text-xs text-stone-500 mb-3 font-medium uppercase tracking-wide">
+                            <div className="flex items-center gap-4 text-xs text-foreground/60 mb-3 font-medium uppercase tracking-wide">
                               <span className="flex items-center gap-1">
                                 <Calendar className="h-3 w-3 text-mango-500" />
                                 {formatBlogDate(post.created_at)}
@@ -180,20 +180,20 @@ const BlogListPage = () => {
                               </span>
                             </div>
                             
-                            <h3 className="text-xl font-bold text-stone-900 mb-3 group-hover:text-mango-600 transition-colors line-clamp-2">
+                            <h3 className="text-xl font-bold text-foreground mb-3 group-hover:text-mango-600 transition-colors line-clamp-2">
                               {post.title}
                             </h3>
                             
-                            <p className="text-stone-600 text-sm line-clamp-3 mb-6 font-light leading-relaxed">
+                            <p className="text-foreground/70 text-sm line-clamp-3 mb-6 font-light leading-relaxed">
                               {post.excerpt}
                             </p>
                             
                             <div className="mt-auto pt-4 border-t border-stone-100 flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <div className="w-6 h-6 rounded-full bg-stone-200 flex items-center justify-center text-xs font-bold text-stone-600">
+                                <div className="w-6 h-6 rounded-full bg-stone-200 flex items-center justify-center text-xs font-bold text-foreground/70">
                                   {post.author?.full_name?.charAt(0) || 'K'}
                                 </div>
-                                <span className="text-xs font-medium text-stone-500">
+                                <span className="text-xs font-medium text-foreground/60">
                                   {post.author?.full_name || 'Kibay Team'}
                                 </span>
                               </div>
@@ -211,10 +211,10 @@ const BlogListPage = () => {
             ) : (
               <div className="text-center py-20 bg-white rounded-3xl border border-stone-200 shadow-sm">
                 <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                   <Search className="w-6 h-6 text-stone-400" />
+                   <Search className="w-6 h-6 text-foreground/50" />
                 </div>
-                <h3 className="text-xl font-medium text-stone-900 mb-2">No stories found</h3>
-                <p className="text-stone-500 max-w-sm mx-auto">
+                <h3 className="text-xl font-medium text-foreground mb-2">No stories found</h3>
+                <p className="text-foreground/60 max-w-sm mx-auto">
                   We couldn't find any articles matching your search. Try different keywords or clear your filters.
                 </p>
                 <Button 

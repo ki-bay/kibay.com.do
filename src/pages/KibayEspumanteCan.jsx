@@ -51,7 +51,7 @@ const KibayEspumanteCan = () => {
 
       <Navigation />
 
-      <main id="main" role="main" className="min-h-screen bg-stone-50 pt-20">
+      <main id="main" role="main" className="min-h-screen bg-background pt-20">
 
         {/* Main Product Section */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
@@ -73,10 +73,10 @@ const KibayEspumanteCan = () => {
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
                 <span className="text-mango-600 font-semibold tracking-wider text-sm uppercase mb-2 block">{t('hero.eyebrow')}</span>
-                <h1 className="text-4xl md:text-5xl font-serif text-stone-900 mb-6 leading-tight">
+                <h1 className="text-4xl md:text-5xl font-serif text-foreground mb-6 leading-tight">
                   {t('hero.h1')}
                 </h1>
-                <p className="text-xl text-stone-600 font-light leading-relaxed mb-8">
+                <p className="text-xl text-foreground/70 font-light leading-relaxed mb-8">
                   {t('hero.intro')}
                 </p>
 
@@ -106,9 +106,9 @@ const KibayEspumanteCan = () => {
 
             {/* Crafted in DR */}
             <section className="text-center">
-              <h2 className="text-3xl md:text-4xl font-serif text-stone-900 mb-6">{t('crafted.heading')}</h2>
+              <h2 className="text-3xl md:text-4xl font-serif text-foreground mb-6">{t('crafted.heading')}</h2>
               <div className="w-16 h-1 bg-mango-400 mx-auto mb-8"></div>
-              <p className="text-lg text-stone-600 leading-relaxed font-light">
+              <p className="text-lg text-foreground/70 leading-relaxed font-light">
                 {t('crafted.body')}
               </p>
             </section>
@@ -116,27 +116,27 @@ const KibayEspumanteCan = () => {
             {/* Process & Organic */}
             <div className="grid md:grid-cols-2 gap-12 items-start">
               <section>
-                <h2 className="text-2xl font-serif text-stone-900 mb-4">{t('process.heading')}</h2>
-                <p className="text-stone-600 leading-relaxed">
+                <h2 className="text-2xl font-serif text-foreground mb-4">{t('process.heading')}</h2>
+                <p className="text-foreground/70 leading-relaxed">
                   {t('process.body')}
                 </p>
               </section>
               <section>
-                <h2 className="text-2xl font-serif text-stone-900 mb-4">{t('organic.heading')}</h2>
-                <p className="text-stone-600 leading-relaxed">
+                <h2 className="text-2xl font-serif text-foreground mb-4">{t('organic.heading')}</h2>
+                <p className="text-foreground/70 leading-relaxed">
                   {t('organic.body')}
                 </p>
               </section>
             </div>
 
             {/* Tasting & Enjoyment */}
-            <section className="bg-stone-50 p-8 md:p-12 rounded-2xl border border-stone-100">
+            <section className="bg-background p-8 md:p-12 rounded-2xl border border-stone-100">
               <div className="grid md:grid-cols-2 gap-12">
                 <div>
-                  <h2 className="text-2xl font-serif text-stone-900 mb-4 flex items-center gap-2">
+                  <h2 className="text-2xl font-serif text-foreground mb-4 flex items-center gap-2">
                     {t('tasting.heading')}
                   </h2>
-                  <ul className="space-y-3 text-stone-600">
+                  <ul className="space-y-3 text-foreground/70">
                     <li className="flex items-start gap-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-mango-400 mt-2.5"></span>
                       <span><strong>{t('tasting.noseLabel')}</strong> {t('tasting.nose')}</span>
@@ -152,11 +152,11 @@ const KibayEspumanteCan = () => {
                   </ul>
                 </div>
                 <div>
-                  <h2 className="text-2xl font-serif text-stone-900 mb-4">{t('enjoy.heading')}</h2>
-                  <p className="text-stone-600 mb-4">
+                  <h2 className="text-2xl font-serif text-foreground mb-4">{t('enjoy.heading')}</h2>
+                  <p className="text-foreground/70 mb-4">
                     {t('enjoy.body1')}
                   </p>
-                  <p className="text-stone-600">
+                  <p className="text-foreground/70">
                     {t('enjoy.body2')}
                   </p>
                 </div>
@@ -165,8 +165,8 @@ const KibayEspumanteCan = () => {
 
             {/* Winery Credibility */}
             <section className="text-center pt-8">
-              <h2 className="text-3xl font-serif text-stone-900 mb-4">{t('winery.heading')}</h2>
-              <p className="text-lg text-stone-500 italic mb-10">{t('winery.tagline')}</p>
+              <h2 className="text-3xl font-serif text-foreground mb-4">{t('winery.heading')}</h2>
+              <p className="text-lg text-foreground/60 italic mb-10">{t('winery.tagline')}</p>
 
               <div className="relative rounded-2xl overflow-hidden shadow-xl max-w-3xl mx-auto group">
                 <img
