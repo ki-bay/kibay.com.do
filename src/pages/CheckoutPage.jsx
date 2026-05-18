@@ -57,10 +57,6 @@ const CheckoutForm = ({
 			return;
 		}
 
-		if (!user) {
-			setError('You must be logged in to complete the purchase.');
-			return;
-		}
 
 		setProcessing(true);
 		setError(null);
@@ -142,6 +138,11 @@ const CheckoutPage = () => {
 	const [step, setStep] = useState('shipping');
 	const [clientSecret, setClientSecret] = useState('');
 	const [pendingOrderId, setPendingOrderId] = useState(null);
+	// Random token issued by the DB default when the order row is INSERTed.
+	// Guests use it to view their order status via the success page (RLS
+	// requires both id and token). Logged-in users carry it too but don't
+	// need it — they can fetch via their session.
+	const [pendingOrderToken, setPendingOrderToken] = useState(null);
 	const [loading, setLoading] = useState(false);
 	const [initError, setInitError] = useState(null);
 	const [shippingMethod, setShippingMethod] = useState('standard');
@@ -241,7 +242,10 @@ const CheckoutPage = () => {
 	const handleSuccess = (orderId) => {
 		clearCart();
 		localStorage.setItem('last_order_id', orderId);
-		navigate(`/checkout-success?order_id=${orderId}`);
+		// Pass the guest lookup token along so non-logged-in customers can
+		// load their own order on /checkout-success via RLS.
+		const tokenParam = pendingOrderToken ? `&token=${pendingOrderToken}` : '';
+		navigate(`/checkout-success?order_id=${orderId}${tokenParam}`);
 	};
 
 	const handleFail = () => {
@@ -302,10 +306,6 @@ const CheckoutPage = () => {
 	};
 
 	const handleContinueToPayment = async () => {
-		if (!user) {
-			setInitError('Please sign in to continue to payment.');
-			return;
-		}
 		if (!shippingInfo.firstName || !shippingInfo.lastName || !shippingInfo.email || !shippingInfo.address) {
 			setInitError('Please complete all required shipping fields.');
 			return;
@@ -394,38 +394,28 @@ const CheckoutPage = () => {
 		const orderNumber = `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
 		let createdOrderId = null;
+		let createdOrderToken = null;
 		try {
-			const { data: orderData, error: orderError } = await supabase
-				.from('orders')
-				.insert({
-					user_id: user.id,
-					order_number: orderNumber,
-					status: 'awaiting_payment',
-					total_amount: finalTotalCents,
-					subtotal_amount: subtotalCents,
-					shipping_amount: shippingCents,
-					discount_amount: finalDiscountCents,
-					coupon_code: finalCouponCode,
-					currency: cartCurrency,
-					items_count: cartItems.length,
-					shipping_address: shippingInfo,
-					shipping_method: cartIsAllExperience ? 'pickup' : shippingMethod,
-					tax_id: shippingInfo.taxId || null,
-					payment_method: 'Stripe',
-					// All-experiences orders have no physical delivery — the
-					// "delivery date" is the reservation date on each line item.
-					estimated_delivery_date: cartIsAllExperience
-						? null
-						: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
-				})
-				.select()
-				.single();
-
-			if (orderError) throw new Error(orderError.message);
-			createdOrderId = orderData.id;
+			const orderPayload = {
+				order_number: orderNumber,
+				status: 'awaiting_payment',
+				total_amount: finalTotalCents,
+				subtotal_amount: subtotalCents,
+				shipping_amount: shippingCents,
+				discount_amount: finalDiscountCents,
+				coupon_code: finalCouponCode,
+				currency: cartCurrency,
+				items_count: cartItems.length,
+				shipping_address: shippingInfo,
+				shipping_method: cartIsAllExperience ? 'pickup' : shippingMethod,
+				tax_id: shippingInfo.taxId || null,
+				payment_method: 'Stripe',
+				estimated_delivery_date: cartIsAllExperience
+					? null
+					: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+			};
 
 			const orderItems = cartItems.map((item) => ({
-				order_id: orderData.id,
 				product_id: item.product.id,
 				variant_id: item.variant.id,
 				product_name: item.product.title,
@@ -433,19 +423,41 @@ const CheckoutPage = () => {
 				price_per_item: item.variant.sale_price_in_cents ?? item.variant.price_in_cents,
 				total_price:
 					(item.variant.sale_price_in_cents ?? item.variant.price_in_cents) * item.quantity,
-				// Per-line metadata. Wine bottles ship with {}; experiences carry
-				// { reservation_date, reservation_time } set at /product/:slug add-to-cart.
 				metadata: item.metadata || {},
 			}));
 
-			const { error: itemsError } = await supabase.from('order_items').insert(orderItems);
-			if (itemsError) throw new Error(itemsError.message);
+			if (user) {
+				// Authenticated user — use direct insert via orders_insert_own RLS.
+				const { data: orderData, error: orderError } = await supabase
+					.from('orders')
+					.insert({ ...orderPayload, user_id: user.id })
+					.select()
+					.single();
+				if (orderError) throw new Error(orderError.message);
+				createdOrderId = orderData.id;
+				createdOrderToken = orderData.guest_lookup_token || null;
+
+				const items = orderItems.map((oi) => ({ ...oi, order_id: orderData.id }));
+				const { error: itemsError } = await supabase.from('order_items').insert(items);
+				if (itemsError) throw new Error(itemsError.message);
+			} else {
+				// Guest path — atomic INSERT via SECURITY DEFINER RPC. Returns
+				// only { order_id, guest_lookup_token } since anon has no
+				// SELECT on orders (orders contain PII).
+				const { data: rpcData, error: rpcErr } = await supabase.rpc('create_guest_order', {
+					p_order: orderPayload,
+					p_items: orderItems,
+				});
+				if (rpcErr) throw new Error(rpcErr.message);
+				createdOrderId = rpcData?.order_id;
+				createdOrderToken = rpcData?.guest_lookup_token;
+			}
 
 			const { data, error } = await supabase.functions.invoke('create-payment-intent', {
 				body: {
 					amount: finalTotalMajor,
 					currency: cartCurrency.toLowerCase(),
-					order_id: orderData.id,
+					order_id: createdOrderId,
 				},
 			});
 
@@ -453,12 +465,20 @@ const CheckoutPage = () => {
 			if (data?.error) throw new Error(data.error);
 			if (!data?.clientSecret) throw new Error('No client secret returned');
 
-			await supabase
-				.from('orders')
-				.update({ stripe_payment_intent_id: data.paymentIntentId })
-				.eq('id', orderData.id);
+			// For authenticated users, we can update the orders row directly
+			// via RLS (orders_update_own). For guests, anon has no UPDATE
+			// permission, so we stamp the payment_intent via the
+			// create-payment-intent function instead (it already runs with
+			// service role and could persist this if extended later).
+			if (user) {
+				await supabase
+					.from('orders')
+					.update({ stripe_payment_intent_id: data.paymentIntentId })
+					.eq('id', createdOrderId);
+			}
 
-			setPendingOrderId(orderData.id);
+			setPendingOrderId(createdOrderId);
+			setPendingOrderToken(createdOrderToken);
 			setClientSecret(data.clientSecret);
 			setStep('payment');
 		} catch (err) {
@@ -483,7 +503,16 @@ const CheckoutPage = () => {
 
 			<main id="main" role="main" className="min-h-screen bg-background pt-28 pb-20 px-4 sm:px-6 lg:px-8">
 				<div className="max-w-6xl mx-auto">
-					<h1 className="text-3xl font-light text-foreground mb-8">{t('title')}</h1>
+					<h1 className="text-3xl font-light text-foreground mb-4">{t('title')}</h1>
+
+					{!user && step === 'shipping' && (
+						<div className="mb-8 text-sm text-foreground/70 font-light">
+							{t('guestNotice', 'Compras como invitado — no necesitas crear una cuenta.')}{' '}
+							<a href="/login" className="text-[#D4A574] hover:underline">
+								{t('haveAccount', '¿Tienes cuenta? Inicia sesión')}
+							</a>
+						</div>
+					)}
 
 					<div className="grid lg:grid-cols-2 gap-12">
 						<div className="space-y-8">
@@ -827,7 +856,7 @@ const CheckoutPage = () => {
 													const { data: { session } } = await supabase.auth.getSession();
 													const accessToken = session?.access_token;
 													const { data, error } = await supabase.functions.invoke('create-cardnet-session', {
-														body: { order_id: pendingOrderId },
+														body: { order_id: pendingOrderId, token: pendingOrderToken || undefined },
 														headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
 													});
 													if (error) throw error;

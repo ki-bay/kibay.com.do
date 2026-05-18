@@ -45,26 +45,38 @@ serve(async (req) => {
 		return json({ error: 'CARDNET not configured' }, 503);
 	}
 
-	const authHeader = req.headers.get('authorization') || '';
-	const token = authHeader.replace(/^Bearer\s+/i, '');
-	if (!token) return json({ error: 'Missing authorization' }, 401);
-	const userClient = createClient(supabaseUrl, anonKey, {
-		global: { headers: { Authorization: `Bearer ${token}` } },
-	});
-	const { data: userData, error: userErr } = await userClient.auth.getUser();
-	if (userErr || !userData?.user) return json({ error: 'Invalid session' }, 401);
-
-	const { order_id } = (await req.json()) as { order_id?: string };
+	// Dual auth: authenticated owner OR anon guest with the order's
+	// guest_lookup_token. Mirrors create-cardnet-session.
+	const { order_id, token: guestToken } = (await req.json()) as {
+		order_id?: string;
+		token?: string;
+	};
 	if (!order_id) return json({ error: 'order_id required' }, 400);
+
+	const authHeader = req.headers.get('authorization') || '';
+	const jwt = authHeader.replace(/^Bearer\s+/i, '');
+	let userId: string | null = null;
+	if (jwt) {
+		const userClient = createClient(supabaseUrl, anonKey, {
+			global: { headers: { Authorization: `Bearer ${jwt}` } },
+		});
+		const { data: u } = await userClient.auth.getUser();
+		userId = u?.user?.id || null;
+	}
 
 	const admin = createClient(supabaseUrl, serviceKey);
 	const { data: order, error: orderErr } = await admin
 		.from('orders')
-		.select('id, user_id, status, cardnet_session_id, order_number, total_amount, currency')
+		.select('id, user_id, status, cardnet_session_id, order_number, total_amount, currency, guest_lookup_token')
 		.eq('id', order_id)
 		.single();
 	if (orderErr || !order) return json({ error: 'Order not found' }, 404);
-	if (order.user_id !== userData.user.id) return json({ error: 'Order belongs to another user' }, 403);
+
+	const ownerMatches = order.user_id && userId && order.user_id === userId;
+	const guestMatches = order.user_id === null && guestToken && guestToken === order.guest_lookup_token;
+	if (!ownerMatches && !guestMatches) {
+		return json({ error: 'Unauthorized for this order' }, 403);
+	}
 	if (!order.cardnet_session_id) return json({ error: 'No CARDNET session on order' }, 400);
 
 	// Already paid? short-circuit — repeat /verify calls are safe.

@@ -72,29 +72,37 @@ serve(async (req) => {
 		);
 	}
 
-	// 1. Auth — must be the user who owns the order, or admin.
-	const authHeader = req.headers.get('authorization') || '';
-	const token = authHeader.replace(/^Bearer\s+/i, '');
-	if (!token) return json({ error: 'Missing authorization' }, 401);
-	const userClient = createClient(supabaseUrl, anonKey, {
-		global: { headers: { Authorization: `Bearer ${token}` } },
-	});
-	const { data: userData, error: userErr } = await userClient.auth.getUser();
-	if (userErr || !userData?.user) return json({ error: 'Invalid session' }, 401);
-
-	// 2. Read order + verify ownership.
-	const body = (await req.json()) as { order_id?: string };
+	// 1. Auth — either authenticated owner OR an anonymous guest who can
+	//    prove possession of the order's guest_lookup_token. Same dual-path
+	//    the SPA's checkout flow uses for both Stripe and CARDNET.
+	const body = (await req.json()) as { order_id?: string; token?: string };
 	const orderId = body?.order_id;
 	if (!orderId) return json({ error: 'order_id required' }, 400);
+
+	const authHeader = req.headers.get('authorization') || '';
+	const jwt = authHeader.replace(/^Bearer\s+/i, '');
+	let userId: string | null = null;
+	if (jwt) {
+		const userClient = createClient(supabaseUrl, anonKey, {
+			global: { headers: { Authorization: `Bearer ${jwt}` } },
+		});
+		const { data: u } = await userClient.auth.getUser();
+		userId = u?.user?.id || null;
+	}
 
 	const admin = createClient(supabaseUrl, serviceKey);
 	const { data: order, error: orderErr } = await admin
 		.from('orders')
-		.select('id, order_number, user_id, total_amount, currency, status')
+		.select('id, order_number, user_id, total_amount, currency, status, guest_lookup_token')
 		.eq('id', orderId)
 		.single();
 	if (orderErr || !order) return json({ error: 'Order not found' }, 404);
-	if (order.user_id !== userData.user.id) return json({ error: 'Order belongs to another user' }, 403);
+
+	const ownerMatches = order.user_id && userId && order.user_id === userId;
+	const guestMatches = order.user_id === null && body.token && body.token === order.guest_lookup_token;
+	if (!ownerMatches && !guestMatches) {
+		return json({ error: 'Unauthorized for this order' }, 403);
+	}
 	if (order.status === 'paid') return json({ error: 'Order already paid' }, 409);
 
 	// 3. Build the CARDNET checkout-creation request. Field names follow
@@ -115,7 +123,7 @@ serve(async (req) => {
 		MerchantType: cardnet.merchantType,
 		MerchantName: cardnet.merchantName,
 		OrderNumber: order.order_number || order.id.slice(0, 18),
-		ReturnUrl: `${cardnet.returnUrl}?order_id=${order.id}`,
+		ReturnUrl: `${cardnet.returnUrl}?order_id=${order.id}${guestMatches ? `&token=${order.guest_lookup_token}` : ''}`,
 		CancelUrl: cardnet.cancelUrl,
 		KeyId: cardnet.keyId,
 		AcquiringInstitutionCode: '349', // standard for DR acquiring

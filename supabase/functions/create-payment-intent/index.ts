@@ -31,26 +31,19 @@ serve(async (req) => {
 			});
 		}
 
+		// Guest checkout: an authenticated user is preferred (when present we
+		// stamp supabase_user_id on the PaymentIntent metadata), but not
+		// required. The anti-spoof guarantee comes from the (order_id,
+		// total_amount) match below — a stranger would need to guess a fresh
+		// UUIDv4 to commandeer a paying order's intent.
 		const authHeader = req.headers.get('Authorization');
-		if (!authHeader) {
-			return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-				status: 401,
-				headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+		let user: { id: string } | null = null;
+		if (authHeader) {
+			const userClient = createClient(supabaseUrl, supabaseAnon, {
+				global: { headers: { Authorization: authHeader } },
 			});
-		}
-
-		const userClient = createClient(supabaseUrl, supabaseAnon, {
-			global: { headers: { Authorization: authHeader } },
-		});
-		const {
-			data: { user },
-			error: userErr,
-		} = await userClient.auth.getUser();
-		if (userErr || !user) {
-			return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-				status: 401,
-				headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-			});
+			const { data } = await userClient.auth.getUser();
+			user = data?.user ? { id: data.user.id } : null;
 		}
 
 		const body = await req.json();
@@ -80,9 +73,18 @@ serve(async (req) => {
 				.eq('id', orderId)
 				.single();
 
-			if (orderErr || !order || order.user_id !== user.id) {
+			if (orderErr || !order) {
 				return new Response(JSON.stringify({ error: 'Invalid order' }), {
 					status: 400,
+					headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+				});
+			}
+			// If the order is owned (registered customer), require that owner.
+			// Guest orders (user_id NULL) skip ownership — order_id is a UUIDv4
+			// and the amount must match below, which is the anti-spoof.
+			if (order.user_id !== null && order.user_id !== user?.id) {
+				return new Response(JSON.stringify({ error: 'Order belongs to another user' }), {
+					status: 403,
 					headers: { ...corsHeaders, 'Content-Type': 'application/json' },
 				});
 			}
@@ -100,7 +102,7 @@ serve(async (req) => {
 			}
 			orderMetadata = {
 				order_id: String(order.id),
-				supabase_user_id: user.id,
+				...(user ? { supabase_user_id: user.id } : { guest: 'true' }),
 			};
 		}
 
@@ -120,6 +122,18 @@ serve(async (req) => {
 			automatic_payment_methods: { enabled: true },
 			metadata: { ...flatMeta, ...orderMetadata },
 		});
+
+		// Stamp the PaymentIntent ID back on the order so the webhook can
+		// match. Logged-in users can do this from the SPA via RLS; guests
+		// can't (anon has no UPDATE on orders), so we always do it here
+		// with the service role when we have an order id.
+		if (orderId && serviceKey) {
+			const admin = createClient(supabaseUrl, serviceKey);
+			await admin
+				.from('orders')
+				.update({ stripe_payment_intent_id: paymentIntent.id })
+				.eq('id', orderId);
+		}
 
 		return new Response(
 			JSON.stringify({

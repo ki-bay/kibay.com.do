@@ -462,6 +462,11 @@ async function renderEmail(
           ${showItems ? renderItemsTable(items, fmt, tpl as Record<string, string>, order, symbol) : ''}
           ${type === 'tracking' ? renderTrackingBlock(order, tpl as Record<string, string>) : ''}
           ${showCta ? `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 24px 0;"><tr><td align="center"><a href="https://kibay.com.do/cart" style="display:inline-block;padding:14px 32px;background:#1a1a1a;color:#ffffff;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;letter-spacing:0.3px;">${escapeHtml(ctaLabel)}</a></td></tr></table>` : ''}
+          ${
+            (type === 'confirmation' || type === 'refund' || type === 'tracking') && (order as { guest_lookup_token?: string }).guest_lookup_token
+              ? `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 24px 0;"><tr><td align="center"><a href="https://kibay.com.do/checkout-success?order_id=${encodeURIComponent(order.id)}&token=${encodeURIComponent(String((order as { guest_lookup_token?: string }).guest_lookup_token))}" style="display:inline-block;padding:12px 28px;background:#D4A574;color:#1a1a1a;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;letter-spacing:0.3px;">${lang === 'es' ? 'Ver mi pedido' : 'View my order'}</a></td></tr></table>`
+              : ''
+          }
           ${renderShipToBlock(ship, customerName, lang, tpl.shipToLabel)}
           <p style="margin:24px 0 0 0;font-size:14px;line-height:1.6;color:#666;">${escapeHtml(tpl.outro)}</p>
         </td></tr>

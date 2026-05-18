@@ -7,6 +7,10 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { useCart } from '@/hooks/useCart';
 
+// Guest orders pass the order's guest_lookup_token via the `token` URL
+// param so cardnet-verify can authorize the call without a logged-in
+// session. Registered users still send their JWT.
+
 // Landing page after CARDNET redirects the customer back from its hosted
 // payment form. We call cardnet-verify on the Edge Function side — it queries
 // CARDNET server-side, validates the amount, and flips the order to 'paid'.
@@ -20,6 +24,7 @@ const CheckoutCardnetReturn = () => {
   const [state, setState] = useState({ status: 'verifying', message: '' });
 
   const orderId = params.get('order_id');
+  const guestToken = params.get('token');
 
   useEffect(() => {
     if (!orderId) {
@@ -32,7 +37,7 @@ const CheckoutCardnetReturn = () => {
         const { data: { session } } = await supabase.auth.getSession();
         const accessToken = session?.access_token;
         const { data, error } = await supabase.functions.invoke('cardnet-verify', {
-          body: { order_id: orderId },
+          body: { order_id: orderId, token: guestToken || undefined },
           headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
         });
         if (cancelled) return;
@@ -42,7 +47,8 @@ const CheckoutCardnetReturn = () => {
         }
         if (data?.status === 'paid') {
           clearCart();
-          setTimeout(() => navigate(`/checkout-success?order_id=${orderId}`, { replace: true }), 1000);
+          const tokenParam = guestToken ? `&token=${guestToken}` : '';
+          setTimeout(() => navigate(`/checkout-success?order_id=${orderId}${tokenParam}`, { replace: true }), 1000);
           setState({ status: 'paid', message: '' });
         } else {
           setState({

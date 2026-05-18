@@ -73,5 +73,7 @@
     "cancelled": "Cancelado",
     "canceled": "Cancelado",
     "payment_failed": "Pago fallido"
-  }
+  },
+  "guestNotice": "Compras como invitado — no necesitas crear una cuenta.",
+  "haveAccount": "¿Tienes cuenta? Inicia sesión"
 }

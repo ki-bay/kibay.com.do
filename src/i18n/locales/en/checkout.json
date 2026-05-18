@@ -73,5 +73,7 @@
     "cancelled": "Cancelled",
     "canceled": "Cancelled",
     "payment_failed": "Payment failed"
-  }
+  },
+  "guestNotice": "You're checking out as a guest — no account needed.",
+  "haveAccount": "Have an account? Sign in"
 }

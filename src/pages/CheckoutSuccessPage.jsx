@@ -14,6 +14,11 @@ import SEOHead from '@/components/SEOHead';
 const CheckoutSuccessPage = () => {
 	const [searchParams] = useSearchParams();
 	const orderId = searchParams.get('order_id');
+	// Guest order lookups append &token=<uuid> to the URL. The RLS policy
+	// orders_select_via_token requires both id AND token to be present in the
+	// query, so we filter by both. Logged-in users don't need the token —
+	// their session covers RLS for their own orders.
+	const guestToken = searchParams.get('token');
 	const { t, i18n } = useTranslation('checkout');
 	const lang = (i18n.resolvedLanguage || i18n.language || 'es').slice(0, 2);
 
@@ -24,16 +29,33 @@ const CheckoutSuccessPage = () => {
 
 	const fetchOrder = useCallback(async () => {
 		if (!orderId) return null;
-		const { data, error: fetchError } = await supabase.from('orders').select('*').eq('id', orderId).single();
+		// Guest path: orders have no SELECT for anon, so go through the
+		// SECURITY DEFINER RPC that returns the row only when both id and
+		// token match. Logged-in users can use the same RPC (works for both)
+		// OR a direct query — we prefer the RPC for consistency.
+		if (guestToken) {
+			const { data, error: rpcErr } = await supabase.rpc('get_order_by_token', {
+				p_id: orderId,
+				p_token: guestToken,
+			});
+			if (rpcErr) throw rpcErr;
+			if (!data) throw new Error('Order not found.');
+			return { order: data.order, items: data.items || [] };
+		}
+		// Authenticated owner path: direct query covered by orders_select_own.
+		const { data, error: fetchError } = await supabase
+			.from('orders')
+			.select('*')
+			.eq('id', orderId)
+			.single();
 		if (fetchError) throw fetchError;
 		if (!data) throw new Error('Order not found.');
-		// Pull line items + their product type so we can tell wine vs experience.
 		const { data: itemRows } = await supabase
 			.from('order_items')
 			.select('id, product_name, quantity, price_per_item, total_price, metadata, product_id, products(type)')
 			.eq('order_id', orderId);
 		return { order: data, items: itemRows || [] };
-	}, [orderId]);
+	}, [orderId, guestToken]);
 
 	useEffect(() => {
 		if (!orderId) {
@@ -81,7 +103,17 @@ const CheckoutSuccessPage = () => {
 		const maxAttempts = 18;
 		const id = setInterval(async () => {
 			attempts += 1;
-			const { data, error: e } = await supabase.from('orders').select('*').eq('id', orderId).single();
+			let data = null;
+			let e = null;
+			if (guestToken) {
+				const r = await supabase.rpc('get_order_by_token', { p_id: orderId, p_token: guestToken });
+				e = r.error;
+				data = r.data?.order || null;
+			} else {
+				const r = await supabase.from('orders').select('*').eq('id', orderId).single();
+				e = r.error;
+				data = r.data || null;
+			}
 			if (cancelled) return;
 			if (!e && data) {
 				setOrder(data);
@@ -97,7 +129,7 @@ const CheckoutSuccessPage = () => {
 			cancelled = true;
 			clearInterval(id);
 		};
-	}, [orderId, order?.invoice_pdf_path, order?.id]);
+	}, [orderId, guestToken, order?.invoice_pdf_path, order?.id]);
 
 	const invoiceHref =
 		order?.invoice_pdf_path && publicStorageObjectUrl('blog_media', order.invoice_pdf_path);
