@@ -1,1 +1,7 @@
+# Proxy /sitemap.xml to the generate-sitemap Edge Function so blog posts
+# auto-published by drive-pipeline between CF Pages builds are still
+# discoverable by Google. Must come BEFORE the SPA catch-all below.
+/sitemap.xml  https://bsnxwajuqkatrmgoqcnu.supabase.co/functions/v1/generate-sitemap  200
+
+# SPA fallback — every other path resolves to the React app's index.html.
 /*    /index.html   200
