@@ -487,7 +487,19 @@ const AdminOrdersPage = () => {
 													{formatDate(o.created_at)}
 												</div>
 												<div className="md:col-span-3 text-sm text-foreground/80">
-													{customerName(o)}
+													<div className="flex items-center gap-2 flex-wrap">
+														<span>{customerName(o)}</span>
+														{!o.user_id && (
+															<span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-stone-500/15 text-stone-400 border border-stone-500/30">
+																Guest
+															</span>
+														)}
+													</div>
+													{o.shipping_address?.email && (
+														<div className="text-xs text-foreground/50 mt-0.5 truncate">
+															{o.shipping_address.email}
+														</div>
+													)}
 												</div>
 												<div className="md:col-span-2">
 													<StatusBadge status={o.status} t={t} createdAt={o.created_at} />

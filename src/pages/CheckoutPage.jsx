@@ -143,6 +143,9 @@ const CheckoutPage = () => {
 	// requires both id and token). Logged-in users carry it too but don't
 	// need it — they can fetch via their session.
 	const [pendingOrderToken, setPendingOrderToken] = useState(null);
+	// Newsletter opt-in checkbox state. Default off (GDPR-friendly).
+	// Wired up after successful order creation.
+	const [subscribeNewsletter, setSubscribeNewsletter] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [initError, setInitError] = useState(null);
 	const [shippingMethod, setShippingMethod] = useState('standard');
@@ -481,6 +484,19 @@ const CheckoutPage = () => {
 			setPendingOrderToken(createdOrderToken);
 			setClientSecret(data.clientSecret);
 			setStep('payment');
+
+			// Newsletter opt-in (best-effort, fire and forget). Don't block
+			// the checkout flow on subscribe success/failure.
+			if (subscribeNewsletter && shippingInfo.email) {
+				import('@/services/NewsletterService').then(({ subscribeToNewsletter }) => {
+					subscribeToNewsletter({
+						email: shippingInfo.email,
+						firstName: shippingInfo.firstName,
+						source: 'Checkout opt-in',
+						tags: ['checkout'],
+					}).catch(() => {});
+				});
+			}
 		} catch (err) {
 			console.error(err);
 			if (createdOrderId) {
@@ -772,6 +788,20 @@ const CheckoutPage = () => {
 											</>
 										)}
 									</div>
+								)}
+
+								{step === 'shipping' && (
+									<label className="flex items-start gap-3 mt-6 pt-6 border-t border-foreground/10 cursor-pointer">
+										<input
+											type="checkbox"
+											checked={subscribeNewsletter}
+											onChange={(e) => setSubscribeNewsletter(e.target.checked)}
+											className="mt-1 w-4 h-4 rounded border-foreground/30 text-[#D4A574] focus:ring-[#D4A574] cursor-pointer"
+										/>
+										<span className="text-sm font-light text-foreground/80">
+											{t('newsletter.optIn', 'Sí, quiero recibir novedades y ofertas de Kibay por correo.')}
+										</span>
+									</label>
 								)}
 
 								{step === 'shipping' && (

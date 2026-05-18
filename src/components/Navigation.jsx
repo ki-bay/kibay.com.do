@@ -153,8 +153,8 @@ const Navigation = () => {
               <div className="transition-colors cursor-pointer text-[#D4A574] hover:text-[#c29462] p-1">
                  <ShoppingCartIcon onClick={handleCartClick} className="w-5 h-5" />
               </div>
-              <LanguageSwitcher size="sm" />
-              <ThemeToggle size="sm" />
+              <LanguageSwitcher size="sm" className={isTransparent ? 'border-white/40 bg-white/10 [&_button]:text-white' : ''} />
+              <ThemeToggle size="sm" className={isTransparent ? 'border-white/40 bg-white/10 text-white hover:bg-white/20' : ''} />
               
               {user ? (
                 <div className="flex items-center gap-2">
@@ -213,8 +213,16 @@ const Navigation = () => {
               )}
             </div>
 
-            <div className="flex items-center gap-4 lg:hidden">
-              <ThemeToggle size="sm" />
+            <div className="flex items-center gap-3 lg:hidden">
+              <LanguageSwitcher
+                variant="toggle"
+                size="sm"
+                className={isTransparent ? 'border-white/40 bg-white/10 text-white hover:bg-white/20' : ''}
+              />
+              <ThemeToggle
+                size="sm"
+                className={isTransparent ? 'border-white/40 bg-white/10 text-white hover:bg-white/20' : ''}
+              />
               <div className="transition-colors cursor-pointer text-[#D4A574] hover:text-[#c29462]"><ShoppingCartIcon onClick={handleCartClick} className="w-6 h-6" /></div>
               <button
                 type="button"

@@ -7,7 +7,11 @@ const LANGS = [
   { code: 'en', label: 'EN' },
 ];
 
-const LanguageSwitcher = ({ className = '', size = 'md' }) => {
+// Two display modes:
+//   default (desktop): ES/EN pill, both visible, active one highlighted.
+//   variant="toggle" (mobile, compact): single circular button showing
+//     the OTHER language — click to switch to it.
+const LanguageSwitcher = ({ className = '', size = 'md', variant = 'pill' }) => {
   const { i18n, t } = useTranslation('common');
   const current = (i18n.resolvedLanguage || 'es').slice(0, 2);
 
@@ -15,6 +19,27 @@ const LanguageSwitcher = ({ className = '', size = 'md' }) => {
     if (code === current) return;
     i18n.changeLanguage(code);
   };
+
+  if (variant === 'toggle') {
+    const other = current === 'es' ? 'en' : 'es';
+    const otherLabel = other.toUpperCase();
+    const sizeClasses = size === 'sm' ? 'w-7 h-7 text-[11px]' : 'w-8 h-8 text-xs';
+    return (
+      <button
+        type="button"
+        aria-label={t('language.switchTo', { lang: otherLabel })}
+        title={t('language.switchTo', { lang: otherLabel })}
+        onClick={() => setLang(other)}
+        className={cn(
+          'inline-flex items-center justify-center rounded-full border border-foreground/25 bg-foreground/10 backdrop-blur-sm text-foreground font-medium tracking-wider hover:bg-foreground/20 transition-colors',
+          sizeClasses,
+          className,
+        )}
+      >
+        {otherLabel}
+      </button>
+    );
+  }
 
   const sizeClasses = size === 'sm' ? 'text-[11px] px-2 py-1' : 'text-xs px-3 py-1.5';
 

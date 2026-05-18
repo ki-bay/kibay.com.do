@@ -4,7 +4,8 @@
     "es": "ES",
     "en": "EN",
     "spanish": "Spanish",
-    "english": "English"
+    "english": "English",
+    "switchTo": "Switch to {{lang}}"
   },
   "theme": {
     "label": "Theme",

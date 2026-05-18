@@ -10,6 +10,7 @@ import { supabase } from '@/lib/customSupabaseClient';
 import { publicStorageObjectUrl } from '@/lib/supabaseStorage';
 import { formatDopFromCents } from '@/lib/formatMoney';
 import SEOHead from '@/components/SEOHead';
+import { useAuth } from '@/contexts/SupabaseAuthContext';
 
 const CheckoutSuccessPage = () => {
 	const [searchParams] = useSearchParams();
@@ -21,11 +22,14 @@ const CheckoutSuccessPage = () => {
 	const guestToken = searchParams.get('token');
 	const { t, i18n } = useTranslation('checkout');
 	const lang = (i18n.resolvedLanguage || i18n.language || 'es').slice(0, 2);
+	const { user } = useAuth();
 
 	const [order, setOrder] = useState(null);
 	const [items, setItems] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
+	const [signupSent, setSignupSent] = useState(false);
+	const [signupError, setSignupError] = useState(null);
 
 	const fetchOrder = useCallback(async () => {
 		if (!orderId) return null;
@@ -269,6 +273,52 @@ const CheckoutSuccessPage = () => {
 									</div>
 								);
 							})()}
+
+							{/* Guest → "Save your details" account-creation upsell.
+								Sends a Supabase magic-link to their email. They click it and
+								land back on /account already signed in. */}
+							{!user && order && order.user_id === null && order.shipping_address?.email && (
+								<div className="bg-stone-50 border border-stone-200 rounded-xl p-5 mb-6 relative z-10 text-left">
+									<p className="text-xs uppercase tracking-widest text-stone-500 mb-2">
+										{t('success.saveDetails.title', 'Guarda tus datos para la próxima')}
+									</p>
+									<p className="text-sm text-stone-600 mb-3 font-light">
+										{t('success.saveDetails.body', 'Te enviamos un enlace mágico al correo. Un clic y tu próximo pedido se hace más rápido — sin escribir todo de nuevo.')}
+									</p>
+									{signupSent ? (
+										<div className="flex items-center gap-2 text-emerald-600 text-sm">
+											<CheckCircle className="w-4 h-4" />
+											{t('success.saveDetails.sent', 'Revisa tu correo para terminar de crear la cuenta.')}
+										</div>
+									) : (
+										<Button
+											variant="outline"
+											size="sm"
+											className="border-[#D4A574] text-[#D4A574] hover:bg-[#D4A574]/10"
+											onClick={async () => {
+												setSignupError(null);
+												const { error: e } = await supabase.auth.signInWithOtp({
+													email: order.shipping_address.email,
+													options: {
+														emailRedirectTo: `${window.location.origin}/account`,
+														data: {
+															first_name: order.shipping_address.firstName,
+															last_name: order.shipping_address.lastName,
+														},
+													},
+												});
+												if (e) setSignupError(e.message);
+												else setSignupSent(true);
+											}}
+										>
+											{t('success.saveDetails.cta', 'Crear cuenta con este correo')}
+										</Button>
+									)}
+									{signupError && (
+										<p className="text-xs text-red-500 mt-2">{signupError}</p>
+									)}
+								</div>
+							)}
 
 							<div className="text-center mb-6 relative z-10">
 								<p className="text-xs uppercase tracking-widest text-stone-500 mb-2">{t('success.shareTitle')}</p>

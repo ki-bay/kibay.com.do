@@ -59,6 +59,7 @@ serve(async (req) => {
 		const unitAmount = Math.max(50, Math.round(Number(amount) * 100));
 
 		let orderMetadata: Record<string, string> = {};
+		let stripeReceiptEmail: string | undefined;
 		if (orderId) {
 			if (!serviceKey) {
 				return new Response(JSON.stringify({ error: 'Missing SUPABASE_SERVICE_ROLE_KEY for order-bound payments' }), {
@@ -69,7 +70,7 @@ serve(async (req) => {
 			const admin = createClient(supabaseUrl, serviceKey);
 			const { data: order, error: orderErr } = await admin
 				.from('orders')
-				.select('id,user_id,status,total_amount')
+				.select('id,user_id,status,total_amount,shipping_address')
 				.eq('id', orderId)
 				.single();
 
@@ -104,6 +105,17 @@ serve(async (req) => {
 				order_id: String(order.id),
 				...(user ? { supabase_user_id: user.id } : { guest: 'true' }),
 			};
+			// Stripe sends its own receipt email (separate from our Brevo
+			// confirmation) when receipt_email is set on the PaymentIntent.
+			// Useful for guests who otherwise might miss our email — Stripe's
+			// inbox-delivery is very reliable.
+			const orderEmail =
+				typeof order.shipping_address === 'object' && order.shipping_address
+					? (order.shipping_address as { email?: string }).email
+					: undefined;
+			if (orderEmail) {
+				stripeReceiptEmail = orderEmail;
+			}
 		}
 
 		const stripe = new Stripe(stripeKey, {
@@ -121,6 +133,7 @@ serve(async (req) => {
 			currency: String(currency).toLowerCase(),
 			automatic_payment_methods: { enabled: true },
 			metadata: { ...flatMeta, ...orderMetadata },
+			...(stripeReceiptEmail ? { receipt_email: stripeReceiptEmail } : {}),
 		});
 
 		// Stamp the PaymentIntent ID back on the order so the webhook can

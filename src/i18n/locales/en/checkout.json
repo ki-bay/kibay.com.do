@@ -62,7 +62,13 @@
       "step3": "We call you the day before to confirm. Questions? Email info@kibay.com.do."
     },
     "shareTitle": "Share your Kibay",
-    "shareCaption": "Tag us @kibaywine — we love seeing your moments."
+    "shareCaption": "Tag us @kibaywine — we love seeing your moments.",
+    "saveDetails": {
+      "title": "Save your details for next time",
+      "body": "We'll email you a magic link — one click and your next order skips the form.",
+      "cta": "Create account with this email",
+      "sent": "Check your inbox to finish creating your account."
+    }
   },
   "statusLabel": {
     "paid": "Payment confirmed",
@@ -75,5 +81,8 @@
     "payment_failed": "Payment failed"
   },
   "guestNotice": "You're checking out as a guest — no account needed.",
-  "haveAccount": "Have an account? Sign in"
+  "haveAccount": "Have an account? Sign in",
+  "newsletter": {
+    "optIn": "Yes, I'd like to receive Kibay news and offers by email."
+  }
 }

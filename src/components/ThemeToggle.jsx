@@ -25,12 +25,17 @@ const ThemeToggle = ({ className = '', size = 'md' }) => {
       title={label}
       onClick={() => setTheme(next)}
       className={cn(
-        'inline-flex items-center justify-center rounded-full border border-foreground/15 bg-foreground/5 backdrop-blur-sm text-foreground/80 hover:text-foreground hover:bg-foreground/10 transition-colors',
+        // Stronger contrast: full-opacity foreground text, /25 border + /10 bg
+        // base, /20 on hover. Works on both light and dark theme cards
+        // because foreground is the theme-aware token. Override-friendly via
+        // the className prop (Navigation passes brand-gold styling when the
+        // header is over the transparent homepage hero).
+        'inline-flex items-center justify-center rounded-full border border-foreground/25 bg-foreground/10 backdrop-blur-sm text-foreground hover:bg-foreground/20 transition-colors',
         sizeClasses,
         className,
       )}
     >
-      {isDark ? <Sun className={iconSize} strokeWidth={1.5} /> : <Moon className={iconSize} strokeWidth={1.5} />}
+      {isDark ? <Sun className={iconSize} strokeWidth={2} /> : <Moon className={iconSize} strokeWidth={2} />}
     </button>
   );
 };
