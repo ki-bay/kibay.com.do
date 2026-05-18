@@ -108,9 +108,10 @@ const HomePage = () => {
 
             <m.h1
               variants={fadeIn}
-              className="text-6xl sm:text-7xl lg:text-8xl xl:text-9xl font-light text-white leading-none tracking-tight drop-shadow-[0_4px_20px_rgba(0,0,0,0.6)]"
+              aria-label="KIBAY"
+              className="brand-wordmark text-6xl sm:text-7xl lg:text-8xl xl:text-9xl text-white leading-none drop-shadow-[0_4px_20px_rgba(0,0,0,0.6)]"
             >
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-300 to-orange-500 font-normal">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-300 to-orange-500">
                 {t('hero.h1')}
               </span>
             </m.h1>

@@ -116,7 +116,7 @@ const Navigation = () => {
                 height="162"
                 className="h-[54px] w-auto object-contain"
               />
-              <span className={cn("text-2xl font-light tracking-tight transition-colors", textColorClass)}>Ki-BAY</span>
+              <span aria-label="KIBAY" className={cn("brand-wordmark text-2xl transition-colors", textColorClass)}>KiBΛY</span>
             </Link>
 
             <div className="hidden lg:flex items-center gap-6">

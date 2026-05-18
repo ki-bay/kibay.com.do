@@ -437,7 +437,7 @@ const BlogPostForm = () => {
                                             <img src="/logo.png" alt={t('preview.logoAlt')} className="w-full h-full object-cover" onError={(e) => e.target.style.display = 'none'} />
                                         </div>
                                         <div className="flex flex-col leading-tight">
-                                            <span className="text-[#202124]">Kibay</span>
+                                            <span aria-label="KIBAY" className="brand-wordmark text-[#202124]">KiBΛY</span>
                                             <span className="text-[#5f6368] text-xs">kibay.com.do › blog › {formData.slug || '...'}</span>
                                         </div>
                                     </div>

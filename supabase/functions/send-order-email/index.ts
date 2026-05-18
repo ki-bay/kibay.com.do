@@ -469,7 +469,7 @@ async function renderEmail(
           <div style="height:1px;background:#eee;"></div>
         </td></tr>
         <tr><td style="padding:24px 40px 32px;text-align:center;">
-          <div style="font-family:Georgia,serif;font-size:18px;font-weight:600;color:#1a1a1a;letter-spacing:0.5px;">Kibay</div>
+          <div aria-label="KIBAY" style="font-family:'Montserrat',Helvetica,Arial,sans-serif;font-size:18px;font-weight:500;color:#1a1a1a;letter-spacing:0.05em;">KiBΛY</div>
           <div style="font-size:12px;color:#777;margin-top:6px;line-height:1.5;max-width:420px;margin-left:auto;margin-right:auto;">${escapeHtml(tagline)}</div>
           <div style="font-size:11px;color:#999;margin-top:14px;">Bahía de Ocoa, Km 6 1/2 Hatillo, Azua 71003 · ${lang === 'es' ? 'República Dominicana' : 'Dominican Republic'}</div>
           <div style="margin-top:16px;">
@@ -773,7 +773,7 @@ async function renderAdminEmail(
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
             <td style="vertical-align:middle;width:64px;"><img src="https://kibay.com.do/logo.png" alt="Kibay" width="56" height="42" style="display:block;border:0;height:auto;max-width:56px;" /></td>
             <td style="vertical-align:middle;padding-left:12px;">
-              <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#a8a29e;">Kibay admin</div>
+              <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#a8a29e;"><span aria-label="KIBAY" style="font-family:'Montserrat',Helvetica,Arial,sans-serif;font-weight:500;letter-spacing:0.05em;text-transform:none;">KiBΛY</span> admin</div>
               <h1 style="margin:4px 0 0 0;font-size:18px;font-weight:600;color:#1c1917;">${escapeHtml(tpl.heading)} — ${escapeHtml(order.order_number)}</h1>
               <p style="margin:4px 0 0 0;font-size:13px;color:#78716c;">${escapeHtml(tpl.intro)}</p>
             </td>

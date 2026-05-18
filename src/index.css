@@ -5,6 +5,23 @@
 /* Import Lato font with weights 300 (Light), 400 (Regular), 700 (Bold) - keeping bold for fallback but primary use is 300/400 */
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
 
+/* Montserrat: used only for the KiBΛY brand wordmark. Geometric sans-serif
+   matches the bottle label's typography. */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
+
+/* Brand wordmark — render "KiBAY" as <span class="brand-wordmark">KiBΛY</span>
+   wherever the name appears as text (header, footer, hero, emails). The
+   Greek capital Lambda (Λ, U+039B) substitutes for the A to remove the
+   crossbar. aria-label="KIBAY" is set on the host element so screen
+   readers announce the brand name correctly. */
+.brand-wordmark {
+  font-family: 'Montserrat', 'Lato', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: none;
+  font-feature-settings: 'kern' 1, 'liga' 0;
+}
+
 /* Skip-to-content link: visually hidden until focused for keyboard a11y */
 .skip-to-content {
   position: fixed;

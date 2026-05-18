@@ -47,7 +47,7 @@ const PublicBlogPage = () => {
             <Trans
               i18nKey="title"
               t={t}
-              components={[<span className="text-mango-500" />]}
+              components={[<span aria-label="KIBAY" className="brand-wordmark text-mango-500" />]}
             />
           </h1>
           <p className="text-xl text-foreground/60 max-w-2xl mx-auto">

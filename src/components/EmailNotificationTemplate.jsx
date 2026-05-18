@@ -34,7 +34,12 @@ const EmailNotificationTemplate = ({
     <div style={styles.body}>
       <div style={styles.container}>
         <div style={styles.header}>
-          <h1 style={styles.headerText}>Ki-BAY</h1>
+          <h1
+            aria-label="KIBAY"
+            style={{ ...styles.headerText, fontFamily: "'Montserrat', 'Lato', sans-serif", fontWeight: 500, letterSpacing: '0.05em' }}
+          >
+            KiBΛY
+          </h1>
         </div>
 
         {featuredImageUrl && (
