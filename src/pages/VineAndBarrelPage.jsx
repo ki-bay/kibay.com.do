@@ -174,7 +174,7 @@ const VineAndBarrelPage = () => {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-[#D4A574] hover:bg-[#c29462] text-foreground py-6 text-lg mt-4"
+                  className="w-full bg-[#D4A574] hover:bg-[#c29462] text-stone-950 py-6 text-lg mt-4"
                 >
                   {isSubmitting ? (
                     <>
@@ -229,15 +229,17 @@ const VineAndBarrelPage = () => {
             className="relative z-10 text-center px-4 max-w-4xl mx-auto"
           >
             <h2 className="text-[#D4A574] font-medium tracking-[0.2em] uppercase text-sm md:text-base mb-6">{t('hero.eyebrow')}</h2>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-foreground mb-8 leading-tight">
+            {/* Hero text is always over a dark photo + black gradient overlay,
+                so it must stay white regardless of the light/dark theme toggle. */}
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-8 leading-tight">
               {t('hero.title')}
             </h1>
-            <p className="text-xl md:text-2xl text-foreground/90 font-light italic mb-10 max-w-2xl mx-auto font-serif">
+            <p className="text-xl md:text-2xl text-white/90 font-light italic mb-10 max-w-2xl mx-auto font-serif">
               {t('hero.tagline')}
             </p>
             <Button
               onClick={() => document.getElementById('experiences').scrollIntoView({ behavior: 'smooth' })}
-              className="bg-foreground/10 hover:bg-foreground/20 backdrop-blur-md border border-foreground/30 text-foreground rounded-full px-10 py-7 text-lg transition-all hover:scale-105"
+              className="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white rounded-full px-10 py-7 text-lg transition-all hover:scale-105"
             >
               {t('hero.cta')}
             </Button>
@@ -247,7 +249,7 @@ const VineAndBarrelPage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.5, duration: 1 }}
-            className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center text-foreground/50"
+            className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center text-white/60"
           >
             <span className="text-xs uppercase tracking-widest mb-2">{t('hero.scroll')}</span>
             <div className="w-px h-16 bg-gradient-to-b from-white/50 to-transparent" />
@@ -353,7 +355,7 @@ const VineAndBarrelPage = () => {
                 </div>
                 <div className="flex flex-col gap-3">
                   <Link to="/product/ocoa-bay-wine-tour" className="w-full">
-                    <Button className="w-full bg-[#D4A574] hover:bg-[#c29462] text-foreground py-6">
+                    <Button className="w-full bg-[#D4A574] hover:bg-[#c29462] text-stone-950 py-6">
                       {t('experiences.buyOnKibay')} <ArrowRight className="ml-2 w-4 h-4" />
                     </Button>
                   </Link>
@@ -379,7 +381,7 @@ const VineAndBarrelPage = () => {
                   decoding="async"
                 />
                 <div className="p-10 flex flex-col flex-1">
-                <div className="absolute top-4 right-4 px-3 py-1 bg-[#D4A574] text-foreground rounded-full text-xs font-medium uppercase tracking-wider">
+                <div className="absolute top-4 right-4 px-3 py-1 bg-[#D4A574] text-stone-950 rounded-full text-xs font-medium uppercase tracking-wider">
                   {t('experiences.complete.badge')}
                 </div>
                 <div className="w-12 h-12 bg-[#D4A574]/20 rounded-full flex items-center justify-center mb-6">
@@ -395,7 +397,7 @@ const VineAndBarrelPage = () => {
                 </div>
                 <div className="flex flex-col gap-3">
                   <Link to="/product/ocoa-bay-complete-experience" className="w-full">
-                    <Button className="w-full bg-[#D4A574] hover:bg-[#c29462] text-foreground py-6">
+                    <Button className="w-full bg-[#D4A574] hover:bg-[#c29462] text-stone-950 py-6">
                       {t('experiences.buyOnKibay')} <ArrowRight className="ml-2 w-4 h-4" />
                     </Button>
                   </Link>
@@ -587,7 +589,7 @@ const VineAndBarrelPage = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button
                 onClick={() => document.getElementById('experiences').scrollIntoView({ behavior: 'smooth' })}
-                className="bg-[#D4A574] hover:bg-[#c29462] text-foreground px-12 py-8 text-xl rounded-full shadow-[0_0_30px_rgba(212,165,116,0.3)] hover:shadow-[0_0_50px_rgba(212,165,116,0.5)] transition-all hover:scale-105"
+                className="bg-[#D4A574] hover:bg-[#c29462] text-stone-950 px-12 py-8 text-xl rounded-full shadow-[0_0_30px_rgba(212,165,116,0.3)] hover:shadow-[0_0_50px_rgba(212,165,116,0.5)] transition-all hover:scale-105"
               >
                 {t('booking.ctaPrimary')}
               </Button>

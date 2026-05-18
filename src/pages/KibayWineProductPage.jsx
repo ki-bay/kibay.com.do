@@ -61,7 +61,7 @@ const KibayWineProductPage = () => {
               </m.div>
               <m.div variants={fadeIn} className="pt-4">
                 <Link to="/shop">
-                  <Button className="bg-[#D4A574] hover:bg-[#b0865a] text-foreground px-8 py-6 text-lg rounded-full font-normal shadow-[0_0_20px_rgba(212,165,116,0.3)] transition-all hover:scale-105">
+                  <Button className="bg-[#D4A574] hover:bg-[#b0865a] text-stone-950 px-8 py-6 text-lg rounded-full font-normal shadow-[0_0_20px_rgba(212,165,116,0.3)] transition-all hover:scale-105">
                     {t('hero.cta')}
                   </Button>
                 </Link>
@@ -215,12 +215,12 @@ const KibayWineProductPage = () => {
                </p>
                <div className="flex flex-col sm:flex-row justify-center gap-4">
                   <Link to="/kibay-sparkling">
-                     <Button variant="outline" className="border-[#D4A574] text-[#D4A574] hover:bg-[#D4A574] hover:text-foreground font-normal">
+                     <Button variant="outline" className="border-[#D4A574] text-[#D4A574] hover:bg-[#D4A574] hover:text-stone-950 font-normal">
                         {t('relationship.ctaSparkling')}
                      </Button>
                   </Link>
                   <Link to="/shop">
-                     <Button className="bg-[#D4A574] text-foreground hover:bg-[#b0865a] font-normal">
+                     <Button className="bg-[#D4A574] text-stone-950 hover:bg-[#b0865a] font-normal">
                         {t('relationship.ctaShop')}
                      </Button>
                   </Link>

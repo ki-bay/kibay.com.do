@@ -98,7 +98,7 @@ const EnjoyCocinaPage = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/blog">
-                  <Button className="bg-[#D4A574] hover:bg-[#c29462] text-foreground rounded-full px-8 py-6 text-base shadow-lg">
+                  <Button className="bg-[#D4A574] hover:bg-[#c29462] text-stone-950 rounded-full px-8 py-6 text-base shadow-lg">
                     {t('hero.ctaBlog')} <ArrowRight className="ml-2 w-4 h-4" />
                   </Button>
                 </Link>
@@ -210,7 +210,7 @@ const EnjoyCocinaPage = () => {
                           </div>
                         )}
                         <Link to={`/product/${p.slug}`} className="mt-auto">
-                          <Button className="w-full bg-[#D4A574] hover:bg-[#c29462] text-foreground rounded-xl py-5">
+                          <Button className="w-full bg-[#D4A574] hover:bg-[#c29462] text-stone-950 rounded-xl py-5">
                             {t('experiences.reserve')} <ArrowRight className="ml-2 w-4 h-4" />
                           </Button>
                         </Link>
@@ -239,7 +239,7 @@ const EnjoyCocinaPage = () => {
               {t('closing.body')}
             </p>
             <Link to="/#enjoy">
-              <Button className="bg-[#D4A574] hover:bg-[#c29462] text-foreground rounded-full px-10 py-7 text-lg shadow-lg hover:scale-105 transition-transform">
+              <Button className="bg-[#D4A574] hover:bg-[#c29462] text-stone-950 rounded-full px-10 py-7 text-lg shadow-lg hover:scale-105 transition-transform">
                 {t('closing.cta')} <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </Link>

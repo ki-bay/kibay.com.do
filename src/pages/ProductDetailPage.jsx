@@ -762,7 +762,7 @@ function ProductDetailPage() {
                   <Button
                     onClick={handleAddToCart}
                     disabled={!canAddToCart || isSoldOut || !product.purchasable}
-                    className="flex-1 bg-[#D4A574] hover:bg-[#c29462] text-white rounded-full py-7 text-lg shadow-lg shadow-[#D4A574]/20 transition-all duration-300 disabled:bg-stone-200 disabled:text-foreground/50 disabled:shadow-none disabled:cursor-not-allowed"
+                    className="flex-1 bg-[#D4A574] hover:bg-[#c29462] text-white rounded-full py-7 text-lg shadow-lg shadow-[#D4A574]/20 transition-all duration-300 disabled:bg-stone-200 disabled:text-stone-950/50 disabled:shadow-none disabled:cursor-not-allowed"
                   >
                     <ShoppingBag className="mr-2 h-5 w-5" />
                     {isSoldOut ? t('outOfStock') : t('addToCart')}
