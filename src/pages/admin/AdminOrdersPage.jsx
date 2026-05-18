@@ -80,11 +80,31 @@ const customerName = (order) => {
 	return name || '—';
 };
 
-const StatusBadge = ({ status, t }) => {
+const StatusBadge = ({ status, t, createdAt }) => {
 	const cls = STATUS_BADGE[status] || 'bg-stone-700/40 text-stone-300 border-stone-600';
+	// Stuck = awaiting_payment + older than 60 min. Mirrors the
+	// alert-stuck-orders Edge Function so admin UI surfaces the same
+	// signal that triggers the hourly email.
+	const isStuck =
+		status === 'awaiting_payment' &&
+		createdAt &&
+		Date.now() - new Date(createdAt).getTime() > 60 * 60 * 1000;
+	const ageMin = isStuck
+		? Math.floor((Date.now() - new Date(createdAt).getTime()) / 60000)
+		: 0;
 	return (
-		<span className={`inline-block text-xs font-medium px-2 py-1 rounded border ${cls}`}>
-			{status ? t(`status.${status}`, status) : '—'}
+		<span className="inline-flex flex-wrap items-center gap-1">
+			<span className={`inline-block text-xs font-medium px-2 py-1 rounded border ${cls}`}>
+				{status ? t(`status.${status}`, status) : '—'}
+			</span>
+			{isStuck && (
+				<span
+					title={`Sin pago confirmado hace ${ageMin} min — revisa Stripe webhook delivery.`}
+					className="inline-block text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded border bg-red-500/15 text-red-300 border-red-500/40 animate-pulse"
+				>
+					⚠ Stuck {ageMin}m
+				</span>
+			)}
 		</span>
 	);
 };
@@ -470,7 +490,7 @@ const AdminOrdersPage = () => {
 													{customerName(o)}
 												</div>
 												<div className="md:col-span-2">
-													<StatusBadge status={o.status} t={t} />
+													<StatusBadge status={o.status} t={t} createdAt={o.created_at} />
 												</div>
 												<div className="md:col-span-2 text-right font-semibold text-mango-400">
 													{formatMoney(o.total_amount, o.currency)}
