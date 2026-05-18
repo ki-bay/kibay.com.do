@@ -3,6 +3,15 @@ import { mediaUrl } from '@/config/mediaCdn';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 
+// Bilingual share-card images, rendered by Cloudinary's text-overlay API.
+// The hero photo gets a brightness reduction + 3 text layers (wordmark,
+// tagline, kibay.com.do). Update either string here to change what link
+// previews show on Facebook, WhatsApp, LinkedIn, iMessage, etc.
+const OG_IMAGE_ES =
+  'https://res.cloudinary.com/dwewurxla/image/upload/w_1200,h_630,c_fill,g_center,e_brightness:-40/l_text:Arial_150_700:KiB%CE%9BY,co_rgb:D4A574,g_south_west,x_70,y_260/fl_layer_apply/l_text:Arial_40_400:El%20arte%20de%20fermentar%20mango%20y%20fruta%20de%20la%20pasi%C3%B3n.,co_white,g_south_west,x_70,y_180/fl_layer_apply/l_text:Arial_28_400:kibay.com.do,co_rgb:D4A574,g_south_west,x_70,y_90/fl_layer_apply/v1779053427/kibay_-vino_copy_q9mvz8.jpg';
+const OG_IMAGE_EN =
+  'https://res.cloudinary.com/dwewurxla/image/upload/w_1200,h_630,c_fill,g_center,e_brightness:-40/l_text:Arial_150_700:KiB%CE%9BY,co_rgb:D4A574,g_south_west,x_70,y_260/fl_layer_apply/l_text:Arial_40_400:The%20art%20of%20fermenting%20mango%20and%20passion%20fruit.,co_white,g_south_west,x_70,y_180/fl_layer_apply/l_text:Arial_28_400:kibay.com.do,co_rgb:D4A574,g_south_west,x_70,y_90/fl_layer_apply/v1779053427/kibay_-vino_copy_q9mvz8.jpg';
+
 const SEOHead = ({
   title,
   description,
@@ -23,7 +32,10 @@ const SEOHead = ({
   const siteTitle = 'Kibay';
   const fullTitle = title ? title : 'Kibay – Espumante & Caribbean Wine Shop';
   const metaDescription = description || 'Kibay offers modern Caribbean wines and Kibay Espumante, crafted in the Dominican Republic from organic fruits.';
-  const metaImage = image || mediaUrl('bc5a0b64ce661332da23e928299b7c41.jpg');
+  // Default OG image flips per language. Pages that pass an explicit `image`
+  // (e.g. a blog post's hero) override this.
+  const defaultOgImage = currentLang === 'es' ? OG_IMAGE_ES : OG_IMAGE_EN;
+  const metaImage = image || defaultOgImage;
   const metaUrl = url || (typeof window !== 'undefined' ? window.location.href : 'https://kibay.com.do/');
   const canonical = canonicalUrl || metaUrl;
 
