@@ -82,7 +82,7 @@ const WhyCansPage = () => {
             >
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                 <img
-                  src="https://images.unsplash.com/photo-1604256913753-eef2d1d8ca21"
+                  src="https://images.unsplash.com/photo-1604256913753-eef2d1d8ca21?w=1200&q=80&auto=format&fit=crop"
                   alt={t('preservation.imgAlt')}
                   className="w-full h-[500px] object-cover"
                 />
@@ -105,7 +105,7 @@ const WhyCansPage = () => {
             >
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                 <img
-                  src="https://images.unsplash.com/photo-1637019449619-37ea52b9a699"
+                  src="https://images.unsplash.com/photo-1637019449619-37ea52b9a699?w=1200&q=80&auto=format&fit=crop"
                   alt={t('freshness.imgAlt')}
                   className="w-full h-[500px] object-cover"
                 />

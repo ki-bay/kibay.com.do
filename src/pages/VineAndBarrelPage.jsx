@@ -523,7 +523,7 @@ const VineAndBarrelPage = () => {
                 className="relative rounded-2xl overflow-hidden shadow-2xl"
               >
                 <img
-                  src="https://images.unsplash.com/photo-1519092796169-bb9cc75a4b68"
+                  src="https://images.unsplash.com/photo-1519092796169-bb9cc75a4b68?w=1200&q=80&auto=format&fit=crop"
                   alt={t('pairings.featureImgAlt')}
                   width="1600"
                   height="1067"

@@ -3,12 +3,12 @@ import { m } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
 const canImageMeta = [
-  { id: 1, src: "https://images.unsplash.com/photo-1703173354700-0b2028e117aa", altKey: "altMango", rotation: -3, yOffset: 0 },
-  { id: 2, src: "https://images.unsplash.com/photo-1546568133-a7dc44ae2955", altKey: "altPassion", rotation: 4, yOffset: 40 },
-  { id: 3, src: "https://images.unsplash.com/photo-1703581672849-951cbd41e3ac", altKey: "altTropical", rotation: -2, yOffset: 10 },
-  { id: 4, src: "https://images.unsplash.com/photo-1703173354700-0b2028e117aa", altKey: "altMangoReserve", rotation: 5, yOffset: 50 },
-  { id: 5, src: "https://images.unsplash.com/photo-1703581672849-951cbd41e3ac", altKey: "altSunset", rotation: -4, yOffset: 20 },
-  { id: 6, src: "https://images.unsplash.com/photo-1546568133-a7dc44ae2955", altKey: "altClassic", rotation: 2, yOffset: 60 }
+  { id: 1, src: "https://images.unsplash.com/photo-1703173354700-0b2028e117aa?w=1200&q=80&auto=format&fit=crop", altKey: "altMango", rotation: -3, yOffset: 0 },
+  { id: 2, src: "https://images.unsplash.com/photo-1546568133-a7dc44ae2955?w=1200&q=80&auto=format&fit=crop", altKey: "altPassion", rotation: 4, yOffset: 40 },
+  { id: 3, src: "https://images.unsplash.com/photo-1703581672849-951cbd41e3ac?w=1200&q=80&auto=format&fit=crop", altKey: "altTropical", rotation: -2, yOffset: 10 },
+  { id: 4, src: "https://images.unsplash.com/photo-1703173354700-0b2028e117aa?w=1200&q=80&auto=format&fit=crop", altKey: "altMangoReserve", rotation: 5, yOffset: 50 },
+  { id: 5, src: "https://images.unsplash.com/photo-1703581672849-951cbd41e3ac?w=1200&q=80&auto=format&fit=crop", altKey: "altSunset", rotation: -4, yOffset: 20 },
+  { id: 6, src: "https://images.unsplash.com/photo-1546568133-a7dc44ae2955?w=1200&q=80&auto=format&fit=crop", altKey: "altClassic", rotation: 2, yOffset: 60 }
 ];
 
 const CanCollage = () => {

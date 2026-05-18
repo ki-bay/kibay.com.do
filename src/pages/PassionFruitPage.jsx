@@ -25,7 +25,7 @@ const PassionFruitPage = () => {
       <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden pt-20 font-lato">
         <div className="absolute inset-0 z-0">
           <img
-            src="https://images.unsplash.com/photo-1637019449619-37ea52b9a699"
+            src="https://images.unsplash.com/photo-1637019449619-37ea52b9a699?w=1200&q=80&auto=format&fit=crop"
             alt={t('hero.imgAlt')}
             width="1920"
             height="1080"
