@@ -9,9 +9,10 @@ import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/customSupabaseClient';
 
-const HERO_IMAGE = 'https://res.cloudinary.com/dwewurxla/image/upload/v1778724587/Babula_Shots_Rd_-63_pronhr.webp';
+const HERO_IMAGE = 'https://res.cloudinary.com/dwewurxla/image/upload/v1778724589/Babula_Shots_Rd_-64_i5sqcv.webp';
 const GALLERY = [
-  'https://res.cloudinary.com/dwewurxla/image/upload/v1778724589/Babula_Shots_Rd_-64_i5sqcv.webp',
+  'https://res.cloudinary.com/dwewurxla/image/upload/v1778724573/Babula_Shots_Rd_-62_rdetaf.webp',
+  'https://res.cloudinary.com/dwewurxla/image/upload/v1778724587/Babula_Shots_Rd_-63_pronhr.webp',
 ];
 
 const fadeIn = {
@@ -130,32 +131,32 @@ const EnjoyLecturaPage = () => {
           </m.div>
         </section>
 
-        {/* Gallery */}
-        <section className="py-16 px-0 sm:px-6 lg:px-8 bg-card">
-          <div className="max-w-7xl mx-auto">
-            <m.h2 {...fadeIn} className="text-2xl sm:text-3xl font-serif text-foreground mb-10 text-center px-4 sm:px-0">
-              {t('galleryHeading')}
-            </m.h2>
-            <div className="columns-1 sm:columns-2 lg:columns-3 gap-1 sm:gap-6 [column-fill:_balance]">
-              {GALLERY.map((src, i) => (
-                <m.div
-                  key={src}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: i * 0.05 }}
-                  className="mb-1 sm:mb-6 break-inside-avoid overflow-hidden rounded-none sm:rounded-2xl shadow-xl bg-background"
-                >
-                  <img
-                    src={src}
-                    alt={`${t('hero.imageAlt')} — ${i + 1}`}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-auto block hover:scale-[1.02] transition-transform duration-700"
-                  />
-                </m.div>
-              ))}
-            </div>
+        {/* Gallery — two photos rendered full-bleed side by side, no
+            container padding. Same aspect ratio + object-cover so both
+            images line up edge to edge regardless of source dimensions. */}
+        <section className="py-16 bg-card">
+          <m.h2 {...fadeIn} className="text-2xl sm:text-3xl font-serif text-foreground mb-10 text-center px-4">
+            {t('galleryHeading')}
+          </m.h2>
+          <div className="grid grid-cols-2 gap-0 w-full">
+            {GALLERY.map((src, i) => (
+              <m.div
+                key={src}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.05 }}
+                className="overflow-hidden"
+              >
+                <img
+                  src={src}
+                  alt={`${t('hero.imageAlt')} — ${i + 1}`}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full aspect-[4/3] object-cover block hover:scale-[1.02] transition-transform duration-700"
+                />
+              </m.div>
+            ))}
           </div>
         </section>
 
