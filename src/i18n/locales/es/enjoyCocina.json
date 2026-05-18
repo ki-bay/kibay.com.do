@@ -14,7 +14,7 @@
   "story": {
     "heading": "Vino caribeño, comida caribeña, mismo origen",
     "p1": "Hay vinos que se hicieron para una cocina que no conocen. Kibay no. El espumante de mango y chinola creció en la misma finca donde se cosechan los ingredientes que llegan a la mesa de Casa Club — el mismo sol, la misma tierra, el mismo viento atlántico. Por eso conversa con la comida en vez de competir con ella.",
-    "p2": "Pruébalo con un ceviche fresco: la acidez del Kibay limpia el paladar y los cítricos del plato se quedan brillando. Con un queso de cabra suave, la fruta del vino se redondea y se vuelve casi cremosa. Con un mahi-mahi al horno, los aromas tropicales se sientan al lado del pescado como si fueran de la familia.",
+    "p2": "Pruébalo con pescado fresco — un mahi-mahi al horno, un pargo a la plancha, un dorado en hoja de plátano — la mineralidad salina del espumante abraza el plato. Va perfecto con cocina dominicana de costa: asopao de mariscos, pescado con coco, camarones criollos. Y para una tarde más ligera, marida especialmente bien con ensaladas frescas, ceviche cítrico, aguacate y queso fresco.",
     "p3": "El menú cambia con la temporada porque la finca cambia con la temporada. Eso también es parte del trato. Reserva una mesa, deja que el equipo de la cocina escoja, y prueba un Caribe que rara vez se sirve en copa."
   },
   "galleryHeading": "Cocina y maridajes en Casa Club",
@@ -29,5 +29,15 @@
     "heading": "¿Otra forma de disfrutar Kibay?",
     "body": "Cinco razones para abrir una botella en Bahía de Ocoa. Esta es solo una.",
     "cta": "Ver las 5 formas"
+  },
+  "pairings": {
+    "heading": "Marida perfecto con",
+    "items": [
+      "Pescados al horno o a la plancha — pargo, mahi-mahi, dorado",
+      "Mariscos y ceviches cítricos — camarones, langostinos, pulpo",
+      "Cocina dominicana de costa — asopao, pescado con coco, locrio",
+      "Ensaladas y comida ligera — aguacate, palmito, frutas tropicales",
+      "Quesos suaves y frescos — queso de cabra, mozzarella, brie"
+    ]
   }
 }

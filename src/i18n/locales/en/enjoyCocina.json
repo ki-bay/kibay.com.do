@@ -14,7 +14,7 @@
   "story": {
     "heading": "Caribbean wine, Caribbean food, same origin",
     "p1": "Some wines were made for a cuisine they've never met. Kibay wasn't. The sparkling of mango and passion fruit grew on the same property where the ingredients on the Casa Club table are harvested — the same sun, the same soil, the same Atlantic wind. That's why it converses with the food instead of competing with it.",
-    "p2": "Try it with a fresh ceviche: the acidity of the Kibay clears the palate and the citrus in the dish stays bright. With a soft goat cheese, the fruit of the wine rounds out and turns almost creamy. With a baked mahi-mahi, the tropical aromatics sit beside the fish like family.",
+    "p2": "Pair it with fresh fish — a baked mahi-mahi, grilled red snapper, dorado in banana leaf — the salt minerality of the sparkling wraps around the plate. It goes beautifully with Dominican coastal cooking: seafood asopao, fish in coconut broth, camarones criollos. And for lighter afternoons, it works especially well with fresh salads, citrus ceviche, avocado and soft cheese.",
     "p3": "The menu shifts with the season because the property shifts with the season. That's part of the deal. Book a table, let the kitchen team choose, and taste a Caribbean that rarely makes it into a glass."
   },
   "galleryHeading": "Plates and pairings at Casa Club",
@@ -29,5 +29,15 @@
     "heading": "Want a different way to enjoy Kibay?",
     "body": "Five reasons to open a bottle at Ocoa Bay. This is just one of them.",
     "cta": "View all 5 ways"
+  },
+  "pairings": {
+    "heading": "Pairs perfectly with",
+    "items": [
+      "Baked or grilled fish — red snapper, mahi-mahi, dorado",
+      "Seafood and citrus ceviche — shrimp, langoustines, octopus",
+      "Dominican coastal cooking — asopao, fish in coconut broth, locrio",
+      "Salads and light dishes — avocado, hearts of palm, tropical fruit",
+      "Soft and fresh cheeses — goat cheese, mozzarella, brie"
+    ]
   }
 }

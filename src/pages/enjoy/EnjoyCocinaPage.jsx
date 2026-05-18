@@ -9,9 +9,9 @@ import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/customSupabaseClient';
 
-const HERO_IMAGE = 'https://res.cloudinary.com/dwewurxla/image/upload/v1778724491/Babula_Shots_Rd_-17_lmekvu.webp';
+const HERO_IMAGE = 'https://res.cloudinary.com/dwewurxla/image/upload/v1778724489/Babula_Shots_Rd_-16_uckkuv.webp';
 const GALLERY = [
-  'https://res.cloudinary.com/dwewurxla/image/upload/v1778724489/Babula_Shots_Rd_-16_uckkuv.webp',
+  'https://res.cloudinary.com/dwewurxla/image/upload/v1778724491/Babula_Shots_Rd_-17_lmekvu.webp',
 ];
 
 const fadeIn = {
@@ -127,6 +127,23 @@ const EnjoyCocinaPage = () => {
               <p>{t('story.p2')}</p>
               <p>{t('story.p3')}</p>
             </div>
+
+            {/* Pairings list — specific Dominican / Caribbean pairings so
+                visitors browsing without context can imagine the bottle on
+                their own table. */}
+            <m.div {...fadeIn} className="mt-12 pt-10 border-t border-foreground/10">
+              <p className="text-xs sm:text-sm uppercase tracking-[0.25em] text-[#D4A574] font-medium mb-5">
+                {t('pairings.heading')}
+              </p>
+              <ul className="space-y-3">
+                {(t('pairings.items', { returnObjects: true }) || []).map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 text-base sm:text-lg text-foreground/85 font-light">
+                    <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[#D4A574] flex-shrink-0" aria-hidden="true" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </m.div>
           </m.div>
         </section>
 

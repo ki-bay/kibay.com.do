@@ -69,8 +69,9 @@ const EnjoyLecturaPage = () => {
       <Navigation />
 
       <main id="main" role="main" className="bg-background text-foreground">
-        {/* Hero */}
-        <section className="relative min-h-[88vh] flex items-end overflow-hidden">
+        {/* Hero — image shown at its natural ratio (no crop), full viewport
+            width. Text + CTAs sit below on the page bg. */}
+        <section className="relative pt-24 sm:pt-28">
           <img
             src={HERO_IMAGE}
             alt={t('hero.imageAlt')}
@@ -78,11 +79,10 @@ const EnjoyLecturaPage = () => {
             height="1600"
             fetchPriority="high"
             decoding="async"
-            className="absolute inset-0 w-full h-full object-cover"
+            className="w-full h-auto block"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/30" />
 
-          <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-10 pb-20 pt-32 w-full">
+          <div className="max-w-5xl mx-auto px-6 sm:px-10 py-14 sm:py-20">
             <m.div
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
@@ -91,10 +91,10 @@ const EnjoyLecturaPage = () => {
               <span className="inline-block text-xs sm:text-sm uppercase tracking-[0.3em] text-[#D4A574] font-medium mb-5">
                 {t('hero.eyebrow')}
               </span>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-white leading-[1.05] mb-6 drop-shadow-lg">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-foreground leading-[1.05] mb-6">
                 {t('hero.title')}
               </h1>
-              <p className="text-lg sm:text-xl text-white/90 font-light max-w-2xl leading-relaxed mb-10 drop-shadow">
+              <p className="text-lg sm:text-xl text-foreground/80 font-light max-w-2xl leading-relaxed mb-10">
                 {t('hero.lead')}
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
@@ -104,7 +104,7 @@ const EnjoyLecturaPage = () => {
                   </Button>
                 </Link>
                 <Link to="/shop">
-                  <Button variant="outline" className="bg-white/10 hover:bg-white/20 backdrop-blur-md border-white/40 text-white hover:text-white rounded-full px-8 py-6 text-base">
+                  <Button variant="outline" className="border-foreground/30 text-foreground hover:bg-foreground/5 rounded-full px-8 py-6 text-base">
                     <Calendar className="mr-2 w-4 h-4" /> {t('hero.ctaBook')}
                   </Button>
                 </Link>
