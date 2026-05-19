@@ -737,13 +737,13 @@ function ProductDetailPage() {
                     )}
                     <div
                       id={isExperience ? 'adults-stepper' : undefined}
-                      className="flex items-center bg-white border border-stone-200 rounded-full p-1 w-fit shadow-sm"
+                      className="flex items-center bg-background border border-foreground/15 rounded-full p-1 w-fit shadow-sm"
                     >
                       <button
                         onClick={() => handleQuantityChange(-1)}
                         disabled={quantity <= 1 || isSoldOut}
                         aria-label={t('decrease')}
-                        className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-stone-100 text-foreground/70 transition-colors disabled:opacity-50"
+                        className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-foreground/5 text-foreground/70 transition-colors disabled:opacity-50"
                       >
                         <Minus size={16} />
                       </button>
@@ -752,7 +752,7 @@ function ProductDetailPage() {
                         onClick={() => handleQuantityChange(1)}
                         disabled={isSoldOut}
                         aria-label={t('increase')}
-                        className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-stone-100 text-foreground/70 transition-colors disabled:opacity-50"
+                        className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-foreground/5 text-foreground/70 transition-colors disabled:opacity-50"
                       >
                         <Plus size={16} />
                       </button>
