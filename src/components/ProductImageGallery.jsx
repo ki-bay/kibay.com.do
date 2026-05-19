@@ -9,6 +9,7 @@ const placeholderImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWln
 const ProductImageGallery = forwardRef(({ images = [], title, ribbonText }, ref) => {
   const { t } = useTranslation('productGallery');
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [isLandscape, setIsLandscape] = useState(false);
 
   const safeImages = useMemo(() => {
     if (images && images.length > 0) {
@@ -21,17 +22,28 @@ const ProductImageGallery = forwardRef(({ images = [], title, ribbonText }, ref)
   }, [images]);
   const currentImage = safeImages[activeImageIndex];
 
+  // Detect orientation from the image's natural dimensions so landscape
+  // product shots (tours, experiences) get a landscape frame and don't
+  // letterbox inside a portrait container.
+  const handleLoad = (e) => {
+    const { naturalWidth, naturalHeight } = e.currentTarget;
+    if (naturalWidth && naturalHeight) {
+      setIsLandscape(naturalWidth > naturalHeight);
+    }
+  };
+
   return (
-    <div className="w-full flex flex-col items-center">
+    <div className="w-full flex flex-col items-center -mx-4 sm:mx-0">
       {/*
-        Sizing constraints:
-        - Mobile: w-full max-w-sm (unchanged mostly)
-        - Desktop: max-w-md (reduced from max-w-lg) to keep it compact
+        Sizing:
+        - Mobile: full-bleed (-mx-4 negates parent px-4)
+        - Desktop: max-w-xl so the active image reads larger next to the buy box
+        Aspect: 4:3 when active image is landscape, 4:5 for portrait bottles.
       */}
-      <div className="w-full max-w-sm md:max-w-md lg:max-w-md transition-all duration-300">
+      <div className="w-full sm:max-w-md lg:max-w-xl transition-all duration-300">
         <FlyToCartAnimation
           ref={ref}
-          className="relative aspect-[4/5] bg-white rounded-2xl overflow-hidden shadow-sm group w-full mb-6 mx-auto"
+          className={`relative ${isLandscape ? 'aspect-[4/3]' : 'aspect-[4/5]'} bg-white rounded-none sm:rounded-2xl overflow-hidden shadow-sm group w-full mb-6 mx-auto`}
         >
           <AnimatePresence mode="wait">
             <m.img
@@ -43,6 +55,7 @@ const ProductImageGallery = forwardRef(({ images = [], title, ribbonText }, ref)
               fetchPriority={activeImageIndex === 0 ? 'high' : undefined}
               decoding="async"
               loading={activeImageIndex === 0 ? undefined : 'lazy'}
+              onLoad={handleLoad}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -59,7 +72,7 @@ const ProductImageGallery = forwardRef(({ images = [], title, ribbonText }, ref)
         </FlyToCartAnimation>
 
         {safeImages.length > 1 && (
-          <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide justify-center w-full">
+          <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide justify-center w-full px-4 sm:px-0">
             {safeImages.map((image, index) => (
               <button
                 key={index}
