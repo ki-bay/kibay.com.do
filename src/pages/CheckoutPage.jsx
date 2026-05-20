@@ -29,9 +29,11 @@ const hasStripePublishableKey = !!(
 	import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || import.meta.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 );
 
-// CARDNET alternative payment method. Hidden until the owner flips the
-// feature flag in env (after live merchant credentials are configured on
-// the Supabase Edge Function side).
+// CARDNET is the production payment processor. When enabled, the entire
+// checkout flips to DOP-only (Dominican peso) regardless of which currency
+// the user was browsing in. The customer's bank handles FX automatically
+// for foreign cards. Stripe stays in the code as a fallback for local
+// development (when CARDNET creds aren't configured).
 const cardnetEnabled = String(import.meta.env.VITE_CARDNET_ENABLED || '').toLowerCase() === 'true';
 
 const CheckoutForm = ({
@@ -193,7 +195,11 @@ const CheckoutPage = () => {
 	}, [user?.email]);
 
 	const subtotalMajor = getCartTotal();
-	const cartCurrency = cartItems[0]?.variant?.currency || 'DOP';
+	// Currency the user was browsing in (drives cart-card display).
+	const browsingCurrency = cartItems[0]?.variant?.currency || 'DOP';
+	// At checkout, CARDNET-mode forces DOP regardless of browsing currency.
+	// Stripe-mode (local dev fallback) uses the browsing currency.
+	const cartCurrency = cardnetEnabled ? 'DOP' : browsingCurrency;
 	const symbol = symbolFor(cartCurrency);
 
 	// Experiences (excursions / day passes) are not shipped — the customer
@@ -313,7 +319,9 @@ const CheckoutPage = () => {
 			setInitError('Please complete all required shipping fields.');
 			return;
 		}
-		if (!hasStripePublishableKey) {
+		// Stripe is only required when CARDNET is disabled (local dev fallback).
+		// In CARDNET-only production mode we don't need a Stripe key at all.
+		if (!cardnetEnabled && !hasStripePublishableKey) {
 			setInitError('Missing VITE_STRIPE_PUBLISHABLE_KEY in environment.');
 			return;
 		}
@@ -390,8 +398,88 @@ const CheckoutPage = () => {
 			}
 		}
 
-		// Recompute totals using the authoritative discount from redeem_coupon.
-		const finalTotalCents = Math.max(0, subtotalCents + shippingCents - finalDiscountCents);
+		// CARDNET path: refetch DOP prices from Supabase (source of truth) so
+		// the order total never depends on whichever currency the user was
+		// browsing in. Foreign cards still pay — the issuer handles FX —
+		// but we charge in DOP and settle in DOP.
+		let dopSubtotalCents = subtotalCents;
+		let dopShippingCents = shippingCents;
+		let dopDiscountCents = finalDiscountCents;
+		let dopLineItems = null;
+		if (cardnetEnabled) {
+			try {
+				const variantIds = cartItems
+					.map((item) => item.variant?.id)
+					.filter(Boolean);
+				const { data: dopRows, error: dopErr } = await supabase
+					.from('product_variants')
+					.select('id, price_dop_cents, sale_price_dop_cents')
+					.in('id', variantIds);
+				if (dopErr) throw new Error(dopErr.message);
+				const dopById = new Map((dopRows || []).map((r) => [r.id, r]));
+
+				dopSubtotalCents = 0;
+				dopLineItems = cartItems.map((item) => {
+					const row = dopById.get(item.variant?.id);
+					const unitCents = row?.sale_price_dop_cents ?? row?.price_dop_cents ?? 0;
+					dopSubtotalCents += unitCents * item.quantity;
+					return {
+						variant_id: item.variant?.id,
+						quantity: item.quantity,
+						unit_dop_cents: unitCents,
+					};
+				});
+
+				// Shipping in DOP: refetch tiers in DOP and re-evaluate.
+				const dopTier = (shippingTiers && shippingTiers.DOP) || null;
+				const subtotalMajorDop = dopSubtotalCents / 100;
+				dopShippingCents = Math.round(
+					computeShippingMajor(
+						shippableBottleCount,
+						cartIsAllExperience ? 'pickup' : shippingMethod,
+						'DOP',
+						shippingTiers,
+						subtotalMajorDop,
+					) * 100,
+				);
+
+				// Discount in DOP: re-redeem against the DOP subtotal if a
+				// coupon was applied (the earlier redeem ran against the
+				// browsing-currency subtotal, which is wrong for CARDNET).
+				if (finalCouponCode) {
+					const { data: redeemDopData, error: redeemDopErr } = await supabase.rpc(
+						'redeem_coupon',
+						{ p_code: finalCouponCode, p_subtotal: dopSubtotalCents, p_currency: 'DOP' },
+					);
+					if (redeemDopErr) throw new Error(redeemDopErr.message);
+					const redeemRow = Array.isArray(redeemDopData) ? redeemDopData[0] : redeemDopData;
+					if (!redeemRow || !redeemRow.valid) {
+						setAppliedCoupon(null);
+						setCouponError(redeemRow?.error || 'Coupon could no longer be applied in DOP.');
+						setLoading(false);
+						return;
+					}
+					dopDiscountCents = Math.max(0, Number(redeemRow.discount_amount) || 0);
+				}
+
+				// dopTier is read above; reference once to satisfy linters
+				// without changing behavior.
+				void dopTier;
+			} catch (dopRecomputeErr) {
+				console.error('DOP recompute failed:', dopRecomputeErr);
+				setInitError('No se pudo calcular el total en RD$. Reintenta en un momento.');
+				setLoading(false);
+				return;
+			}
+		}
+
+		// Effective totals used for the order INSERT and payment step.
+		// CARDNET-mode uses DOP, Stripe-mode uses the browsing currency.
+		const effSubtotalCents = cardnetEnabled ? dopSubtotalCents : subtotalCents;
+		const effShippingCents = cardnetEnabled ? dopShippingCents : shippingCents;
+		const effDiscountCents = cardnetEnabled ? dopDiscountCents : finalDiscountCents;
+		const effCurrency = cardnetEnabled ? 'DOP' : cartCurrency;
+		const finalTotalCents = Math.max(0, effSubtotalCents + effShippingCents - effDiscountCents);
 		const finalTotalMajor = finalTotalCents / 100;
 
 		const orderNumber = `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
@@ -403,31 +491,38 @@ const CheckoutPage = () => {
 				order_number: orderNumber,
 				status: 'awaiting_payment',
 				total_amount: finalTotalCents,
-				subtotal_amount: subtotalCents,
-				shipping_amount: shippingCents,
-				discount_amount: finalDiscountCents,
+				subtotal_amount: effSubtotalCents,
+				shipping_amount: effShippingCents,
+				discount_amount: effDiscountCents,
 				coupon_code: finalCouponCode,
-				currency: cartCurrency,
+				currency: effCurrency,
 				items_count: cartItems.length,
 				shipping_address: shippingInfo,
 				shipping_method: cartIsAllExperience ? 'pickup' : shippingMethod,
 				tax_id: shippingInfo.taxId || null,
-				payment_method: 'Stripe',
+				payment_method: cardnetEnabled ? 'cardnet' : 'Stripe',
 				estimated_delivery_date: cartIsAllExperience
 					? null
 					: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
 			};
 
-			const orderItems = cartItems.map((item) => ({
-				product_id: item.product.id,
-				variant_id: item.variant.id,
-				product_name: item.product.title,
-				quantity: item.quantity,
-				price_per_item: item.variant.sale_price_in_cents ?? item.variant.price_in_cents,
-				total_price:
-					(item.variant.sale_price_in_cents ?? item.variant.price_in_cents) * item.quantity,
-				metadata: item.metadata || {},
-			}));
+			// Line items: in CARDNET-mode, persist the DOP unit price instead
+			// of whichever currency the cart was holding. Order_items are the
+			// audit trail for the eventual settlement reconciliation.
+			const orderItems = cartItems.map((item, i) => {
+				const browsingUnit = item.variant.sale_price_in_cents ?? item.variant.price_in_cents;
+				const dopUnit = dopLineItems?.[i]?.unit_dop_cents ?? browsingUnit;
+				const unit = cardnetEnabled ? dopUnit : browsingUnit;
+				return {
+					product_id: item.product.id,
+					variant_id: item.variant.id,
+					product_name: item.product.title,
+					quantity: item.quantity,
+					price_per_item: unit,
+					total_price: unit * item.quantity,
+					metadata: item.metadata || {},
+				};
+			});
 
 			if (user) {
 				// Authenticated user — use direct insert via orders_insert_own RLS.
@@ -456,34 +551,43 @@ const CheckoutPage = () => {
 				createdOrderToken = rpcData?.guest_lookup_token;
 			}
 
-			const { data, error } = await supabase.functions.invoke('create-payment-intent', {
-				body: {
-					amount: finalTotalMajor,
-					currency: cartCurrency.toLowerCase(),
-					order_id: createdOrderId,
-				},
-			});
+			// In CARDNET mode, skip the Stripe PaymentIntent dance entirely —
+			// the payment step renders a single "Pagar con CARDNET" button
+			// that calls create-cardnet-session on click.
+			if (cardnetEnabled) {
+				setPendingOrderId(createdOrderId);
+				setPendingOrderToken(createdOrderToken);
+				setStep('payment');
+			} else {
+				const { data, error } = await supabase.functions.invoke('create-payment-intent', {
+					body: {
+						amount: finalTotalMajor,
+						currency: effCurrency.toLowerCase(),
+						order_id: createdOrderId,
+					},
+				});
 
-			if (error) throw error;
-			if (data?.error) throw new Error(data.error);
-			if (!data?.clientSecret) throw new Error('No client secret returned');
+				if (error) throw error;
+				if (data?.error) throw new Error(data.error);
+				if (!data?.clientSecret) throw new Error('No client secret returned');
 
-			// For authenticated users, we can update the orders row directly
-			// via RLS (orders_update_own). For guests, anon has no UPDATE
-			// permission, so we stamp the payment_intent via the
-			// create-payment-intent function instead (it already runs with
-			// service role and could persist this if extended later).
-			if (user) {
-				await supabase
-					.from('orders')
-					.update({ stripe_payment_intent_id: data.paymentIntentId })
-					.eq('id', createdOrderId);
+				// For authenticated users, we can update the orders row directly
+				// via RLS (orders_update_own). For guests, anon has no UPDATE
+				// permission, so we stamp the payment_intent via the
+				// create-payment-intent function instead (it already runs with
+				// service role and could persist this if extended later).
+				if (user) {
+					await supabase
+						.from('orders')
+						.update({ stripe_payment_intent_id: data.paymentIntentId })
+						.eq('id', createdOrderId);
+				}
+
+				setPendingOrderId(createdOrderId);
+				setPendingOrderToken(createdOrderToken);
+				setClientSecret(data.clientSecret);
+				setStep('payment');
 			}
-
-			setPendingOrderId(createdOrderId);
-			setPendingOrderToken(createdOrderToken);
-			setClientSecret(data.clientSecret);
-			setStep('payment');
 
 			// Newsletter opt-in (best-effort, fire and forget). Don't block
 			// the checkout flow on subscribe success/failure.
@@ -836,7 +940,82 @@ const CheckoutPage = () => {
 
 							<div className="bg-card p-6 rounded-xl border border-foreground/10">
 								<h2 className="text-xl font-normal text-foreground mb-6">{t('payment')}</h2>
-								{!hasStripePublishableKey ? (
+								{cardnetEnabled ? (
+									step === 'payment' && pendingOrderId ? (
+										// CARDNET-only payment step. The order has already been
+										// created in DOP (handleContinueToPayment refetched the
+										// canonical price_dop_cents). Show the DOP total
+										// prominently, plus a small USD reference if the user
+										// was browsing in USD, then a single CTA.
+										<div className="space-y-5">
+											<div className="bg-background/50 border border-foreground/10 rounded-lg p-5">
+												<p className="text-xs uppercase tracking-widest text-foreground/50 font-light mb-2">
+													{t('cardnet.payInDop', 'Cargo final en pesos dominicanos')}
+												</p>
+												<p className="text-3xl font-serif text-foreground">
+													RD${totalMajor.toFixed(2)}
+												</p>
+												{browsingCurrency === 'USD' && subtotalMajor > 0 && (
+													<p className="text-xs text-foreground/50 font-light mt-2">
+														{t(
+															'cardnet.usdHint',
+															'Tarjeta en USD: tu banco hace la conversión (≈ US${{usd}} en este momento)',
+															{ usd: subtotalMajor.toFixed(2) },
+														)}
+													</p>
+												)}
+											</div>
+											{initError && (
+												<div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-lg flex items-center gap-2">
+													<AlertCircle className="w-5 h-5 flex-shrink-0" />
+													<p className="text-sm font-light">{initError}</p>
+												</div>
+											)}
+											<Button
+												type="button"
+												onClick={async () => {
+													try {
+														setInitError(null);
+														const { data: { session } } = await supabase.auth.getSession();
+														const accessToken = session?.access_token;
+														const { data, error } = await supabase.functions.invoke('create-cardnet-session', {
+															body: { order_id: pendingOrderId, token: pendingOrderToken || undefined },
+															headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+														});
+														if (error) throw error;
+														if (data?.redirect_url) {
+															window.location.href = data.redirect_url;
+														} else {
+															setInitError(data?.error || 'CARDNET no devolvió URL de redirección.');
+														}
+													} catch (e) {
+														setInitError(e.message || 'CARDNET error');
+													}
+												}}
+												className="w-full bg-[#D4A574] hover:bg-[#c29462] text-stone-950 rounded-full py-6 text-lg shadow-lg"
+											>
+												{t('cardnet.payButton', 'Pagar con CARDNET (RD$)')}
+											</Button>
+											<p className="text-xs text-foreground/50 font-light text-center">
+												{t('cardnet.redirectNotice', 'Te redirigimos a la pasarela segura de CARDNET. Tu tarjeta nunca pasa por nuestros servidores.')}
+											</p>
+										</div>
+									) : (
+										<div className="text-foreground/50 text-sm font-light py-6">
+											{initError ? (
+												<div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-lg flex items-center gap-2">
+													<AlertCircle className="w-5 h-5 flex-shrink-0" />
+													<div>
+														<p className="font-normal">Could not continue</p>
+														<p className="text-sm font-light">{initError}</p>
+													</div>
+												</div>
+											) : (
+												t('cardnet.completeShipping', 'Completa la información de envío arriba y continúa para pagar de forma segura.')
+											)}
+										</div>
+									)
+								) : !hasStripePublishableKey ? (
 									<div className="bg-amber-500/10 border border-amber-500/30 text-amber-200 p-4 rounded-lg text-sm font-light">
 										Configure <code className="text-amber-100">VITE_STRIPE_PUBLISHABLE_KEY</code>{' '}
 										in <code className="text-amber-100">.env.local</code> and Vercel env, then
@@ -874,38 +1053,6 @@ const CheckoutPage = () => {
 									</div>
 								)}
 
-								{cardnetEnabled && step === 'payment' && pendingOrderId && (
-									<div className="mt-6 pt-6 border-t border-foreground/10">
-										<p className="text-xs uppercase tracking-widest text-foreground/50 font-light mb-3">
-											{t('cardnet.alt', '¿Tarjeta dominicana? Paga con CARDNET')}
-										</p>
-										<Button
-											type="button"
-											onClick={async () => {
-												try {
-													const { data: { session } } = await supabase.auth.getSession();
-													const accessToken = session?.access_token;
-													const { data, error } = await supabase.functions.invoke('create-cardnet-session', {
-														body: { order_id: pendingOrderId, token: pendingOrderToken || undefined },
-														headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
-													});
-													if (error) throw error;
-													if (data?.redirect_url) {
-														window.location.href = data.redirect_url;
-													} else {
-														setInitError('CARDNET no devolvió URL de redirección.');
-													}
-												} catch (e) {
-													setInitError(e.message || 'CARDNET error');
-												}
-											}}
-											variant="outline"
-											className="w-full border-[#D4A574] text-[#D4A574] hover:bg-[#D4A574]/10 rounded-full py-5"
-										>
-											{t('cardnet.payButton', 'Pagar con CARDNET (RD)')}
-										</Button>
-									</div>
-								)}
 							</div>
 						</div>
 
@@ -982,7 +1129,11 @@ const CheckoutPage = () => {
 								<div className="mt-6 pt-6 border-t border-foreground/10 space-y-3">
 									<div className="flex items-start gap-3 text-xs font-light text-foreground/70">
 										<Lock className="w-4 h-4 mt-0.5 text-[#D4A574] flex-shrink-0" aria-hidden="true" />
-										<span>{t('trust.secure', 'Pago 100% seguro vía Stripe + 3D Secure. Nunca vemos tu tarjeta.')}</span>
+										<span>
+											{cardnetEnabled
+												? t('trust.secureCardnet', 'Pago 100% seguro vía CARDNET + 3D Secure. Nunca vemos tu tarjeta.')
+												: t('trust.secure', 'Pago 100% seguro vía Stripe + 3D Secure. Nunca vemos tu tarjeta.')}
+										</span>
 									</div>
 									<div className="flex items-start gap-3 text-xs font-light text-foreground/70">
 										<Shield className="w-4 h-4 mt-0.5 text-[#D4A574] flex-shrink-0" aria-hidden="true" />

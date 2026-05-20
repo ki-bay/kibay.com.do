@@ -110,8 +110,10 @@ serve(async (req) => {
 	// https://developers.cardnet.com.do/guias/boton-de-pago/web-con-pantalla-post-3ds.html
 	// Currency code: 214 = DOP, 840 = USD (ISO 4217 numeric).
 	const currencyCode = order.currency === 'USD' ? '840' : '214';
-	// CARDNET wants amount in cents as a string (no decimals, left-padded).
-	const amountInCents = String(Math.round(order.total_amount * 100));
+	// orders.total_amount is already stored as integer minor units (cents).
+	// Pass it through verbatim — earlier revs multiplied by 100, which would
+	// have charged 100× the real amount.
+	const amountInCents = String(order.total_amount);
 
 	const payload = {
 		TransactionType: '0200', // sale
