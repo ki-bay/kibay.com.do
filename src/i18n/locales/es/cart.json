@@ -12,5 +12,5 @@
   "decrease": "Disminuir",
   "quantity": "Cantidad",
   "checkout": "Finalizar compra",
-  "secureCheckout": "Pago seguro con Stripe"
+  "secureCheckout": "Pago seguro con CARDNET"
 }

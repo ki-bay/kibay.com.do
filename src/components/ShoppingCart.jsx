@@ -74,7 +74,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             aria-hidden="true"
-            className="fixed inset-0 bg-card/40 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
             onClick={() => setIsCartOpen(false)}
           />
 
@@ -87,11 +87,11 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
             role="dialog"
             aria-modal="true"
             aria-labelledby="cart-title"
-            className="fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl z-[51] flex flex-col border-l border-stone-100"
+            className="fixed right-0 top-0 h-full w-full max-w-md bg-card shadow-2xl z-[51] flex flex-col border-l border-foreground/10"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-stone-100 bg-white">
+            <div className="flex items-center justify-between p-6 border-b border-foreground/10 bg-card">
               <div className="flex items-center gap-3">
                 <ShoppingBag className="w-5 h-5 text-[#D4A574]" aria-hidden="true" />
                 <h2 id="cart-title" className="text-xl font-serif font-medium text-foreground">{t('title')}</h2>
@@ -102,7 +102,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                 variant="ghost"
                 size="icon"
                 aria-label={t('close', { defaultValue: 'Close' })}
-                className="text-foreground/50 hover:text-foreground hover:bg-background rounded-full"
+                className="text-foreground/50 hover:text-foreground hover:bg-foreground/5 rounded-full"
               >
                 <X className="w-5 h-5" aria-hidden="true" />
               </Button>
@@ -112,8 +112,8 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
             <div className="flex-grow p-6 overflow-y-auto bg-background/50">
               {cartItems.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
-                  <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center">
-                    <ShoppingBag className="w-8 h-8 text-stone-300" aria-hidden="true" />
+                  <div className="w-16 h-16 bg-foreground/5 rounded-full flex items-center justify-center">
+                    <ShoppingBag className="w-8 h-8 text-foreground/40" aria-hidden="true" />
                   </div>
                   <p className="text-foreground/60 text-lg">{t('empty')}</p>
                   <Button
@@ -132,9 +132,9 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                     <m.div
                       layout
                       key={itemKey}
-                      className="flex gap-4 bg-white p-4 rounded-xl shadow-sm border border-stone-100"
+                      className="flex gap-4 bg-card p-4 rounded-xl shadow-sm border border-foreground/10"
                     >
-                      <div className="w-20 h-24 bg-stone-100 rounded-lg overflow-hidden flex-shrink-0">
+                      <div className="w-20 h-24 bg-foreground/5 rounded-lg overflow-hidden flex-shrink-0">
                         <img
                           src={resolveProductMediaUrl(item.product.image) || item.product.image}
                           alt={item.product.title}
@@ -150,7 +150,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                               type="button"
                               onClick={() => removeFromCart(itemKey)}
                               aria-label={t('remove', { defaultValue: 'Remove item' })}
-                              className="text-stone-300 hover:text-red-400 transition-colors p-1"
+                              className="text-foreground/40 hover:text-red-400 transition-colors p-1"
                             >
                               <Trash2 className="w-4 h-4" aria-hidden="true" />
                             </button>
@@ -169,12 +169,12 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                             {item.variant.sale_price_formatted || item.variant.price_formatted}
                           </p>
 
-                          <div className="flex items-center bg-stone-100 rounded-full p-1">
+                          <div className="flex items-center bg-background border border-foreground/10 rounded-full p-1">
                             <button
                               type="button"
                               onClick={() => updateQuantity(itemKey, Math.max(1, item.quantity - 1))}
                               aria-label={t('decreaseQuantity', { defaultValue: 'Decrease quantity' })}
-                              className="w-6 h-6 flex items-center justify-center rounded-full bg-white text-foreground/70 shadow-sm hover:text-[#D4A574] transition-colors"
+                              className="w-6 h-6 flex items-center justify-center rounded-full bg-card text-foreground/70 shadow-sm hover:text-[#D4A574] transition-colors"
                             >
                               <Minus className="w-3 h-3" aria-hidden="true" />
                             </button>
@@ -183,7 +183,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                               type="button"
                               onClick={() => updateQuantity(itemKey, item.quantity + 1)}
                               aria-label={t('increaseQuantity', { defaultValue: 'Increase quantity' })}
-                              className="w-6 h-6 flex items-center justify-center rounded-full bg-white text-foreground/70 shadow-sm hover:text-[#D4A574] transition-colors"
+                              className="w-6 h-6 flex items-center justify-center rounded-full bg-card text-foreground/70 shadow-sm hover:text-[#D4A574] transition-colors"
                             >
                               <Plus className="w-3 h-3" aria-hidden="true" />
                             </button>
@@ -199,7 +199,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
 
             {/* Footer */}
             {cartItems.length > 0 && (
-              <div className="p-6 bg-white border-t border-stone-100 shadow-[0_-10px_40px_rgba(0,0,0,0.03)]">
+              <div className="p-6 bg-card border-t border-foreground/10 shadow-[0_-10px_40px_rgba(0,0,0,0.03)]">
                 <div className="flex justify-between items-center mb-6">
                   <span className="text-foreground/60">{t('subtotal')}</span>
                   <span className="text-2xl font-serif font-medium text-foreground">
@@ -208,7 +208,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                 </div>
                 <Button
                   onClick={handleCheckout}
-                  className="w-full bg-[#D4A574] hover:bg-[#c29462] text-white font-medium py-6 rounded-full text-lg shadow-lg shadow-[#D4A574]/20 group transition-all duration-300"
+                  className="w-full bg-[#D4A574] hover:bg-[#c29462] text-stone-950 font-medium py-6 rounded-full text-lg shadow-lg shadow-[#D4A574]/20 group transition-all duration-300"
                 >
                   {t('checkout')}
                   <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />

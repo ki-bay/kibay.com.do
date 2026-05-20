@@ -27,7 +27,7 @@
     },
     {
       "title": "5. Compartir información",
-      "content": "Podemos compartir su información con proveedores externos, consultores y otros prestadores de servicios que necesiten acceder a dicha información para llevar a cabo tareas en nuestro nombre (por ejemplo, procesadores de pago, socios de envío). No vendemos ni alquilamos su información personal a terceros."
+      "content": "Podemos compartir su información con proveedores externos, consultores y otros prestadores de servicios que necesiten acceder a dicha información para llevar a cabo tareas en nuestro nombre. En particular, los pagos con tarjeta son procesados por CARDNET Dominicana, S.A. — su información de tarjeta se ingresa directamente en la pasarela de CARDNET y nunca pasa por nuestros servidores. CARDNET aplica su propia política de privacidad y los estándares PCI-DSS para resguardar los datos de su tarjeta. También compartimos información mínima con socios de envío para entregar su pedido. No vendemos ni alquilamos su información personal a terceros."
     },
     {
       "title": "6. Seguridad de los datos",

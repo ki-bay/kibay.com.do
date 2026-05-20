@@ -12,5 +12,5 @@
   "decrease": "Decrease",
   "quantity": "Quantity",
   "checkout": "Checkout",
-  "secureCheckout": "Secure checkout via Stripe"
+  "secureCheckout": "Secure checkout via CARDNET"
 }
