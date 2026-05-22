@@ -1,34 +1,56 @@
-## Pages
-- [- Kibay Admin](/blogeditor): No description available
-- [— Kibay](/checkout): No description available
-- [) : t('seoTitleNew')}](/adminproductform): No description available
-- [Blog - Kibay Espumante - Premium Sparkling Wine](/bloglist): Read the latest news, stories, and updates from Kibay Espumante.
-- [Blog Admin - Kibay Espumante](/blogadmin): No description available
-- [Our Wine - Kibay Espumante | Organic Sparkling Wine](/product): Discover Kibay Espumante: premium organic sparkling wine made with mango and passion fruit. Learn about our fermentation process, tasting notes, and Dominican heritage.
-- [Untitled Page](/kibaywineproduct): No description available
-- [Untitled Page](/mango): No description available
-- [Untitled Page](/notfound): No description available
-- [Untitled Page](/passionfruit): No description available
-- [Untitled Page](/privacypolicy): No description available
-- [Untitled Page](/shippingreturnspolicy): No description available
-- [Untitled Page](/termsandconditions): No description available
-- [Untitled Page](/userprofile): No description available
-- [Untitled Page](/whycans): No description available
-- [Untitled Page](/adminanalytics): No description available
-- [Untitled Page](/admincoupons): No description available
-- [Untitled Page](/admincustomers): No description available
-- [Untitled Page](/adminorders): No description available
-- [Untitled Page](/adminproducts): No description available
-- [Untitled Page](/adminshipping): No description available
-- [Untitled Page](/emailcampaigns): No description available
-- [Untitled Page](/emailcomposer): No description available
-- [Untitled Page](/emaildashboard): No description available
-- [Untitled Page](/emailtemplates): No description available
-- [Untitled Page](/bloglogin): No description available
-- [Untitled Page](/login): No description available
-- [Untitled Page](/register): No description available
-- [Untitled Page](/verifyotp): No description available
-- [Untitled Page](/enjoyamigos): No description available
-- [Untitled Page](/enjoycocina): No description available
-- [Untitled Page](/enjoylectura): No description available
-- [Untitled Page](/enjoypiscina): No description available
+# Kibay Espumante
+
+> Organic Caribbean sparkling wine from Ocoa Bay, Dominican Republic — passion-fruit and mango infusions, made in 250 ml cans and 750 ml bottles. The website also sells experiences at the Ocoa Bay winery (tastings, tours, Casa Club day passes) and runs a bilingual blog about Dominican wine culture.
+
+Kibay (pronounced *ki-BAY*) is a small-batch wine brand from Bahía de Ocoa, Azua, Dominican Republic. The site is bilingual (Spanish / English) and sells direct-to-consumer in the Dominican Republic with all charges processed in Dominican pesos (DOP) via the CARDNET payment gateway. International customers can place orders too — their issuing bank handles the FX automatically. Prices may be displayed in USD as a reference but the actual charge is always DOP.
+
+This file is a flattened sitemap intended for AI agents. Use the links below to retrieve specific information about products, experiences, the winery story, blog content, or policies. Routes ending in `/cart`, `/checkout`, `/account`, `/login`, `/register`, and anything under `/admin` or `/dashboard` are user-state-dependent and should be ignored by crawlers.
+
+## Core Products
+
+- [Shop — full catalog](/shop): Browse every Kibay wine and Ocoa Bay experience currently for sale, with prices in DOP and USD.
+- [Ki-BAY Sparkling Can](/product/kibay-sparkling): Sparkling Passion Fruit Beverage
+- [Kibay Tropical Wine](/product/kibay-wine): Caribbean wine, reimagined
+- [Rosé](/product/rose): Dry rosé — 2026 vintage
+- [French Colombard](/product/french-colombard): Bright white wine — 2026 vintage
+
+## Experiences at Ocoa Bay
+
+- [Complete Ocoa Bay Experience](/product/ocoa-bay-complete-experience): Tasting + tour + Casa Club + 3-course organic menu · US$145 p/p + taxes
+- [Ocoa Bay Wine Tour](/product/ocoa-bay-wine-tour): Tasting + vineyard tour — 90 minutes · US$65 p/p + taxes
+- [Casa Club Day Pass](/product/ocoa-bay-casa-club-day-pass): Reservation only · À la carte menu (minimum purchase) · 11:00 AM – 6:30 PM
+
+## Story & Context
+
+- [About Kibay](/about): Brand origin, founders, mission, and the story behind making sparkling wine in the Caribbean.
+- [Vine & Barrel](/vine-and-barrel): The Ocoa Bay winery — climate, soil, varieties, harvest practices, and why we can grow vinifera grapes at 18° latitude.
+- [Why cans?](/why-cans): The case for 250 ml aluminum cans for sparkling wine — freshness, portability, lower carbon footprint.
+- [Whitepaper](/whitepaper): Deeper technical document on Kibay's organic winemaking process and Caribbean viticulture.
+- [Enjoy — sunrise at Ocoa Bay](/enjoy/amanecer): Visual journal of mornings at the bay, framing how Kibay fits into Dominican coastal living.
+- [Enjoy — among friends](/enjoy/amigos): Casual gatherings at Casa Club and how Kibay pairs with social meals.
+- [Enjoy — Caribbean kitchen](/enjoy/cocina): Pairing notes for Kibay with traditional Dominican coastal dishes (fish, asopao, ceviche, light salads).
+- [Enjoy — by the pool](/enjoy/piscina): Pool-side moments at Ocoa Bay's Casa Club.
+- [Enjoy — quiet reading](/enjoy/lectura): Reflective afternoons at the winery — bottle pairings for solitude and slow time.
+
+## Blog
+
+- [Blog index](/blog): Browse all Kibay articles — Spanish-language posts on Ocoa Bay, Caribbean wine, and Dominican food pairings.
+- [Kibay: del Caribe a tu copa, desde Ocoa Bay](/blog/kibay-espumante-caribeno-ocoa-bay-zona-colonial-1s4yi5): Descubre Kibay, espumante orgánico caribeño de Ocoa Bay, Azua. Infusiones de mango y maracuyá. Compra en línea o visita Casa Maria en Zona Colonial, Santo Domingo.
+- [Kibay en Ocoa Bay: del viñedo caribeño a tu copa](/blog/kibay-ocoa-bay-vinedo-caribeno-1rwn08): Descubre Kibay, el espumante orgánico caribeño de Ocoa Bay. Visita el viñedo, compra online o recorre Casa María en Zona Colonial, Santo Domingo.
+- [Kibay en Casa Club: donde el Caribe se vierte en copa](/blog/kibay-casa-club-ocoa-bay-piscina-1azvgn): Kibay espumante orgánico caribeño de Ocoa Bay. Descubre el terroir, las infusiones tropicales y Casa Maria Zona Colonial. Compra en línea o reserva una visita.
+- [Ocoa Bay a Casa Maria: El viaje del espumante Kibay](/blog/ocoa-bay-casa-maria-viaje-espumante-kibay-1uirt4): Descubre cómo el espumante orgánico Kibay nace en Ocoa Bay, Azua, y llega a tu copa vía Casa Maria en Zona Colonial. Terroir caribeño, infusiones de mango y maracuyá.
+- [Kibay: del Caribe a tu copa, terroir en cada sorbo](/blog/kibay-mango-chinola-bebida-del-dia-1bzdwo): Kibay espumante orgánico caribeño: terroir de Ocoa Bay, infusiones de mango y chinola. Descubre cómo viña, proceso y boutique convergen en cada copa.
+- [Ocoa Bay a tu Copa: La Ruta del Espumante Caribeño](/blog/ocoa-bay-espumante-caribe-o-ruta-vi-a-casa-maria-1twodq): Descubre la ruta del espumante caribeño Kibay: desde Ocoa Bay hasta Casa Maria. Terroir tropical, infusiones de mango y maracuyá. Reserva tu visita a la viña hoy.
+- [Ocoa Bay a tu copa: la ruta del espumante Kibay](/blog/ocoa-bay-copa-ruta-espumante-kibay-1c4ilo): Descubre Kibay, el espumante orgánico caribeño de Ocoa Bay. Terroir tropical, infusiones de mango y maracuyá. Visita la viña o compra en línea.
+- [Kibay: del Caribe a tu copa, encuentro en Ocoa Bay](/blog/kibay-caribe-ocoa-bay-encuentro-amigos-1u9syo): Kibay espumante caribeño orgánico: conoce el terroir de Ocoa Bay, la magia de la viña dominicana y cómo brindis entre amigos conectan la viña con tu copa.
+
+## Policies & Support
+
+- [Contact](/contact): How to reach Kibay — email, phone, social, and Ocoa Bay address.
+- [Shipping & Returns](/shipping-returns): Domestic Dominican Republic shipping rates, free-shipping thresholds, and 48-hour breakage guarantee.
+- [Terms & Conditions](/terms): Pricing, payment, age verification, and order acceptance terms.
+- [Privacy Policy](/privacy): What data we collect, how we use it, and the role of CARDNET as the card processor (Kibay never sees card numbers).
+
+---
+
+Generated at 2026-05-22T16:22:46.131Z from https://kibay.com.do. Source-of-truth product and blog data is pulled from Supabase at build time.
