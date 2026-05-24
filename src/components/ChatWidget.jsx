@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { MessageCircle, X, Send, Loader2 } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Mic, MicOff, Keyboard, Volume2 } from 'lucide-react';
 import { supabase } from '@/lib/customSupabaseClient';
 
 // AI HITL Chat Widget — floating button bottom-right that opens a slide-out
@@ -16,8 +16,22 @@ import { supabase } from '@/lib/customSupabaseClient';
 
 const SESSION_KEY = 'kibay_chat_session';
 const CONV_KEY = 'kibay_chat_conv_id';
+const MODE_KEY = 'kibay_chat_mode'; // 'text' | 'voice'
 const POLL_INTERVAL_MS = 5000;
 const HIDDEN_PATH_PREFIXES = ['/admin', '/dashboard', '/checkout/cardnet'];
+
+// Web Speech API support (Tier 5 in-browser voice). Chrome/Edge/Safari + mobile Safari yes,
+// Firefox no (we degrade to text). HTTPS required — http://localhost works in dev too.
+function isVoiceSupported() {
+  if (typeof window === 'undefined') return false;
+  const hasSR = 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
+  const hasTTS = 'speechSynthesis' in window;
+  return hasSR && hasTTS;
+}
+
+// Map app locale → BCP-47 region tag for SpeechRecognition / SpeechSynthesis.
+// OS picks the closest available voice if the exact tag isn't installed.
+const VOICE_LOCALE = { es: 'es-DO', en: 'en-US' };
 
 function getOrCreateSessionToken() {
   if (typeof window === 'undefined') return '';
@@ -85,6 +99,126 @@ const ChatWidget = () => {
   // Determine current locale (es | en) from i18next.
   const locale = (i18n.language || 'es').slice(0, 2) === 'en' ? 'en' : 'es';
 
+  // Tier 5: in-browser voice mode (Web Speech API). State machine + refs.
+  const voiceSupported = useMemo(isVoiceSupported, []);
+  const [mode, setMode] = useState(() =>
+    typeof window !== 'undefined' ? localStorage.getItem(MODE_KEY) || 'text' : 'text',
+  );
+  // voicePhase: idle | listening | thinking | speaking
+  const [voicePhase, setVoicePhase] = useState('idle');
+  const [voiceInterim, setVoiceInterim] = useState('');
+  const recognitionRef = useRef(null);
+  const lastSpokenIdRef = useRef(null);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    localStorage.setItem(MODE_KEY, mode);
+  }, [mode]);
+
+  // ---- Voice mode (Tier 5) ---------------------------------------------
+  // 1. Initialize SpeechRecognition once per mount + when locale changes.
+  useEffect(() => {
+    if (!voiceSupported) return undefined;
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) return undefined;
+    const rec = new SR();
+    rec.continuous = false;
+    rec.interimResults = true;
+    rec.maxAlternatives = 1;
+    rec.lang = VOICE_LOCALE[locale] || 'en-US';
+
+    rec.onresult = (event) => {
+      let interim = '';
+      let finalText = '';
+      for (let i = event.resultIndex; i < event.results.length; i += 1) {
+        const res = event.results[i];
+        if (res.isFinal) finalText += res[0].transcript;
+        else interim += res[0].transcript;
+      }
+      if (interim) setVoiceInterim(interim);
+      if (finalText.trim()) {
+        setVoiceInterim('');
+        setVoicePhase('thinking');
+        // Send the transcript through the same path as a typed message.
+        sendUserText(finalText.trim());
+      }
+    };
+    rec.onerror = (e) => {
+      if (e?.error === 'not-allowed' || e?.error === 'service-not-allowed') {
+        // Permission denied — drop back to text mode.
+        setMode('text');
+        setError(t('voiceMicDenied', 'No pudimos acceder al micrófono. Cambiamos a chat de texto.'));
+      }
+      setVoicePhase('idle');
+      setVoiceInterim('');
+    };
+    rec.onend = () => {
+      setVoicePhase((p) => (p === 'listening' ? 'idle' : p));
+    };
+    recognitionRef.current = rec;
+    return () => {
+      try { rec.stop(); } catch { /* ignore */ }
+      recognitionRef.current = null;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [voiceSupported, locale]);
+
+  // 2. TTS — speak the newest approved assistant message when in voice mode.
+  useEffect(() => {
+    if (mode !== 'voice' || !voiceSupported) return;
+    const last = [...messages].reverse().find((m) => m.role === 'assistant' && !m.pending);
+    if (!last || last.id === lastSpokenIdRef.current) return;
+    lastSpokenIdRef.current = last.id;
+    try {
+      window.speechSynthesis.cancel();
+      const u = new window.SpeechSynthesisUtterance(last.body);
+      u.lang = VOICE_LOCALE[locale] || 'en-US';
+      // Pick a voice that matches the locale prefix if available.
+      const voices = window.speechSynthesis.getVoices();
+      const pref = (VOICE_LOCALE[locale] || 'en-US').slice(0, 2);
+      const match = voices.find((v) => v.lang?.toLowerCase().startsWith(pref));
+      if (match) u.voice = match;
+      u.onstart = () => setVoicePhase('speaking');
+      u.onend = () => setVoicePhase('idle');
+      u.onerror = () => setVoicePhase('idle');
+      window.speechSynthesis.speak(u);
+    } catch {
+      /* TTS unavailable — skip silently */
+    }
+  }, [messages, mode, voiceSupported, locale]);
+
+  // 3. Stop in-flight SR/TTS when widget closes or mode flips away.
+  useEffect(() => {
+    if (open && mode === 'voice') return;
+    try { window.speechSynthesis?.cancel(); } catch { /* ignore */ }
+    try { recognitionRef.current?.stop(); } catch { /* ignore */ }
+    setVoicePhase('idle');
+    setVoiceInterim('');
+  }, [open, mode]);
+
+  const handleVoiceTap = () => {
+    if (!voiceSupported) return;
+    if (voicePhase === 'speaking') {
+      // Tap interrupts TTS.
+      try { window.speechSynthesis.cancel(); } catch { /* ignore */ }
+      setVoicePhase('idle');
+      return;
+    }
+    if (voicePhase === 'listening') {
+      try { recognitionRef.current?.stop(); } catch { /* ignore */ }
+      setVoicePhase('idle');
+      return;
+    }
+    if (voicePhase === 'thinking') return;
+    try {
+      setVoiceInterim('');
+      recognitionRef.current?.start();
+      setVoicePhase('listening');
+    } catch (e) {
+      // Some browsers throw if .start() called twice quickly.
+      setVoicePhase('idle');
+    }
+  };
+
   // Hide on admin / dashboard / cardnet-return pages.
   const shouldHide = useMemo(
     () => HIDDEN_PATH_PREFIXES.some((p) => location.pathname.startsWith(p)),
@@ -140,8 +274,7 @@ const ChatWidget = () => {
     };
   }, [open, conversationId, sessionToken]);
 
-  const sendMessage = useCallback(async () => {
-    const text = input.trim();
+  const sendUserText = useCallback(async (text) => {
     if (!text || sending) return;
     setSending(true);
     setError(null);
@@ -155,7 +288,6 @@ const ChatWidget = () => {
       { id: optimisticUserId, role: 'user', body: text },
       { id: optimisticPendingId, role: 'assistant', body: '', pending: true },
     ]);
-    setInput('');
 
     try {
       const resp = await fetch(`${supabase.supabaseUrl}/functions/v1/ai-chat`, {
@@ -173,6 +305,7 @@ const ChatWidget = () => {
       if (!resp.ok) {
         setMessages((prev) => prev.filter((m) => m.id !== optimisticPendingId));
         setError(data.error || t('errorGeneric', 'Algo salió mal. Intenta de nuevo.'));
+        if (mode === 'voice') setVoicePhase('idle');
         return;
       }
       if (data.conversation_id && data.conversation_id !== conversationId) {
@@ -184,10 +317,18 @@ const ChatWidget = () => {
     } catch (e) {
       setMessages((prev) => prev.filter((m) => m.id !== optimisticPendingId));
       setError(e.message || t('errorGeneric', 'Algo salió mal. Intenta de nuevo.'));
+      if (mode === 'voice') setVoicePhase('idle');
     } finally {
       setSending(false);
     }
-  }, [input, sending, conversationId, sessionToken, locale, location.pathname, t]);
+  }, [sending, conversationId, sessionToken, locale, location.pathname, t, mode]);
+
+  const sendMessage = useCallback(async () => {
+    const text = input.trim();
+    if (!text) return;
+    setInput('');
+    await sendUserText(text);
+  }, [input, sendUserText]);
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -216,20 +357,44 @@ const ChatWidget = () => {
       {open && (
         <div className="fixed bottom-5 right-5 z-50 w-[min(380px,calc(100vw-2rem))] h-[min(560px,calc(100vh-2rem))] bg-card border border-foreground/15 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
           <div className="flex items-center justify-between px-4 py-3 border-b border-foreground/10 bg-background/50">
-            <div>
+            <div className="min-w-0">
               <p className="text-sm font-normal text-foreground">{t('title', 'Chatea con Kibay')}</p>
               <p className="text-[11px] text-foreground/55 font-light">
                 {t('subtitle', 'Cada respuesta es revisada por nuestro equipo')}
               </p>
             </div>
-            <button
-              type="button"
-              aria-label={t('close', 'Cerrar chat')}
-              onClick={() => setOpen(false)}
-              className="text-foreground/60 hover:text-foreground p-1"
-            >
-              <X className="w-5 h-5" />
-            </button>
+            <div className="flex items-center gap-1">
+              {voiceSupported && (
+                <div className="flex items-center bg-foreground/5 rounded-full p-0.5" role="group" aria-label={t('modeToggle', 'Modo')}>
+                  <button
+                    type="button"
+                    onClick={() => setMode('text')}
+                    aria-pressed={mode === 'text'}
+                    aria-label={t('modeText', 'Modo texto')}
+                    className={`px-2 py-1 rounded-full transition-colors ${mode === 'text' ? 'bg-[#D4A574] text-stone-950' : 'text-foreground/55 hover:text-foreground'}`}
+                  >
+                    <Keyboard className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setMode('voice')}
+                    aria-pressed={mode === 'voice'}
+                    aria-label={t('modeVoice', 'Modo voz')}
+                    className={`px-2 py-1 rounded-full transition-colors ${mode === 'voice' ? 'bg-[#D4A574] text-stone-950' : 'text-foreground/55 hover:text-foreground'}`}
+                  >
+                    <Volume2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
+              <button
+                type="button"
+                aria-label={t('close', 'Cerrar chat')}
+                onClick={() => setOpen(false)}
+                className="text-foreground/60 hover:text-foreground p-1"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
           </div>
 
           <div
@@ -278,27 +443,77 @@ const ChatWidget = () => {
           </div>
 
           <div className="border-t border-foreground/10 p-3 bg-background/50">
-            <div className="flex items-end gap-2">
-              <textarea
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                rows={1}
-                placeholder={t('placeholder', 'Escribe tu mensaje…')}
-                className="flex-1 resize-none bg-background border border-foreground/15 rounded-xl px-3 py-2 text-sm font-light text-foreground placeholder:text-foreground/40 focus:outline-none focus:border-[#D4A574] max-h-24"
-                style={{ minHeight: 38 }}
-                disabled={sending}
-              />
-              <button
-                type="button"
-                onClick={sendMessage}
-                disabled={!input.trim() || sending}
-                aria-label={t('send', 'Enviar')}
-                className="w-9 h-9 rounded-full bg-[#D4A574] text-stone-950 hover:bg-[#c29462] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center"
-              >
-                {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-              </button>
-            </div>
+            {mode === 'voice' && voiceSupported ? (
+              <div className="flex flex-col items-center gap-2 py-2">
+                {voiceInterim && (
+                  <div role="status" className="text-xs text-foreground/55 font-light text-center w-full px-2 truncate">
+                    "{voiceInterim}"
+                  </div>
+                )}
+                <button
+                  type="button"
+                  onClick={handleVoiceTap}
+                  disabled={voicePhase === 'thinking'}
+                  aria-label={
+                    voicePhase === 'listening'
+                      ? t('voiceStop', 'Tocar para detener')
+                      : voicePhase === 'speaking'
+                        ? t('voiceInterrupt', 'Tocar para interrumpir')
+                        : t('voiceStart', 'Tocar para hablar')
+                  }
+                  className={`w-14 h-14 rounded-full flex items-center justify-center transition-all disabled:cursor-not-allowed ${
+                    voicePhase === 'listening'
+                      ? 'bg-red-500/85 text-white ring-4 ring-red-500/30 animate-pulse'
+                      : voicePhase === 'thinking'
+                        ? 'bg-foreground/15 text-foreground/55'
+                        : voicePhase === 'speaking'
+                          ? 'bg-emerald-500/85 text-white ring-4 ring-emerald-500/30'
+                          : 'bg-[#D4A574] text-stone-950 hover:bg-[#c29462]'
+                  }`}
+                >
+                  {voicePhase === 'thinking' ? (
+                    <Loader2 className="w-6 h-6 animate-spin" />
+                  ) : voicePhase === 'listening' ? (
+                    <MicOff className="w-6 h-6" />
+                  ) : voicePhase === 'speaking' ? (
+                    <Volume2 className="w-6 h-6" />
+                  ) : (
+                    <Mic className="w-6 h-6" />
+                  )}
+                </button>
+                <p className="text-[11px] text-foreground/55 font-light text-center">
+                  {voicePhase === 'listening'
+                    ? t('voiceListening', 'Escuchando… habla con claridad')
+                    : voicePhase === 'thinking'
+                      ? t('voiceThinking', 'Procesando tu mensaje…')
+                      : voicePhase === 'speaking'
+                        ? t('voiceSpeaking', 'Respondiendo… toca para interrumpir')
+                        : t('voiceTapToTalk', 'Toca el micrófono para hablar')}
+                </p>
+              </div>
+            ) : (
+              <div className="flex items-end gap-2">
+                <textarea
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  rows={1}
+                  placeholder={t('placeholder', 'Escribe tu mensaje…')}
+                  className="flex-1 resize-none bg-background border border-foreground/15 rounded-xl px-3 py-2 text-sm font-light text-foreground placeholder:text-foreground/40 focus:outline-none focus:border-[#D4A574] max-h-24"
+                  style={{ minHeight: 38 }}
+                  disabled={sending}
+                />
+                <button
+                  type="button"
+                  onClick={sendMessage}
+                  disabled={!input.trim() || sending}
+                  aria-label={t('send', 'Enviar')}
+                  className="w-9 h-9 rounded-full bg-[#D4A574] text-stone-950 hover:bg-[#c29462] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center"
+                >
+                  {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                </button>
+              </div>
+            )}
             <p className="text-[10px] text-foreground/35 text-center mt-2 font-light">
               {t('hitlNotice', 'Las respuestas son revisadas por una persona antes de enviarse.')}
             </p>

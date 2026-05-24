@@ -8,5 +8,16 @@
   "send": "Send",
   "awaitingReview": "We got your message. Our team is reviewing and will reply shortly.",
   "hitlNotice": "Replies are reviewed by a person before sending.",
-  "errorGeneric": "Something went wrong. Please try again."
+  "errorGeneric": "Something went wrong. Please try again.",
+  "modeToggle": "Mode",
+  "modeText": "Text mode",
+  "modeVoice": "Voice mode",
+  "voiceStart": "Tap to speak",
+  "voiceStop": "Tap to stop",
+  "voiceInterrupt": "Tap to interrupt",
+  "voiceListening": "Listening… speak clearly",
+  "voiceThinking": "Processing your message…",
+  "voiceSpeaking": "Replying… tap to interrupt",
+  "voiceTapToTalk": "Tap the mic to speak",
+  "voiceMicDenied": "We couldn't access the mic. Switched to text chat."
 }

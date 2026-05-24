@@ -8,5 +8,16 @@
   "send": "Enviar",
   "awaitingReview": "Tu mensaje fue recibido. Nuestro equipo lo revisará y te responderá pronto.",
   "hitlNotice": "Las respuestas son revisadas por una persona antes de enviarse.",
-  "errorGeneric": "Algo salió mal. Intenta de nuevo."
+  "errorGeneric": "Algo salió mal. Intenta de nuevo.",
+  "modeToggle": "Modo",
+  "modeText": "Modo texto",
+  "modeVoice": "Modo voz",
+  "voiceStart": "Tocar para hablar",
+  "voiceStop": "Tocar para detener",
+  "voiceInterrupt": "Tocar para interrumpir",
+  "voiceListening": "Escuchando… habla con claridad",
+  "voiceThinking": "Procesando tu mensaje…",
+  "voiceSpeaking": "Respondiendo… toca para interrumpir",
+  "voiceTapToTalk": "Toca el micrófono para hablar",
+  "voiceMicDenied": "No pudimos acceder al micrófono. Cambiamos a chat de texto."
 }
