@@ -132,6 +132,352 @@ const CheckoutForm = ({
 	);
 };
 
+// CARDNET ZTRANS 3DS direct integration. Renders a card form, drives the
+// 3DS authentication flow, opens a modal iframe for the bank's challenge
+// when required, then triggers the server-side ProcessSale. Card data
+// lives only in React state for the lifetime of this component — never
+// persisted to disk, never echoed back from the server.
+const CardnetCardForm = ({
+	orderId,
+	guestToken,
+	totalAmountCents,
+	currencyCode,
+	usdReferenceMajor,
+	onPaid,
+}) => {
+	const { t } = useTranslation('checkout');
+	const [cardNumber, setCardNumber] = useState('');
+	const [exp, setExp] = useState(''); // MM/YY
+	const [cvv, setCvv] = useState('');
+	const [holder, setHolder] = useState('');
+	const [busy, setBusy] = useState(false);
+	const [error, setError] = useState(null);
+	const [challenge, setChallenge] = useState(null); // { url, token } or null
+
+	// While a 3DS challenge is open we listen for the iframe's postMessage.
+	useEffect(() => {
+		if (!challenge) return undefined;
+		function handler(ev) {
+			if (ev.origin !== window.location.origin) return;
+			const data = ev.data || {};
+			if (data.type !== 'cardnet-3ds-return') return;
+			if (data.order_id !== orderId) return;
+			finalize();
+		}
+		window.addEventListener('message', handler);
+		return () => window.removeEventListener('message', handler);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [challenge, orderId]);
+
+	const totalMajor = totalAmountCents / 100;
+	const currencySymbol = currencyCode === 'USD' ? '$' : 'RD$';
+	const cardDigits = cardNumber.replace(/\D/g, '');
+	const [expMonth, expYear] = (() => {
+		const m = exp.match(/^(\d{1,2})\s*\/?\s*(\d{0,2})$/);
+		return m ? [m[1], m[2]] : ['', ''];
+	})();
+	const formValid =
+		cardDigits.length >= 13 &&
+		cardDigits.length <= 19 &&
+		/^\d{3,4}$/.test(cvv) &&
+		/^(0?[1-9]|1[0-2])$/.test(expMonth) &&
+		/^\d{2}$/.test(expYear) &&
+		holder.trim().length >= 3;
+
+	const finalize = useCallback(async () => {
+		setBusy(true);
+		setError(null);
+		try {
+			const { data: { session } } = await supabase.auth.getSession();
+			const accessToken = session?.access_token;
+			const { data, error: invokeErr } = await supabase.functions.invoke('cardnet-finalize-sale', {
+				body: {
+					order_id: orderId,
+					token: guestToken || undefined,
+					card: {
+						number: cardDigits,
+						cvv,
+						exp_month: expMonth,
+						exp_year: expYear,
+						holder_name: holder.trim(),
+					},
+				},
+				headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+			});
+			if (invokeErr) throw invokeErr;
+			if (data?.status === 'paid') {
+				// Wipe card data from memory before navigating away.
+				setCardNumber('');
+				setCvv('');
+				setExp('');
+				setHolder('');
+				setChallenge(null);
+				onPaid(data.order_id);
+			} else {
+				setChallenge(null);
+				setError(
+					data?.message ||
+						t('cardnet.declined', 'Pago rechazado (código {{code}})', { code: data?.code || '—' }),
+				);
+			}
+		} catch (e) {
+			setChallenge(null);
+			setError(e.message || 'CARDNET error');
+		} finally {
+			setBusy(false);
+		}
+	}, [orderId, guestToken, cardDigits, cvv, expMonth, expYear, holder, onPaid, t]);
+
+	const startPayment = async () => {
+		if (!formValid || busy) return;
+		setBusy(true);
+		setError(null);
+		try {
+			const { data: { session } } = await supabase.auth.getSession();
+			const accessToken = session?.access_token;
+			const browser = {
+				screen_width: window.screen.width,
+				screen_height: window.screen.height,
+				javascript_enabled: true,
+				tz_offset_minutes: -new Date().getTimezoneOffset(), // EMVCo: minutes offset from UTC
+				user_agent: navigator.userAgent,
+				language: (navigator.language || 'es').slice(0, 2),
+				accept_header: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+				color_depth: window.screen.colorDepth,
+			};
+			const { data, error: invokeErr } = await supabase.functions.invoke('cardnet-auth-3ds', {
+				body: {
+					order_id: orderId,
+					token: guestToken || undefined,
+					card: {
+						number: cardDigits,
+						cvv,
+						exp_month: expMonth,
+						exp_year: expYear,
+						holder_name: holder.trim(),
+					},
+					browser,
+				},
+				headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+			});
+			if (invokeErr) throw invokeErr;
+			if (data?.transStatus === 'Y') {
+				// Frictionless — go straight to /sales.
+				await finalize();
+				return;
+			}
+			if (data?.transStatus === 'C' && data?.challengeUrl && data?.challengeToken) {
+				setChallenge({ url: data.challengeUrl, token: data.challengeToken });
+				// busy stays true until the iframe postMessages back.
+				return;
+			}
+			setError(
+				t('cardnet.authFailed', 'Autenticación 3DS rechazada (transStatus={{s}})', {
+					s: data?.transStatus || '?',
+				}),
+			);
+			setBusy(false);
+		} catch (e) {
+			setError(e.message || 'CARDNET error');
+			setBusy(false);
+		}
+	};
+
+	return (
+		<div className="space-y-5">
+			<div className="bg-background/50 border border-foreground/10 rounded-lg p-5">
+				<p className="text-xs uppercase tracking-widest text-foreground/50 font-light mb-2">
+					{currencyCode === 'DOP'
+						? t('cardnet.payInDop', 'Cargo final en pesos dominicanos')
+						: t('cardnet.payInUsd', 'Charge in US dollars')}
+				</p>
+				<p className="text-3xl font-serif text-foreground">
+					{currencySymbol}
+					{totalMajor.toFixed(2)}
+				</p>
+				{currencyCode === 'DOP' && usdReferenceMajor > 0 && (
+					<p className="text-xs text-foreground/50 font-light mt-2">
+						{t(
+							'cardnet.usdHint',
+							'Tarjeta en USD: tu banco hace la conversión (≈ US${{usd}} en este momento)',
+							{ usd: usdReferenceMajor.toFixed(2) },
+						)}
+					</p>
+				)}
+			</div>
+
+			<div className="space-y-3">
+				<div>
+					<label className="block text-xs uppercase tracking-widest text-foreground/50 font-light mb-1">
+						{t('cardnet.cardNumber', 'Número de tarjeta')}
+					</label>
+					<Input
+						type="tel"
+						inputMode="numeric"
+						autoComplete="cc-number"
+						placeholder="1234 5678 9012 3456"
+						value={cardNumber}
+						onChange={(e) => {
+							const digits = e.target.value.replace(/\D/g, '').slice(0, 19);
+							const grouped = digits.replace(/(.{4})/g, '$1 ').trim();
+							setCardNumber(grouped);
+						}}
+						className="bg-background border-foreground/20 text-foreground font-mono tracking-wider"
+						disabled={busy}
+					/>
+				</div>
+				<div className="grid grid-cols-2 gap-3">
+					<div>
+						<label className="block text-xs uppercase tracking-widest text-foreground/50 font-light mb-1">
+							{t('cardnet.expiry', 'Vence (MM/YY)')}
+						</label>
+						<Input
+							type="tel"
+							inputMode="numeric"
+							autoComplete="cc-exp"
+							placeholder="12/27"
+							value={exp}
+							onChange={(e) => {
+								let v = e.target.value.replace(/\D/g, '').slice(0, 4);
+								if (v.length >= 3) v = v.slice(0, 2) + '/' + v.slice(2);
+								setExp(v);
+							}}
+							className="bg-background border-foreground/20 text-foreground font-mono"
+							disabled={busy}
+						/>
+					</div>
+					<div>
+						<label className="block text-xs uppercase tracking-widest text-foreground/50 font-light mb-1">
+							CVV
+						</label>
+						<Input
+							type="tel"
+							inputMode="numeric"
+							autoComplete="cc-csc"
+							placeholder="123"
+							value={cvv}
+							onChange={(e) => setCvv(e.target.value.replace(/\D/g, '').slice(0, 4))}
+							className="bg-background border-foreground/20 text-foreground font-mono"
+							disabled={busy}
+						/>
+					</div>
+				</div>
+				<div>
+					<label className="block text-xs uppercase tracking-widest text-foreground/50 font-light mb-1">
+						{t('cardnet.holder', 'Nombre en la tarjeta')}
+					</label>
+					<Input
+						type="text"
+						autoComplete="cc-name"
+						placeholder="Juan Pérez"
+						value={holder}
+						onChange={(e) => setHolder(e.target.value)}
+						className="bg-background border-foreground/20 text-foreground"
+						disabled={busy}
+					/>
+				</div>
+			</div>
+
+			{error && (
+				<div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-lg flex items-center gap-2">
+					<AlertCircle className="w-5 h-5 flex-shrink-0" />
+					<p className="text-sm font-light">{error}</p>
+				</div>
+			)}
+
+			<Button
+				type="button"
+				onClick={startPayment}
+				disabled={!formValid || busy}
+				className="w-full bg-[#D4A574] hover:bg-[#c29462] text-stone-950 rounded-full py-6 text-lg shadow-lg disabled:opacity-50"
+			>
+				{busy ? (
+					<>
+						<Loader2 className="w-5 h-5 mr-2 animate-spin" />
+						{challenge
+							? t('cardnet.awaitingChallenge', 'Esperando confirmación de tu banco…')
+							: t('cardnet.processing', 'Procesando pago seguro…')}
+					</>
+				) : (
+					t('cardnet.payButton', 'Pagar con CARDNET (RD$)')
+				)}
+			</Button>
+			<p className="text-xs text-foreground/50 font-light text-center flex items-center justify-center gap-2">
+				<Lock className="w-3 h-3" />
+				{t(
+					'cardnet.tlsNotice',
+					'Conexión cifrada TLS 1.2 directo a CARDNET. Tu tarjeta no se almacena.',
+				)}
+			</p>
+
+			{challenge && (
+				<Cardnet3DSChallengeModal
+					url={challenge.url}
+					token={challenge.token}
+					onCancel={() => {
+						setChallenge(null);
+						setBusy(false);
+						setError(
+							t('cardnet.challengeCanceled', 'Verificación 3DS cancelada. Vuelve a intentarlo.'),
+						);
+					}}
+				/>
+			)}
+		</div>
+	);
+};
+
+const Cardnet3DSChallengeModal = ({ url, token, onCancel }) => {
+	const { t } = useTranslation('checkout');
+	// Render a form that auto-submits POST to the challenge URL targeting our
+	// hidden iframe. CARDNET expects the browserChallengeToken in the request
+	// body; query-string is not documented as working.
+	const iframeName = 'cardnet-3ds-iframe';
+	useEffect(() => {
+		const form = document.getElementById('cardnet-3ds-launcher');
+		if (form && form instanceof HTMLFormElement) {
+			form.submit();
+		}
+	}, []);
+
+	return (
+		<div className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4">
+			<div className="bg-card border border-foreground/10 rounded-2xl w-full max-w-md overflow-hidden flex flex-col" style={{ height: 'min(620px, 90vh)' }}>
+				<div className="p-4 border-b border-foreground/10 flex items-center justify-between">
+					<div className="flex items-center gap-2">
+						<Shield className="w-4 h-4 text-[#D4A574]" />
+						<p className="text-sm font-light text-foreground">
+							{t('cardnet.challengeTitle', 'Verificación 3D Secure')}
+						</p>
+					</div>
+					<button
+						type="button"
+						onClick={onCancel}
+						className="text-foreground/60 hover:text-foreground text-sm"
+					>
+						{t('cardnet.cancel', 'Cancelar')}
+					</button>
+				</div>
+				<iframe
+					name={iframeName}
+					title="CARDNET 3DS challenge"
+					className="flex-1 w-full bg-white"
+					sandbox="allow-forms allow-scripts allow-same-origin allow-top-navigation-by-user-activation"
+				/>
+				<form
+					id="cardnet-3ds-launcher"
+					action={url}
+					method="POST"
+					target={iframeName}
+					style={{ display: 'none' }}
+				>
+					<input type="hidden" name="browserChallengeToken" value={token} />
+				</form>
+			</div>
+		</div>
+	);
+};
+
 const CheckoutPage = () => {
 	const { cartItems, getCartTotal, clearCart } = useCart();
 	const { user } = useAuth();
@@ -145,6 +491,11 @@ const CheckoutPage = () => {
 	// requires both id and token). Logged-in users carry it too but don't
 	// need it — they can fetch via their session.
 	const [pendingOrderToken, setPendingOrderToken] = useState(null);
+	// The canonical order total in minor units of the DB-stored currency
+	// (DOP cents under CARDNET, browsing-currency cents under Stripe). Set
+	// alongside pendingOrderId so the payment form displays the actual
+	// amount that will be charged.
+	const [pendingOrderTotalCents, setPendingOrderTotalCents] = useState(0);
 	// Newsletter opt-in checkbox state. Default off (GDPR-friendly).
 	// Wired up after successful order creation.
 	const [subscribeNewsletter, setSubscribeNewsletter] = useState(false);
@@ -267,6 +618,7 @@ const CheckoutPage = () => {
 		}
 		setClientSecret('');
 		setPendingOrderId(null);
+		setPendingOrderTotalCents(0);
 		setStep('shipping');
 	}, [pendingOrderId]);
 
@@ -557,6 +909,7 @@ const CheckoutPage = () => {
 			if (cardnetEnabled) {
 				setPendingOrderId(createdOrderId);
 				setPendingOrderToken(createdOrderToken);
+				setPendingOrderTotalCents(finalTotalCents);
 				setStep('payment');
 			} else {
 				const { data, error } = await supabase.functions.invoke('create-payment-intent', {
@@ -585,6 +938,7 @@ const CheckoutPage = () => {
 
 				setPendingOrderId(createdOrderId);
 				setPendingOrderToken(createdOrderToken);
+				setPendingOrderTotalCents(finalTotalCents);
 				setClientSecret(data.clientSecret);
 				setStep('payment');
 			}
@@ -942,64 +1296,22 @@ const CheckoutPage = () => {
 								<h2 className="text-xl font-normal text-foreground mb-6">{t('payment')}</h2>
 								{cardnetEnabled ? (
 									step === 'payment' && pendingOrderId ? (
-										// CARDNET-only payment step. The order has already been
-										// created in DOP (handleContinueToPayment refetched the
-										// canonical price_dop_cents). Show the DOP total
-										// prominently, plus a small USD reference if the user
-										// was browsing in USD, then a single CTA.
-										<div className="space-y-5">
-											<div className="bg-background/50 border border-foreground/10 rounded-lg p-5">
-												<p className="text-xs uppercase tracking-widest text-foreground/50 font-light mb-2">
-													{t('cardnet.payInDop', 'Cargo final en pesos dominicanos')}
-												</p>
-												<p className="text-3xl font-serif text-foreground">
-													RD${totalMajor.toFixed(2)}
-												</p>
-												{browsingCurrency === 'USD' && subtotalMajor > 0 && (
-													<p className="text-xs text-foreground/50 font-light mt-2">
-														{t(
-															'cardnet.usdHint',
-															'Tarjeta en USD: tu banco hace la conversión (≈ US${{usd}} en este momento)',
-															{ usd: subtotalMajor.toFixed(2) },
-														)}
-													</p>
-												)}
-											</div>
-											{initError && (
-												<div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-lg flex items-center gap-2">
-													<AlertCircle className="w-5 h-5 flex-shrink-0" />
-													<p className="text-sm font-light">{initError}</p>
-												</div>
-											)}
-											<Button
-												type="button"
-												onClick={async () => {
-													try {
-														setInitError(null);
-														const { data: { session } } = await supabase.auth.getSession();
-														const accessToken = session?.access_token;
-														const { data, error } = await supabase.functions.invoke('create-cardnet-session', {
-															body: { order_id: pendingOrderId, token: pendingOrderToken || undefined },
-															headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
-														});
-														if (error) throw error;
-														if (data?.redirect_url) {
-															window.location.href = data.redirect_url;
-														} else {
-															setInitError(data?.error || 'CARDNET no devolvió URL de redirección.');
-														}
-													} catch (e) {
-														setInitError(e.message || 'CARDNET error');
-													}
-												}}
-												className="w-full bg-[#D4A574] hover:bg-[#c29462] text-stone-950 rounded-full py-6 text-lg shadow-lg"
-											>
-												{t('cardnet.payButton', 'Pagar con CARDNET (RD$)')}
-											</Button>
-											<p className="text-xs text-foreground/50 font-light text-center">
-												{t('cardnet.redirectNotice', 'Te redirigimos a la pasarela segura de CARDNET. Tu tarjeta nunca pasa por nuestros servidores.')}
-											</p>
-										</div>
+										// CARDNET ZTRANS direct-integration payment step. The order
+										// has been created in DOP. We collect card data and drive the
+										// 3-step 3DS flow (auth → challenge → sale) entirely from
+										// CardnetCardForm.
+										<CardnetCardForm
+											orderId={pendingOrderId}
+											guestToken={pendingOrderToken}
+											totalAmountCents={pendingOrderTotalCents}
+											currencyCode="DOP"
+											usdReferenceMajor={browsingCurrency === 'USD' ? subtotalMajor : 0}
+											onPaid={(paidOrderId) => {
+												clearCart();
+												const tokenParam = pendingOrderToken ? `&token=${pendingOrderToken}` : '';
+												navigate(`/checkout-success?order_id=${paidOrderId}${tokenParam}`, { replace: true });
+											}}
+										/>
 									) : (
 										<div className="text-foreground/50 text-sm font-light py-6">
 											{initError ? (

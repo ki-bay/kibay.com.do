@@ -408,3 +408,13 @@ s3_secret_key = "env(S3_SECRET_KEY)"
 # Stripe calls this endpoint with no Supabase JWT — disable JWT verification.
 [functions.stripe-webhook]
 verify_jwt = false
+
+# CARDNET functions handle dual auth (Supabase JWT for logged-in users OR
+# guest_lookup_token in body) inside the function itself. The platform-level
+# JWT verifier rejects the new sb_publishable_* anon key format, so we turn
+# it off and rely on in-function checks.
+[functions.cardnet-auth-3ds]
+verify_jwt = false
+
+[functions.cardnet-finalize-sale]
+verify_jwt = false
