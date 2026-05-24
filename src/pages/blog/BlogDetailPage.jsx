@@ -189,7 +189,7 @@ const BlogDetailPage = () => {
           </div>
 
           {/* Content */}
-          <div className="prose prose-invert prose-lg max-w-none text-foreground/80 leading-relaxed">
+          <div className="prose dark:prose-invert prose-lg max-w-none text-foreground/80 leading-relaxed">
             <div dangerouslySetInnerHTML={{ __html: post.content }} />
           </div>
 

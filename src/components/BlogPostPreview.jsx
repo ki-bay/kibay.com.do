@@ -87,7 +87,7 @@ const BlogPostPreview = ({ post, onClose, authorName }) => {
               </div>
 
               {/* Content */}
-              <div className="prose prose-invert prose-lg max-w-none text-foreground/80">
+              <div className="prose dark:prose-invert prose-lg max-w-none text-foreground/80">
                 <div dangerouslySetInnerHTML={{ __html: post.content || t('placeholderContent') }} />
               </div>
 
