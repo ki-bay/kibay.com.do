@@ -11,3 +11,6 @@ service-account.json
 **/service-account.json
 google keys json/
 **/google keys json/
+
+# Worker node_modules
+workers/*/node_modules/

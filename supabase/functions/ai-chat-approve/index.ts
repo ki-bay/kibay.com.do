@@ -80,10 +80,11 @@ serve(async (req) => {
 		if (editedBody.length > 4000) return json({ error: 'edited_body too long' }, 400);
 	}
 
-	// Fetch the message + its conversation.
+	// Fetch the message + its conversation + the conversation's channel
+	// (so we can route outbound dispatch to the correct provider).
 	const { data: msg } = await admin
 		.from('ai_conversation_messages')
-		.select('id, conversation_id, role, body, approval_status, edited_body')
+		.select('id, conversation_id, role, channel, body, approval_status, edited_body')
 		.eq('id', messageId)
 		.maybeSingle();
 	if (!msg) return json({ error: 'message_not_found' }, 404);
@@ -124,8 +125,32 @@ serve(async (req) => {
 	await admin.from('ai_conversation_events').insert({
 		conversation_id: msg.conversation_id,
 		kind: action === 'edit' ? 'edited' : 'approved',
-		payload: { message_id: messageId },
+		payload: { message_id: messageId, channel: msg.channel },
 	});
 
-	return json({ ok: true, status: newStatus, sent_at: now });
+	// Channel dispatch: web_chat is buyer-pull (poll endpoint), nothing to push.
+	// email is push — fire ai-email-send. whatsapp / voice → future channels.
+	let outboundDispatch: { ok: boolean; detail?: unknown } | null = null;
+	if (msg.channel === 'email') {
+		try {
+			const dispatchResp = await fetch(`${supabaseUrl}/functions/v1/ai-email-send`, {
+				method: 'POST',
+				headers: {
+					Authorization: `Bearer ${jwt}`,
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ message_id: messageId }),
+			});
+			const dispatchData = await dispatchResp.json().catch(() => ({}));
+			outboundDispatch = { ok: dispatchResp.ok, detail: dispatchData };
+			if (!dispatchResp.ok) {
+				console.error('ai-chat-approve: outbound email dispatch failed', dispatchResp.status, dispatchData);
+			}
+		} catch (e) {
+			console.error('ai-chat-approve: outbound email dispatch threw', e);
+			outboundDispatch = { ok: false, detail: { error: String(e) } };
+		}
+	}
+
+	return json({ ok: true, status: newStatus, sent_at: now, channel: msg.channel, outbound: outboundDispatch });
 });

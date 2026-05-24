@@ -430,3 +430,11 @@ verify_jwt = false
 # Admin approval endpoint — validates Supabase JWT + admin role IN-FUNCTION.
 [functions.ai-chat-approve]
 verify_jwt = false
+
+# Email channel — inbound called by the CF Email Worker (HMAC-signed),
+# outbound called by ai-chat-approve on email-channel approvals.
+[functions.ai-email-inbound]
+verify_jwt = false
+
+[functions.ai-email-send]
+verify_jwt = false

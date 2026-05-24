@@ -1,0 +1,17 @@
+name = "kibay-email-inbound"
+main = "src/index.ts"
+compatibility_date = "2025-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+# This Worker is triggered by Cloudflare Email Routing's "send to Worker"
+# action (configured in dash.cloudflare.com → kibay.com.do → Email →
+# Email Routing → Routes). It receives the raw RFC-5322, parses it with
+# postal-mime, HMAC-signs the JSON payload, and POSTs to our Supabase
+# Edge Function `ai-email-inbound`.
+#
+# Required secrets (set with `wrangler secret put <NAME>`):
+#   AI_EMAIL_INBOUND_SECRET  — same HMAC secret as the Edge Function
+#   SUPABASE_FUNCTIONS_URL   — e.g. https://bsnxwajuqkatrmgoqcnu.supabase.co/functions/v1
+
+[observability]
+enabled = true
