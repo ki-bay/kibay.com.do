@@ -525,7 +525,7 @@ const VineAndBarrelPage = () => {
                 className="relative rounded-2xl overflow-hidden shadow-2xl"
               >
                 <img
-                  src="https://images.unsplash.com/photo-1519092796169-bb9cc75a4b68?w=1200&q=80&auto=format&fit=crop"
+                  src="/unsplash/photo-1519092796169-bb9cc75a4b68.webp"
                   alt={t('pairings.featureImgAlt')}
                   width="1600"
                   height="1067"
@@ -563,7 +563,7 @@ const VineAndBarrelPage = () => {
         </section>
 
         {/* Call to Action - Booking */}
-        <section className="py-32 relative bg-[url('https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=2940&auto=format&fit=crop')] bg-cover bg-fixed bg-center">
+        <section className="py-32 relative bg-[url('/unsplash/photo-1506377247377-2a5b3b417ebb.webp')] bg-cover bg-fixed bg-center">
           <div className="absolute inset-0 bg-card/80 backdrop-blur-sm" />
 
           <m.div

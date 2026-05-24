@@ -38,8 +38,8 @@ const KibayEspumanteCan = () => {
   };
 
   const images = [
-    'https://images.unsplash.com/photo-1514721011872-7b7c47dea6b1',
-    'https://images.unsplash.com/photo-1695032553876-7f277e3f5c45' // Lifestyle
+    '/unsplash/photo-1514721011872-7b7c47dea6b1.webp',
+    '/unsplash/photo-1695032553876-7f277e3f5c45.webp' // Lifestyle
   ];
 
   return (
@@ -170,7 +170,7 @@ const KibayEspumanteCan = () => {
 
               <div className="relative rounded-2xl overflow-hidden shadow-xl max-w-3xl mx-auto group">
                 <img
-                  src="https://images.unsplash.com/photo-1587895656140-88dc74ed96de"
+                  src="/unsplash/photo-1587895656140-88dc74ed96de.webp"
                   alt={t('winery.imgAlt')}
                   width="1600"
                   height="1067"

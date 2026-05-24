@@ -215,7 +215,7 @@ const KibayEspumanteProductPage = () => {
               className="relative h-[300px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl"
             >
               <img
-                src="https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&q=80"
+                src="/unsplash/photo-1506377247377-2a5b3b417ebb.webp"
                 alt={t('origin.imgAlt')}
                 className="w-full h-full object-cover"
               />

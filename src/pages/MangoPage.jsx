@@ -25,7 +25,7 @@ const MangoPage = () => {
       <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden pt-20 font-lato">
         <div className="absolute inset-0 z-0">
           <img
-            src="https://images.unsplash.com/photo-1602081593819-65e7a8cee0dd?w=1200&q=80&auto=format&fit=crop"
+            src="/unsplash/photo-1602081593819-65e7a8cee0dd.webp"
             alt={t('hero.imgAlt')}
             width="1920"
             height="1080"

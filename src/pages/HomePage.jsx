@@ -42,7 +42,7 @@ const HomePage = () => {
   };
 
   const sparklingImage = getProductImage('sparkling', mediaUrl('bc5a0b64ce661332da23e928299b7c41.jpg'));
-  const wineImage = getProductImage('wine', 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=2940&auto=format&fit=crop');
+  const wineImage = getProductImage('wine', '/unsplash/photo-1510812431401-41d2bd2722f3.webp');
 
   // Animation variants
   const fadeIn = {
@@ -186,8 +186,8 @@ const HomePage = () => {
                 <Card className="overflow-hidden h-full rounded-3xl border-none shadow-2xl bg-background relative">
                   <div className="relative h-[500px] overflow-hidden">
                     <img
-                      src="https://images.unsplash.com/photo-1697350495566-a094004aedd8?w=900&q=78&auto=format&fit=crop"
-                      srcSet="https://images.unsplash.com/photo-1697350495566-a094004aedd8?w=600&q=75&auto=format&fit=crop 600w, https://images.unsplash.com/photo-1697350495566-a094004aedd8?w=900&q=78&auto=format&fit=crop 900w, https://images.unsplash.com/photo-1697350495566-a094004aedd8?w=1200&q=80&auto=format&fit=crop 1200w"
+                      src="/unsplash/photo-1697350495566-a094004aedd8.webp"
+                      srcSet="/unsplash/photo-1697350495566-a094004aedd8.webp 600w, /unsplash/photo-1697350495566-a094004aedd8.webp 900w, /unsplash/photo-1697350495566-a094004aedd8.webp 1200w"
                       sizes="(min-width: 768px) 50vw, 100vw"
                       alt={t('origin.mango.imgAlt')}
                       width="1200"

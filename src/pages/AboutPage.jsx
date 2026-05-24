@@ -127,7 +127,7 @@ const AboutPage = () => {
             >
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                 <img
-                  src="https://images.unsplash.com/photo-1621437218583-7028065980f8"
+                  src="/media/kibay-vino-ocoa-bay.webp"
                   alt="Beautiful Caribbean sunset over tropical landscape"
                   width="1600"
                   height="1067"

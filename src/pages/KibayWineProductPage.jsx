@@ -36,7 +36,7 @@ const KibayWineProductPage = () => {
       <main id="main" role="main">
       {/* Hero Section */}
       <section className="relative min-h-[85vh] flex items-center bg-background pt-20 overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1516594915697-87eb3b1c14ea?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-20"></div>
+        <div className="absolute inset-0 bg-[url('/unsplash/photo-1516594915697-87eb3b1c14ea.webp')] bg-cover bg-center opacity-20"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-transparent"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
@@ -77,7 +77,7 @@ const KibayWineProductPage = () => {
                {/* Placeholder for KiBay Wine Bottle */}
                <div className="relative z-10 mx-auto w-64 h-[500px] bg-[#D4A574]/20 rounded-full blur-3xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
                <img
-                 src="https://images.unsplash.com/photo-1585553616435-2dc0a54e271d?auto=format&fit=crop&q=80"
+                 src="/unsplash/photo-1585553616435-2dc0a54e271d.webp"
                  alt={t('hero.imgAlt')}
                  className="relative z-20 w-auto h-[550px] mx-auto object-contain drop-shadow-2xl rounded-lg opacity-90"
                />
@@ -105,7 +105,7 @@ const KibayWineProductPage = () => {
 
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
            <div className="relative h-[400px] rounded-2xl overflow-hidden shadow-xl">
-             <img src="https://images.unsplash.com/photo-1534234828563-0259b16e87f1?auto=format&fit=crop&q=80" alt={t('origin.imgAlt')} className="w-full h-full object-cover" />
+             <img src="/media/vinedo-republica-dominicana-aerial.webp" alt={t('origin.imgAlt')} className="w-full h-full object-cover" />
            </div>
            <div className="space-y-6">
               <h3 className="text-2xl font-normal text-foreground">{t('origin.subheading')}</h3>
