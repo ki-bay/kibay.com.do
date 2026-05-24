@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { m, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, ChevronDown, LogOut, LayoutDashboard, Settings, Activity, Key, BookOpen, Package, Receipt, Users, Ticket, BarChart3, Mail, Truck, Send, AtSign, FileText } from 'lucide-react';
+import { Menu, X, User, ChevronDown, LogOut, LayoutDashboard, Settings, Activity, Key, BookOpen, Package, Receipt, Users, Ticket, BarChart3, Mail, Truck, Send, AtSign, FileText, MessageSquare } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -178,6 +178,7 @@ const Navigation = () => {
                               <Link to="/admin/analytics" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><BarChart3 className="w-3 h-3" aria-hidden="true" /> Analytics</Link>
                               <Link to="/admin/newsletter" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><Mail className="w-3 h-3" aria-hidden="true" /> Newsletter</Link>
                               <Link to="/admin/shipping" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><Truck className="w-3 h-3" aria-hidden="true" /> Shipping</Link>
+                              <Link to="/admin/ai-inbox" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><MessageSquare className="w-3 h-3" aria-hidden="true" /> AI Inbox</Link>
                               <div className="border-t border-border my-1"></div>
                               <div className="px-4 py-1 text-[10px] uppercase tracking-widest text-foreground/40 font-medium">Email Marketing</div>
                               <Link to="/admin/email" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><BarChart3 className="w-3 h-3" aria-hidden="true" /> Email Dashboard</Link>
@@ -311,6 +312,7 @@ const Navigation = () => {
                               <Link to="/admin/analytics" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">Analytics</Link>
                               <Link to="/admin/newsletter" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">Newsletter</Link>
                               <Link to="/admin/shipping" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">Shipping</Link>
+                              <Link to="/admin/ai-inbox" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">AI Inbox</Link>
                               <div className="text-xs uppercase tracking-widest text-foreground/40 pt-2">Email Marketing</div>
                               <Link to="/admin/email" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">Email Dashboard</Link>
                               <Link to="/admin/email/contacts" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">Email Contacts</Link>
