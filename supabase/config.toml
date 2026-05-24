@@ -418,3 +418,15 @@ verify_jwt = false
 
 [functions.cardnet-finalize-sale]
 verify_jwt = false
+
+# AI HITL chat — buyer-side endpoints called by the public widget (anon).
+# We do our own auth (session_token in body, validated against the conversation row).
+[functions.ai-chat]
+verify_jwt = false
+
+[functions.ai-chat-poll]
+verify_jwt = false
+
+# Admin approval endpoint — validates Supabase JWT + admin role IN-FUNCTION.
+[functions.ai-chat-approve]
+verify_jwt = false

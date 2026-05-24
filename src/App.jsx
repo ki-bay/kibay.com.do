@@ -6,6 +6,7 @@ import ScrollToTop from './components/ScrollToTop';
 import ProtectedRoute from './components/ProtectedRoute';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute';
 import CookieConsent from './components/CookieConsent';
+import ChatWidget from './components/ChatWidget';
 
 // Pages (lazy)
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -71,6 +72,7 @@ const AdminCouponsPage = lazy(() => import('./pages/admin/AdminCouponsPage'));
 const AdminAnalyticsPage = lazy(() => import('./pages/admin/AdminAnalyticsPage'));
 const AdminNewsletterPage = lazy(() => import('./pages/admin/AdminNewsletterPage'));
 const AdminShippingPage = lazy(() => import('./pages/admin/AdminShippingPage'));
+const AdminAIInboxPage = lazy(() => import('./pages/admin/AdminAIInboxPage'));
 const EmailDashboardPage = lazy(() => import('./pages/admin/email/EmailDashboardPage'));
 const EmailContactsPage = lazy(() => import('./pages/admin/email/EmailContactsPage'));
 const EmailCampaignsPage = lazy(() => import('./pages/admin/email/EmailCampaignsPage'));
@@ -182,12 +184,14 @@ function App() {
               <Route path="/admin/email/campaigns/:id/edit" element={<ProtectedAdminRoute><EmailComposerPage /></ProtectedAdminRoute>} />
               <Route path="/admin/email/templates" element={<ProtectedAdminRoute><EmailTemplatesPage /></ProtectedAdminRoute>} />
               <Route path="/admin/shipping" element={<ProtectedAdminRoute><AdminShippingPage /></ProtectedAdminRoute>} />
+              <Route path="/admin/ai-inbox" element={<ProtectedAdminRoute><AdminAIInboxPage /></ProtectedAdminRoute>} />
 
               {/* 404 catch-all — must stay LAST */}
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </Suspense>
         <CookieConsent />
+        <ChatWidget />
       </Router>
     </>
   );

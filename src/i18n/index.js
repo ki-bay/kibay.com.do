@@ -10,6 +10,7 @@ import esHome from './locales/es/home.json';
 import esShop from './locales/es/shop.json';
 import esProduct from './locales/es/product.json';
 import esCart from './locales/es/cart.json';
+import esChat from './locales/es/chat.json';
 import esCheckout from './locales/es/checkout.json';
 import esAbout from './locales/es/about.json';
 
@@ -103,6 +104,7 @@ import enHome from './locales/en/home.json';
 import enShop from './locales/en/shop.json';
 import enProduct from './locales/en/product.json';
 import enCart from './locales/en/cart.json';
+import enChat from './locales/en/chat.json';
 import enCheckout from './locales/en/checkout.json';
 import enAbout from './locales/en/about.json';
 
@@ -191,6 +193,7 @@ const resources = {
     shop: esShop,
     product: esProduct,
     cart: esCart,
+    chat: esChat,
     checkout: esCheckout,
     about: esAbout,
     login: esLogin,
@@ -272,6 +275,7 @@ const resources = {
     shop: enShop,
     product: enProduct,
     cart: enCart,
+    chat: enChat,
     checkout: enCheckout,
     about: enAbout,
     login: enLogin,

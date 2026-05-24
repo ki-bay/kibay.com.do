@@ -1,0 +1,12 @@
+{
+  "openChat": "Abrir chat con Kibay",
+  "close": "Cerrar chat",
+  "title": "Chatea con Kibay",
+  "subtitle": "Cada respuesta es revisada por nuestro equipo",
+  "greeting": "Hola 👋 Pregúntanos sobre Kibay — vinos, envíos, visitas al viñedo. Te respondemos cuanto antes.",
+  "placeholder": "Escribe tu mensaje…",
+  "send": "Enviar",
+  "awaitingReview": "Tu mensaje fue recibido. Nuestro equipo lo revisará y te responderá pronto.",
+  "hitlNotice": "Las respuestas son revisadas por una persona antes de enviarse.",
+  "errorGeneric": "Algo salió mal. Intenta de nuevo."
+}
