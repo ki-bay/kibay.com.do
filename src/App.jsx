@@ -73,6 +73,7 @@ const AdminAnalyticsPage = lazy(() => import('./pages/admin/AdminAnalyticsPage')
 const AdminNewsletterPage = lazy(() => import('./pages/admin/AdminNewsletterPage'));
 const AdminShippingPage = lazy(() => import('./pages/admin/AdminShippingPage'));
 const AdminAIInboxPage = lazy(() => import('./pages/admin/AdminAIInboxPage'));
+const AdminReviewsPage = lazy(() => import('./pages/admin/AdminReviewsPage'));
 const EmailDashboardPage = lazy(() => import('./pages/admin/email/EmailDashboardPage'));
 const EmailContactsPage = lazy(() => import('./pages/admin/email/EmailContactsPage'));
 const EmailCampaignsPage = lazy(() => import('./pages/admin/email/EmailCampaignsPage'));
@@ -185,6 +186,7 @@ function App() {
               <Route path="/admin/email/templates" element={<ProtectedAdminRoute><EmailTemplatesPage /></ProtectedAdminRoute>} />
               <Route path="/admin/shipping" element={<ProtectedAdminRoute><AdminShippingPage /></ProtectedAdminRoute>} />
               <Route path="/admin/ai-inbox" element={<ProtectedAdminRoute><AdminAIInboxPage /></ProtectedAdminRoute>} />
+              <Route path="/admin/reviews" element={<ProtectedAdminRoute><AdminReviewsPage /></ProtectedAdminRoute>} />
 
               {/* 404 catch-all — must stay LAST */}
               <Route path="*" element={<NotFoundPage />} />

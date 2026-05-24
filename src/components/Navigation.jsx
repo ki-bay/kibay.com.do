@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { m, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, ChevronDown, LogOut, LayoutDashboard, Settings, Activity, Key, BookOpen, Package, Receipt, Users, Ticket, BarChart3, Mail, Truck, Send, AtSign, FileText, MessageSquare } from 'lucide-react';
+import { Menu, X, User, ChevronDown, LogOut, LayoutDashboard, Settings, Activity, Key, BookOpen, Package, Receipt, Users, Ticket, BarChart3, Mail, Truck, Send, AtSign, FileText, MessageSquare, Star } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -13,12 +13,14 @@ import SearchBar from '@/components/SearchBar';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import ThemeToggle from '@/components/ThemeToggle';
 import { mediaUrl } from '@/config/mediaCdn';
+import { supabase } from '@/lib/customSupabaseClient';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [adminMenuOpen, setAdminMenuOpen] = useState(false);
+  const [aiInboxPending, setAiInboxPending] = useState(0);
   
   const [expandedMobileMenus, setExpandedMobileMenus] = useState({
     ourProducts: true,
@@ -46,6 +48,36 @@ const Navigation = () => {
     setIsCartOpen(false);
     setAdminMenuOpen(false);
   }, [location]);
+
+  // Admin-only: count pending AI chat drafts. Refreshes on focus + every 60s
+  // while the tab is visible. Errors are silent (RLS denial for non-admins).
+  useEffect(() => {
+    if (!isAdmin) {
+      setAiInboxPending(0);
+      return undefined;
+    }
+    let cancelled = false;
+    const refresh = async () => {
+      const { count, error } = await supabase
+        .from('ai_conversation_messages')
+        .select('id', { count: 'exact', head: true })
+        .eq('role', 'assistant')
+        .eq('approval_status', 'pending');
+      if (cancelled) return;
+      if (!error) setAiInboxPending(count ?? 0);
+    };
+    refresh();
+    const id = setInterval(() => {
+      if (document.visibilityState === 'visible') refresh();
+    }, 60_000);
+    const onFocus = () => { if (!cancelled) refresh(); };
+    window.addEventListener('focus', onFocus);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+      window.removeEventListener('focus', onFocus);
+    };
+  }, [isAdmin]);
 
   // ESC closes the mobile menu
   useEffect(() => {
@@ -178,7 +210,15 @@ const Navigation = () => {
                               <Link to="/admin/analytics" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><BarChart3 className="w-3 h-3" aria-hidden="true" /> Analytics</Link>
                               <Link to="/admin/newsletter" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><Mail className="w-3 h-3" aria-hidden="true" /> Newsletter</Link>
                               <Link to="/admin/shipping" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><Truck className="w-3 h-3" aria-hidden="true" /> Shipping</Link>
-                              <Link to="/admin/ai-inbox" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><MessageSquare className="w-3 h-3" aria-hidden="true" /> AI Inbox</Link>
+                              <Link to="/admin/ai-inbox" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors">
+                                <MessageSquare className="w-3 h-3" aria-hidden="true" /> AI Inbox
+                                {aiInboxPending > 0 && (
+                                  <span className="ml-auto inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-[#D4A574] text-stone-950 text-[10px] font-medium">
+                                    {aiInboxPending > 99 ? '99+' : aiInboxPending}
+                                  </span>
+                                )}
+                              </Link>
+                              <Link to="/admin/reviews" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><Star className="w-3 h-3" aria-hidden="true" /> Reviews</Link>
                               <div className="border-t border-border my-1"></div>
                               <div className="px-4 py-1 text-[10px] uppercase tracking-widest text-foreground/40 font-medium">Email Marketing</div>
                               <Link to="/admin/email" className="flex items-center gap-2 px-4 py-2 text-xs font-light text-foreground hover:text-mango-400 hover:bg-foreground/5 rounded-md transition-colors"><BarChart3 className="w-3 h-3" aria-hidden="true" /> Email Dashboard</Link>
@@ -312,7 +352,15 @@ const Navigation = () => {
                               <Link to="/admin/analytics" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">Analytics</Link>
                               <Link to="/admin/newsletter" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">Newsletter</Link>
                               <Link to="/admin/shipping" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">Shipping</Link>
-                              <Link to="/admin/ai-inbox" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">AI Inbox</Link>
+                              <Link to="/admin/ai-inbox" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400 flex items-center gap-2">
+                                AI Inbox
+                                {aiInboxPending > 0 && (
+                                  <span className="inline-flex items-center justify-center min-w-[22px] h-5 px-1.5 rounded-full bg-[#D4A574] text-stone-950 text-xs font-medium">
+                                    {aiInboxPending > 99 ? '99+' : aiInboxPending}
+                                  </span>
+                                )}
+                              </Link>
+                              <Link to="/admin/reviews" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">Reviews</Link>
                               <div className="text-xs uppercase tracking-widest text-foreground/40 pt-2">Email Marketing</div>
                               <Link to="/admin/email" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">Email Dashboard</Link>
                               <Link to="/admin/email/contacts" onClick={() => setIsOpen(false)} className="text-base text-foreground/80 hover:text-mango-400">Email Contacts</Link>
