@@ -31,6 +31,10 @@ export async function initSentry() {
         'ResizeObserver loop limit exceeded',
         'Non-Error promise rejection captured',
         'AbortError',
+        // Stale-chunk reloads — main.jsx auto-recovers via window.location.reload,
+        // so the user sees no breakage. The pre-recovery error is noise.
+        'Failed to fetch dynamically imported module',
+        'Importing a module script failed',
       ],
     });
     // Expose the namespace so we can fire test events from DevTools and so
