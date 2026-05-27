@@ -3,7 +3,7 @@
 // Called by the SPA's /checkout/cardnet/return page after CARDNET redirects
 // the buyer back from its hosted payment UI. We GET CARDNET's session
 // endpoint with the SESSION GUID + sk (session-key) to retrieve the final
-// transaction result, then flip the order to 'paid' (or 'payment_failed').
+// transaction result, then flip the order to 'paid' (or 'failed').
 //
 // Auth model: anon-callable, same dual-auth as create-session (owner JWT or
 // guest_lookup_token in body). The SESSION + session_key were persisted on
@@ -127,15 +127,24 @@ serve(async (req) => {
 
 	if (!approved) {
 		// Could be a decline, a session-not-found ('404'), TF (3DS failed), or
-		// any of the codes in the response-code table.
-		await admin
+		// any of the codes in the response-code table. The DB constraint
+		// (orders_status_check, migration 20260509120000) allows the value
+		// 'failed' — NOT 'payment_failed'. Using the wrong value silently
+		// drops the UPDATE (RLS/check violations on supabase-js return on
+		// the resolved value, not as throw) so we check error explicitly.
+		const { error: updErr } = await admin
 			.from('orders')
 			.update({
-				status: 'payment_failed',
+				status: 'failed',
 				cardnet_response_code: responseCode || null,
 				cardnet_response_message: humanizeResponseCode(responseCode || remoteResponseCode) || null,
+				cardnet_tx_token: txToken,
 			})
 			.eq('id', order.id);
+		if (updErr) {
+			console.error('cardnet-verify-session: failed-status update error', updErr);
+			return json({ error: 'order_update_failed', detail: updErr.message }, 500);
+		}
 		return json({
 			status: 'failed',
 			order_id: order.id,

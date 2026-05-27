@@ -79,6 +79,7 @@
     "refunded": "Refunded",
     "cancelled": "Cancelled",
     "canceled": "Cancelled",
+    "failed": "Payment failed",
     "payment_failed": "Payment failed"
   },
   "cardnet": {
