@@ -409,6 +409,13 @@ s3_secret_key = "env(S3_SECRET_KEY)"
 [functions.stripe-webhook]
 verify_jwt = false
 
+# create-payment-intent is called from the SPA with the new sb_publishable_*
+# anon key format which Supabase's platform JWT verifier rejects (same issue
+# the CARDNET functions hit). Auth is handled in-function (lines 39-45 read
+# Authorization header + call auth.getUser() with a user-scoped client).
+[functions.create-payment-intent]
+verify_jwt = false
+
 # CARDNET Botón de Pago — hosted-checkout flow.
 # cardnet-create-session: anon-callable from the SPA (verified by order
 #   session_token OR Supabase user JWT in-function). POSTs to CARDNET's
