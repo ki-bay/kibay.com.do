@@ -7,7 +7,7 @@
   "eyebrow": "Legal",
   "title": "Terms & Conditions",
   "intro": "Please read these terms carefully before using our website or purchasing our products. By accessing or using any part of the site, you agree to be bound by these Terms of Service.",
-  "lastUpdated": "Last Updated: October 2024",
+  "lastUpdated": "Last Updated: May 2026",
   "sections": [
     {
       "title": "1. Legal Drinking Age Requirement",
@@ -60,6 +60,10 @@
     {
       "title": "13. Contact Information",
       "content": "If you have any questions about these Terms and Conditions, please contact us at info@kibay.com.do."
+    },
+    {
+      "title": "14. Company Information",
+      "content": "This website and online store are operated by LADISON DOMINICANA SRL, a company duly incorporated under the laws of the Dominican Republic, with National Taxpayer Registry (RNC) number 131128033 and Wine Manufacturing License VINO-022 issued by the Dominican Internal Revenue Service (DGII) on 17 June 2023, currently in force. Registered address: Bahía de Ocoa, Km 6½ Hatillo, Azua 71003, Dominican Republic. Contact: info@kibay.com.do. Kibay is the commercial brand under which LADISON DOMINICANA SRL markets its organic sparkling wines."
     }
   ]
 }
