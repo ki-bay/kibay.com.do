@@ -1,84 +1,38 @@
 # Email a Hansel — Solicitud de certificación CARDNET
 
-Listo para enviar. Copiar/pegar al cliente de correo, ajustar saludo / cc según necesidad.
+Listo para enviar. Tono natural, corto, solo lo accionable.
 
 ---
 
 **Para:** Hansel Aybar — Integraciones CARDNET
-**CC:** (ejecutivo comercial Kibay, si aplica)
-**Asunto:** Kibay (kibay.com.do) — Integración Botón de Pago lista; solicitamos slot de certificación
+**Asunto:** Kibay — listos para certificar Botón de Pago
 
 ---
 
-Hola Hansel, buenos días.
+Hola Hansel, buenas.
 
-Gracias por las aclaraciones del 27 de mayo — quedamos completamente alineados en que estamos integrando **Botón de Pago (Webpantalla)** y no ZTRANS Web Services. Ya implementamos la integración del lado de Kibay y la probamos end-to-end contra el ambiente QA.
+Ya tenemos la integración de Botón de Pago corriendo contra QA (`labservicios.cardnet.com.do`) con los datos de prueba que nos compartieron. Llegamos hasta la página alojada con el monto correcto, ITBIS, 3DS, etc. — lo único que no pude probar solo es el ciclo completo con OTP, así que de ahí en adelante es lo que necesitamos validar contigo.
 
-## Lo que tenemos funcionando en QA
+**¿Cuándo podríamos agendar la certificación?** Esta semana o la próxima nos va bien, en horario AST.
 
-Usando los datos del ambiente QA que nos compartiste:
-- `MerchantNumber: 349000000`
-- `MerchantTerminal: 58585858`
-- `MerchantType: 7997`
-- URL base: `https://labservicios.cardnet.com.do/sessions` y `/authorize`
-- Tarjetas de prueba Visa `4761340000000050` y MasterCard `5461340000000050`
+Si me puedes adelantar la lista de escenarios que cubrimos en la sesión, los preparo de antemano. Asumo que van: aprobada, rechazada, 3DS OK, 3DS fallido, sesión expirada, y reverso si aplica — pero confirmame si me falta alguno.
 
-Validamos lo siguiente:
+Datos del afiliado para que lo encuentres rápido:
 
-1. **Creación de sesión** — `POST /sessions` con los campos requeridos (incluyendo todos los `3DS_*` mandatorios: email, mobilePhone, workPhone, homePhone, billAddr_line1/2/3, city, state, country, postCode). CARDNET responde con `SESSION` + `session-key`. ✅
-2. **Redirección al gateway** — el navegador hace form-POST a `/authorize` con el SESSION; aterriza correctamente en la página alojada de CARDNET (`labservicios.cardnet.com.do/auth?s=...`) mostrando el monto en RD$, ITBIS calculado, datos del cliente prellenados, y los logos de Visa Secure / MC ID Check / SafeKey. ✅
-3. **Verificación post-pago** — `GET /sessions/<SESSION>?sk=<key>` desde el backend. Implementado y desplegado. ⏳ (pendiente de probar el ciclo completo con OTP 3DS — eso es exactamente lo que esperamos validar contigo durante la certificación).
-4. **URL de retorno y cancelación** — configuradas a `https://kibay.com.do/checkout/cardnet/return` y `/cancel`. El flujo de cancelación ya quedó probado (CARDNET nos redirige correctamente cuando el flujo no se completa).
-
-## Arquitectura — del lado de Kibay
-
-- Frontend: SPA en React (Vite) servido desde Cloudflare Pages.
-- Backend: Supabase Edge Functions (Deno) para los dos endpoints que tocan CARDNET — uno para crear sesión, otro para verificar el resultado.
-- Datos de tarjeta: **nunca tocan nuestros servidores**. Solo se introducen en tu página alojada → alcance PCI SAQ A.
-- Datos persistidos del lado nuestro: SESSION GUID, session-key (cifrada en reposo en Supabase), AuthorizationCode, RetrievalReferenceNumber, ResponseCode, TxToken — todo lo necesario para soporte al cliente y reconciliación, nada de PAN.
-
-## Lo que necesitamos de ustedes
-
-1. **Slot de certificación** — confirmar fecha/hora cuando podemos correr los escenarios de prueba juntos (idealmente esta semana o la próxima). Estamos disponibles en horario AST.
-
-2. **Lista de escenarios** — ¿pueden compartir el checklist que cubrimos en la certificación? Asumimos:
-   - Compra normal aprobada
-   - Compra rechazada (declinada por el emisor)
-   - Compra con 3DS challenge completada exitosamente (con OTP)
-   - Compra con 3DS challenge fallida (cancelación o timeout)
-   - Sesión expirada (intentar verificar después de los 30 minutos)
-   - Reverso/anulación (`TransactionType: 2240`) — si aplica para Webpantalla
-   
-   Si hay otros, agradecemos saber por adelantado para tenerlos cubiertos.
-
-3. **Producción** — una vez completada la certificación, esperamos recibir:
-   - `MerchantNumber` y `MerchantTerminal` productivos para Kibay
-   - URLs productivas (asumimos `https://ecommerce.cardnet.com.do/sessions` y `/authorize`)
-   - `MerchantType` que aplica para nuestra industria (vinos/licores — sugerimos 5921 si está disponible)
-
-4. **Whitelist de URL de integración** — apenas tengamos credenciales productivas, le enviaremos al ejecutivo comercial el dominio `https://kibay.com.do` para que lo añada al whitelist como nos indicaste.
-
-## Datos del afiliado
-
-- **Comercio:** kibay.com.do (marca: Kibay)
 - **Razón social:** LADISON DOMINICANA SRL
 - **RNC:** 131128033
-- **Licencia DGII:** VINO-022 — Licencia de Fabricación de Vinos (emitida 17/06/2023, VIGENTE)
-- **Dirección:** Bahía de Ocoa, Km 6½ Hatillo, Azua 71003, República Dominicana
-- **Ambiente actual:** QA contra `labservicios.cardnet.com.do`
-- **Tarjetas probadas:** las que nos compartiste (Visa 4761... y MC 5461...)
+- **Licencia DGII:** VINO-022 (Fabricación de Vinos, emitida 17/06/2023)
+- **Comercio web:** kibay.com.do
 
-Quedamos atentos para coordinar el slot de certificación. Si necesitas más datos del lado técnico o un diagrama del flujo, lo enviamos con gusto.
-
-Saludos cordiales,
-Michał Babula
-Kibay
-kibay.com.do
+Gracias,
+Michał
 
 ---
 
-## Notas internas
+## Notas internas (no enviar)
 
-- No mencionar el rewriting del backend ni que pasamos de ZTRANS a Botón de Pago — Hansel ya nos aclaró y no necesita el histórico.
-- Si Hansel pide capturas: tenemos screenshots del flujo (página alojada con el monto correcto, ITBIS, etc.) en `/tmp/cardnet-full-e2e/` después de la última corrida E2E. Adjuntables al correo si lo solicita.
-- Datos del afiliado completos: LADISON DOMINICANA SRL · RNC 131128033 · Licencia VINO-022. Estos también están en el módulo `src/lib/legalEntity.js` como única fuente de verdad y ya están aplicados en CARDNET (`CARDNET_MERCHANT_NAME` secret), en el footer de los correos transaccionales, y en el PDF de factura.
+- Mantener el correo corto. Lo único que Hansel necesita decidir es la fecha de certificación; el resto es contexto.
+- Si pide más detalles técnicos: tenemos screenshots de la página alojada con el monto correcto en `/tmp/cardnet-full-e2e/` y `/tmp/cardnet-boton-e2e/`. Adjuntables si los pide.
+- Tras la certificación pedimos: MerchantNumber + MerchantTerminal productivos, URLs productivas (`ecommerce.cardnet.com.do`), MerchantType para vinos (5921). NO ponerlo en este correo — es ruido para el ask actual.
+- Whitelist de `kibay.com.do` se hace después, vía ejecutivo comercial.
+- Datos del afiliado también están en `src/lib/legalEntity.js` y aplicados en CARDNET_MERCHANT_NAME, emails y facturas PDF.
