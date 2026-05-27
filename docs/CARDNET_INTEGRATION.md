@@ -1,94 +1,151 @@
-# CARDNET ZTRANS 3DS Integration
+# CARDNET Botón de Pago (Webpantalla) Integration
 
-How the live payment path is wired, what to test, and what's needed before going to production.
+How Kibay's CARDNET payment flow is wired, what's needed to go live, and the test path.
 
-## Architecture (one-paragraph version)
+## One-paragraph version
 
-This is a **direct integration** — Kibay's checkout collects the card data on its own site (PAN + CVV + expiry + holder name) and posts it to CARDNET's ZTRANS API. There is no hosted "Botón de Pago" redirect in the spec CARDNET sent us. The flow has 3 server round-trips: `/servicios/3ds/server/authentication` → (browser does 3DS challenge in an iframe) → `/servicios/3ds/server/status` → `/api/payment/transactions/sales`. Card data lives only in browser memory and the Edge Functions' in-flight memory — it is never logged, never persisted.
+Kibay uses CARDNET's **hosted-checkout product**: Botón de Pago Webpantalla. When a buyer clicks "Pagar con CARDNET" on the checkout page, we POST the order details to `/sessions` to mint a SESSION GUID, then the browser is auto-redirected via a tiny form-POST to `/authorize` carrying that SESSION. CARDNET serves their own card-entry page (with 3DS if the card supports it), the buyer enters card data there, and on result CARDNET redirects back to `/checkout/cardnet/return` (success/decline) or `/checkout/cardnet/cancel` (user gave up). Our return page calls `/sessions/<id>?sk=<key>` server-side to verify the final status and flips the order to `paid` or `payment_failed`. **Card data never touches our servers** → PCI scope is SAQ A.
 
 ## Components
 
 | Layer | File | Responsibility |
 |---|---|---|
-| DB | [`supabase/migrations/20260523120000_cardnet_3ds_columns.sql`](../supabase/migrations/20260523120000_cardnet_3ds_columns.sql) | Adds `cardnet_integrator_tx_id`, `cardnet_three_ds_server_trans_id`, `cardnet_eci`, `cardnet_pn_ref`, `cardnet_idempotency_key` columns to `orders`. |
-| Edge Function | [`supabase/functions/cardnet-auth-3ds/index.ts`](../supabase/functions/cardnet-auth-3ds/index.ts) | Calls `/authentication`, persists `threeDSServerTransID`, returns frictionless approval or challenge URL. |
-| Edge Function | [`supabase/functions/cardnet-finalize-sale/index.ts`](../supabase/functions/cardnet-finalize-sale/index.ts) | After 3DS, calls `/status` then `/sales`, marks order paid, fires confirmation emails. |
-| Frontend | [`src/pages/CheckoutPage.jsx`](../src/pages/CheckoutPage.jsx) (`CardnetCardForm`) | Renders the card form + browser context capture + 3DS challenge modal. |
-| Frontend | [`src/pages/CheckoutCardnetReturn.jsx`](../src/pages/CheckoutCardnetReturn.jsx) | The 3DS return URL — runs inside the iframe, postMessages parent on return. |
+| DB | [`20260517100000_cardnet_columns.sql`](../supabase/migrations/20260517100000_cardnet_columns.sql) | Adds `payment_method`, `cardnet_session_id`, `cardnet_authorization_code`, `cardnet_reference_number`, `cardnet_response_code`, `cardnet_response_message` |
+| DB | [`20260527100000_cardnet_boton_de_pago.sql`](../supabase/migrations/20260527100000_cardnet_boton_de_pago.sql) | Drops obsolete ZTRANS columns; adds `cardnet_session_key`, `cardnet_tx_token` |
+| Edge Function | [`cardnet-create-session`](../supabase/functions/cardnet-create-session/index.ts) | POSTs to `<SESSION_URL>/sessions` with order params + 3DS fields. Returns `{session, authorize_url}` to the SPA. |
+| Edge Function | [`cardnet-verify-session`](../supabase/functions/cardnet-verify-session/index.ts) | GETs `<SESSION_URL>/sessions/<id>?sk=<key>`. Flips order to paid (response-code `00`) or payment_failed. Fires confirmation emails. |
+| Frontend | [`CardnetRedirectButton`](../src/pages/CheckoutPage.jsx) inside [`CheckoutPage.jsx`](../src/pages/CheckoutPage.jsx) | Single "Pagar con CARDNET" button → calls create-session → auto-submits hidden form to authorize URL. |
+| Frontend | [`CheckoutCardnetReturn.jsx`](../src/pages/CheckoutCardnetReturn.jsx) | Return landing — calls verify-session, shows pass/fail UI, navigates to `/checkout-success` on approval. |
+| Frontend | [`CheckoutCardnetCancel.jsx`](../src/pages/CheckoutCardnetCancel.jsx) | Cancel landing — friendly "you can try again" page. |
 
-The old stubs (`create-cardnet-session`, `cardnet-verify`) are no longer called from the SPA. They still exist on Supabase as inactive functions and can be deleted once the new flow is locked in.
+## Edge Function secrets
 
-## Required Edge Function secrets
-
-| Secret | Sandbox value | Prod value |
+| Secret | Sandbox value (currently set) | Prod value (post-certification) |
 |---|---|---|
-| `CARDNET_3DS_BASE_URL` | `https://lab.cardnet.com.do` | `https://servicios.cardnet.com.do` |
-| `CARDNET_API_BASE_URL` | `https://lab.cardnet.com.do/api/payment` | `https://ecommerce.cardnet.com.do/api/payment` |
-| `CARDNET_INTEGRATOR_CODE` | `349011300` | issued by account exec |
-| `CARDNET_API_KEY` | `66827137-4ad5-4a37-8e87-6299fe2d5b57` | issued by account exec |
-| `CARDNET_MERCHANT_ID` | `349041263` | issued by account exec |
-| `CARDNET_TERMINAL_ID` | `77777777` | issued by account exec |
-| `CARDNET_RETURN_URL` | `http://localhost:3000/checkout/cardnet/return` | `https://kibay.com.do/checkout/cardnet/return` |
+| `CARDNET_SESSION_URL` | `https://labservicios.cardnet.com.do/sessions` | `https://ecommerce.cardnet.com.do/sessions` |
+| `CARDNET_AUTHORIZE_URL` | `https://labservicios.cardnet.com.do/authorize` | `https://ecommerce.cardnet.com.do/authorize` |
+| `CARDNET_MERCHANT_NUMBER` | `349000000` (shared QA) | Kibay's prod MerchantNumber |
+| `CARDNET_MERCHANT_TERMINAL` | `58585858` (shared QA) | Kibay's prod TerminalId |
+| `CARDNET_MERCHANT_TYPE` | `7997` (QA generic MCC) | `5921` (wine/liquor) or whatever Hansel assigns |
+| `CARDNET_MERCHANT_NAME` | `KIBAY SANTO DOMINGO         DN DO` | same (40 chars max, 22 name + 13 city + 3 state + 2 country) |
+| `CARDNET_ACQUIRING_INSTITUTION_CODE` | `349` | `349` |
+| `CARDNET_RETURN_URL` | `https://kibay.com.do/checkout/cardnet/return` | same |
+| `CARDNET_CANCEL_URL` | `https://kibay.com.do/checkout/cardnet/cancel` | same |
+| `CARDNET_TRANSACTION_TYPE` | `200` | `200` (sale) |
 
-Set via `npx supabase secrets set KEY=value KEY2=value2`.
+`labservicios` and `ecommerce` are the only public hostnames per Hansel's clarification (`lab.cardnet.com.do` is documented in the PDF but dead — use `labservicios`).
 
-## Required SPA env (Cloudflare Pages)
+## Request flow (in production / sandbox)
 
-| Env | Effect |
-|---|---|
-| `VITE_CARDNET_ENABLED=true` | Flips checkout to the CARDNET DOP path. Without this it falls back to Stripe. |
-
-## Sandbox status (2026-05-23) — BLOCKED waiting on CARDNET
-
-Code-side: all correct. Verified the SHA-512 signing recipe matches the PDF's worked example byte-for-byte; the Edge Function signature implementation reproduces it. Payload field names match the Postman collection. CORS, JWT-verify, and dual-auth (logged-in JWT or guest token) all confirmed working via end-to-end Playwright drive.
-
-Endpoint-side: the QA host documented in the PDF is dead.
-
-| Host (per PDF) | Reachability | What happens |
-|---|---|---|
-| `lab.cardnet.com.do/servicios/3ds/server/authentication` | dead | 302 → `/error/503.html` |
-| `labservicios.cardnet.com.do/servicios/3ds/server/authentication` | unhealthy | 502 nginx (3DS module not deployed; only the `/api/payment/*` sales side works here) |
-| `servicios.cardnet.com.do/servicios/3ds/server/authentication` | live | Returns proper JSON, but rejects the PDF's QA `integratorCode=349011300` + `apiKey=66827137-...` with `MESSAGE_NOT_VALID: invalid signature for message`. This host expects production-grade creds. |
-
-**Action needed from the CARDNET account exec (Sergio Objío):**
-
-1. Confirm the current sandbox URL for `/servicios/3ds/server/authentication` — `lab.cardnet.com.do` returns 503 errors and the docs may be stale.
-2. If sandbox is migrated, share the new host or confirm sandbox runs on `servicios.cardnet.com.do` with a different integratorCode/apiKey pair.
-3. Alternatively, provision Kibay's **production** merchant creds (MERCHANT_ID, TERMINAL_ID, INTEGRATOR_CODE, API_KEY) so we can test against `servicios.cardnet.com.do` directly with a small real-money charge.
-
-Until one of those arrives the integration cannot be exercised end-to-end. The code is shippable; only the test against a live endpoint is blocked.
-
-## Once real creds arrive — local test
-
-```bash
-# Update secrets with real values, then:
-npm run dev  # http://localhost:3000
+```
+Buyer clicks "Pagar con CARDNET"
+              │
+              ▼
+SPA → POST /functions/v1/cardnet-create-session
+              │  body: {order_id, token (guest only)}
+              ▼
+Edge Function authenticates (owner JWT or guest_token)
+loads order, builds payload (TransactionType, CurrencyCode, MerchantNumber,
+MerchantTerminal, ReturnUrl, CancelUrl, Amount in 12-digit minor units,
++ 3DS_email, 3DS_mobilePhone, 3DS_workPhone, 3DS_homePhone,
++ 3DS_billAddr_line1/city/state/country/postCode — reused from shipping)
+              │
+              ▼
+POST <SESSION_URL>/sessions     ← CARDNET responds with SESSION + session-key
+              │
+              ▼
+Persist on order: cardnet_session_id + cardnet_session_key
+Return to SPA: {session, authorize_url}
+              │
+              ▼
+SPA renders hidden <form action={authorize_url} method="POST">
+            <input name="SESSION" value={session}>
+          </form>
+SPA submits the form
+              │
+              ▼
+Browser navigates to CARDNET hosted page (labservicios.cardnet.com.do/auth?s=GUID)
+              │
+              ▼
+Buyer enters PAN + CVV + exp on CARDNET's own UI
+3DS challenge (if card supports it) — issuer OTP
+              │
+              ▼
+CARDNET decides → redirects to ReturnUrl on success/decline
+                            OR CancelUrl on user cancel
+              │
+              ▼
+/checkout/cardnet/return loads → POSTs /functions/v1/cardnet-verify-session
+                                  with the order_id (token for guest)
+              │
+              ▼
+Edge Function GETs <SESSION_URL>/sessions/<id>?sk=<key>
+Response → ResponseCode='00' approved | other = declined
+              │
+              ▼
+Order flipped to status='paid' or 'payment_failed'
+Inventory-decrement trigger fires on paid transition
+Confirmation + admin emails sent
+              │
+              ▼
+SPA navigates to /checkout-success
 ```
 
-1. Add a product to the cart, go to checkout.
-2. Fill in shipping (any DR address). The payment step shows the DOP card form.
-3. Use the test card CARDNET issues with the creds (or a real low-value card).
-4. Submit → either frictionless (transStatus=Y) and you land on `/checkout-success`, or a 3DS challenge modal opens. OTP per CARDNET's test guide.
-5. After the OTP, the modal closes and you land on `/checkout-success`.
-6. Verify in Supabase: the order should be `status='paid'`, with `cardnet_authorization_code`, `cardnet_pn_ref`, `cardnet_eci` populated.
+## Auth model
 
-If something rejects: check the Edge Function logs at https://supabase.com/dashboard/project/bsnxwajuqkatrmgoqcnu/functions → `cardnet-auth-3ds` / `cardnet-finalize-sale` → Logs.
+- **Anon buyers** (guest checkout): the `order_id` is verified against `guest_lookup_token` passed in the function body. Token was generated server-side at order creation. The buyer's browser never holds the `cardnet_session_key` — that stays on the order row, only the Edge Function reads it.
+- **Logged-in buyers**: same path, but the function also accepts the Supabase JWT as Bearer and matches `orders.user_id = auth.uid()`.
+- Both Edge Functions have `verify_jwt = false` in [`supabase/config.toml`](../supabase/config.toml) because the platform-level JWT verifier rejects Supabase's newer `sb_publishable_*` anon key format that the SPA sends. In-function checks cover security.
 
-A working Playwright driver for the SPA flow is at [`cardnet-e2e.mjs`](../cardnet-e2e.mjs) — run with `node cardnet-e2e.mjs` while `npm run dev` is up. It snapshots each step to `/tmp/cardnet-e2e/` for diagnosis.
+## Path to live
 
-## Going to production (checklist)
+| # | Step | Owner | Status |
+|---|---|---|---|
+| 1 | Sandbox code + E2E proof | Me | ✅ done |
+| 2 | Schedule certification with Hansel Aybar / Integraciones CARDNET | Send the email in `docs/CARDNET_CERT_EMAIL.md` | ⏳ pending |
+| 3 | Run CARDNET's certification test scenarios (approval, decline, 3DS challenge OK / NOK, void, refund, session timeout) | Hansel monitors, I drive | 1–3 business days |
+| 4 | Receive production credentials (MerchantNumber, MerchantTerminal, prod URLs) | Hansel issues post-cert | Same day after cert |
+| 5 | Submit `https://kibay.com.do` as the integration URL to the commercial exec for whitelist | You email | Same day |
+| 6 | Update Supabase secrets to prod values | Me, ~5 min | Trivial |
+| 7 | Set `VITE_CARDNET_ENABLED=true` on Cloudflare Pages (Production + Preview) | You via dashboard or me via wrangler | ~5 min |
+| 8 | Smoke test with RD$50 on a real card | Both | 5 min |
 
-1. **Get merchant creds from CARDNET account exec:** `MERCHANT_ID`, `TERMINAL_ID`, `INTEGRATOR_CODE`, `API_KEY`. (The sandbox `INTEGRATOR_CODE=349011300` is a shared dev value; prod will be unique to Kibay.)
-2. **Update Edge Function secrets** to prod values (table above). Keep `CARDNET_RETURN_URL=https://kibay.com.do/checkout/cardnet/return`.
-3. **Set `VITE_CARDNET_ENABLED=true` on Cloudflare Pages** (Production + Preview).
-4. **Redeploy CF Pages** (`git push origin main` after a commit, or trigger via dashboard).
-5. **Live smoke test** with a small RD$ amount on a real card — verify confirmation email arrives and Supabase row reflects `paid`.
-6. **PCI compliance**: this flow puts Kibay in **SAQ A-EP scope** at minimum (we touch the PAN in transit even though we never persist it). Required mitigations:
-   - All card-data routes are HTTPS only (CF/Supabase TLS 1.2+).
-   - Edge Functions never log card data (verified — only `responseCode`/`internalResponseCode` go to console).
-   - DB never stores card data (verified — only `cardnet_*` audit columns).
-   - Quarterly ASV scans + annual self-assessment are merchant responsibilities. Talk to the acquirer.
+## Stripe as history (already wired)
 
-## Refunds / voids
+When `VITE_CARDNET_ENABLED=true` flips on:
+- `CheckoutPage.jsx` takes the CARDNET branch (line ~37: `cardnetEnabled = import.meta.env.VITE_CARDNET_ENABLED === 'true'`). Stripe `PaymentElement` is never instantiated.
+- Stripe webhook (`stripe-webhook`) stays deployed — still processes any legacy `payment_intent.succeeded` from old orders.
+- Stripe refund function (`refund-payment`) stays callable for legacy orders.
+- AdminOrdersPage shows `payment_method` per row → Stripe orders say `Stripe`, new CARDNET orders say `cardnet`.
 
-Not wired yet. The ZTRANS doc describes `POST /transactions/refund` (needs a bearer token from CARDNET) and `POST /transactions/voids` (no bearer). Both are post-MVP — add when the first refund request comes in. The `cardnet_pn_ref` column already captures the `pnRef` needed to call them.
+Rollback is one env-var flip + redeploy.
+
+## E2E test (current, with sandbox creds)
+
+What's proven via Playwright (latest run with current code):
+1. Order created → `cardnet-create-session` invoked
+2. CARDNET returned a SESSION + session-key (200 OK)
+3. Browser auto-submitted form to `labservicios.cardnet.com.do/authorize`
+4. Browser landed on CARDNET hosted page (`labservicios.cardnet.com.do/auth?s=<GUID>`) with our DOP total, ITBIS calculated, customer email + phone pre-filled, Visa Secure / MC ID Check / SafeKey logos
+5. Card form is fillable with QA Visa `4761340000000050` exp `11/29` CVV `123`
+
+What's NOT proven in headless (because it requires a human-completed 3DS OTP challenge): the post-Pagar leg back to our `ReturnUrl` and the verify-session call. **This is exactly what CARDNET's certification process exercises.** Hansel walks through OTP scenarios manually with us.
+
+## Common response codes
+
+| Code | Meaning |
+|---|---|
+| `00` | Approved (only code that flips order to `paid`) |
+| `01`, `02`, `08` | Call your bank |
+| `04`, `05` | Declined |
+| `13` | Invalid amount |
+| `14` | Invalid card number |
+| `33`, `54` | Expired card |
+| `51` | Insufficient funds |
+| `57`, `58` | Transaction not allowed |
+| `91` | Issuer unavailable |
+| `94` | Duplicate transaction |
+| `404` | Session not found / expired (>30 min) |
+| `TF` | 3DS authentication failed |
+
+Full table is on the CARDNET technical-spec PDF p. 11–12 + mirrored in [`cardnet-verify-session/index.ts`](../supabase/functions/cardnet-verify-session/index.ts) `humanizeResponseCode` helper.
