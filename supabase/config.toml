@@ -448,3 +448,9 @@ verify_jwt = false
 
 [functions.ai-email-send]
 verify_jwt = false
+
+# Public contact form (/contact page) — anon-callable from the SPA. Same
+# JWT-format issue as the other anon callers; in-function validation (email
+# regex, length caps, Brevo allowlist) covers the security boundary.
+[functions.send-contact-email]
+verify_jwt = false
