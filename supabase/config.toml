@@ -409,14 +409,17 @@ s3_secret_key = "env(S3_SECRET_KEY)"
 [functions.stripe-webhook]
 verify_jwt = false
 
-# CARDNET functions handle dual auth (Supabase JWT for logged-in users OR
-# guest_lookup_token in body) inside the function itself. The platform-level
-# JWT verifier rejects the new sb_publishable_* anon key format, so we turn
-# it off and rely on in-function checks.
-[functions.cardnet-auth-3ds]
+# CARDNET Botón de Pago — hosted-checkout flow.
+# cardnet-create-session: anon-callable from the SPA (verified by order
+#   session_token OR Supabase user JWT in-function). POSTs to CARDNET's
+#   /sessions endpoint, returns the SESSION GUID + the authorize URL the
+#   browser will form-POST to.
+# cardnet-verify-session: anon-callable from the return page. Calls
+#   CARDNET's GET /sessions/<id>?sk=<key> and flips the order to paid/failed.
+[functions.cardnet-create-session]
 verify_jwt = false
 
-[functions.cardnet-finalize-sale]
+[functions.cardnet-verify-session]
 verify_jwt = false
 
 # AI HITL chat — buyer-side endpoints called by the public widget (anon).
