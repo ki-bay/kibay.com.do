@@ -3,6 +3,7 @@ import { Download, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { formatDopFromCents } from '@/lib/formatMoney';
+import { LEGAL_ENTITY, formatLegalFooter } from '@/lib/legalEntity';
 
 // jspdf is ~620 KB gzipped and only needed when a customer actually clicks
 // "Download invoice". Static-imported it would pay that cost for every
@@ -87,6 +88,23 @@ const InvoiceDownload = ({ order, orderItems, className }) => {
       doc.text(`${address.city || ''}, ${address.state || ''} ${address.zipCode || ''}`, 120, 70);
       doc.text(address.country || t('pdf.defaultCountry'), 120, 75);
 
+      // Seller block (legally required — DGII invoices must state the
+      // issuer's razón social + RNC). Drawn under the order info, left side.
+      doc.setFontSize(8);
+      doc.setTextColor(...darkColor);
+      doc.text(t('pdf.fromLabel', 'De / From:'), 20, 73);
+      doc.setFont("helvetica", "bold");
+      doc.text(LEGAL_ENTITY.razonSocial, 20, 77);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(80, 80, 80);
+      doc.text(`RNC ${LEGAL_ENTITY.rnc}`, 20, 81);
+      const licType = i18n.language?.startsWith('es')
+        ? LEGAL_ENTITY.license.typeEs
+        : LEGAL_ENTITY.license.typeEn;
+      doc.text(`${licType} ${LEGAL_ENTITY.license.code} (DGII)`, 20, 85);
+      doc.setFontSize(10);
+      doc.setTextColor(...darkColor);
+
       // Items Table
       const tableColumn = [t('pdf.colItem'), t('pdf.colQuantity'), t('pdf.colUnitPrice'), t('pdf.colTotal')];
       const tableRows = orderItems.map(item => [
@@ -114,10 +132,19 @@ const InvoiceDownload = ({ order, orderItems, className }) => {
       doc.text(t('pdf.totalLabel'), 140, finalY);
       doc.text(formatDopFromCents(order.total_amount), 190, finalY, { align: 'right' });
 
-      // Footer
+      // Footer — thank-you line + the legal block (DGII compliance).
       doc.setFontSize(8);
       doc.setTextColor(150, 150, 150);
-      doc.text(t('pdf.footer'), 105, 280, { align: 'center' });
+      doc.text(t('pdf.footer'), 105, 270, { align: 'center' });
+
+      doc.setFontSize(7);
+      doc.setTextColor(130, 130, 130);
+      const legalLines = formatLegalFooter(i18n.language?.startsWith('es') ? 'es' : 'en').split('\n');
+      let y = 278;
+      for (const line of legalLines) {
+        doc.text(line, 105, y, { align: 'center' });
+        y += 3.5;
+      }
 
       doc.save(`Kibay-Invoice-${order.order_number}.pdf`);
     } catch (err) {

@@ -437,6 +437,13 @@ async function renderEmail(
 	const tagline = lang === 'es' ? taglineEs : taglineEn;
 	const copyright = lang === 'es' ? copyrightEs : copyrightEn;
 
+	// Legal entity disclaimer (DGII compliance). MUST MATCH the data in
+	// src/lib/legalEntity.js — Edge Functions can't import from the SPA bundle
+	// so the strings are duplicated. If the legal entity changes, update BOTH.
+	const legalLineEs = `LADISON DOMINICANA SRL · RNC 131128033 · Licencia de Fabricación de Vinos VINO-022 (DGII, emitida 17/06/2023)`;
+	const legalLineEn = `LADISON DOMINICANA SRL · RNC 131128033 · Wine Manufacturing License VINO-022 (DGII, issued 06/17/2023)`;
+	const legalLine = lang === 'es' ? legalLineEs : legalLineEn;
+
 	const html = `<!DOCTYPE html>
 <html lang="${lang}">
 <head>
@@ -487,6 +494,7 @@ async function renderEmail(
             <a href="mailto:info@kibay.com.do" style="color:#aaa;text-decoration:none;">info@kibay.com.do</a> · <a href="https://kibay.com.do" style="color:#aaa;text-decoration:none;">kibay.com.do</a>
           </div>
           <div style="font-size:10px;color:#bbb;margin-top:14px;letter-spacing:0.5px;text-transform:uppercase;">${escapeHtml(copyright)}</div>
+          <div style="font-size:10px;color:#9a9a9a;margin-top:8px;line-height:1.5;max-width:480px;margin-left:auto;margin-right:auto;">${escapeHtml(legalLine)}</div>
         </td></tr>
       </table>
     </td></tr>
