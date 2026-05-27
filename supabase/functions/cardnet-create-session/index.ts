@@ -46,6 +46,11 @@ const cn = {
 	returnUrl: Deno.env.get('CARDNET_RETURN_URL') || 'https://kibay.com.do/checkout/cardnet/return',
 	cancelUrl: Deno.env.get('CARDNET_CANCEL_URL') || 'https://kibay.com.do/checkout/cardnet/cancel',
 	transactionType: Deno.env.get('CARDNET_TRANSACTION_TYPE') || '200',
+	// QA-only: override the buyer's 3DS contact info so the OTP challenge
+	// can be dispatched via Hansel's preconfigured test 3DS account. Leave
+	// unset in production — real buyer email/phone flow through.
+	test3dsEmail: Deno.env.get('CARDNET_3DS_TEST_EMAIL') || '',
+	test3dsPhone: Deno.env.get('CARDNET_3DS_TEST_PHONE') || '',
 };
 
 const cors = {
@@ -173,11 +178,19 @@ serve(async (req) => {
 	// email mobile + email are mandatory; per the spec doc workPhone/homePhone
 	// and the full billAddr block are also marked Mandatorio. We fall back
 	// to mobile for work/home and use the shipping address as billing.
-	if (buyerEmail) payload['3DS_email'] = buyerEmail;
-	if (buyerMobile) {
-		payload['3DS_mobilePhone'] = buyerMobile;
-		payload['3DS_workPhone'] = buyerMobile;
-		payload['3DS_homePhone'] = buyerMobile;
+	//
+	// QA testing requires Hansel's preconfigured test 3DS account (otherwise
+	// the OTP challenge can't be dispatched). When CARDNET_3DS_TEST_EMAIL/
+	// CARDNET_3DS_TEST_PHONE are set, we override the buyer's contact info
+	// for the two 3DS fields that drive OTP routing. Other 3DS fields keep
+	// the real buyer data — that's what the issuer's risk engine reads.
+	const effective3dsEmail = cn.test3dsEmail || buyerEmail;
+	const effective3dsPhone = cn.test3dsPhone || buyerMobile;
+	if (effective3dsEmail) payload['3DS_email'] = effective3dsEmail;
+	if (effective3dsPhone) {
+		payload['3DS_mobilePhone'] = effective3dsPhone;
+		payload['3DS_workPhone'] = effective3dsPhone;
+		payload['3DS_homePhone'] = effective3dsPhone;
 	}
 	if (billAddrLine1) payload['3DS_billAddr_line1'] = billAddrLine1;
 	if (billAddrLine2) payload['3DS_billAddr_line2'] = billAddrLine2;
