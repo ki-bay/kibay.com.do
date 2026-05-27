@@ -15,7 +15,7 @@
     "fromName": "From name",
     "fromEmail": "From email",
     "replyTo": "Reply-to (optional)",
-    "replyToPlaceholder": "hello@kibay.com.do",
+    "replyToPlaceholder": "info@kibay.com.do",
     "htmlBody": "HTML body *"
   },
   "audience": {

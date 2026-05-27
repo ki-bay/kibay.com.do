@@ -8,7 +8,7 @@
   },
   "form": {
     "emailLabel": "Email Address",
-    "emailPlaceholder": "admin@kibay.com.do",
+    "emailPlaceholder": "info@kibay.com.do",
     "passwordLabel": "Password",
     "passwordPlaceholder": "••••••••",
     "forgot": "Forgot password?",

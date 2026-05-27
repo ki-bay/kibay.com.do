@@ -8,7 +8,7 @@
   },
   "form": {
     "emailLabel": "Correo Electrónico",
-    "emailPlaceholder": "admin@kibay.com.do",
+    "emailPlaceholder": "info@kibay.com.do",
     "passwordLabel": "Contraseña",
     "passwordPlaceholder": "••••••••",
     "forgot": "¿Olvidaste tu contraseña?",

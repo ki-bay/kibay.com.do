@@ -15,7 +15,7 @@
     "fromName": "Nombre del remitente",
     "fromEmail": "Email del remitente",
     "replyTo": "Reply-to (opcional)",
-    "replyToPlaceholder": "hello@kibay.com.do",
+    "replyToPlaceholder": "info@kibay.com.do",
     "htmlBody": "Cuerpo HTML *"
   },
   "audience": {
