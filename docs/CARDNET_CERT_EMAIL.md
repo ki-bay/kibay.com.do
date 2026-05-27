@@ -60,8 +60,11 @@ Validamos lo siguiente:
 
 ## Datos del afiliado
 
-- **Comercio:** kibay.com.do (Kibay)
-- **Razón social:** [completar con la razón social tal como fue registrada en la nueva afiliación]
+- **Comercio:** kibay.com.do (marca: Kibay)
+- **Razón social:** LADISON DOMINICANA SRL
+- **RNC:** 131128033
+- **Licencia DGII:** VINO-022 — Licencia de Fabricación de Vinos (emitida 17/06/2023, VIGENTE)
+- **Dirección:** Bahía de Ocoa, Km 6½ Hatillo, Azua 71003, República Dominicana
 - **Ambiente actual:** QA contra `labservicios.cardnet.com.do`
 - **Tarjetas probadas:** las que nos compartiste (Visa 4761... y MC 5461...)
 
@@ -78,4 +81,4 @@ kibay.com.do
 
 - No mencionar el rewriting del backend ni que pasamos de ZTRANS a Botón de Pago — Hansel ya nos aclaró y no necesita el histórico.
 - Si Hansel pide capturas: tenemos screenshots del flujo (página alojada con el monto correcto, ITBIS, etc.) en `/tmp/cardnet-full-e2e/` después de la última corrida E2E. Adjuntables al correo si lo solicita.
-- El campo `Razón social` arriba está como placeholder — completarlo con el nombre exacto del nuevo afiliado para Kibay (la afiliación nueva del 20/05/2026 que Hansel mencionó en el correo anterior).
+- Datos del afiliado completos: LADISON DOMINICANA SRL · RNC 131128033 · Licencia VINO-022. Estos también están en el módulo `src/lib/legalEntity.js` como única fuente de verdad y ya están aplicados en CARDNET (`CARDNET_MERCHANT_NAME` secret), en el footer de los correos transaccionales, y en el PDF de factura.
