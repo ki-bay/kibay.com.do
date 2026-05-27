@@ -74,7 +74,19 @@ serve(async (req) => {
 	if (!token) return json({ error: 'Missing authorization' }, 401);
 
 	// Either the caller is service-role (server-to-server), or an admin user.
-	const isServiceRole = token === serviceKey;
+	// Supabase rotated to a new key system (sb_secret_*) — accept either the
+	// legacy SUPABASE_SERVICE_ROLE_KEY OR any key in the new SUPABASE_SECRET_KEYS
+	// rotation set (CSV) so server-to-server callers don't break on rotation.
+	const legacyService = serviceKey;
+	const newSecret = Deno.env.get('SUPABASE_SECRET_KEY') || '';
+	const rotatedKeys = (Deno.env.get('SUPABASE_SECRET_KEYS') || '')
+		.split(',')
+		.map((k) => k.trim())
+		.filter(Boolean);
+	const isServiceRole =
+		token === legacyService ||
+		token === newSecret ||
+		rotatedKeys.includes(token);
 	if (!isServiceRole) {
 		const userClient = createClient(supabaseUrl, anonKey, {
 			global: { headers: { Authorization: `Bearer ${token}` } },
