@@ -1,10 +1,11 @@
 import { listImageGroups, downloadDriveFile, ImageGroup } from './drive';
-import { generateBlogFromImage, ImageInput } from './anthropic';
+import { generateBlogFromImage, ImageInput, checkVisualSimilarity, RecentHero } from './anthropic';
 import {
 	isFileProcessed,
 	uploadImage,
 	insertBlogPost,
 	recordProcessed,
+	recentPublishedHeroes,
 	setPostPublished,
 	deletePost,
 	markProcessedStatus,
@@ -552,6 +553,54 @@ async function runPipeline(env: Env): Promise<void> {
 			}
 
 			const llmImages: ImageInput[] = uploaded.map((u) => ({ bytes: u.bytes, mimeType: u.mime }));
+
+			// VISUAL-DIVERSITY GUARD — skip if the new hero looks like a
+			// recently-published post. File-ID dedup catches re-uploads of
+			// the same Drive file; this catches different files from the
+			// same photoshoot (which is what just shipped two near-identical
+			// posts on 2026-05-22 and 2026-05-25). When similar, mark the
+			// group processed-with-status=skipped_similar so the cron tries
+			// the next group on its next run, and notify the admin via the
+			// review-email channel that already exists.
+			try {
+				const recent = await recentPublishedHeroes(env, 30, 5);
+				const recentBytes: RecentHero[] = [];
+				for (const r of recent) {
+					try {
+						const fetched = await fetch(r.featured_image_url);
+						if (!fetched.ok) continue;
+						const bytes = await fetched.arrayBuffer();
+						const mime = fetched.headers.get('content-type') || 'image/webp';
+						recentBytes.push({ title: r.title, imageBytes: bytes, mimeType: mime });
+					} catch {
+						// Skip individual fetch failures rather than abort the whole check.
+					}
+				}
+				const sim = await checkVisualSimilarity(
+					env.ANTHROPIC_API_KEY,
+					{ bytes: uploaded[0].bytes, mimeType: uploaded[0].mime },
+					recentBytes,
+				);
+				if (sim.similar) {
+					console.log(
+						`pipeline: SKIPPING group ${g.name} — visually similar to "${sim.matchedTitle || 'recent post'}". Reason: ${sim.reason}`,
+					);
+					await recordProcessed(env, {
+						file_id: g.key,
+						drive_modified_time: g.latestModified,
+						blog_post_id: null,
+						status: 'skipped_similar',
+					});
+					return; // Stop after this group like a normal run; cron picks the next group next time.
+				}
+				console.log(`pipeline: similarity check passed — ${sim.reason || 'distinct enough'}`);
+			} catch (simErr) {
+				// The check is best-effort. If it throws, log + proceed to
+				// generate the post anyway — better one redundant post than
+				// no post.
+				console.error('pipeline: similarity check threw, proceeding anyway:', simErr);
+			}
+
 			const post = await generateBlogFromImage(
 				env.ANTHROPIC_API_KEY,
 				env.ANTHROPIC_MODEL,

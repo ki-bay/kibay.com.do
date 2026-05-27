@@ -304,6 +304,105 @@ export async function generateBlogFromImage(
 	};
 }
 
+// Visual-similarity check for the auto-blog pipeline. Sends the new hero
+// image + the recent hero images (already published in the last 30 days)
+// to Haiku and asks: "is the new image too visually similar to any of
+// these?" — same photoshoot / same subject pose / same setting +
+// lighting all count as similar even if the files are technically
+// distinct. Returns { similar: boolean, reason: string, matchedTitle?:
+// string }.
+//
+// Why this exists: the file-ID dedup catches re-uploads of the same
+// Drive file but doesn't help when the user drops in a fresh batch
+// from the same photoshoot. Two posts in three days both showing
+// "person sitting in the vineyard with a Kibay can" looks redundant to
+// real readers even though the underlying files are different.
+export interface RecentHero {
+	title: string;
+	imageBytes: ArrayBuffer;
+	mimeType: string;
+}
+export interface SimilarityResult {
+	similar: boolean;
+	reason: string;
+	matchedTitle?: string;
+}
+export async function checkVisualSimilarity(
+	apiKey: string,
+	newHero: ImageInput,
+	recent: RecentHero[],
+): Promise<SimilarityResult> {
+	if (recent.length === 0) return { similar: false, reason: 'no recent posts to compare' };
+
+	const content: Array<unknown> = [
+		{
+			type: 'text',
+			text:
+				`You are checking whether a NEW blog hero image is too visually similar to any of ${recent.length} RECENT hero image(s) from posts published in the last 30 days.\n\n` +
+				`"Too similar" means ANY of:\n` +
+				`- Same scene / same photoshoot (even different frames)\n` +
+				`- Same subject in the same pose or near-identical pose\n` +
+				`- Same setting + same lighting (golden hour vineyard with model holding can = same)\n` +
+				`- Same product close-up from a similar angle\n\n` +
+				`Not similar = clearly different subject, different setting, or different style of image (e.g., landscape vs portrait vs flat-lay).\n\n` +
+				`Return ONLY a JSON object on a single line: {"similar": true|false, "reason": "one short sentence", "matched_index": null | 0-based index of the most similar recent image}.\n\n` +
+				`NEW image follows.`,
+		},
+		{
+			type: 'image',
+			source: {
+				type: 'base64',
+				media_type: newHero.mimeType,
+				data: arrayBufferToBase64(newHero.bytes),
+			},
+		},
+	];
+	for (let i = 0; i < recent.length; i += 1) {
+		const r = recent[i];
+		content.push({ type: 'text', text: `RECENT image #${i} (post: "${r.title}"):` });
+		content.push({
+			type: 'image',
+			source: { type: 'base64', media_type: r.mimeType, data: arrayBufferToBase64(r.imageBytes) },
+		});
+	}
+
+	const body = {
+		model: 'claude-haiku-4-5-20251001',
+		max_tokens: 200,
+		messages: [{ role: 'user', content }],
+	};
+	const resp = await fetch('https://api.anthropic.com/v1/messages', {
+		method: 'POST',
+		headers: {
+			'content-type': 'application/json',
+			'x-api-key': apiKey,
+			'anthropic-version': '2023-06-01',
+		},
+		body: JSON.stringify(body),
+	});
+	if (!resp.ok) {
+		// Don't block the pipeline on an API error — log + treat as not similar.
+		console.error(`similarity check API failed: ${resp.status} ${await resp.text()}`);
+		return { similar: false, reason: 'similarity check API error' };
+	}
+	const json = (await resp.json()) as ClaudeMessagesResponse;
+	const text = json.content.find((c) => c.type === 'text')?.text || '';
+	try {
+		const parsed = parseJsonStrict<{ similar: boolean; reason: string; matched_index: number | null }>(
+			text,
+			'similarity',
+		);
+		const matchedTitle =
+			parsed.matched_index != null && parsed.matched_index >= 0 && parsed.matched_index < recent.length
+				? recent[parsed.matched_index].title
+				: undefined;
+		return { similar: parsed.similar, reason: parsed.reason, matchedTitle };
+	} catch (e) {
+		console.error('similarity check returned non-JSON, treating as not similar', text.slice(0, 200));
+		return { similar: false, reason: 'similarity check non-JSON' };
+	}
+}
+
 function arrayBufferToBase64(buf: ArrayBuffer): string {
 	const bytes = new Uint8Array(buf);
 	let bin = '';

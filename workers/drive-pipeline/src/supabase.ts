@@ -66,6 +66,29 @@ export async function insertBlogPost(
 	return rows[0];
 }
 
+// Fetch the N most recent published blog posts' (title, hero URL). Used by
+// the visual-similarity guard before a new auto-generated post is created.
+// Only PUBLISHED posts count — drafts (including ones we just skipped for
+// similarity) aren't considered competition.
+export async function recentPublishedHeroes(
+	env: SupabaseEnv,
+	withinDays: number,
+	limit: number,
+): Promise<Array<{ title: string; featured_image_url: string }>> {
+	const since = new Date(Date.now() - withinDays * 24 * 60 * 60 * 1000).toISOString();
+	const url =
+		`${env.SUPABASE_URL}/rest/v1/blog_posts` +
+		`?published=eq.true&published_at=gte.${encodeURIComponent(since)}` +
+		`&featured_image_url=not.is.null` +
+		`&select=title,featured_image_url&order=published_at.desc&limit=${limit}`;
+	const r = await fetch(url, { headers: authHeaders(env) });
+	if (!r.ok) {
+		console.error(`recentPublishedHeroes failed: ${r.status}`);
+		return [];
+	}
+	return (await r.json()) as Array<{ title: string; featured_image_url: string }>;
+}
+
 export async function recordProcessed(
 	env: SupabaseEnv,
 	row: {
