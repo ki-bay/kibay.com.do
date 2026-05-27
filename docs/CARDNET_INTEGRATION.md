@@ -110,15 +110,39 @@ SPA navigates to /checkout-success
 | 7 | Set `VITE_CARDNET_ENABLED=true` on Cloudflare Pages (Production + Preview) | You via dashboard or me via wrangler | ~5 min |
 | 8 | Smoke test with RD$50 on a real card | Both | 5 min |
 
-## Stripe as history (already wired)
+## Stripe — phased removal
 
-When `VITE_CARDNET_ENABLED=true` flips on:
-- `CheckoutPage.jsx` takes the CARDNET branch (line ~37: `cardnetEnabled = import.meta.env.VITE_CARDNET_ENABLED === 'true'`). Stripe `PaymentElement` is never instantiated.
-- Stripe webhook (`stripe-webhook`) stays deployed — still processes any legacy `payment_intent.succeeded` from old orders.
-- Stripe refund function (`refund-payment`) stays callable for legacy orders.
-- AdminOrdersPage shows `payment_method` per row → Stripe orders say `Stripe`, new CARDNET orders say `cardnet`.
+Stripe is **being removed**, not kept as a fallback. Owner confirmed
+2026-05-27 that they want a CARDNET-only checkout once certification
+passes. The current Stripe path is bridge code that comes out as soon
+as CARDNET is live.
 
-Rollback is one env-var flip + redeploy.
+**Step 1 — flip the env var (immediate cutover):**
+
+When `VITE_CARDNET_ENABLED=true` is set on Cloudflare Pages:
+- `CheckoutPage.jsx:37` evaluates `cardnetEnabled = true`. The `if (cardnetEnabled) { ... } else { /* Stripe */ }` branch never enters the Stripe arm.
+- No Stripe Elements mount. No `create-payment-intent` call. Stripe is unreachable from the buyer's checkout.
+- The Stripe Edge Functions stay deployed but receive no traffic from the SPA. Stripe webhook is currently broken (signature mismatch since 2026-05-14) and will stay broken — there's no point fixing it.
+- `AdminOrdersPage` still renders historical Stripe orders via the `payment_method` column.
+
+**Step 2 — code/function deletion (post-cert cleanup):**
+
+Once one real CARDNET transaction has settled, do the full removal in one pass:
+
+1. Delete Edge Functions:
+   ```
+   supabase/functions/stripe-webhook/
+   supabase/functions/create-payment-intent/
+   supabase/functions/refund-payment/
+   ```
+2. From `CheckoutPage.jsx`: remove the `loadStripe`, `Elements`, `PaymentElement`, `useStripe`, `useElements` imports and the entire `CheckoutForm` sub-component (~95 LOC). Drop the `cardnetEnabled` conditional — CARDNET becomes the unconditional path.
+3. From `supabase/config.toml`: remove `[functions.stripe-webhook]` and `[functions.create-payment-intent]` entries.
+4. From `package.json`: drop `@stripe/stripe-js`, `@stripe/react-stripe-js`, `stripe`.
+5. From Supabase secrets: `npx supabase secrets unset STRIPE_SECRET_KEY STRIPE_WEBHOOK_SECRET`.
+6. From CF Pages env: unset `VITE_STRIPE_PUBLISHABLE_KEY` (also remove the `pk_test_*` from `.env.local`).
+7. Optional migration: drop the `stripe_payment_intent_id` column from `orders`. (Or leave it nullable so historical orders keep their IDs for support lookups — owner's call.)
+
+Existing Stripe orders in the DB stay as-is and remain viewable in the admin UI.
 
 ## E2E test (current, with sandbox creds)
 
