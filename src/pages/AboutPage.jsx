@@ -127,8 +127,8 @@ const AboutPage = () => {
             >
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                 <img
-                  src="/media/kibay-vino-ocoa-bay.webp"
-                  alt="Beautiful Caribbean sunset over tropical landscape"
+                  src="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_1600/v1780011402/Collecion_de_vinos_en_ocoabay_iobvhf.webp"
+                  alt="Colección de vinos en Ocoa Bay — Dominican wines at the winery"
                   width="1600"
                   height="1067"
                   loading="lazy"
