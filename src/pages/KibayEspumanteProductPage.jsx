@@ -116,7 +116,7 @@ const KibayEspumanteProductPage = () => {
             >
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 sm:w-64 sm:h-64 lg:w-96 lg:h-96 bg-orange-500/20 rounded-full blur-3xl -z-10"></div>
               <img
-                src={mediaUrl('16146fe95251b7071c35445b71cd0274.jpg')}
+                src="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_1200/v1780011940/kibay_sparkling_ehvpws.webp"
                 alt={t('hero.imgAlt')}
                 className="w-auto h-[300px] sm:h-[400px] lg:h-[600px] object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-700 ease-in-out"
               />
@@ -215,7 +215,7 @@ const KibayEspumanteProductPage = () => {
               className="relative h-[300px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl"
             >
               <img
-                src="/unsplash/photo-1506377247377-2a5b3b417ebb.webp"
+                src="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_1200/v1780011402/Kibay_Espumante_Lata_ocoabay_w2hagj.webp"
                 alt={t('origin.imgAlt')}
                 className="w-full h-full object-cover"
               />

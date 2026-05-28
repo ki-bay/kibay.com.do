@@ -72,9 +72,11 @@ const HomePage = () => {
             with f_auto for AVIF/WebP, q_auto for quality, and a 2400px cap.
             object-cover keeps the framing intact across viewports. */}
         <picture className="absolute inset-0 w-full h-full">
+          {/* Desktop only: super-wide vineyard hero shot by Babula (RD).
+              Mobile keeps the existing cropped hero — explicitly requested. */}
           <source
             media="(min-width: 1024px)"
-            srcSet="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_2400/v1779053427/kibay_-vino_copy_q9mvz8.webp"
+            srcSet="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_2400/v1780011824/fotografo_babula_shots_republica_dominicana_rughqj.webp"
           />
           <img
             src="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_1200/v1779053427/kibay_-vino_copy_q9mvz8.webp"

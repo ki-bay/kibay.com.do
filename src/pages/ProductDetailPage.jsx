@@ -467,14 +467,14 @@ function ProductDetailPage() {
                 initial={{ opacity: 0, x: 40 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.15 }}
-                className="relative flex justify-center lg:justify-end"
+                className="relative flex justify-center lg:justify-end -mx-4 sm:mx-0"
               >
-                <div className="relative">
-                  <div className="absolute inset-0 bg-[#D4A574]/30 rounded-full blur-[110px] opacity-60" aria-hidden="true" />
+                <div className="relative w-full sm:w-auto">
+                  <div className="absolute inset-0 bg-[#D4A574]/30 rounded-full blur-[110px] opacity-60 hidden sm:block" aria-hidden="true" />
                   <img
                     src={hero?.heroImage}
                     alt={displayTitle}
-                    className="relative z-10 max-h-[560px] w-auto object-contain drop-shadow-2xl rounded-lg"
+                    className="relative z-10 w-full h-auto block sm:w-auto sm:max-h-[560px] sm:object-contain sm:drop-shadow-2xl sm:rounded-lg"
                     loading="eager"
                     decoding="async"
                     fetchpriority="high"
