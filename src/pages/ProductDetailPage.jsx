@@ -325,8 +325,16 @@ function ProductDetailPage() {
   const isSoldOut = isStockManaged && availableStock <= 0;
 
   const seoImage = product.images?.[0];
-  const seoTitle = `${displayTitle} | Kibay`;
-  const seoDescription = displaySubtitle || displayDescription.replace(/<[^>]+>/g, '').slice(0, 160);
+  // Allow metadata overrides for SEO-critical fields (title/description/keywords).
+  // Used by /product/kibay-wine to target "vino dominicano" without renaming the
+  // visible product title. Falls back to derived defaults when absent.
+  const seoTitleOverride = pickLocalized(metadata, 'seo_title', lang);
+  const seoDescriptionOverride = pickLocalized(metadata, 'seo_description', lang);
+  const seoKeywords = pickLocalized(metadata, 'seo_keywords', lang);
+  const seoTitle = seoTitleOverride || `${displayTitle} | Kibay`;
+  const seoDescription = seoDescriptionOverride
+    || displaySubtitle
+    || displayDescription.replace(/<[^>]+>/g, '').slice(0, 160);
   const newsletterTags = product.slug === 'kibay-sparkling' ? ['Sparkling Can Interest'] : [];
   const productUrl = `${window.location.origin}/product/${product.slug || product.id}`;
 
@@ -347,6 +355,7 @@ function ProductDetailPage() {
         url={productUrl}
         type="product"
         canonicalUrl={productUrl}
+        keywords={seoKeywords}
       />
 
       <SchemaMarkup
@@ -468,6 +477,7 @@ function ProductDetailPage() {
                     className="relative z-10 max-h-[560px] w-auto object-contain drop-shadow-2xl rounded-lg"
                     loading="eager"
                     decoding="async"
+                    fetchpriority="high"
                   />
                 </div>
               </m.div>
