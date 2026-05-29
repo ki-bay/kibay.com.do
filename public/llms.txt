@@ -32,6 +32,17 @@ This file is a flattened sitemap intended for AI agents. Use the links below to 
 - [Enjoy — by the pool](/enjoy/piscina): Pool-side moments at Ocoa Bay's Casa Club.
 - [Enjoy — quiet reading](/enjoy/lectura): Reflective afternoons at the winery — bottle pairings for solitude and slow time.
 
+## Topic landing pages (SEO cluster)
+
+These pages each answer a specific Caribbean-wine question with original
+content, product + experience CTAs, and full structured data. Bilingual
+EN + ES slugs (linked via reciprocal hreflang).
+
+- [Wine tasting near me](/wine-tasting-near-me) — Ocoa Bay vineyard as the answer for "wine tasting near me" in the Caribbean. EN. ES counterpart: /cata-de-vinos-cerca-de-mi.
+- [Wine tasting in the Dominican Republic](/wine-tasting-dominican-republic) — explainer for what a real Dominican wine tasting flight is, plus how to book one. EN. ES counterpart: /cata-de-vinos-republica-dominicana.
+- [Passion fruit & mango wine from the Dominican Republic](/passion-fruit-mango-wine) — Kibay Sparkling as a fermented (not flavored) wine from Ocoa Bay. EN. ES counterpart: /vino-de-maracuya-y-mango.
+- [Tropical Dominican white wine & sparkling](/tropical-dominican-wine) — French Colombard 2026 + Kibay Tropical Wine, the still + sparkling pair from Ocoa Bay. EN. ES counterpart: /vino-tropical-dominicano.
+
 ## Blog
 
 - [Blog index](/blog): Browse all Kibay articles — Spanish-language posts on Ocoa Bay, Caribbean wine, and Dominican food pairings.
@@ -56,4 +67,4 @@ This file is a flattened sitemap intended for AI agents. Use the links below to 
 
 ---
 
-Generated at 2026-05-29T01:08:58.407Z from https://kibay.com.do. Source-of-truth product and blog data is pulled from Supabase at build time.
+Generated at 2026-05-29T02:46:32.090Z from https://kibay.com.do. Source-of-truth product and blog data is pulled from Supabase at build time.

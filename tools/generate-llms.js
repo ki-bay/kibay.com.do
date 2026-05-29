@@ -78,6 +78,18 @@ const STORY_SECTION = `## Story & Context
 - [Enjoy — quiet reading](/enjoy/lectura): Reflective afternoons at the winery — bottle pairings for solitude and slow time.
 `;
 
+const KEYWORD_LANDING_SECTION = `## Topic landing pages (SEO cluster)
+
+These pages each answer a specific Caribbean-wine question with original
+content, product + experience CTAs, and full structured data. Bilingual
+EN + ES slugs (linked via reciprocal hreflang).
+
+- [Wine tasting near me](/wine-tasting-near-me) — Ocoa Bay vineyard as the answer for "wine tasting near me" in the Caribbean. EN. ES counterpart: /cata-de-vinos-cerca-de-mi.
+- [Wine tasting in the Dominican Republic](/wine-tasting-dominican-republic) — explainer for what a real Dominican wine tasting flight is, plus how to book one. EN. ES counterpart: /cata-de-vinos-republica-dominicana.
+- [Passion fruit & mango wine from the Dominican Republic](/passion-fruit-mango-wine) — Kibay Sparkling as a fermented (not flavored) wine from Ocoa Bay. EN. ES counterpart: /vino-de-maracuya-y-mango.
+- [Tropical Dominican white wine & sparkling](/tropical-dominican-wine) — French Colombard 2026 + Kibay Tropical Wine, the still + sparkling pair from Ocoa Bay. EN. ES counterpart: /vino-tropical-dominicano.
+`;
+
 const POLICIES_SECTION = `## Policies & Support
 
 - [Contact](/contact): How to reach Kibay — email, phone, social, and Ocoa Bay address.
@@ -173,6 +185,7 @@ async function main() {
 		products,
 		experiences,
 		STORY_SECTION,
+		KEYWORD_LANDING_SECTION,
 		blog,
 		POLICIES_SECTION,
 		`---\n\nGenerated at ${new Date().toISOString()} from ${SITE_URL}. Source-of-truth product and blog data is pulled from Supabase at build time.\n`,

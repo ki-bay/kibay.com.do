@@ -46,6 +46,16 @@ const STATIC_ROUTES = [
 	{ path: '/shipping-returns', priority: '0.3', changefreq: 'yearly' },
 ];
 
+// SEO keyword-cluster landing pages — bilingual slugs (EN + ES URLs render
+// the same component). Each topic gets two <url> entries with reciprocal
+// hreflang; x-default points at the EN slug.
+const SEO_LANDING_ROUTES = [
+	{ en: '/wine-tasting-near-me', es: '/cata-de-vinos-cerca-de-mi', priority: '0.8', changefreq: 'monthly' },
+	{ en: '/wine-tasting-dominican-republic', es: '/cata-de-vinos-republica-dominicana', priority: '0.8', changefreq: 'monthly' },
+	{ en: '/passion-fruit-mango-wine', es: '/vino-de-maracuya-y-mango', priority: '0.9', changefreq: 'monthly' },
+	{ en: '/tropical-dominican-wine', es: '/vino-tropical-dominicano', priority: '0.8', changefreq: 'monthly' },
+];
+
 const xmlEscape = (s) =>
 	String(s ?? '')
 		.replace(/&/g, '&amp;')
@@ -86,6 +96,23 @@ function urlEntry({ loc, lastmod, changefreq = 'monthly', priority = '0.5' }) {
   </url>`;
 }
 
+// Bilingual entry for pages that have distinct EN + ES slugs (the SEO
+// landing cluster). Emits both URLs with reciprocal hreflang; x-default
+// points at the EN slug. `current` decides which URL is the <loc>.
+function bilingualUrlEntry({ enPath, esPath, lastmod, changefreq, priority, current }) {
+	const lm = lastmod ? `\n    <lastmod>${xmlEscape(lastmod.slice(0, 10))}</lastmod>` : '';
+	const loc = current === 'es' ? `${SITE_URL}${esPath}` : `${SITE_URL}${enPath}`;
+	const alt = `
+    <xhtml:link rel="alternate" hreflang="en" href="${xmlEscape(SITE_URL + enPath)}" />
+    <xhtml:link rel="alternate" hreflang="es" href="${xmlEscape(SITE_URL + esPath)}" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="${xmlEscape(SITE_URL + enPath)}" />`;
+	return `  <url>
+    <loc>${xmlEscape(loc)}</loc>${lm}
+    <changefreq>${changefreq}</changefreq>
+    <priority>${priority}</priority>${alt}
+  </url>`;
+}
+
 async function main() {
 	const today = new Date().toISOString();
 
@@ -98,6 +125,30 @@ async function main() {
 			priority: r.priority,
 		}),
 	);
+
+	// SEO landing cluster — emit EN and ES URLs as a pair with reciprocal hreflang.
+	for (const r of SEO_LANDING_ROUTES) {
+		entries.push(
+			bilingualUrlEntry({
+				enPath: r.en,
+				esPath: r.es,
+				lastmod: today,
+				changefreq: r.changefreq,
+				priority: r.priority,
+				current: 'en',
+			}),
+		);
+		entries.push(
+			bilingualUrlEntry({
+				enPath: r.en,
+				esPath: r.es,
+				lastmod: today,
+				changefreq: r.changefreq,
+				priority: r.priority,
+				current: 'es',
+			}),
+		);
+	}
 
 	// Products: published only, by slug.
 	const products = await fetchTable(

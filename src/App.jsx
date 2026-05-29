@@ -46,6 +46,12 @@ const KibayEspumanteBottle = lazy(() => import('./pages/KibayEspumanteBottle'));
 const KibayEspumanteProductPage = lazy(() => import('./pages/KibayEspumanteProductPage'));
 const KibayWineProductPage = lazy(() => import('./pages/KibayWineProductPage'));
 
+// SEO Landing Pages (keyword-cluster set, bilingual EN + ES URLs)
+const WineTastingNearMePage = lazy(() => import('./pages/seo/WineTastingNearMePage'));
+const WineTastingDRPage = lazy(() => import('./pages/seo/WineTastingDRPage'));
+const PassionFruitMangoWinePage = lazy(() => import('./pages/seo/PassionFruitMangoWinePage'));
+const TropicalDominicanWinePage = lazy(() => import('./pages/seo/TropicalDominicanWinePage'));
+
 // Auth Pages
 const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/auth/RegisterPage'));
@@ -142,6 +148,18 @@ function App() {
               <Route path="/about" element={<AboutPage />} />
               <Route path="/whitepaper" element={<WhitepaperPage />} />
               <Route path="/contact" element={<ContactPage />} />
+
+              {/* SEO keyword-cluster landing pages — bilingual slugs, single
+                  component per topic. EN slug + ES slug both render the same
+                  page; the page picks copy from i18n.language. */}
+              <Route path="/wine-tasting-near-me" element={<WineTastingNearMePage />} />
+              <Route path="/cata-de-vinos-cerca-de-mi" element={<WineTastingNearMePage />} />
+              <Route path="/wine-tasting-dominican-republic" element={<WineTastingDRPage />} />
+              <Route path="/cata-de-vinos-republica-dominicana" element={<WineTastingDRPage />} />
+              <Route path="/passion-fruit-mango-wine" element={<PassionFruitMangoWinePage />} />
+              <Route path="/vino-de-maracuya-y-mango" element={<PassionFruitMangoWinePage />} />
+              <Route path="/tropical-dominican-wine" element={<TropicalDominicanWinePage />} />
+              <Route path="/vino-tropical-dominicano" element={<TropicalDominicanWinePage />} />
 
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
