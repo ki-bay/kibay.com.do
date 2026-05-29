@@ -65,19 +65,21 @@ body { counter-reset: pageNum 0; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Was 0.55 (image darkened by warm-brown bg bleeding through, reading
-     pink/violet on hero shots with warm tones). Now closer to 0.85 so
-     the photo stays neutral and the gradient does the readability work. */
-  opacity: 0.82;
-  filter: saturate(0.85);
+  opacity: 0.85;
+  /* Push the hero close to monochrome — warm gold/orange highlights
+     from bottle photography were bleeding through any tint we added,
+     reading as the same warm cast we already fixed in the palette.
+     90% grayscale + small contrast bump keeps form/light without color. */
+  filter: grayscale(0.9) contrast(1.06) brightness(0.95);
 }
 
 .cover .cover-overlay {
   position: absolute;
   inset: 0;
-  /* Neutral dark-gray gradient — minimal at top so the photo breathes,
-     stronger at bottom only enough to keep the title legible. */
-  background: linear-gradient(180deg, rgba(30,30,30,0.08) 0%, rgba(30,30,30,0.35) 55%, rgba(30,30,30,0.78) 100%);
+  /* Slightly cool dark-gray gradient — minimal at top so the photo
+     breathes, stronger at bottom for title legibility. The tiny blue
+     bias counters any residual warmth in the desaturated image. */
+  background: linear-gradient(180deg, rgba(28,30,34,0.10) 0%, rgba(28,30,34,0.38) 55%, rgba(28,30,34,0.82) 100%);
 }
 
 .cover .cover-content {
