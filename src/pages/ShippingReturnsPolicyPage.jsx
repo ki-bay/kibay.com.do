@@ -50,7 +50,7 @@ const ShippingReturnsPolicyPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="bg-white rounded-2xl shadow-sm border border-stone-100 p-8 md:p-12 space-y-12"
+            className="bg-card rounded-2xl shadow-sm border border-foreground/10 p-8 md:p-12 space-y-12"
           >
             {sections.map((section, index) => (
               <div key={index} className="scroll-mt-32" id={`section-${index}`}>
