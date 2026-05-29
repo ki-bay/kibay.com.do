@@ -51,7 +51,7 @@ body { counter-reset: pageNum 0; }
 
 .cover {
   padding: 0;
-  background: #0e0d0c;
+  background: #2b2b2b;
   color: #fdfaf3;
   display: flex;
   flex-direction: column;
@@ -65,13 +65,19 @@ body { counter-reset: pageNum 0; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.55;
+  /* Was 0.55 (image darkened by warm-brown bg bleeding through, reading
+     pink/violet on hero shots with warm tones). Now closer to 0.85 so
+     the photo stays neutral and the gradient does the readability work. */
+  opacity: 0.82;
+  filter: saturate(0.85);
 }
 
 .cover .cover-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(14,13,12,0.2) 0%, rgba(14,13,12,0.55) 60%, rgba(14,13,12,0.92) 100%);
+  /* Neutral dark-gray gradient — minimal at top so the photo breathes,
+     stronger at bottom only enough to keep the title legible. */
+  background: linear-gradient(180deg, rgba(30,30,30,0.08) 0%, rgba(30,30,30,0.35) 55%, rgba(30,30,30,0.78) 100%);
 }
 
 .cover .cover-content {
