@@ -312,8 +312,15 @@ const ChatWidget = () => {
         setConversationId(data.conversation_id);
         localStorage.setItem(CONV_KEY, data.conversation_id);
       }
-      // The draft is pending HITL approval; the placeholder bubble stays
-      // visible until polling picks up the approved reply.
+      if (data.reply?.body) {
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === optimisticPendingId
+              ? { id: data.reply.id, role: 'assistant', body: data.reply.body }
+              : m,
+          ),
+        );
+      }
     } catch (e) {
       setMessages((prev) => prev.filter((m) => m.id !== optimisticPendingId));
       setError(e.message || t('errorGeneric', 'Algo salió mal. Intenta de nuevo.'));
@@ -360,7 +367,7 @@ const ChatWidget = () => {
             <div className="min-w-0">
               <p className="text-sm font-normal text-foreground">{t('title', 'Chatea con Kibay')}</p>
               <p className="text-[11px] text-foreground/55 font-light">
-                {t('subtitle', 'Cada respuesta es revisada por nuestro equipo')}
+                {t('subtitle', 'Asistente AI de Kibay')}
               </p>
             </div>
             <div className="flex items-center gap-1">
@@ -424,7 +431,7 @@ const ChatWidget = () => {
                   <div key={m.id} className="flex justify-start">
                     <div className="bg-foreground/5 border border-foreground/10 text-foreground/55 px-3 py-2 rounded-2xl rounded-bl-md text-xs font-light flex items-center gap-2">
                       <Loader2 className="w-3 h-3 animate-spin" />
-                      {t('awaitingReview', 'Tu mensaje fue recibido. Nuestro equipo lo revisará y te responderá pronto.')}
+                      {t('awaitingReview', 'Pensando…')}
                     </div>
                   </div>
                 );
@@ -515,7 +522,7 @@ const ChatWidget = () => {
               </div>
             )}
             <p className="text-[10px] text-foreground/35 text-center mt-2 font-light">
-              {t('hitlNotice', 'Las respuestas son revisadas por una persona antes de enviarse.')}
+              {t('hitlNotice', 'Respuestas generadas por AI. Para asuntos delicados, escríbenos a info@kibay.com.do.')}
             </p>
           </div>
         </div>

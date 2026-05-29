@@ -2,9 +2,14 @@
 // =============================================================================
 // Anon-callable. The chat widget POSTs the visitor's message here; the
 // function creates/extends a conversation, calls Claude to draft a reply,
-// classifies it, persists as approval_status='pending'. The DRAFT IS NOT
-// returned to the buyer — that's the HITL gate. The buyer's widget polls
-// `ai-chat-poll` to discover approved replies.
+// classifies it, AND auto-sends the reply to the buyer (approval_status =
+// 'auto_sent'). The reply is also returned in the POST response so the
+// widget can render it immediately without waiting for the next poll.
+//
+// HITL note: this endpoint runs in auto-send mode for web_chat. Risk flags
+// and confidence are still stored on the row so an admin can audit / claw
+// back a turn from /admin/ai-inbox. Other channels (email, future
+// whatsapp / voice) keep the HITL gate.
 //
 // Auth model: anon. The buyer identifies via `session_token` (random UUID
 // stored in their localStorage). The token is checked against the
@@ -46,6 +51,85 @@ type ChatBody = {
 	context_product_id?: string | null;
 	context_path?: string | null;
 };
+
+// Full Kibay knowledge base — passed to the model so it can answer questions
+// about the brand, the winery, the wines, the experiences, policies, and
+// lifestyle context without inventing facts. Source: distilled from the
+// public site (home, about, vine-and-barrel, why-cans, shipping-returns,
+// enjoy/*) on 2026-05-29. Update this string when site content materially
+// changes.
+const KIBAY_KNOWLEDGE = `# Brand & legal
+Kibay is the commercial brand of LADISON DOMINICANA SRL (RNC 131128033),
+licensed wine producer in the Dominican Republic (Wine Manufacturing
+License VINO-022, DGII, issued 2023-06-17). Pronounced "ki-BAY". The
+brand identity is tropical, Caribbean, and unapologetically Dominican.
+
+# Winery — Ocoa Bay
+- Bahía de Ocoa, Km 6½ Hatillo, Azua, Dominican Republic — about 2 hours from Santo Domingo.
+- One of the very few working vineyards in the Caribbean (~18° latitude).
+- Coastal estate growing organic vinifera grapes (rosé, French Colombard, red) plus organic mango and passion fruit on the same land.
+- Sister property: Ocoa Bay Winery (ocoabay.com) handles in-person tastings, Casa Club restaurant, and visitor reservations.
+
+# Wines (all 12% ABV, fermented — never flavored soda)
+1. Kibay Sparkling — 250 ml organic sparkling can. Mango + passion fruit infused via fermentation. Caribbean aperitif format.
+2. Kibay Tropical Wine — 750 ml bottle. Kibay's signature tropical sparkling.
+3. Rosé 2026 — dry rosé, Ocoa Bay terroir. Fermented.
+4. French Colombard 2026 — bright dry white. Fermented.
+
+# Experiences at Ocoa Bay (Saturdays & Sundays only)
+- Complete Ocoa Bay Experience — full day, ~4 hours on-site: wine tour + tasting + Casa Club + 3-course farm-to-table organic menu. US$145/person + taxes.
+- Ocoa Bay Wine Tour — 90 min: guided tasting + electric-cart tour of vineyards and winery. US$65/person + taxes.
+- Casa Club Day Pass — pool, à la carte restaurant, beach view. Reservation only, minimum consumption. 11am – 6:30pm.
+Taxes: 18% ITBIS + 10% legal. Reservations confirmed by Ocoa Bay (ocoabay.com). Group bookings → info@kibay.com.do.
+
+# Why aluminum cans (Kibay Sparkling)
+- 100% light + oxygen barrier (better than glass) → preserves aroma and effervescence from canning to first sip.
+- 250 ml = perfect single serve, no half-opened bottles going flat.
+- Beach / pool / boat friendly (no glass safety issue).
+- Aluminum chills 50× faster than glass.
+- Infinitely recyclable, lower carbon footprint vs. bottles.
+
+# Five ways to enjoy Kibay (lifestyle moments at Bahía de Ocoa)
+1. Sunrise walk through the vineyard.
+2. Friends gathering at Casa Club.
+3. Paired with Caribbean cuisine (ceviche, seafood, soft cheese).
+4. Afternoon at the pool, can in hand.
+5. Reading and quiet at the winery.
+Each has a dedicated page at /enjoy/{amanecer, amigos, cocina, piscina, lectura}.
+
+# Pairings
+Best with: fresh ceviche & seafood, tropical mango/avocado salads, soft and goat cheeses, light Caribbean dishes (asopao, fish, light salads).
+Serve at 8–10°C for sparkling, 10–12°C for rosé / French Colombard.
+
+# Shipping & returns (Dominican Republic)
+- Standard shipping: RD$250, 1–3 business days. Free over RD$5,000.
+- Adult-only delivery (18+), valid government ID required at handoff. Carriers do not leave packages unattended.
+- Orders process in 1–2 business days; tracking emailed once shipped.
+- No returns on alcohol (legal). For damaged or incorrect orders → info@kibay.com.do with photos.
+- Cancellations possible only before the shipping label is created.
+
+# Payment
+- All charges processed in Dominican pesos (DOP) via CARDNET (3DS-secured Dominican gateway).
+- International cards welcome — issuing bank handles FX automatically.
+- USD prices on the site are display references; the actual charge is always DOP.
+
+# Visits & retail
+- Visit info + booking flow: kibay.com.do/vine-and-barrel.
+- Casa Maria (Zona Colonial, Santo Domingo) — boutique retail point mentioned in blog posts.
+- Blog at /blog covers Caribbean wine culture, Ocoa Bay terroir, mango/passion-fruit fermentation, and food pairings.
+
+# Refusal / escalation rules (already enforced upstream — re-state here so you don't slip)
+- Wholesale / distribution: reply "Please email info@kibay.com.do".
+- Legal or compliance questions: escalate to info@kibay.com.do.
+- Medical questions about alcohol: escalate to info@kibay.com.do.
+- Custom commercial terms: escalate.
+
+# What NOT to claim
+- Don't quote phone numbers — direct buyers to info@kibay.com.do.
+- Don't invent vintages beyond 2026.
+- Don't promise stock levels — say "check the product page for live availability".
+- Don't fabricate retail partners beyond Ocoa Bay (ocoabay.com) and Casa Maria.
+- Don't claim Kibay is sold abroad outside the Dominican Republic.`;
 
 // Hardcoded operational facts — single source of truth so the AI cannot drift
 // from what the rest of the system enforces. Reference: skill gotcha #16
@@ -139,7 +223,9 @@ URL: https://kibay.com.do/product/${focusProduct.slug}
 					.join('\n')}\n</catalog>`
 		: '';
 
-	return [role, tone, format, refusals, facts, focus, catalog].join('\n\n');
+	const knowledge = `\n\n# Kibay knowledge base\n${KIBAY_KNOWLEDGE}`;
+
+	return [role, tone, format, refusals, facts, knowledge, focus, catalog].join('\n\n');
 }
 
 // Lightweight risk classifier — regex-only, no second LLM call.
@@ -384,21 +470,33 @@ serve(async (req) => {
 		.select('id')
 		.single();
 
-	// 7. Classify + persist the assistant draft as pending.
+	// 7. Classify + persist the assistant reply. auto_sent + sent_at=now()
+	// means the buyer's widget can render it immediately (we also return it
+	// inline below). Classification metadata is preserved on the row so an
+	// admin can audit risky turns from /admin/ai-inbox.
 	const classification = classify(message, draft);
-	await admin.from('ai_conversation_messages').insert({
-		conversation_id: conversationId,
-		role: 'assistant',
-		body: draft,
-		approval_status: 'pending',
-		confidence: classification.confidence,
-		intent: classification.intent,
-		risk_flags: classification.risk_flags,
-		ai_generation_log_id: logRow?.id ?? null,
-	});
+	const sentAt = new Date().toISOString();
+	const { data: assistantRow, error: insertErr } = await admin
+		.from('ai_conversation_messages')
+		.insert({
+			conversation_id: conversationId,
+			role: 'assistant',
+			body: draft,
+			approval_status: 'auto_sent',
+			sent_at: sentAt,
+			confidence: classification.confidence,
+			intent: classification.intent,
+			risk_flags: classification.risk_flags,
+			ai_generation_log_id: logRow?.id ?? null,
+		})
+		.select('id, body, sent_at')
+		.single();
+	if (insertErr) {
+		console.error('ai-chat: assistant insert failed', insertErr);
+	}
 	await admin.from('ai_conversation_events').insert({
 		conversation_id: conversationId,
-		kind: 'draft_pending',
+		kind: 'auto_sent',
 		payload: {
 			intent: classification.intent,
 			risk_flags: classification.risk_flags,
@@ -408,7 +506,13 @@ serve(async (req) => {
 
 	return json({
 		conversation_id: conversationId,
-		// Buyer doesn't see the draft yet — that's the whole point of HITL.
-		pending: true,
+		reply: assistantRow
+			? {
+					id: assistantRow.id,
+					role: 'assistant',
+					body: assistantRow.body,
+					sent_at: assistantRow.sent_at,
+				}
+			: null,
 	});
 });
