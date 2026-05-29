@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { m } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, MapPin, Wine, Grape, ExternalLink } from 'lucide-react';
 import Navigation from '@/components/Navigation';
@@ -15,13 +15,26 @@ import Footer from '@/components/Footer';
 // BreadcrumbList) and the visual layout. No i18n JSON namespaces — the
 // copy lives in the page config so each landing page is one self-contained
 // file that's easy to tweak per keyword intent.
+//
+// Language is picked from the URL slug, NOT from the user's i18n choice —
+// /wine-tasting-near-me always renders English; /cata-de-vinos-cerca-de-mi
+// always renders Spanish. This keeps the URL language consistent with the
+// page content so Google indexes each slug to the right locale. On mount
+// the global i18n language is also synced so nav + footer match.
 
 const SITE = 'https://kibay.com.do';
 
 const SeoLandingTemplate = ({ slug, content }) => {
   const { i18n } = useTranslation();
-  const lang = (i18n.language || 'es').startsWith('en') ? 'en' : 'es';
+  const location = useLocation();
+  // URL is the source of truth for which language to render.
+  const lang = location.pathname === `/${slug.en}` ? 'en' : 'es';
   const c = content[lang];
+
+  useEffect(() => {
+    if (i18n.language?.startsWith(lang)) return;
+    i18n.changeLanguage(lang);
+  }, [lang, i18n]);
   const altLang = lang === 'en' ? 'es' : 'en';
   const currentPath = `/${slug[lang]}`;
   const altPath = `/${slug[altLang]}`;
