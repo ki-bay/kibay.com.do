@@ -275,6 +275,18 @@ const AboutPage = () => {
               <p className="text-xl font-medium text-orange-400 text-center mt-8">
                 This is wine designed for now. This is Kibay.
               </p>
+              <p className="text-sm text-foreground/60 text-center font-light tracking-wide">
+                Made in the Dominican Republic at{' '}
+                <a
+                  href="https://ocoabay.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-orange-400 hover:text-orange-300 underline-offset-4 hover:underline transition-colors"
+                >
+                  Ocoa Bay winery
+                </a>
+                .
+              </p>
             </div>
           </m.div>
         </div>
