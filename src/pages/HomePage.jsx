@@ -122,7 +122,7 @@ const HomePage = () => {
               <p className="text-xl sm:text-2xl lg:text-3xl text-white font-light leading-snug drop-shadow-[0_2px_10px_rgba(0,0,0,0.7)]">
                 {t('hero.tagline')}
               </p>
-              <p className="text-base sm:text-lg text-white/85 font-light leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
+              <p className="hidden sm:block text-base sm:text-lg text-white/85 font-light leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
                 {t('hero.description')}
               </p>
             </m.div>
