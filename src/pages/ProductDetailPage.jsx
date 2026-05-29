@@ -258,7 +258,12 @@ function ProductDetailPage() {
         .filter(Boolean);
     }
     if (typeof s === 'object') {
-      const knownKeys = ['origin', 'vintage', 'varietal', 'abv', 'volume', 'category', 'format', 'ingredients', 'shelf_life'];
+      const knownKeys = [
+        'category', 'style', 'varietal', 'origin', 'producer', 'vintage', 'abv',
+        'service_temp', 'pairings', 'glass', 'fermentation', 'ingredients',
+        'volume', 'format', 'closure', 'sulfites', 'allergens',
+        'vegan', 'organic', 'shelf_life',
+      ];
       const labels = {
         origin: lang === 'en' ? 'Origin' : 'Origen',
         vintage: lang === 'en' ? 'Vintage' : 'Añada',
@@ -269,6 +274,17 @@ function ProductDetailPage() {
         format: lang === 'en' ? 'Format' : 'Formato',
         ingredients: lang === 'en' ? 'Ingredients' : 'Ingredientes',
         shelf_life: lang === 'en' ? 'Shelf life' : 'Vida útil',
+        producer: lang === 'en' ? 'Producer' : 'Bodega',
+        style: lang === 'en' ? 'Style' : 'Estilo',
+        service_temp: lang === 'en' ? 'Serving temperature' : 'Temperatura de servicio',
+        pairings: lang === 'en' ? 'Pairings' : 'Maridaje',
+        glass: lang === 'en' ? 'Glass' : 'Copa',
+        fermentation: lang === 'en' ? 'Fermentation' : 'Fermentación',
+        closure: lang === 'en' ? 'Closure' : 'Cierre',
+        sulfites: lang === 'en' ? 'Sulfites' : 'Sulfitos',
+        allergens: lang === 'en' ? 'Allergens' : 'Alérgenos',
+        vegan: lang === 'en' ? 'Vegan' : 'Vegano',
+        organic: lang === 'en' ? 'Organic' : 'Orgánico',
       };
       return knownKeys
         .filter(k => s[k] != null && s[k] !== '')
@@ -841,10 +857,88 @@ function ProductDetailPage() {
             </div>
           </div>
         </div>
+
+        {/* ---------------------------------------------------------------- */}
+        {/* Cinco formas de disfrutar Kibay — condensed version of the       */}
+        {/* homepage section. Mobile = horizontal snap-scroll, desktop = 5-col grid. */}
+        {/* ---------------------------------------------------------------- */}
+        <EnjoyKibaySection />
       </main>
 
       <Footer />
     </>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Cinco formas de disfrutar Kibay — compact version reused on every PDP.
+// Mobile: horizontal snap-scroll. Desktop: 5-column grid.
+// Copy + photos come from `product:enjoy` (shorter than the homepage variant).
+// ---------------------------------------------------------------------------
+function EnjoyKibaySection() {
+  const { t } = useTranslation('product');
+  const ways = t('enjoy.ways', { returnObjects: true });
+  if (!Array.isArray(ways) || ways.length === 0) return null;
+
+  return (
+    <section className="relative bg-gradient-to-b from-card to-background border-t border-foreground/10 py-20 lg:py-28 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-12">
+          <div>
+            <span className="block text-xs uppercase tracking-[0.25em] text-[#D4A574] font-medium mb-3">
+              {t('enjoy.eyebrow')}
+            </span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-light text-foreground leading-tight max-w-2xl">
+              {t('enjoy.heading')}
+            </h2>
+            <p className="text-foreground/60 mt-4 max-w-xl font-light">
+              {t('enjoy.subheading')}
+            </p>
+          </div>
+          <Link
+            to="/vine-and-barrel"
+            className="inline-flex items-center gap-2 text-[#D4A574] hover:text-[#c29462] font-medium whitespace-nowrap group"
+          >
+            {t('enjoy.cta')}
+            <ArrowDown className="w-4 h-4 -rotate-90 group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </div>
+
+        {/* Mobile: horizontal snap scroll. Desktop: 5-col grid. */}
+        <div className="flex lg:grid lg:grid-cols-5 gap-5 overflow-x-auto snap-x snap-mandatory lg:overflow-visible pb-4 lg:pb-0 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0 scrollbar-hide">
+          {ways.map((way, i) => (
+            <m.article
+              key={way.slug || i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.5, delay: (i % 5) * 0.06 }}
+              className="snap-start shrink-0 w-[78vw] max-w-[300px] sm:w-[42vw] lg:w-auto lg:max-w-none group"
+            >
+              <div className="relative aspect-[4/5] rounded-2xl overflow-hidden mb-4 shadow-lg">
+                <img
+                  src={way.image}
+                  alt={way.imageAlt}
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <span className="absolute top-3 left-3 bg-[#D4A574] text-white text-[10px] uppercase tracking-widest font-semibold px-2.5 py-1 rounded-full">
+                  {way.kicker}
+                </span>
+              </div>
+              <h3 className="text-lg font-serif text-foreground leading-snug mb-2">
+                {way.title}
+              </h3>
+              <p className="text-sm text-foreground/60 font-light leading-relaxed">
+                {way.lead}
+              </p>
+            </m.article>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 

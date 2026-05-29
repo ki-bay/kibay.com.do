@@ -295,6 +295,11 @@ const ProductsList = () => {
             <h2 className="text-2xl sm:text-3xl font-light text-foreground">
               {i18n.language === 'en' ? 'Wines & Sparkling' : 'Vinos & Espumantes'}
             </h2>
+            <p className="text-sm text-foreground/60 mt-2 max-w-2xl">
+              {i18n.language === 'en'
+                ? 'Every bottle is born at Bahía de Ocoa. Visit the vineyard to taste all four, book a day at Casa Club, or order any bottle here — shipped straight from the winery.'
+                : 'Cada botella nace en Bahía de Ocoa. Visita el viñedo para catarlos todos, reserva un día en Casa Club o pide cualquier botella aquí — enviada directamente desde la bodega.'}
+            </p>
             <div className="w-16 h-0.5 bg-[#D4A574] mt-3"></div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">

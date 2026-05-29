@@ -38,5 +38,53 @@
     "timeLabel": "Time",
     "availability": "Saturdays, Sundays, and holidays only",
     "required": "Pick a date to continue"
+  },
+  "enjoy": {
+    "eyebrow": "The Kibay experience",
+    "heading": "Five ways to enjoy Kibay",
+    "subheading": "Five reasons to open a bottle at Bahía de Ocoa.",
+    "cta": "Plan your visit",
+    "ways": [
+      {
+        "slug": "sunrise",
+        "kicker": "Reason #1",
+        "title": "Sunrise walk in the vineyard",
+        "lead": "Golden hour at Bahía de Ocoa, glass in hand.",
+        "image": "https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_700/v1778724993/Babula_Shots_Rd_-75_doytfj.webp",
+        "imageAlt": "Couple walking through the Kibay vineyard at sunrise with glasses in hand"
+      },
+      {
+        "slug": "friends",
+        "kicker": "Reason #2",
+        "title": "Friends at Casa Club",
+        "lead": "Long table, à-la-carte food, bay view.",
+        "image": "https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_700/v1778724134/Babula_Shots_Rd_-60_dbwlky.webp",
+        "imageAlt": "Friends raising glasses of Kibay at Casa Club Ocoa Bay"
+      },
+      {
+        "slug": "pairing",
+        "kicker": "Reason #3",
+        "title": "Pair it with Caribbean cuisine",
+        "lead": "Ceviche, seafood and soft cheese, with a valley view.",
+        "image": "https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_700/v1778724491/Babula_Shots_Rd_-17_lmekvu.webp",
+        "imageAlt": "Caribbean dish paired with a glass of Kibay sparkling"
+      },
+      {
+        "slug": "pool",
+        "kicker": "Reason #4",
+        "title": "Poolside with a cold can",
+        "lead": "Stone, crystal water, a cold Kibay Sparkling in hand.",
+        "image": "https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_700/v1778724366/casa_Club_kibay_ocoa_bay_picina_fxtzv8.webp",
+        "imageAlt": "Casa Club pool at Ocoa Bay with a Kibay Sparkling can"
+      },
+      {
+        "slug": "reading",
+        "kicker": "Reason #5",
+        "title": "Reading in the vineyard",
+        "lead": "A chair, a book, a glass, the sea in the background.",
+        "image": "https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_700/v1778724587/Babula_Shots_Rd_-63_pronhr.webp",
+        "imageAlt": "Person reading with a glass of Kibay in the Ocoa Bay vineyard"
+      }
+    ]
   }
 }

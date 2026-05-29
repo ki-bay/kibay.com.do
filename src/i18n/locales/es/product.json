@@ -38,5 +38,53 @@
     "timeLabel": "Hora",
     "availability": "Solo sábados, domingos y feriados",
     "required": "Selecciona una fecha antes de continuar"
+  },
+  "enjoy": {
+    "eyebrow": "La experiencia Kibay",
+    "heading": "Cinco formas de disfrutar Kibay",
+    "subheading": "Cada una con su propia razón para abrir una botella en Bahía de Ocoa.",
+    "cta": "Reserva tu visita",
+    "ways": [
+      {
+        "slug": "amanecer",
+        "kicker": "Razón #1",
+        "title": "Paseo al amanecer en el viñedo",
+        "lead": "La hora dorada en Bahía de Ocoa, copa en mano.",
+        "image": "https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_700/v1778724993/Babula_Shots_Rd_-75_doytfj.webp",
+        "imageAlt": "Pareja caminando por el viñedo de Kibay al amanecer con copas en la mano"
+      },
+      {
+        "slug": "amigos",
+        "kicker": "Razón #2",
+        "title": "Reunión con amigos en Casa Club",
+        "lead": "Mesa larga, comida a la carta y vista a la bahía.",
+        "image": "https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_700/v1778724134/Babula_Shots_Rd_-60_dbwlky.webp",
+        "imageAlt": "Grupo de amigos brindando con Kibay en Casa Club Ocoa Bay"
+      },
+      {
+        "slug": "cocina",
+        "kicker": "Razón #3",
+        "title": "Maridaje con cocina caribeña",
+        "lead": "Ceviche, mariscos y quesos en una mesa con vista al valle.",
+        "image": "https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_700/v1778724491/Babula_Shots_Rd_-17_lmekvu.webp",
+        "imageAlt": "Plato de cocina caribeña maridado con copa de Kibay"
+      },
+      {
+        "slug": "piscina",
+        "kicker": "Razón #4",
+        "title": "Tarde en la piscina con lata fría",
+        "lead": "Piedra, agua cristalina y una Kibay Espumante en la mano.",
+        "image": "https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_700/v1778724366/casa_Club_kibay_ocoa_bay_picina_fxtzv8.webp",
+        "imageAlt": "Piscina de Casa Club en Ocoa Bay con Kibay Espumante en lata"
+      },
+      {
+        "slug": "lectura",
+        "kicker": "Razón #5",
+        "title": "Lectura y silencio en el viñedo",
+        "lead": "Una silla, un libro, una copa y el mar al fondo.",
+        "image": "https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_700/v1778724587/Babula_Shots_Rd_-63_pronhr.webp",
+        "imageAlt": "Persona leyendo con copa de Kibay en el viñedo de Ocoa Bay"
+      }
+    ]
   }
 }
