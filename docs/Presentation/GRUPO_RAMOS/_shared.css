@@ -65,21 +65,19 @@ body { counter-reset: pageNum 0; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.85;
-  /* Push the hero close to monochrome — warm gold/orange highlights
-     from bottle photography were bleeding through any tint we added,
-     reading as the same warm cast we already fixed in the palette.
-     90% grayscale + small contrast bump keeps form/light without color. */
-  filter: grayscale(0.9) contrast(1.06) brightness(0.95);
+  /* Photos come through close to their original color. Light desat (20%)
+     only to keep the warmest highlights from blooming into the
+     pink/violet cast we hit before. */
+  opacity: 0.95;
+  filter: saturate(0.92);
 }
 
 .cover .cover-overlay {
   position: absolute;
   inset: 0;
-  /* Slightly cool dark-gray gradient — minimal at top so the photo
-     breathes, stronger at bottom for title legibility. The tiny blue
-     bias counters any residual warmth in the desaturated image. */
-  background: linear-gradient(180deg, rgba(28,30,34,0.10) 0%, rgba(28,30,34,0.38) 55%, rgba(28,30,34,0.82) 100%);
+  /* Slight neutral gradient just for title legibility — top half is
+     almost transparent so the photo dominates. */
+  background: linear-gradient(180deg, rgba(20,20,20,0.0) 0%, rgba(20,20,20,0.18) 50%, rgba(20,20,20,0.72) 100%);
 }
 
 .cover .cover-content {
