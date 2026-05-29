@@ -421,7 +421,7 @@ const HomePage = () => {
                   decoding="async"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
-                <div className={`absolute inset-0 bg-gradient-to-r ${idx % 2 === 0 ? 'from-black/75 via-black/40 to-transparent' : 'from-transparent via-black/40 to-black/75'}`}></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/40 to-transparent"></div>
                 <div className={`relative h-full max-w-7xl mx-auto px-6 sm:px-10 flex flex-col ${idx === 1 ? 'justify-start pt-16' : 'justify-center'} ${idx % 2 === 0 ? 'items-start text-left' : 'items-start'}`}>
                   <div className="max-w-xl">
                     <span className="inline-block text-xs sm:text-sm uppercase tracking-[0.3em] text-[#D4A574] font-medium mb-4">
