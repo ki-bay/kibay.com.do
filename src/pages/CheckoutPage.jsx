@@ -1073,7 +1073,25 @@ const CheckoutPage = () => {
 							</div>
 
 							<div className="bg-card p-6 rounded-xl border border-foreground/10">
-								<h2 className="text-xl font-normal text-foreground mb-6">{t('payment')}</h2>
+								<h2 className="text-xl font-normal text-foreground mb-4">{t('payment')}</h2>
+								{/* CARDNET trust strip — visible as soon as the payment card renders.
+								    Reassures shoppers that payment is processed by the local DR acquirer. */}
+								{cardnetEnabled && (
+									<div className="flex items-center gap-3 mb-6 px-3 py-2.5 rounded-lg bg-background/60 border border-foreground/5">
+										<img
+											src="/cardnet/cardnet-logo.png"
+											alt="CARDNET"
+											width="84"
+											height="28"
+											loading="lazy"
+											decoding="async"
+											className="h-7 w-auto flex-shrink-0"
+										/>
+										<p className="text-xs text-foreground/70 font-light leading-snug">
+											{t('cardnet.secure', 'Pago 100% seguro vía CARDNET + 3D Secure. Nunca vemos tu tarjeta.')}
+										</p>
+									</div>
+								)}
 								{cardnetEnabled ? (
 									step === 'payment' && pendingOrderId ? (
 										// CARDNET Boton de Pago (Webpantalla) - hosted checkout.
