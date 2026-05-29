@@ -35,6 +35,9 @@ This file is a flattened sitemap intended for AI agents. Use the links below to 
 ## Blog
 
 - [Blog index](/blog): Browse all Kibay articles — Spanish-language posts on Ocoa Bay, Caribbean wine, and Dominican food pairings.
+- [Ocoa Bay a tu copa: el viaje sensorial de Kibay](/blog/ocoa-bay-viaje-sensorial-kibay-1r0qnh): Kibay espumante caribeño orgánico: descubre el terroir de Ocoa Bay, Azua, desde la viña hasta Casa Maria Zona Colonial. Infusiones de mango y maracuyá.
+- [Kibay: del mar de Ocoa Bay a tu copa](/blog/kibay-ocoa-bay-espumante-organico-dominicano-1vx2vq): Kibay, espumante orgánico dominicano de Ocoa Bay. Infusiones de mango y maracuyá. Compra en línea o visita Casa Maria en Zona Colonial, Santo Domingo.
+- [Ocoa Bay a Casa Maria: El viaje del espumante caribeño](/blog/ocoa-bay-casa-maria-espumante-caribeno-1yhcv7): Descubre Kibay, el espumante orgánico caribeño de Ocoa Bay. Infusiones de mango y maracuyá. Compra en línea o visita Casa Maria en Zona Colonial.
 - [Kibay: del Caribe a tu copa, desde Ocoa Bay](/blog/kibay-espumante-caribeno-ocoa-bay-zona-colonial-1s4yi5): Descubre Kibay, espumante orgánico caribeño de Ocoa Bay, Azua. Infusiones de mango y maracuyá. Compra en línea o visita Casa Maria en Zona Colonial, Santo Domingo.
 - [Kibay en Ocoa Bay: del viñedo caribeño a tu copa](/blog/kibay-ocoa-bay-vinedo-caribeno-1rwn08): Descubre Kibay, el espumante orgánico caribeño de Ocoa Bay. Visita el viñedo, compra online o recorre Casa María en Zona Colonial, Santo Domingo.
 - [Kibay en Casa Club: donde el Caribe se vierte en copa](/blog/kibay-casa-club-ocoa-bay-piscina-1azvgn): Kibay espumante orgánico caribeño de Ocoa Bay. Descubre el terroir, las infusiones tropicales y Casa Maria Zona Colonial. Compra en línea o reserva una visita.
@@ -53,4 +56,4 @@ This file is a flattened sitemap intended for AI agents. Use the links below to 
 
 ---
 
-Generated at 2026-05-22T16:22:46.131Z from https://kibay.com.do. Source-of-truth product and blog data is pulled from Supabase at build time.
+Generated at 2026-05-29T01:08:58.407Z from https://kibay.com.do. Source-of-truth product and blog data is pulled from Supabase at build time.
