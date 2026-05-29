@@ -214,6 +214,27 @@ const BlogPostForm = () => {
 
       if (error) throw error;
 
+      // Fire-and-forget EN translation so the post renders in English on
+      // /blog without an extra manual step. New posts always need this; on
+      // edits we mark the row 'stale' first so the function refreshes the
+      // EN columns to match the new Spanish copy.
+      if (postId) {
+        try {
+          if (id) {
+            await supabase
+              .from('blog_posts')
+              .update({ translation_status: 'stale' })
+              .eq('id', postId);
+          }
+          // No await — toast user immediately, translation finishes in bg.
+          supabase.functions
+            .invoke('translate-blog-post', { body: { post_id: postId, force: true } })
+            .catch((e) => console.warn('translate-blog-post invoke failed', e));
+        } catch (e) {
+          console.warn('translation trigger setup failed', e);
+        }
+      }
+
       // Handle Sitemap Regeneration via Edge Function
       try {
         await supabase.functions.invoke('generate-sitemap');

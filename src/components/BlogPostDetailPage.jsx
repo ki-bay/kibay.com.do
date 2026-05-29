@@ -12,6 +12,7 @@ import { sanitizeHtmlContent } from '@/utils/sanitizeHtmlContent';
 import SEOHead from '@/components/SEOHead';
 import SchemaMarkup from '@/components/SchemaMarkup';
 import BreadcrumbNav from '@/components/BreadcrumbNav';
+import pickLocalized from '@/lib/pickLocalized';
 import '@/styles/editor.css';
 
 // Strip the first <figure>...</figure> block in body HTML whose <img src>
@@ -103,12 +104,21 @@ const BlogPostDetailPage = () => {
     );
   }
 
-  const wordCount = post.content ? post.content.replace(/<[^>]*>/g, '').split(/\s+/).length : 0;
+  const lang = i18n.language?.startsWith('en') ? 'en' : 'es';
+  const title = pickLocalized(post, 'title', lang);
+  const description = pickLocalized(post, 'description', lang);
+  const content = pickLocalized(post, 'content', lang);
+  const seoTitle = pickLocalized(post, 'seo_title', lang) || title;
+  const seoDescription = pickLocalized(post, 'seo_description', lang) || description;
+  const seoKeywords = pickLocalized(post, 'seo_keywords', lang);
+  const altText = pickLocalized(post, 'alt_text', lang) || title;
+
+  const wordCount = content ? content.replace(/<[^>]*>/g, '').split(/\s+/).length : 0;
   const readTime = Math.max(1, Math.ceil(wordCount / 200));
 
   const schemaData = {
-    headline: post.seo_title || post.title,
-    description: post.seo_description || post.description,
+    headline: seoTitle,
+    description: seoDescription,
     image: post.featured_image_url,
     datePublished: post.created_at,
     dateModified: post.updated_at,
@@ -116,17 +126,17 @@ const BlogPostDetailPage = () => {
     url: window.location.href
   };
 
-  const locale = i18n.language?.startsWith('es') ? 'es-DO' : 'en-US';
+  const locale = lang === 'en' ? 'en-US' : 'es-DO';
 
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={post.seo_title || post.title}
-        description={post.seo_description || post.description}
+        title={seoTitle}
+        description={seoDescription}
         image={post.featured_image_url}
         url={post.canonical_url || window.location.href}
         type="article"
-        keywords={post.seo_keywords}
+        keywords={seoKeywords}
         canonicalUrl={post.canonical_url}
       />
 
@@ -140,7 +150,7 @@ const BlogPostDetailPage = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 mb-8">
             <BreadcrumbNav items={[
                 { name: t('breadcrumbBlog'), url: '/blog' },
-                { name: post.title, url: '#' }
+                { name: title, url: '#' }
             ]} />
 
           <Link to="/blog" className="inline-flex items-center text-mango-400 hover:text-mango-300 mb-8 transition-colors">
@@ -154,7 +164,7 @@ const BlogPostDetailPage = () => {
           )}
 
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
-            {post.title}
+            {title}
           </h1>
 
           <div className="flex flex-wrap items-center gap-6 text-sm text-foreground/60 border-b border-foreground/10 pb-8">
@@ -189,7 +199,7 @@ const BlogPostDetailPage = () => {
             >
               <img
                 src={post.featured_image_url}
-                alt={post.alt_text || post.title}
+                alt={altText}
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
@@ -206,7 +216,7 @@ const BlogPostDetailPage = () => {
             className="blog-content-renderer"
             dangerouslySetInnerHTML={{
               __html: sanitizeHtmlContent(
-                stripFirstMatchingFigure(post.content, post.featured_image_url),
+                stripFirstMatchingFigure(content, post.featured_image_url),
               ),
             }}
           />

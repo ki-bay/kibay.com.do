@@ -66,6 +66,35 @@ export async function insertBlogPost(
 	return rows[0];
 }
 
+// Fire-and-forget call to the translate-blog-post Edge Function so the
+// new post gets EN columns populated before it shows up on /blog for an
+// English visitor. Awaits the request but tolerates failure — the post
+// row stays at translation_status='pending' / 'failed' and can be
+// retried from the admin Inbox or a backfill.
+export async function triggerBlogTranslation(
+	env: SupabaseEnv,
+	postId: string,
+): Promise<void> {
+	const url = `${env.SUPABASE_URL}/functions/v1/translate-blog-post`;
+	try {
+		const r = await fetch(url, {
+			method: 'POST',
+			headers: {
+				...authHeaders(env),
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ post_id: postId }),
+		});
+		if (!r.ok) {
+			console.warn(
+				`translate-blog-post returned ${r.status} for ${postId}: ${await r.text()}`,
+			);
+		}
+	} catch (e) {
+		console.warn(`translate-blog-post threw for ${postId}:`, e);
+	}
+}
+
 // Fetch the N most recent published blog posts' (title, hero URL). Used by
 // the visual-similarity guard before a new auto-generated post is created.
 // Only PUBLISHED posts count — drafts (including ones we just skipped for

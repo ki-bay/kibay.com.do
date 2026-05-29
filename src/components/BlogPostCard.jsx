@@ -3,12 +3,17 @@ import { Link } from 'react-router-dom';
 import { m } from 'framer-motion';
 import { Calendar, User, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import pickLocalized from '@/lib/pickLocalized';
 
 const BlogPostCard = ({ post }) => {
   const { t, i18n } = useTranslation('blogPostCard');
-  const { id, title, description, featured_image_url, author_email, created_at } = post;
+  const lang = i18n.language?.startsWith('en') ? 'en' : 'es';
+  const title = pickLocalized(post, 'title', lang);
+  const description = pickLocalized(post, 'description', lang);
+  const altText = pickLocalized(post, 'alt_text', lang) || title;
+  const { id, featured_image_url, author_email, created_at } = post;
 
-  const locale = i18n.language?.startsWith('es') ? 'es-DO' : 'en-US';
+  const locale = lang === 'en' ? 'en-US' : 'es-DO';
   const formattedDate = new Date(created_at).toLocaleDateString(locale, {
     year: 'numeric',
     month: 'long',
@@ -24,7 +29,7 @@ const BlogPostCard = ({ post }) => {
         {featured_image_url ? (
           <img
             src={featured_image_url}
-            alt={title}
+            alt={altText}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (

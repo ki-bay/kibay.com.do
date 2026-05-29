@@ -56,4 +56,4 @@ EN + ES slugs (linked via reciprocal hreflang).
 
 ---
 
-Generated at 2026-05-29T03:01:21.315Z from https://kibay.com.do. Source-of-truth product and blog data is pulled from Supabase at build time.
+Generated at 2026-05-29T04:56:18.891Z from https://kibay.com.do. Source-of-truth product and blog data is pulled from Supabase at build time.

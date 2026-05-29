@@ -1,0 +1,3 @@
+# Disable platform JWT verification so we can read the raw Authorization
+# header (service-role bearer) ourselves and gate on it.
+verify_jwt = false

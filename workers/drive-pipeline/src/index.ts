@@ -4,6 +4,7 @@ import {
 	isFileProcessed,
 	uploadImage,
 	insertBlogPost,
+	triggerBlogTranslation,
 	recordProcessed,
 	recentPublishedHeroes,
 	setPostPublished,
@@ -653,6 +654,11 @@ async function runPipeline(env: Env): Promise<void> {
 			};
 
 			const inserted = await insertBlogPost(env, blogRow);
+
+			// Translate the post to English so /blog renders correctly for EN
+			// visitors as soon as it ships. Awaited but tolerant — failure
+			// leaves translation_status='failed' for later retry.
+			await triggerBlogTranslation(env, inserted.id);
 
 			// AUTO_PUBLISH=true → skip the human-in-the-loop email and ship
 			// straight to the blog + social. A cross-post results email still
