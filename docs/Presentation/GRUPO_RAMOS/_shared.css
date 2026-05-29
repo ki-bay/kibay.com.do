@@ -1,4 +1,8 @@
-/* Kibay × Grupo Ramos sales deck — print stylesheet */
+/* Kibay × Grupo Ramos sales deck — print stylesheet.
+   Brand palette: deep gold (#B8860B + #C9A035), warm off-white, dark
+   espresso. Avoids the peachy/pink cream tones the first version had.
+   Auto-numbered pages via CSS counters on .page (cover not counted). */
+
 @page {
   size: A4;
   margin: 0;
@@ -15,23 +19,35 @@ html, body {
   padding: 0;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   color: #1a1a1a;
-  font-size: 11pt;
-  line-height: 1.55;
+  font-size: 9.8pt;
+  line-height: 1.48;
   background: #ffffff;
 }
 
+/* Auto page numbers: cover doesn't count, content pages count from 1. */
+body { counter-reset: pageNum 0; }
+.page:not(.cover) { counter-increment: pageNum; }
+.page-num::after { content: counter(pageNum); }
+
 .page {
   width: 210mm;
-  min-height: 297mm;
-  padding: 22mm 20mm;
+  /* A4 is 297mm but Chrome's print engine can spill content over 297mm onto a
+     blank 2nd page from sub-pixel rounding when .page is exactly 297mm tall.
+     Keeping it 1.5mm short of A4 leaves headroom while still feeling "full". */
+  min-height: 295.5mm;
+  padding: 20mm 18mm 26mm 18mm;
   page-break-after: always;
+  break-after: page;
   position: relative;
   background: #ffffff;
 }
 
 .page:last-child {
-  page-break-after: auto;
+  page-break-after: avoid;
+  break-after: avoid;
 }
+
+/* ---------- Cover ---------- */
 
 .cover {
   padding: 0;
@@ -40,7 +56,6 @@ html, body {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  position: relative;
   overflow: hidden;
 }
 
@@ -61,173 +76,209 @@ html, body {
 
 .cover .cover-content {
   position: relative;
-  padding: 0 20mm 28mm 20mm;
+  padding: 0 22mm 28mm 22mm;
   z-index: 2;
 }
 
 .cover .brand {
-  font-size: 16pt;
-  letter-spacing: 0.45em;
-  color: #D4A574;
+  font-size: 14pt;
+  letter-spacing: 0.42em;
+  color: #C9A035;
   text-transform: uppercase;
-  margin-bottom: 8mm;
+  margin-bottom: 7mm;
+  font-weight: 500;
 }
 
 .cover h1 {
-  font-size: 36pt;
+  font-size: 34pt;
   line-height: 1.05;
   font-weight: 300;
   margin: 0 0 8mm 0;
   letter-spacing: -0.01em;
+  color: #fdfaf3;
 }
 
 .cover .sub {
-  font-size: 14pt;
+  font-size: 13pt;
   color: #f3e9d6;
   font-weight: 300;
-  max-width: 130mm;
-  margin: 0 0 10mm 0;
+  max-width: 140mm;
+  margin: 0 0 12mm 0;
   line-height: 1.45;
 }
 
 .cover .deck-meta {
   display: flex;
   justify-content: space-between;
-  border-top: 1px solid rgba(212, 165, 116, 0.4);
-  padding-top: 6mm;
-  font-size: 9pt;
+  border-top: 1px solid rgba(201, 160, 53, 0.5);
+  padding-top: 5mm;
+  font-size: 8.5pt;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: #d4a574;
+  color: #C9A035;
 }
+
+/* ---------- Typography ---------- */
 
 h1, h2, h3, h4 {
   color: #1a1a1a;
   font-weight: 400;
+  page-break-after: avoid;
+  break-after: avoid;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 h2 {
-  font-size: 22pt;
+  font-size: 19pt;
   line-height: 1.15;
-  margin: 0 0 6mm 0;
+  margin: 0 0 5mm 0;
   font-weight: 300;
-  border-bottom: 2px solid #D4A574;
-  padding-bottom: 4mm;
+  border-bottom: 2px solid #B8860B;
+  padding-bottom: 3mm;
   letter-spacing: -0.005em;
+  color: #1a1a1a;
 }
 
 h3 {
-  font-size: 13pt;
-  margin: 8mm 0 3mm 0;
-  font-weight: 500;
+  font-size: 11.5pt;
+  margin: 5mm 0 2.2mm 0;
+  font-weight: 600;
   color: #2a2520;
+  page-break-after: avoid;
+  break-after: avoid;
 }
 
 h4 {
-  font-size: 10.5pt;
-  margin: 5mm 0 2mm 0;
-  font-weight: 600;
+  font-size: 9.5pt;
+  margin: 4mm 0 1.8mm 0;
+  font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #8a6b4b;
+  color: #8a6817;
+  page-break-after: avoid;
+  break-after: avoid;
 }
 
 p {
-  margin: 0 0 3.5mm 0;
+  margin: 0 0 2.8mm 0;
+  orphans: 3;
+  widows: 3;
+  hyphens: auto;
+  word-wrap: break-word;
 }
 
 ul, ol {
-  padding-left: 6mm;
-  margin: 0 0 4mm 0;
+  padding-left: 5.5mm;
+  margin: 0 0 3mm 0;
+  orphans: 2;
+  widows: 2;
 }
 
 li {
-  margin-bottom: 1.5mm;
+  margin-bottom: 1.2mm;
+  page-break-inside: avoid;
+  break-inside: avoid;
 }
 
 strong { color: #1a1a1a; font-weight: 600; }
 em { color: #5a4b3a; }
 
 .eyebrow {
-  font-size: 9pt;
+  font-size: 8.5pt;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: #D4A574;
+  color: #B8860B;
   margin-bottom: 4mm;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .lead {
-  font-size: 12pt;
-  line-height: 1.55;
+  font-size: 10.5pt;
+  line-height: 1.5;
   color: #2a2520;
-  margin-bottom: 5mm;
+  margin-bottom: 4mm;
+  orphans: 3;
+  widows: 3;
 }
 
+/* ---------- Callouts, KPIs, tables ---------- */
+
 .callout {
-  background: #faf3e6;
-  border-left: 4px solid #D4A574;
-  padding: 5mm 7mm;
-  margin: 5mm 0;
+  background: #fbf6e8;
+  border-left: 4px solid #B8860B;
+  padding: 4mm 6mm;
+  margin: 4mm 0;
+  page-break-inside: avoid;
+  break-inside: avoid;
 }
 
 .callout .label {
-  font-size: 9pt;
+  font-size: 8.5pt;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #8a6b4b;
-  font-weight: 600;
+  color: #8a6817;
+  font-weight: 700;
   margin-bottom: 2mm;
 }
 
 .kpi-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 5mm;
-  margin: 6mm 0;
+  gap: 4mm;
+  margin: 4mm 0;
+  page-break-inside: avoid;
+  break-inside: avoid;
 }
 
 .kpi {
-  background: #f7f1e3;
-  padding: 5mm;
+  background: #fbf6e8;
+  padding: 4mm 3mm;
   border-radius: 2mm;
   text-align: center;
+  page-break-inside: avoid;
+  break-inside: avoid;
 }
 
 .kpi .value {
-  font-size: 20pt;
-  font-weight: 300;
-  color: #8a6b4b;
+  font-size: 17pt;
+  font-weight: 400;
+  color: #8a6817;
   display: block;
   line-height: 1;
-  margin-bottom: 2mm;
+  margin-bottom: 1.5mm;
 }
 
 .kpi .label {
-  font-size: 8pt;
-  letter-spacing: 0.18em;
+  font-size: 7.5pt;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: #5a4b3a;
+  font-weight: 600;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  margin: 4mm 0;
-  font-size: 10pt;
+  margin: 3mm 0 4mm 0;
+  font-size: 9pt;
+  page-break-inside: avoid;
+  break-inside: avoid;
 }
 
 th, td {
   text-align: left;
-  padding: 3mm 3mm;
-  border-bottom: 1px solid #e2d5be;
+  padding: 2.2mm 2.5mm;
+  border-bottom: 1px solid #e2d5a8;
+  vertical-align: top;
 }
 
 th {
-  background: #f7f1e3;
-  font-weight: 600;
+  background: #fbf6e8;
+  font-weight: 700;
   color: #2a2520;
-  font-size: 9pt;
+  font-size: 8.5pt;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -237,14 +288,22 @@ td.num {
   font-variant-numeric: tabular-nums;
 }
 
+tr {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+/* ---------- Product cards ---------- */
+
 .product-card {
   display: grid;
-  grid-template-columns: 60mm 1fr;
+  grid-template-columns: 55mm 1fr;
   gap: 7mm;
-  margin-bottom: 8mm;
-  padding-bottom: 6mm;
-  border-bottom: 1px solid #e2d5be;
+  margin-bottom: 6mm;
+  padding-bottom: 4mm;
+  border-bottom: 1px solid #e2d5a8;
   page-break-inside: avoid;
+  break-inside: avoid;
 }
 
 .product-card:last-of-type {
@@ -252,7 +311,7 @@ td.num {
 }
 
 .product-card .img-wrap {
-  background: #f7f1e3;
+  background: #fbf6e8;
   border-radius: 2mm;
   overflow: hidden;
   aspect-ratio: 4 / 5;
@@ -275,46 +334,61 @@ td.num {
   display: flex;
   flex-wrap: wrap;
   gap: 3mm 5mm;
-  margin: 3mm 0 4mm 0;
-  font-size: 9pt;
+  margin: 3mm 0 0 0;
+  font-size: 8.5pt;
   color: #5a4b3a;
 }
 
 .product-card .specs span strong {
   display: block;
   text-transform: uppercase;
-  font-size: 7.5pt;
+  font-size: 7pt;
   letter-spacing: 0.12em;
-  color: #8a6b4b;
+  color: #8a6817;
   margin-bottom: 0.5mm;
+  font-weight: 700;
 }
+
+/* ---------- Footer + page numbers ---------- */
 
 footer.page-footer {
   position: absolute;
-  bottom: 10mm;
-  left: 20mm;
-  right: 20mm;
-  border-top: 1px solid #e2d5be;
+  bottom: 12mm;
+  left: 18mm;
+  right: 18mm;
+  border-top: 1px solid #e2d5a8;
   padding-top: 3mm;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-size: 8pt;
-  color: #8a6b4b;
+  color: #8a6817;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 footer.page-footer .brand-mark {
-  font-weight: 600;
-  color: #D4A574;
-  letter-spacing: 0.3em;
+  font-weight: 700;
+  color: #B8860B;
+  letter-spacing: 0.32em;
 }
 
+footer.page-footer .page-num {
+  display: inline-block;
+  min-width: 6mm;
+  text-align: right;
+  font-weight: 600;
+}
+
+/* ---------- Signature ---------- */
+
 .signature {
-  margin-top: 12mm;
+  margin-top: 8mm;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12mm;
+  gap: 10mm;
+  page-break-inside: avoid;
+  break-inside: avoid;
 }
 
 .signature .line {
@@ -324,10 +398,12 @@ footer.page-footer .brand-mark {
   color: #5a4b3a;
 }
 
+/* ---------- Tags ---------- */
+
 .tag {
   display: inline-block;
-  background: #D4A574;
-  color: #1a1a1a;
+  background: #B8860B;
+  color: #ffffff;
   font-size: 8pt;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -337,6 +413,17 @@ footer.page-footer .brand-mark {
 }
 
 .tag.muted {
-  background: #f7f1e3;
-  color: #8a6b4b;
+  background: #fbf6e8;
+  color: #8a6817;
+}
+
+/* ---------- Section keeps + safety ---------- */
+
+section.page > h3 + p,
+section.page > h3 + ul,
+section.page > h3 + ol,
+section.page > h3 + table,
+section.page > h4 + p {
+  page-break-before: avoid;
+  break-before: avoid;
 }
