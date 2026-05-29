@@ -656,7 +656,7 @@ function ProductDetailPage() {
                             <button
                               id="reservation-date"
                               type="button"
-                              className="w-full bg-white border border-stone-200 rounded-lg px-4 py-3 text-left text-foreground hover:border-[#D4A574] focus:border-[#D4A574] focus:outline-none focus:ring-1 focus:ring-[#D4A574] flex items-center justify-between transition-colors"
+                              className="w-full bg-background border border-stone-200 dark:border-stone-700 rounded-lg px-4 py-3 text-left text-foreground hover:border-[#D4A574] focus:border-[#D4A574] focus:outline-none focus:ring-1 focus:ring-[#D4A574] flex items-center justify-between transition-colors"
                             >
                               <span className={reservationDate ? 'text-foreground' : 'text-foreground/50'}>
                                 {reservationDate
@@ -713,7 +713,7 @@ function ProductDetailPage() {
                             value={reservationTime}
                             onChange={(e) => setReservationTime(e.target.value)}
                             required
-                            className="w-full bg-white border border-stone-200 rounded-lg px-4 py-3 text-foreground focus:border-[#D4A574] focus:outline-none focus:ring-1 focus:ring-[#D4A574]"
+                            className="w-full bg-background border border-stone-200 dark:border-stone-700 rounded-lg px-4 py-3 text-foreground focus:border-[#D4A574] focus:outline-none focus:ring-1 focus:ring-[#D4A574]"
                           >
                             {timeslots.map((slot) => (
                               <option key={slot} value={slot}>
