@@ -718,26 +718,40 @@ function ProductDetailPage() {
                       </div>
                       {needsTimePicker && (
                         <div className="space-y-2">
-                          <label
-                            htmlFor="reservation-time"
+                          <span
+                            id="reservation-time-label"
                             className="block text-xs font-medium uppercase tracking-wide text-foreground/60"
                           >
                             {t('reservation.timeLabel')} *
-                          </label>
-                          <select
-                            id="reservation-time"
-                            name="reservationTime"
-                            value={reservationTime}
-                            onChange={(e) => setReservationTime(e.target.value)}
-                            required
-                            className="w-full bg-background border border-stone-200 dark:border-stone-700 rounded-lg px-4 py-3 text-foreground focus:border-[#D4A574] focus:outline-none focus:ring-1 focus:ring-[#D4A574]"
+                          </span>
+                          {/* Pill buttons — all slots visible at once on every viewport
+                              so the available times are explicit, not hidden behind a
+                              native <select>. */}
+                          <div
+                            role="radiogroup"
+                            aria-labelledby="reservation-time-label"
+                            className="flex flex-wrap gap-2"
                           >
-                            {timeslots.map((slot) => (
-                              <option key={slot} value={slot}>
-                                {slot}
-                              </option>
-                            ))}
-                          </select>
+                            {timeslots.map((slot) => {
+                              const selected = reservationTime === slot;
+                              return (
+                                <button
+                                  key={slot}
+                                  type="button"
+                                  role="radio"
+                                  aria-checked={selected}
+                                  onClick={() => setReservationTime(slot)}
+                                  className={`px-4 py-2.5 rounded-full border text-sm font-medium transition-all ${
+                                    selected
+                                      ? 'bg-[#D4A574] text-white border-[#D4A574] shadow-sm'
+                                      : 'bg-background text-foreground border-stone-200 dark:border-stone-700 hover:border-[#D4A574] hover:text-[#D4A574]'
+                                  }`}
+                                >
+                                  {slot}
+                                </button>
+                              );
+                            })}
+                          </div>
                         </div>
                       )}
                     </div>
