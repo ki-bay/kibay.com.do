@@ -76,7 +76,7 @@ const HomePage = () => {
               Mobile keeps the existing cropped hero — explicitly requested. */}
           <source
             media="(min-width: 1024px)"
-            srcSet="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_2400/v1780011824/fotografo_babula_shots_republica_dominicana_rughqj.webp"
+            srcSet="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_2400/v1780011402/Kibay_vino_tropical_mango_y_chinola_eiy2go.webp"
           />
           <img
             src="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_1200/v1779053427/kibay_-vino_copy_q9mvz8.webp"
