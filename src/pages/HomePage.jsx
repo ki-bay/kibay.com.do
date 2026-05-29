@@ -430,15 +430,15 @@ const HomePage = () => {
                     <h3 className="text-3xl sm:text-4xl font-light text-white leading-tight mb-5 drop-shadow-lg">
                       {way.title}
                     </h3>
-                    <p className="text-base sm:text-lg text-white/90 font-light leading-relaxed mb-8 drop-shadow">
-                      {way.lead}
-                    </p>
                     <Link to={`/enjoy/${way.slug}`} aria-label={`${way.cta}: ${way.title}`}>
                       <span className="inline-flex items-center gap-2 px-6 py-3 bg-[#D4A574] text-stone-950 font-medium rounded-full hover:bg-[#c29462] transition-all shadow-lg hover:shadow-xl hover:scale-105">
                         {way.cta}
                         <ArrowRight className="w-4 h-4" />
                       </span>
                     </Link>
+                    <p className="text-base sm:text-lg text-white/90 font-light leading-relaxed mt-6 drop-shadow">
+                      {way.lead}
+                    </p>
                   </div>
                 </div>
               </div>
