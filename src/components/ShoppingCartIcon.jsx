@@ -13,7 +13,7 @@ const ShoppingCartIcon = forwardRef(({ onClick }, ref) => {
       id="cart-icon-trigger"
       variant="ghost"
       size="icon"
-      className="relative text-stone-700 hover:text-[#D4A574] hover:bg-[#D4A574]/10 transition-colors"
+      className="relative text-stone-700 dark:text-stone-300 hover:text-[#D4A574] hover:bg-[#D4A574]/10 transition-colors"
       onClick={onClick}
       aria-label="Open Cart"
     >

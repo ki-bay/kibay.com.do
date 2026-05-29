@@ -127,6 +127,7 @@ function ProductDetailPage() {
         toast({
           title: t('addedToCart'),
           description: product.title,
+          duration: 2500,
           className: "bg-card text-foreground border-none",
         });
       } catch (error) {
