@@ -198,7 +198,6 @@ const HomePage = () => {
                       decoding="async"
                       className="w-full h-auto block md:absolute md:inset-0 md:w-full md:h-full md:object-cover md:bg-center md:transform md:group-hover:scale-105 md:transition-transform md:duration-1000"
                     />
-                    <div className="hidden md:block absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent opacity-90"></div>
                     <div className="p-6 sm:p-8 md:p-10 md:absolute md:bottom-0 md:left-0 md:right-0 md:transform md:translate-y-4 md:group-hover:translate-y-0 md:transition-transform md:duration-500 text-center">
                       <span className="text-orange-400 font-medium tracking-wider text-sm uppercase mb-2 block">{t('origin.mango.eyebrow')}</span>
                       <h3 className="text-3xl font-normal text-foreground mb-4">{t('origin.mango.title')}</h3>
@@ -232,7 +231,6 @@ const HomePage = () => {
                       decoding="async"
                       className="w-full h-auto block md:absolute md:inset-0 md:w-full md:h-full md:object-cover md:bg-center md:transform md:group-hover:scale-105 md:transition-transform md:duration-1000"
                     />
-                    <div className="hidden md:block absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent opacity-90"></div>
                     <div className="p-6 sm:p-8 md:p-10 md:absolute md:bottom-0 md:left-0 md:right-0 md:transform md:translate-y-4 md:group-hover:translate-y-0 md:transition-transform md:duration-500 text-center">
                       <span className="text-orange-400 font-medium tracking-wider text-sm uppercase mb-2 block">{t('origin.passion.eyebrow')}</span>
                       <h3 className="text-3xl font-normal text-foreground mb-4">{t('origin.passion.title')}</h3>
