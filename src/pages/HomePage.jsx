@@ -186,20 +186,20 @@ const HomePage = () => {
             >
               <Link to="/mango">
                 <Card className="overflow-hidden h-full rounded-3xl border-none shadow-2xl bg-background relative">
-                  <div className="relative h-[500px] overflow-hidden">
+                  {/* Desktop: 500px tall card with text overlaid on a cover-cropped image.
+                      Mobile: image renders at natural aspect ratio (no crop), text stacks below. */}
+                  <div className="relative md:h-[500px] overflow-hidden">
                     <img
-                      src="/unsplash/photo-1697350495566-a094004aedd8.webp"
-                      srcSet="/unsplash/photo-1697350495566-a094004aedd8.webp 600w, /unsplash/photo-1697350495566-a094004aedd8.webp 900w, /unsplash/photo-1697350495566-a094004aedd8.webp 1200w"
-                      sizes="(min-width: 768px) 50vw, 100vw"
+                      src="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_1200/v1780014135/mango_kibay_mksxpj.webp"
                       alt={t('origin.mango.imgAlt')}
                       width="1200"
                       height="900"
                       loading="lazy"
                       decoding="async"
-                      className="w-full h-full object-cover bg-center transform group-hover:scale-105 transition-transform duration-1000"
+                      className="w-full h-auto block md:absolute md:inset-0 md:w-full md:h-full md:object-cover md:bg-center md:transform md:group-hover:scale-105 md:transition-transform md:duration-1000"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent opacity-90"></div>
-                    <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 md:p-10 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 text-center">
+                    <div className="hidden md:block absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent opacity-90"></div>
+                    <div className="p-6 sm:p-8 md:p-10 md:absolute md:bottom-0 md:left-0 md:right-0 md:transform md:translate-y-4 md:group-hover:translate-y-0 md:transition-transform md:duration-500 text-center">
                       <span className="text-orange-400 font-medium tracking-wider text-sm uppercase mb-2 block">{t('origin.mango.eyebrow')}</span>
                       <h3 className="text-3xl font-normal text-foreground mb-4">{t('origin.mango.title')}</h3>
                       <p className="text-foreground/80 leading-relaxed text-lg mb-6 font-light">{t('origin.mango.body')}</p>
@@ -221,18 +221,19 @@ const HomePage = () => {
             >
               <Link to="/passion-fruit">
                 <Card className="overflow-hidden h-full rounded-3xl border-none shadow-2xl bg-background relative">
-                  <div className="relative h-[500px] overflow-hidden">
+                  {/* Same desktop/mobile treatment as the mango card. */}
+                  <div className="relative md:h-[500px] overflow-hidden">
                     <img
-                      src={mediaUrl('ai-generated-8983326-k1zSk.jpg')}
+                      src="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_1200/v1780014021/chinola_passoin_fruit_ocoabay_kibay_nw3mya.webp"
                       alt={t('origin.passion.imgAlt')}
                       width="1200"
                       height="900"
                       loading="lazy"
                       decoding="async"
-                      className="w-full h-full object-cover bg-center transform group-hover:scale-105 transition-transform duration-1000"
+                      className="w-full h-auto block md:absolute md:inset-0 md:w-full md:h-full md:object-cover md:bg-center md:transform md:group-hover:scale-105 md:transition-transform md:duration-1000"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent opacity-90"></div>
-                    <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 md:p-10 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 text-center">
+                    <div className="hidden md:block absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent opacity-90"></div>
+                    <div className="p-6 sm:p-8 md:p-10 md:absolute md:bottom-0 md:left-0 md:right-0 md:transform md:translate-y-4 md:group-hover:translate-y-0 md:transition-transform md:duration-500 text-center">
                       <span className="text-orange-400 font-medium tracking-wider text-sm uppercase mb-2 block">{t('origin.passion.eyebrow')}</span>
                       <h3 className="text-3xl font-normal text-foreground mb-4">{t('origin.passion.title')}</h3>
                       <p className="text-foreground/80 leading-relaxed text-lg mb-6 font-light">{t('origin.passion.body')}</p>
