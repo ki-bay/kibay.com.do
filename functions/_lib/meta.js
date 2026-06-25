@@ -115,9 +115,22 @@ export async function injectMeta(env, request, meta) {
     status: 200,
     headers: {
       'Content-Type': 'text/html; charset=utf-8',
-      // 1h edge cache; if a product/post is edited, the SPA shows fresh
-      // data immediately because the meta is for scrapers, not users.
-      'Cache-Control': 'public, max-age=3600',
+      // s-maxage is what actually lets Cloudflare's edge cache this
+      // Pages Function response. Without it the Function is invoked on
+      // every single hit (incl. every bot crawl / social-share preview),
+      // which is what blew through the 100k/day free-plan limit.
+      //
+      //   max-age=300            — browsers cache for 5 minutes
+      //   s-maxage=86400         — CF edge caches for 24 hours
+      //   stale-while-revalidate — serve stale up to 7d while refresh
+      //
+      // Risk acceptable: the SPA still hydrates with live Supabase data
+      // for actual users; the only thing being cached at the edge is the
+      // meta tags scrapers read. If a product or post gets edited, the
+      // browser-visible content is fresh immediately; the OG tags catch
+      // up at the next edge revalidation (or purge the URL in the CF
+      // dashboard if it really matters).
+      'Cache-Control': 'public, max-age=300, s-maxage=86400, stale-while-revalidate=604800',
     },
   });
 }
