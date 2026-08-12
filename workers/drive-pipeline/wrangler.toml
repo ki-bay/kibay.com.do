@@ -12,6 +12,11 @@ compatibility_flags = ["nodejs_compat"]
 # last run of one month and the first run of the next can be 1-3 days; that's
 # fine — the pipeline self-throttles to one post per run regardless.
 crons = ["0 19 */3 * *"]
+# The B2B campaign rollout (DAILY_CAMPAIGN_ORDER in src/index.ts) is NOT on
+# a native cron trigger — the account is at its free-plan 5-trigger cap,
+# shared with an unrelated project (ocoabay-cron). Trigger it manually via
+# POST /campaigns/send-next (Bearer DAILY_CAMPAIGN_CRON_TOKEN) once a day
+# instead, until either a slot frees up or the account upgrades.
 
 [vars]
 SUPABASE_URL = "https://bsnxwajuqkatrmgoqcnu.supabase.co"

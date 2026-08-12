@@ -1,12 +1,30 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { XCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
+import { supabase } from '@/lib/customSupabaseClient';
 
 const CheckoutCardnetCancel = () => {
   const { t } = useTranslation('checkout');
+  const [params] = useSearchParams();
+  const orderId = params.get('order_id');
+  const guestToken = params.get('token');
+
+  // CARDNET sends buyers here both for a genuine user-cancel and for other
+  // failure modes (e.g. a session timing out mid-3DS) — the UI stays the
+  // same friendly "try again" message either way, but we still ask CARDNET
+  // what actually happened so it's recorded (cardnet_response_code /
+  // cardnet_response_message) instead of the order sitting unexplained in
+  // awaiting_payment. Best-effort — never blocks or changes this page.
+  useEffect(() => {
+    if (!orderId) return;
+    supabase.functions
+      .invoke('cardnet-verify-session', { body: { order_id: orderId, token: guestToken || undefined } })
+      .catch((err) => console.error('cardnet-verify-session (cancel page, best-effort) failed:', err));
+  }, [orderId, guestToken]);
+
   return (
     <>
       <Navigation />

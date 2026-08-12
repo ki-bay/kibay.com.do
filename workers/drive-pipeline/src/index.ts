@@ -42,6 +42,8 @@ interface Env extends SupabaseEnv, EmailEnv, SocialEnv {
 	AUTO_PUBLISH?: string;
 	// Email marketing module (added 2026-05-12)
 	BREVO_WEBHOOK_SECRET?: string;
+	// Manual trigger auth for POST /campaigns/send-next (added 2026-08-12).
+	DAILY_CAMPAIGN_CRON_TOKEN?: string;
 }
 
 // CORS allowlist for endpoints called from the browser (admin SPA).
@@ -75,7 +77,11 @@ function withCors(res: Response, req: Request): Response {
 }
 
 export default {
-	async scheduled(_event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
+	async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
+		if (event.cron === DAILY_CAMPAIGN_CRON) {
+			ctx.waitUntil(runDailyCampaignAutoSend(env));
+			return;
+		}
 		ctx.waitUntil(runPipeline(env));
 	},
 
@@ -277,6 +283,38 @@ h1{margin:0 0 12px;color:#16a34a;}
 				return withCors(await handleEmailSend(env, req, auth.email), req);
 			} catch (e) {
 				console.error('/email/send error:', e);
+				return withCors(
+					new Response(
+						JSON.stringify({ ok: false, error: (e as Error).message }),
+						{ status: 500, headers: { 'content-type': 'application/json' } },
+					),
+					req,
+				);
+			}
+		}
+
+		// POST /campaigns/send-next — manual trigger for the daily B2B rollout
+		// (DAILY_CAMPAIGN_ORDER). No native Cloudflare cron trigger is wired up
+		// for this yet — the account is at its free-plan 5-cron-trigger cap,
+		// shared with an unrelated project (ocoabay-cron). Call this by hand
+		// (or from any scheduler you control) once a day instead. Same auth as
+		// the other cron-style endpoints: DAILY_CAMPAIGN_CRON_TOKEN or the
+		// Supabase service-role key as a Bearer token.
+		if (url.pathname === '/campaigns/send-next' && req.method === 'POST') {
+			const auth = req.headers.get('authorization') || '';
+			const token = auth.replace(/^Bearer\s+/i, '');
+			const cronToken = env.DAILY_CAMPAIGN_CRON_TOKEN || '';
+			if (token !== env.SUPABASE_SERVICE_ROLE_KEY && (!cronToken || token !== cronToken)) {
+				return withCors(new Response('Unauthorized', { status: 401 }), req);
+			}
+			try {
+				await runDailyCampaignAutoSend(env);
+				return withCors(
+					new Response(JSON.stringify({ ok: true }), { headers: { 'content-type': 'application/json' } }),
+					req,
+				);
+			} catch (e) {
+				console.error('/campaigns/send-next error:', e);
 				return withCors(
 					new Response(
 						JSON.stringify({ ok: false, error: (e as Error).message }),
@@ -1040,6 +1078,167 @@ interface ContactRow {
 	status: string;
 }
 
+// Daily B2B campaign rollout — one campaign per day, in priority order
+// (largest/most-ready segments first). Each entry is sent once; the cron
+// picks the first name below still in `draft`/`sending` status and sends up
+// to DAILY_CAMPAIGN_BATCH_SIZE of its remaining recipients per run (see
+// runDailyCampaignAutoSend for why — Cloudflare's free-tier subrequest cap
+// per invocation caused partial failures sending Fine Dining in one shot).
+//
+// Not on a native cron trigger currently — the account is at its free-plan
+// 5-trigger cap (shared with the unrelated ocoabay-cron project). Run via
+// POST /campaigns/send-next instead. DAILY_CAMPAIGN_CRON is kept so wiring
+// up a real schedule later (once a slot frees up or the account upgrades)
+// is a one-line wrangler.toml change, no code change.
+const DAILY_CAMPAIGN_CRON = '0 14 * * *';
+const DAILY_CAMPAIGN_BATCH_SIZE = 15;
+const DAILY_CAMPAIGN_ORDER = [
+	'B2B Hospitalidad — Caja de muestras',
+	'B2B Hoteles — Wine experience local',
+	'B2B Supermercados — Rotación + góndola dominicana',
+	'B2B Retail — Distribuidores / minoristas',
+	'B2B Importadores — Distribución exclusiva',
+	'B2B Wine Shops — Rareza con historia',
+	'B2B Eventos y catering — Volumen + entrega',
+	'Individual — Tienda online + oferta de bienvenida',
+	'B2B Online retailers — Comisión + activos listos',
+	'B2B Duty-Free — Travel retail premium',
+	'Individual — Experiencia en la bodega Ocoa Bay',
+];
+
+// 'draft' = not started yet; 'sending' = a previous day's run got partway
+// through a large campaign and left it in progress — resume it rather than
+// re-picking from the top (which would re-send to people already logged).
+async function loadResumableCampaignByName(env: Env, name: string): Promise<CampaignRow | null> {
+	const u = `${env.SUPABASE_URL}/rest/v1/email_campaigns?name=eq.${encodeURIComponent(
+		name,
+	)}&status=in.(draft,sending)&select=id,name,subject,html_content,from_name,from_email,reply_to,segment_filter,status&limit=1`;
+	const r = await fetch(u, { headers: emailMarketingHeaders(env) });
+	if (!r.ok) return null;
+	const rows = (await r.json()) as CampaignRow[];
+	return rows[0] ?? null;
+}
+
+async function loadSentEmailsForCampaign(env: Env, campaignId: string): Promise<Set<string>> {
+	const u = `${env.SUPABASE_URL}/rest/v1/email_logs?campaign_id=eq.${encodeURIComponent(
+		campaignId,
+	)}&status=eq.sent&select=recipient`;
+	const r = await fetch(u, { headers: emailMarketingHeaders(env) });
+	if (!r.ok) return new Set();
+	const rows = (await r.json()) as Array<{ recipient: string }>;
+	return new Set(rows.map((row) => row.recipient.toLowerCase()));
+}
+
+// Runs on the daily cron. Each invocation sends up to DAILY_CAMPAIGN_BATCH_SIZE
+// recipients of the current campaign in DAILY_CAMPAIGN_ORDER — a real
+// Cloudflare-imposed ceiling per invocation (see the "Too many subrequests"
+// failure hit while manually sending Fine Dining to 48 people in one shot;
+// chunking the loop *inside* one invocation doesn't help, since the
+// subrequest budget is shared across the whole invocation regardless of how
+// the work is grouped in code — only separate invocations get a fresh one).
+// Large campaigns (e.g. Hospitalidad's 77) span multiple days automatically:
+// already-sent recipients are excluded via email_logs, so each day picks up
+// where the last one left off, and the campaign only moves to 'sent' (and
+// the rollout advances to the next name) once every recipient is accounted
+// for — self-healing the same way the manual Fine Dining recovery worked.
+async function runDailyCampaignAutoSend(env: Env): Promise<void> {
+	let campaign: CampaignRow | null = null;
+	for (const name of DAILY_CAMPAIGN_ORDER) {
+		campaign = await loadResumableCampaignByName(env, name);
+		if (campaign) break;
+	}
+	if (!campaign) {
+		console.log('runDailyCampaignAutoSend: no draft/sending campaigns left in the rollout order — nothing to do');
+		return;
+	}
+
+	const allRecipients = await loadContactsBySegment(env, campaign.segment_filter || {});
+	const alreadySent = await loadSentEmailsForCampaign(env, campaign.id);
+	const remaining = allRecipients.filter((c) => !alreadySent.has(c.email.toLowerCase()));
+	const todaysBatch = remaining.slice(0, DAILY_CAMPAIGN_BATCH_SIZE);
+
+	console.log(
+		`runDailyCampaignAutoSend: "${campaign.name}" — ${alreadySent.size} already sent, ` +
+			`${remaining.length} remaining, sending ${todaysBatch.length} today`,
+	);
+
+	if (campaign.status !== 'sending') {
+		try {
+			await patchCampaign(env, campaign.id, { status: 'sending' });
+		} catch (e) {
+			console.error('runDailyCampaignAutoSend: status->sending failed:', e);
+		}
+	}
+
+	let sentCount = 0;
+	let failedCount = 0;
+	for (const c of todaysBatch) {
+		try {
+			const finalHtml = await injectUnsubscribeFooter(env, campaign.html_content, c.email);
+			const params = c.merge_vars && Object.keys(c.merge_vars).length > 0 ? c.merge_vars : undefined;
+			const recipientName = [c.first_name, c.last_name].filter(Boolean).join(' ').trim() || undefined;
+			const result = await sendBrevoEmail(env, {
+				to: [{ email: c.email, name: recipientName, params }],
+				subject: campaign.subject,
+				htmlContent: finalHtml,
+				fromName: campaign.from_name || undefined,
+				fromEmail: campaign.from_email || undefined,
+				replyTo: campaign.reply_to ? { email: campaign.reply_to } : undefined,
+				tags: [`campaign:${campaign.id}`, `segment:${c.segment}`, 'daily-auto'],
+			});
+			await insertEmailLog(env, {
+				campaign_id: campaign.id,
+				recipient: c.email,
+				contact_id: c.id || null,
+				message_id: result.messageId || null,
+				campaign_type: c.segment,
+				status: 'sent',
+				sent_at: new Date().toISOString(),
+			});
+			sentCount++;
+		} catch (e) {
+			failedCount++;
+			const msg = (e as Error).message || String(e);
+			console.error(`runDailyCampaignAutoSend: failed for ${c.email}:`, msg);
+			try {
+				await insertEmailLog(env, {
+					campaign_id: campaign.id,
+					recipient: c.email,
+					contact_id: c.id || null,
+					message_id: null,
+					campaign_type: c.segment,
+					status: 'failed',
+					bounce_reason: msg,
+				});
+			} catch (logErr) {
+				console.error('runDailyCampaignAutoSend: failed-log insert failed:', logErr);
+			}
+		}
+	}
+
+	const stillRemaining = remaining.length - todaysBatch.length;
+	if (stillRemaining > 0) {
+		console.log(
+			`runDailyCampaignAutoSend: "${campaign.name}" not finished — ${stillRemaining} left, resuming tomorrow`,
+		);
+		return;
+	}
+
+	try {
+		const totalSentEver = alreadySent.size + sentCount;
+		await patchCampaign(env, campaign.id, {
+			status: totalSentEver === 0 && allRecipients.length > 0 ? 'failed' : 'sent',
+			sent_at: new Date().toISOString(),
+			recipients_count: totalSentEver,
+			sent_by: 'daily-cron',
+		});
+	} catch (e) {
+		console.error('runDailyCampaignAutoSend: finalize failed:', e);
+	}
+
+	console.log(`runDailyCampaignAutoSend: "${campaign.name}" complete — sent today=${sentCount} failed today=${failedCount}`);
+}
+
 async function handleEmailSend(env: Env, req: Request, adminEmail: string): Promise<Response> {
 	let body: EmailSendBody;
 	try {
@@ -1426,12 +1625,16 @@ async function handleBrevoEvent(env: Env, ev: BrevoEvent): Promise<void> {
 		case 'unique_opened':
 			patch.status = 'opened';
 			patch.opened_at = ev.date ? new Date(ev.date).toISOString() : new Date().toISOString();
+			if (typeof ev.ip === 'string') patch.ip_address = ev.ip;
+			if (typeof ev.user_agent === 'string') patch.user_agent = ev.user_agent;
 			skipIfAlreadyOpened = true;
 			break;
 		case 'click':
 		case 'clicked':
 			patch.status = 'clicked';
 			patch.clicked_at = ev.date ? new Date(ev.date).toISOString() : new Date().toISOString();
+			if (typeof ev.ip === 'string') patch.ip_address = ev.ip;
+			if (typeof ev.user_agent === 'string') patch.user_agent = ev.user_agent;
 			break;
 		case 'hard_bounce':
 			patch.status = 'bounced';

@@ -106,7 +106,23 @@ serve(async (req) => {
 		}
 		if (!resp.ok) {
 			console.error('cardnet-verify-session: HTTP', resp.status, result);
-			return json({ error: 'cardnet_verify_failed', status: resp.status, detail: result }, 502);
+			// A non-200 here (e.g. 404 "rspdata_not_found" for an expired/lost
+			// session) still deserves a record on the order — otherwise it's
+			// indistinguishable from an order nobody ever tried to pay for.
+			const code = resp.status === 404 ? '404' : String(resp.status);
+			const { error: updErr } = await admin
+				.from('orders')
+				.update({
+					status: 'failed',
+					cardnet_response_code: code,
+					cardnet_response_message: humanizeResponseCode(code) || (result?.message ? String(result.message) : null),
+				})
+				.eq('id', order.id);
+			if (updErr) console.error('cardnet-verify-session: failed-status update error (http path)', updErr);
+			return json(
+				{ status: 'failed', order_id: order.id, code, message: humanizeResponseCode(code) },
+				200,
+			);
 		}
 	} catch (e) {
 		console.error('cardnet-verify-session: fetch threw', e);

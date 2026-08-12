@@ -1,81 +1,86 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
+import { Button } from '@/components/ui/button';
+import { supabase } from '@/lib/customSupabaseClient';
 
-// Landing page after the CARDNET 3DS challenge completes.
-//
-// In the normal flow this page is loaded inside a hidden iframe that
-// CheckoutPage opened to host the bank's 3DS challenge. CARDNET redirects
-// back to /checkout/cardnet/return after the user finishes the challenge.
-// Our only job here is to postMessage the parent window so it can move on
-// to cardnet-finalize-sale (which actually charges the card, using the
-// PAN/CVV still held in the parent's React state).
-//
-// If the page is NOT inside an iframe (e.g. the user opened the link
-// directly, or their browser blocked iframes), we still show a friendly
-// fallback UI pointing them back to /checkout.
+// Landing page after CARDNET's hosted payment page (with 3DS challenge, if
+// the card supports it) redirects back here. We call cardnet-verify-session
+// to ask CARDNET for the final result and flip the order to paid/failed —
+// this is the only place that actually confirms a CARDNET payment; without
+// it, orders stay stuck in `awaiting_payment` even after a real approval.
 
 const CheckoutCardnetReturn = () => {
   const [params] = useSearchParams();
+  const navigate = useNavigate();
   const { t } = useTranslation('checkout');
   const orderId = params.get('order_id');
   const guestToken = params.get('token');
-  const integratorTxId = params.get('tx');
-  const [posted, setPosted] = useState(false);
-  const isInIframe = typeof window !== 'undefined' && window.parent !== window;
+
+  const [status, setStatus] = useState('verifying'); // verifying | paid | failed | error
+  const [failureMessage, setFailureMessage] = useState('');
 
   useEffect(() => {
-    if (!isInIframe) return;
-    try {
-      window.parent.postMessage(
-        {
-          type: 'cardnet-3ds-return',
-          order_id: orderId,
-          token: guestToken,
-          tx: integratorTxId,
-        },
-        window.location.origin,
-      );
-      setPosted(true);
-    } catch {
-      // ignore — fallback UI below
+    if (!orderId) {
+      setStatus('error');
+      return;
     }
-  }, [orderId, guestToken, integratorTxId, isInIframe]);
 
-  if (isInIframe) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background text-foreground p-4 text-center">
-        <div>
-          <Loader2 className="w-8 h-8 animate-spin text-[#D4A574] mx-auto mb-3" />
-          <p className="text-sm font-light text-foreground/70">
-            {posted
-              ? t('cardnet.returnPosted', 'Volviendo a la confirmación…')
-              : t('cardnet.returnPosting', 'Conectando con la pasarela…')}
-          </p>
-        </div>
-      </div>
-    );
-  }
+    let cancelled = false;
+    (async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke('cardnet-verify-session', {
+          body: { order_id: orderId, token: guestToken || undefined },
+        });
+        if (cancelled) return;
+        if (error) throw error;
+        if (data?.status === 'paid') {
+          const tokenParam = guestToken ? `&token=${encodeURIComponent(guestToken)}` : '';
+          navigate(`/checkout-success?order_id=${orderId}${tokenParam}`, { replace: true });
+          return;
+        }
+        setFailureMessage(data?.message || '');
+        setStatus('failed');
+      } catch (err) {
+        if (cancelled) return;
+        console.error('cardnet-verify-session failed:', err);
+        setStatus('error');
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [orderId, guestToken, navigate]);
 
   return (
     <>
       <Navigation />
       <main className="min-h-[70vh] flex items-center justify-center px-4 pt-32 pb-16">
         <div className="max-w-md w-full text-center bg-card border border-foreground/10 rounded-2xl p-8">
-          {orderId ? (
+          {status === 'verifying' && (
             <>
-              <CheckCircle className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
+              <Loader2 className="w-12 h-12 text-[#D4A574] mx-auto mb-4 animate-spin" />
               <h1 className="text-2xl font-light text-foreground mb-2">
-                {t('cardnet.returnDirectTitle', 'Regreso de CARDNET')}
+                {t('cardnet.verifying', 'Confirmando tu pago…')}
+              </h1>
+              <p className="text-foreground/70 font-light text-sm">
+                {t('cardnet.verifyingBody', 'Estamos confirmando el resultado con CARDNET. No cierres esta ventana.')}
+              </p>
+            </>
+          )}
+
+          {status === 'failed' && (
+            <>
+              <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-4" />
+              <h1 className="text-2xl font-light text-foreground mb-2">
+                {t('cardnet.failedTitle', 'El pago no se completó')}
               </h1>
               <p className="text-foreground/70 font-light text-sm mb-6">
-                {t(
-                  'cardnet.returnDirectBody',
-                  'Si llegaste aquí desde la ventana de tu banco, vuelve a la ventana de Kibay para completar tu pedido.',
-                )}
+                {failureMessage || t('cardnet.failedBody', 'Tu banco o CARDNET rechazó la transacción. Tu carrito sigue intacto — puedes intentarlo de nuevo.')}
               </p>
               <Link
                 to="/checkout"
@@ -84,24 +89,31 @@ const CheckoutCardnetReturn = () => {
                 {t('cardnet.backToCheckout', 'Volver al checkout')}
               </Link>
             </>
-          ) : (
+          )}
+
+          {status === 'error' && (
             <>
               <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-4" />
               <h1 className="text-2xl font-light text-foreground mb-2">
-                {t('cardnet.returnNoOrderTitle', 'Sin información de pedido')}
+                {t('cardnet.returnNoOrderTitle', 'No pudimos confirmar tu pago')}
               </h1>
               <p className="text-foreground/70 font-light text-sm mb-6">
                 {t(
-                  'cardnet.returnNoOrderBody',
-                  'No pudimos identificar el pedido. Si tu pago fue exitoso lo verás en tu historial de pedidos.',
+                  'cardnet.returnErrorBody',
+                  'Si tu banco confirmó el cargo, contáctanos con el número de tu pedido y lo verificamos manualmente.',
                 )}
               </p>
-              <Link
-                to="/cart"
-                className="inline-block px-6 py-3 rounded-full border border-foreground/20 text-foreground hover:bg-foreground/5"
-              >
-                {t('cardnet.backToCart', 'Volver al carrito')}
-              </Link>
+              <div className="flex flex-col gap-3">
+                <Button
+                  onClick={() => window.location.reload()}
+                  className="bg-[#D4A574] hover:bg-[#c29462] text-white rounded-full"
+                >
+                  {t('cardnet.retryVerify', 'Reintentar confirmación')}
+                </Button>
+                <Link to="/contact" className="text-sm text-foreground/60 hover:text-[#D4A574] underline">
+                  {t('cardnet.contactUs', 'Contactar a Kibay')}
+                </Link>
+              </div>
             </>
           )}
         </div>
