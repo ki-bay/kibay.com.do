@@ -11,7 +11,7 @@ const content = {
   en: {
     seoTitle: 'Wine Tasting in the Dominican Republic — Ocoa Bay Vineyard | Kibay',
     seoDescription:
-      'Wine tasting in the Dominican Republic happens at Ocoa Bay — the Caribbean\'s working organic vineyard in Azua. Taste Kibay\'s rosé, French Colombard, sparkling and tropical wines at the source, or buy them online for delivery.',
+      'Wine tasting in the Dominican Republic happens at Ocoa Bay — the Caribbean\'s working sustainable vineyard in Azua. Taste Kibay\'s rosé, French Colombard, sparkling and tropical wines at the source, or buy them online for delivery.',
     seoKeywords:
       'wine tasting Dominican Republic, Dominican wine, vino dominicano, cata vino Santo Domingo, Caribbean wine tasting, Ocoa Bay tasting, Kibay tasting',
     eyebrow: 'Wine tasting',
@@ -25,7 +25,7 @@ const content = {
     storyHeading: 'A Dominican tasting flight, explained',
     storyParagraphs: [
       'The Dominican Republic does not have an old wine tradition — and that is the point. Ocoa Bay is a first-generation Caribbean winery, planted at sea level on the south coast where most viticulturists insist vinifera grapes won\'t survive. They do, and the four wines on the Kibay tasting flight prove it.',
-      'A standard flight pours Rosé 2026 (dry, light berry profile), French Colombard 2026 (bright, citrusy, high acidity), Kibay Sparkling (organic sparkling fermented with mango and passion fruit, in 250 ml cans) and Kibay Tropical Wine (the 750 ml sparkling). All four are fermented — not flavored sodas — at 12% ABV.',
+      'A standard flight pours Rosé 2026 (dry, light berry profile), French Colombard 2026 (bright, citrusy, high acidity), Kibay Sparkling (sustainable sparkling fermented with mango and passion fruit, in 250 ml cans) and Kibay Tropical Wine (the 750 ml sparkling). All four are fermented — not flavored sodas — at 12% ABV.',
       'Sittings happen Saturdays and Sundays, 90 minutes per slot, with the winemaking team. Reservations are required; book here on Kibay and Ocoa Bay confirms your date.',
     ],
     cardsHeading: 'Taste here, or bring the tasting home',
@@ -48,7 +48,7 @@ const content = {
         title: 'Build your own tasting at home',
         body: 'All four Kibay wines ship across the Dominican Republic — Rosé, French Colombard, Sparkling can, and the 750 ml tropical bottle. Free shipping over RD$5,000.',
         image: SHOP_IMG,
-        imageAlt: 'The Kibay wine lineup — Dominican organic wines available online',
+        imageAlt: 'The Kibay wine lineup — Dominican sustainable wines available online',
         ctaLabel: 'Shop the lineup',
         ctaUrl: '/shop',
         schema: null,
@@ -56,17 +56,17 @@ const content = {
     ],
     ocoaHeading: 'Where the wines come from',
     ocoaBody:
-      'Ocoa Bay is the Caribbean\'s first working vineyard, a coastal organic estate at Bahía de Ocoa, Azua. The same land grows the grapes, the mango and the passion fruit that go into every Kibay bottle. Visits, tastings, the Casa Club restaurant and the pool are all on-site.',
+      'Ocoa Bay is the Caribbean\'s first working vineyard, a coastal sustainable estate at Bahía de Ocoa, Azua. The same land grows the grapes, the mango and the passion fruit that go into every Kibay bottle. Visits, tastings, the Casa Club restaurant and the pool are all on-site.',
     ocoaCta: 'Visit ocoabay.com',
     faqHeading: 'Wine tasting in the DR — what people ask',
     faqs: [
       {
         q: 'Is there really a vineyard in the Dominican Republic?',
-        a: 'Yes. Ocoa Bay in Azua is the Caribbean\'s only working commercial vineyard at this latitude, with organic vinifera grapes (rosé, French Colombard) and tropical fruit fermentation (mango, passion fruit). It is about two hours south of Santo Domingo.',
+        a: 'Yes. Ocoa Bay in Azua is the Caribbean\'s only working commercial vineyard at this latitude, with sustainable vinifera grapes (rosé, French Colombard) and tropical fruit fermentation (mango, passion fruit). It is about two hours south of Santo Domingo.',
       },
       {
         q: 'What wines are poured in a Kibay tasting?',
-        a: 'Rosé 2026, French Colombard 2026, Kibay Sparkling (passion fruit / mango can) and Kibay Tropical Wine (750 ml sparkling). All organic, all fermented, all 12% ABV.',
+        a: 'Rosé 2026, French Colombard 2026, Kibay Sparkling (passion fruit / mango can) and Kibay Tropical Wine (750 ml sparkling). All sustainable, all fermented, all 12% ABV.',
       },
       {
         q: 'Can I taste the wines without visiting the vineyard?',
@@ -88,7 +88,7 @@ const content = {
   es: {
     seoTitle: 'Cata de vinos en República Dominicana — Viñedo Ocoa Bay | Kibay',
     seoDescription:
-      'La cata de vinos en República Dominicana sucede en Ocoa Bay — el viñedo orgánico en activo del Caribe, en Azua. Prueba el rosé, French Colombard, espumante y vino tropical de Kibay en el origen, o cómpralos en línea para envío a domicilio.',
+      'La cata de vinos en República Dominicana sucede en Ocoa Bay — el viñedo sostenible en activo del Caribe, en Azua. Prueba el rosé, French Colombard, espumante y vino tropical de Kibay en el origen, o cómpralos en línea para envío a domicilio.',
     seoKeywords:
       'cata de vinos República Dominicana, vino dominicano, cata vino Santo Domingo, vino caribeño, cata Ocoa Bay, cata Kibay, vino Azua',
     eyebrow: 'Cata de vinos',
@@ -102,7 +102,7 @@ const content = {
     storyHeading: 'Una cata dominicana, explicada',
     storyParagraphs: [
       'República Dominicana no tiene una tradición vitivinícola antigua — y ese es el punto. Ocoa Bay es una bodega caribeña de primera generación, plantada a nivel del mar en la costa sur donde la mayoría de los viticultores insistirían en que la vinifera no sobrevive. Sobrevive, y los cuatro vinos de la cata Kibay lo demuestran.',
-      'Una cata estándar incluye Rosé 2026 (seco, perfil ligero de frutos rojos), French Colombard 2026 (brillante, cítrico, alta acidez), Kibay Sparkling (espumante orgánico fermentado con mango y maracuyá, en lata de 250 ml) y Kibay Tropical Wine (el espumante de 750 ml). Los cuatro son fermentados — no refrescos saborizados — a 12% ABV.',
+      'Una cata estándar incluye Rosé 2026 (seco, perfil ligero de frutos rojos), French Colombard 2026 (brillante, cítrico, alta acidez), Kibay Sparkling (espumante sostenible fermentado con mango y maracuyá, en lata de 250 ml) y Kibay Tropical Wine (el espumante de 750 ml). Los cuatro son fermentados — no refrescos saborizados — a 12% ABV.',
       'Las catas son sábados y domingos, 90 minutos por turno, con el equipo enológico. Requieren reserva; reserva aquí en Kibay y Ocoa Bay confirma tu fecha.',
     ],
     cardsHeading: 'Cata aquí, o lleva la cata a casa',
@@ -125,7 +125,7 @@ const content = {
         title: 'Arma tu propia cata en casa',
         body: 'Los cuatro vinos Kibay se envían a toda República Dominicana — Rosé, French Colombard, lata Sparkling y la botella tropical de 750 ml. Envío gratis sobre RD$5,000.',
         image: SHOP_IMG,
-        imageAlt: 'La gama Kibay — vinos orgánicos dominicanos disponibles en línea',
+        imageAlt: 'La gama Kibay — vinos sostenibles dominicanos disponibles en línea',
         ctaLabel: 'Ver la gama',
         ctaUrl: '/shop',
         schema: null,
@@ -133,17 +133,17 @@ const content = {
     ],
     ocoaHeading: 'De dónde vienen los vinos',
     ocoaBody:
-      'Ocoa Bay es el primer viñedo en activo del Caribe, una finca orgánica costera en Bahía de Ocoa, Azua. La misma tierra cultiva las uvas, el mango y la maracuyá que entran en cada botella de Kibay. Visitas, catas, el restaurante Casa Club y la piscina están en sitio.',
+      'Ocoa Bay es el primer viñedo en activo del Caribe, una finca sostenible costera en Bahía de Ocoa, Azua. La misma tierra cultiva las uvas, el mango y la maracuyá que entran en cada botella de Kibay. Visitas, catas, el restaurante Casa Club y la piscina están en sitio.',
     ocoaCta: 'Visita ocoabay.com',
     faqHeading: 'Cata en RD — lo que más se pregunta',
     faqs: [
       {
         q: '¿De verdad hay un viñedo en República Dominicana?',
-        a: 'Sí. Ocoa Bay en Azua es el único viñedo comercial en activo del Caribe a esta latitud, con uvas vinifera orgánicas (rosé, French Colombard) y fermentación de fruta tropical (mango, maracuyá). Está a unas dos horas al sur de Santo Domingo.',
+        a: 'Sí. Ocoa Bay en Azua es el único viñedo comercial en activo del Caribe a esta latitud, con uvas vinifera sostenibles (rosé, French Colombard) y fermentación de fruta tropical (mango, maracuyá). Está a unas dos horas al sur de Santo Domingo.',
       },
       {
         q: '¿Qué vinos se sirven en una cata Kibay?',
-        a: 'Rosé 2026, French Colombard 2026, Kibay Sparkling (lata de maracuyá / mango) y Kibay Tropical Wine (espumante de 750 ml). Todos orgánicos, todos fermentados, todos a 12% ABV.',
+        a: 'Rosé 2026, French Colombard 2026, Kibay Sparkling (lata de maracuyá / mango) y Kibay Tropical Wine (espumante de 750 ml). Todos sostenibles, todos fermentados, todos a 12% ABV.',
       },
       {
         q: '¿Puedo catar los vinos sin visitar el viñedo?',

@@ -1248,7 +1248,7 @@ const CheckoutPage = () => {
 									</div>
 									<div className="flex items-start gap-3 text-xs font-light text-foreground/70">
 										<Leaf className="w-4 h-4 mt-0.5 text-[#D4A574] flex-shrink-0" aria-hidden="true" />
-										<span>{t('trust.organic', 'Vinos orgánicos, fermentación natural, sin aditivos artificiales.')}</span>
+										<span>{t('trust.sustainable', 'Vinos sostenibles, fermentación natural, sin aditivos artificiales.')}</span>
 									</div>
 									<div className="flex items-start gap-3 text-xs font-light text-foreground/70">
 										<MapPin className="w-4 h-4 mt-0.5 text-[#D4A574] flex-shrink-0" aria-hidden="true" />

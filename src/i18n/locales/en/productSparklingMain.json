@@ -1,24 +1,24 @@
 {
   "seo": {
-    "title": "Kibay Sparkling | Organic Sparkling Wine from Dominican Republic",
-    "description": "Kibay Sparkling: A premium organic sparkling wine crafted with mango and passion fruit. Fermented, not flavored. Real wine, refreshingly alive."
+    "title": "Kibay Sparkling | Sustainable Sparkling Wine from Dominican Republic",
+    "description": "Kibay Sparkling: A premium sustainable sparkling wine crafted with mango and passion fruit. Fermented, not flavored. Real wine, refreshingly alive."
   },
   "hero": {
     "eyebrow": "The New Caribbean Standard",
     "h1Lead": "Kibay",
     "h1Accent": "Sparkling",
-    "subtitle": "Organic Sparkling Wine with Mango & Passion Fruit",
+    "subtitle": "Sustainable Sparkling Wine with Mango & Passion Fruit",
     "body": "Fermented, not flavored. Real wine, refreshingly alive. A sophisticated expression of Dominican terroir crafted for modern enjoyment.",
     "cta": "Discover the Wine",
     "imgAlt": "Kibay Sparkling Can"
   },
   "what": {
     "heading": "A Real Sparkling Wine",
-    "body": "Kibay Sparkling is true wine, achieved through natural fermentation. We don't simply mix fruit juice with alcohol. We ferment premium, organic mango and passion fruit from Ocoa Bay to create a complex, structured sparkling wine that retains the authentic soul of its ingredients.",
+    "body": "Kibay Sparkling is true wine, achieved through natural fermentation. We don't simply mix fruit juice with alcohol. We ferment premium, sustainable mango and passion fruit from Ocoa Bay to create a complex, structured sparkling wine that retains the authentic soul of its ingredients.",
     "isTitle": "What It Is",
     "isItems": [
       "Naturally fermented sparkling wine",
-      "Crafted from 100% organic fruit",
+      "Crafted from 100% sustainable fruit",
       "A product of skilled winemaking",
       "Complex, dry, and refreshing"
     ],
@@ -53,7 +53,7 @@
   "philosophy": {
     "heading": "Crafted with Intention",
     "body1": "We believe that the best flavors come from nature, not a lab. That's why Kibay Sparkling is made without artificial sugars, chemical flavorings, or synthetic additives.",
-    "body2": "Our philosophy is simple: respect the ingredients. By using organic fermentation methods, we preserve the integrity of the fruit and the land it comes from. It's a cleaner, more authentic way to enjoy sparkling wine.",
+    "body2": "Our philosophy is simple: respect the ingredients. By using sustainable fermentation methods, we preserve the integrity of the fruit and the land it comes from. It's a cleaner, more authentic way to enjoy sparkling wine.",
     "imgAlt": "Fresh mango and passion fruit close-up product photography showing key ingredients in Kibay Sparkling",
     "badgePercent": "100%",
     "badgeLabel": "Natural"
@@ -71,7 +71,7 @@
   "specs": {
     "heading": "Product Specifications",
     "items": [
-      { "label": "Category", "value": "Organic Sparkling Wine" },
+      { "label": "Category", "value": "Sustainable Sparkling Wine" },
       { "label": "Origin", "value": "Ocoa Bay, Dominican Republic" },
       { "label": "Format", "value": "250 ml Aluminum Can (Recyclable)" },
       { "label": "Ingredients", "value": "Fermented Mango & Passion Fruit" },

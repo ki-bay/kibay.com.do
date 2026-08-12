@@ -86,8 +86,8 @@ const SeoLandingTemplate = ({ slug, content }) => {
     name: 'Ocoa Bay Vineyard',
     description:
       lang === 'es'
-        ? 'Viñedo orgánico caribeño y bodega de Kibay en Bahía de Ocoa, Azua, República Dominicana. Catas de vino, recorridos guiados y Casa Club frente al mar.'
-        : 'Caribbean organic vineyard and Kibay winery at Bahía de Ocoa, Azua, Dominican Republic. Wine tastings, guided tours and ocean-front Casa Club.',
+        ? 'Viñedo sostenible caribeño y bodega de Kibay en Bahía de Ocoa, Azua, República Dominicana. Catas de vino, recorridos guiados y Casa Club frente al mar.'
+        : 'Caribbean sustainable vineyard and Kibay winery at Bahía de Ocoa, Azua, Dominican Republic. Wine tastings, guided tours and ocean-front Casa Club.',
     image: c.heroImage,
     url: 'https://ocoabay.com',
     address: {

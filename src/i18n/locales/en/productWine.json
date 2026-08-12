@@ -41,14 +41,14 @@
   },
   "relationship": {
     "heading": "Two Expressions, One Origin",
-    "body": "Just like our Sparkling, KiBay Wine is born from the same dedication to organic quality and local sourcing. While the Sparkling celebrates effervescence and celebration, KiBay Wine offers a tranquil, contemplative experience of our terroir. Together, they represent the full spectrum of Ocoa Bay's potential.",
+    "body": "Just like our Sparkling, KiBay Wine is born from the same dedication to sustainable quality and local sourcing. While the Sparkling celebrates effervescence and celebration, KiBay Wine offers a tranquil, contemplative experience of our terroir. Together, they represent the full spectrum of Ocoa Bay's potential.",
     "ctaSparkling": "Discover Sparkling",
     "ctaShop": "Shop All Wines"
   },
   "specs": {
     "heading": "Product Specifications",
     "items": [
-      { "label": "Category", "value": "Organic Wine" },
+      { "label": "Category", "value": "Sustainable Wine" },
       { "label": "Origin", "value": "Ocoa Bay, Dominican Republic" },
       { "label": "Format", "value": "750 ml glass bottle (Recyclable)" },
       { "label": "Ingredients", "value": "Fermented Mango & Passion Fruit" },

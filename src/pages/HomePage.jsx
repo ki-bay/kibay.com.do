@@ -318,9 +318,9 @@ const HomePage = () => {
                 <div className="w-16 h-16 bg-background rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-inner group-hover:bg-orange-500 transition-colors duration-300">
                   <Leaf className="w-8 h-8 text-orange-500 group-hover:text-foreground transition-colors" strokeWidth={2} aria-hidden="true" />
                 </div>
-                <h3 className="text-xl font-normal mb-3 text-foreground">{t('difference.features.organic.title')}</h3>
+                <h3 className="text-xl font-normal mb-3 text-foreground">{t('difference.features.sustainable.title')}</h3>
                 <p className="text-foreground/70 leading-relaxed font-light">
-                  {t('difference.features.organic.body')}
+                  {t('difference.features.sustainable.body')}
                 </p>
               </Card>
             </m.div>

@@ -73,7 +73,7 @@ const SchemaMarkup = ({ type, data }) => {
       "url": (data && data.url) || origin,
       "image": (data && data.image) || `${origin}/og-default.jpg`,
       "logo": `${origin}/favicon.png`,
-      "description": (data && data.description) || "Kibay crafts organic Caribbean sparkling wine in the Dominican Republic — made with mango and passion fruit at Ocoa Bay.",
+      "description": (data && data.description) || "Kibay crafts sustainable Caribbean sparkling wine in the Dominican Republic — made with mango and passion fruit at Ocoa Bay.",
       "priceRange": "$$",
       "areaServed": "Caribbean",
       "address": {

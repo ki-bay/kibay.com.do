@@ -20,6 +20,7 @@ const CheckoutCardnetCancel = lazy(() => import('./pages/CheckoutCardnetCancel')
 const WhyCansPage = lazy(() => import('./pages/WhyCansPage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const WhitepaperPage = lazy(() => import('./pages/WhitepaperPage'));
+const TastingSignupPage = lazy(() => import('./pages/TastingSignupPage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
 const VineAndBarrelPage = lazy(() => import('./pages/VineAndBarrelPage'));
 const DiagnosticPage = lazy(() => import('./pages/DiagnosticPage'));
@@ -147,6 +148,7 @@ function App() {
               <Route path="/why-cans" element={<WhyCansPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/whitepaper" element={<WhitepaperPage />} />
+              <Route path="/tasting-invitation" element={<TastingSignupPage />} />
               <Route path="/contact" element={<ContactPage />} />
 
               {/* SEO keyword-cluster landing pages — bilingual slugs, single

@@ -1,24 +1,24 @@
 {
   "seo": {
-    "title": "Kibay Espumante | Vino espumante orgánico de la República Dominicana",
-    "description": "Kibay Espumante: un vino espumante orgánico premium elaborado con mango y chinola. Fermentado, no saborizado. Vino auténtico, refrescantemente vivo."
+    "title": "Kibay Espumante | Vino espumante sostenible de la República Dominicana",
+    "description": "Kibay Espumante: un vino espumante sostenible premium elaborado con mango y chinola. Fermentado, no saborizado. Vino auténtico, refrescantemente vivo."
   },
   "hero": {
     "eyebrow": "El nuevo estándar caribeño",
     "h1Lead": "Kibay",
     "h1Accent": "Espumante",
-    "subtitle": "Vino espumante orgánico con mango y chinola",
+    "subtitle": "Vino espumante sostenible con mango y chinola",
     "body": "Fermentado, no saborizado. Vino auténtico, refrescantemente vivo. Una expresión sofisticada del terroir dominicano elaborada para el disfrute moderno.",
     "cta": "Descubre el vino",
     "imgAlt": "Lata de Kibay Espumante"
   },
   "what": {
     "heading": "Un espumante de verdad",
-    "body": "Kibay Espumante es vino auténtico, logrado mediante fermentación natural. No mezclamos jugo con alcohol: fermentamos mango y chinola orgánicos premium de Ocoa Bay para crear un espumante complejo y estructurado que conserva el alma genuina de sus ingredientes.",
+    "body": "Kibay Espumante es vino auténtico, logrado mediante fermentación natural. No mezclamos jugo con alcohol: fermentamos mango y chinola sostenibles premium de Ocoa Bay para crear un espumante complejo y estructurado que conserva el alma genuina de sus ingredientes.",
     "isTitle": "Lo que sí es",
     "isItems": [
       "Vino espumante fermentado naturalmente",
-      "Elaborado con fruta 100 % orgánica",
+      "Elaborado con fruta 100 % sostenible",
       "Resultado de un trabajo enológico cuidadoso",
       "Complejo, seco y refrescante"
     ],
@@ -53,7 +53,7 @@
   "philosophy": {
     "heading": "Elaborado con intención",
     "body1": "Creemos que los mejores sabores vienen de la naturaleza, no de un laboratorio. Por eso, Kibay Espumante se elabora sin azúcares artificiales, saborizantes químicos ni aditivos sintéticos.",
-    "body2": "Nuestra filosofía es simple: respetar los ingredientes. Al utilizar métodos de fermentación orgánica, preservamos la integridad de la fruta y la tierra de la que proviene. Es una forma más limpia y auténtica de disfrutar el espumante.",
+    "body2": "Nuestra filosofía es simple: respetar los ingredientes. Al utilizar métodos de fermentación sostenible, preservamos la integridad de la fruta y la tierra de la que proviene. Es una forma más limpia y auténtica de disfrutar el espumante.",
     "imgAlt": "Mango y chinola frescos en primer plano, ingredientes clave de Kibay Espumante",
     "badgePercent": "100 %",
     "badgeLabel": "Natural"
@@ -71,7 +71,7 @@
   "specs": {
     "heading": "Especificaciones del producto",
     "items": [
-      { "label": "Categoría", "value": "Vino espumante orgánico" },
+      { "label": "Categoría", "value": "Vino espumante sostenible" },
       { "label": "Origen", "value": "Ocoa Bay, República Dominicana" },
       { "label": "Formato", "value": "Lata de aluminio 250 ml (reciclable)" },
       { "label": "Ingredientes", "value": "Mango y chinola fermentados" },

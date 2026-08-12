@@ -1,17 +1,17 @@
 {
   "seo": {
-    "title": "Kibay Sparkling – Organic Mango & Passion Fruit Sparkling Wine",
-    "description": "Organic Dominican sparkling wine fermented with mango & passion fruit. Crafted by Ocoa Bay winery. Refreshing, natural, and unique."
+    "title": "Kibay Sparkling – Sustainable Mango & Passion Fruit Sparkling Wine",
+    "description": "Sustainable Dominican sparkling wine fermented with mango & passion fruit. Crafted by Ocoa Bay winery. Refreshing, natural, and unique."
   },
   "product": {
     "name": "Kibay Sparkling - 250ml Can",
-    "description": "A convenient, single-serve organic sparkling wine. Crisp, refreshing, and bursting with Dominican tropical flavors."
+    "description": "A convenient, single-serve sustainable sparkling wine. Crisp, refreshing, and bursting with Dominican tropical flavors."
   },
   "details": {
     "category": "Sparkling Wine",
     "origin": "Dominican Republic",
     "format": "250ml Aluminum Can",
-    "ingredients": "Organic mango, passion fruit, natural fermentation",
+    "ingredients": "Sustainable mango, passion fruit, natural fermentation",
     "style": "Dry Sparkling Wine",
     "alcohol": "11.5%",
     "shelfLife": "2 years",
@@ -26,12 +26,12 @@
     }
   },
   "gallery": {
-    "altBase": "Kibay Sparkling 250ml organic sparkling wine can"
+    "altBase": "Kibay Sparkling 250ml sustainable sparkling wine can"
   },
   "hero": {
-    "eyebrow": "Organic & Natural",
-    "h1": "Kibay Sparkling – Organic Sparkling Wine with Mango & Passion Fruit",
-    "intro": "A refreshing organic sparkling wine crafted with Dominican mango and passion fruit. Perfect for any occasion."
+    "eyebrow": "Sustainable & Natural",
+    "h1": "Kibay Sparkling – Sustainable Sparkling Wine with Mango & Passion Fruit",
+    "intro": "A refreshing sustainable sparkling wine crafted with Dominican mango and passion fruit. Perfect for any occasion."
   },
   "crafted": {
     "heading": "Crafted in the Dominican Republic",
@@ -41,9 +41,9 @@
     "heading": "Fermentation & Wine Process",
     "body": "We use traditional fermentation methods to create fine, persistent bubbles. The process respects the integrity of the fruit, ensuring a clean, crisp finish that dances on the palate without being overly sweet."
   },
-  "organic": {
-    "heading": "Organic Ingredients & Natural Profile",
-    "body": "No artificial flavors. No synthetic additives. Just pure, organic fruit grown under the Caribbean sun. Our commitment to organic farming protects the land and delivers a purer taste experience."
+  "sustainable": {
+    "heading": "Sustainable Ingredients & Natural Profile",
+    "body": "No artificial flavors. No synthetic additives. Just pure, sustainable fruit grown under the Caribbean sun. Our commitment to sustainable farming protects the land and delivers a purer taste experience."
   },
   "tasting": {
     "heading": "Tasting Notes",
@@ -62,7 +62,7 @@
   "winery": {
     "heading": "Winery Credibility",
     "tagline": "From the same winery as Kibay Wine — by Ocoa Bay",
-    "imgAlt": "Ocoa Bay winery Dominican vineyard organic farming",
+    "imgAlt": "Ocoa Bay winery Dominican vineyard sustainable farming",
     "caption": "Sustainable Viticulture in the Heart of the Caribbean"
   }
 }

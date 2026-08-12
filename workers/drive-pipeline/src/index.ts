@@ -290,9 +290,9 @@ h1{margin:0 0 12px;color:#16a34a;}
 		if (url.pathname === '/unsubscribe' && req.method === 'GET') {
 			const email = url.searchParams.get('email') || '';
 			const sig = url.searchParams.get('sig') || '';
-			if (!email) return unsubscribeResultPage(false, '', 'Missing email');
+			if (!email) return unsubscribeResultPage(false, '', 'Falta el correo electrónico');
 			const ok = await verifyUnsubscribeToken(env, email, sig);
-			if (!ok) return unsubscribeResultPage(false, email, 'Invalid or tampered link');
+			if (!ok) return unsubscribeResultPage(false, email, 'Enlace inválido o alterado');
 			try {
 				await patchContactStatusByEmail(env, email, 'unsubscribed');
 			} catch (e) {
@@ -318,7 +318,7 @@ h1{margin:0 0 12px;color:#16a34a;}
 			return unsubscribeResultPage(
 				true,
 				email,
-				"You won't receive marketing emails from Kibay. You can resubscribe anytime by replying.",
+				'No recibirás más correos de marketing de Kibay. Puedes volver a suscribirte cuando quieras respondiendo a cualquier correo.',
 			);
 		}
 

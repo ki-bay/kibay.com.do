@@ -113,7 +113,7 @@ const KibayEspumanteBottle = () => {
               </p>
             </section>
 
-            {/* Process & Organic */}
+            {/* Process & Sustainable */}
             <div className="grid md:grid-cols-2 gap-12 items-start">
               <section>
                 <h2 className="text-2xl font-serif text-foreground mb-4">{t('process.heading')}</h2>
@@ -122,9 +122,9 @@ const KibayEspumanteBottle = () => {
                 </p>
               </section>
               <section>
-                <h2 className="text-2xl font-serif text-foreground mb-4">{t('organic.heading')}</h2>
+                <h2 className="text-2xl font-serif text-foreground mb-4">{t('sustainable.heading')}</h2>
                 <p className="text-foreground/70 leading-relaxed">
-                  {t('organic.body')}
+                  {t('sustainable.body')}
                 </p>
               </section>
             </div>

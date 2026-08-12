@@ -67,7 +67,7 @@ const ShopPage = () => {
             <div className="flex items-center justify-center mx-auto mb-8">
               <img
                 src={mediaUrl('8557ed8a8cfde6155f713b177c6452a7.png')}
-                alt="Kibay seal — organic Caribbean wine from the Dominican Republic"
+                alt="Kibay seal — sustainable Caribbean wine from the Dominican Republic"
                 width="64"
                 height="64"
                 loading="lazy"

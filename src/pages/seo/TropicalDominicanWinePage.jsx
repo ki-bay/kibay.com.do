@@ -24,7 +24,7 @@ const content = {
     ctaSecondary: { label: 'Visit the vineyard', url: '/product/ocoa-bay-wine-tour' },
     storyHeading: 'Wine made for the Caribbean climate',
     storyParagraphs: [
-      'Most "tropical wine" outside Latin America is European wine sold beside a beach. Kibay is the other thing: vinifera grapes and tropical fruit grown organically on a Caribbean coastal estate, fermented locally, and built around the way you actually drink wine in 30°C weather — bright, light, cold, refreshing, never heavy.',
+      'Most "tropical wine" outside Latin America is European wine sold beside a beach. Kibay is the other thing: vinifera grapes and tropical fruit grown sustainably on a Caribbean coastal estate, fermented locally, and built around the way you actually drink wine in 30°C weather — bright, light, cold, refreshing, never heavy.',
       'The two pieces of the lineup that fit the "tropical Dominican white and sparkling" shape are the French Colombard 2026 (a crisp dry white with green apple, citrus and a tropical edge — high acidity that holds up to ceviche and grilled fish) and the Kibay Tropical Wine 750 ml (the signature sparkling that started the brand: mango and passion fruit fermentation, dry, lively, served at table).',
       'Both are made at Ocoa Bay in Azua, about two hours south of Santo Domingo, and both ship across the Dominican Republic.',
     ],
@@ -56,13 +56,13 @@ const content = {
     ],
     ocoaHeading: 'About the estate',
     ocoaBody:
-      'Ocoa Bay is the Caribbean\'s first working vineyard, a coastal organic estate at Bahía de Ocoa, Azua. Vinifera grapes (French Colombard, rosé, red), mango and passion fruit are all grown on the same land. Same soil, same Atlantic breeze, same harvest team.',
+      'Ocoa Bay is the Caribbean\'s first working vineyard, a coastal sustainable estate at Bahía de Ocoa, Azua. Vinifera grapes (French Colombard, rosé, red), mango and passion fruit are all grown on the same land. Same soil, same Atlantic breeze, same harvest team.',
     ocoaCta: 'Visit ocoabay.com',
     faqHeading: 'Tropical Dominican wine — answered',
     faqs: [
       {
         q: 'Can vinifera grapes really grow in the Dominican Republic?',
-        a: 'Yes — at Ocoa Bay. The coastal microclimate of Bahía de Ocoa, plus organic farming practices and careful varietal selection, gives the estate genuine vinifera vintages (rosé, French Colombard, red). It is the only working vineyard at this Caribbean latitude.',
+        a: 'Yes — at Ocoa Bay. The coastal microclimate of Bahía de Ocoa, plus sustainable farming practices and careful varietal selection, gives the estate genuine vinifera vintages (rosé, French Colombard, red). It is the only working vineyard at this Caribbean latitude.',
       },
       {
         q: 'How is the French Colombard different from the sparkling?',
@@ -73,8 +73,8 @@ const content = {
         a: 'Caribbean cuisine: ceviche, grilled fish, fried fish, mango/avocado salads, soft cheeses, light asopao. The acidity in the Colombard handles citrus marinades; the sparkling lifts seafood and lighter Caribbean dishes.',
       },
       {
-        q: 'Are these wines organic?',
-        a: 'Yes. All Kibay wines are fermented from organically grown ingredients at the Ocoa Bay estate. 12% ABV across the lineup.',
+        q: 'Are these wines sustainable?',
+        a: 'Yes. All Kibay wines are fermented from sustainably grown ingredients at the Ocoa Bay estate. 12% ABV across the lineup.',
       },
       {
         q: 'Where do I buy them?',
@@ -101,7 +101,7 @@ const content = {
     ctaSecondary: { label: 'Visita el viñedo', url: '/product/ocoa-bay-wine-tour' },
     storyHeading: 'Vino hecho para el clima caribeño',
     storyParagraphs: [
-      'La mayoría del "vino tropical" fuera de Latinoamérica es vino europeo vendido al lado de una playa. Kibay es la otra cosa: uvas vinifera y fruta tropical cultivadas orgánicamente en una finca costera caribeña, fermentadas localmente, y pensadas para cómo realmente se bebe vino a 30°C — brillante, ligero, frío, refrescante, nunca pesado.',
+      'La mayoría del "vino tropical" fuera de Latinoamérica es vino europeo vendido al lado de una playa. Kibay es la otra cosa: uvas vinifera y fruta tropical cultivadas sosteniblemente en una finca costera caribeña, fermentadas localmente, y pensadas para cómo realmente se bebe vino a 30°C — brillante, ligero, frío, refrescante, nunca pesado.',
       'Las dos piezas de la gama que encajan con "vino blanco tropical dominicano y espumante" son el French Colombard 2026 (un blanco seco crujiente con manzana verde, cítrico y un toque tropical — acidez alta que aguanta el ceviche y el pescado a la plancha) y el Kibay Tropical Wine de 750 ml (el espumante insignia que arrancó la marca: fermentación de mango y maracuyá, seco, vivo, para servir en la mesa).',
       'Los dos se hacen en Ocoa Bay en Azua, a unas dos horas al sur de Santo Domingo, y los dos se envían a toda República Dominicana.',
     ],
@@ -133,13 +133,13 @@ const content = {
     ],
     ocoaHeading: 'Sobre la finca',
     ocoaBody:
-      'Ocoa Bay es el primer viñedo en activo del Caribe, una finca orgánica costera en Bahía de Ocoa, Azua. Las uvas vinifera (French Colombard, rosé, tinto), el mango y la maracuyá se cultivan todos en la misma tierra. Mismo suelo, misma brisa atlántica, mismo equipo de cosecha.',
+      'Ocoa Bay es el primer viñedo en activo del Caribe, una finca sostenible costera en Bahía de Ocoa, Azua. Las uvas vinifera (French Colombard, rosé, tinto), el mango y la maracuyá se cultivan todos en la misma tierra. Mismo suelo, misma brisa atlántica, mismo equipo de cosecha.',
     ocoaCta: 'Visita ocoabay.com',
     faqHeading: 'Vino tropical dominicano — respuestas',
     faqs: [
       {
         q: '¿De verdad crecen las uvas vinifera en República Dominicana?',
-        a: 'Sí — en Ocoa Bay. El microclima costero de Bahía de Ocoa, más prácticas orgánicas y selección varietal cuidadosa, le da a la finca cosechas vinifera genuinas (rosé, French Colombard, tinto). Es el único viñedo en activo a esta latitud caribeña.',
+        a: 'Sí — en Ocoa Bay. El microclima costero de Bahía de Ocoa, más prácticas sostenibles y selección varietal cuidadosa, le da a la finca cosechas vinifera genuinas (rosé, French Colombard, tinto). Es el único viñedo en activo a esta latitud caribeña.',
       },
       {
         q: '¿En qué se diferencia el French Colombard del espumante?',
@@ -150,8 +150,8 @@ const content = {
         a: 'Cocina caribeña: ceviche, pescado a la plancha, pescado frito, ensaladas de mango/aguacate, quesos suaves, asopao ligero. La acidez del Colombard aguanta marinadas cítricas; el espumante levanta mariscos y platos caribeños más ligeros.',
       },
       {
-        q: '¿Estos vinos son orgánicos?',
-        a: 'Sí. Todos los vinos Kibay se fermentan con ingredientes cultivados orgánicamente en la finca Ocoa Bay. 12% ABV en toda la gama.',
+        q: '¿Estos vinos son sostenibles?',
+        a: 'Sí. Todos los vinos Kibay se fermentan con ingredientes cultivados sosteniblemente en la finca Ocoa Bay. 12% ABV en toda la gama.',
       },
       {
         q: '¿Dónde los compro?',

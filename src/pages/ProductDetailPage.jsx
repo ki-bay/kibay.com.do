@@ -263,7 +263,7 @@ function ProductDetailPage() {
         'category', 'style', 'varietal', 'origin', 'producer', 'vintage', 'abv',
         'service_temp', 'pairings', 'glass', 'fermentation', 'ingredients',
         'volume', 'format', 'closure', 'sulfites', 'allergens',
-        'vegan', 'organic', 'shelf_life',
+        'vegan', 'sustainable', 'shelf_life',
       ];
       const labels = {
         origin: lang === 'en' ? 'Origin' : 'Origen',
@@ -285,7 +285,7 @@ function ProductDetailPage() {
         sulfites: lang === 'en' ? 'Sulfites' : 'Sulfitos',
         allergens: lang === 'en' ? 'Allergens' : 'Alérgenos',
         vegan: lang === 'en' ? 'Vegan' : 'Vegano',
-        organic: lang === 'en' ? 'Organic' : 'Orgánico',
+        sustainable: lang === 'en' ? 'Sustainable' : 'Sostenible',
       };
       return knownKeys
         .filter(k => s[k] != null && s[k] !== '')

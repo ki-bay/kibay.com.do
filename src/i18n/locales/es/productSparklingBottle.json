@@ -1,17 +1,17 @@
 {
   "seo": {
-    "title": "Kibay Espumante – Vino espumante orgánico de mango y chinola",
-    "description": "Vino espumante dominicano orgánico fermentado con mango y chinola. Elaborado por la bodega Ocoa Bay. Refrescante, natural y único."
+    "title": "Kibay Espumante – Vino espumante sostenible de mango y chinola",
+    "description": "Vino espumante dominicano sostenible fermentado con mango y chinola. Elaborado por la bodega Ocoa Bay. Refrescante, natural y único."
   },
   "product": {
     "name": "Kibay Espumante - Botella 750ml",
-    "description": "Una elegante botella de 750ml de nuestro espumante orgánico insignia. Ideal para compartir, celebrar y vivir momentos especiales."
+    "description": "Una elegante botella de 750ml de nuestro espumante sostenible insignia. Ideal para compartir, celebrar y vivir momentos especiales."
   },
   "details": {
     "category": "Vino espumante",
     "origin": "República Dominicana",
     "format": "Botella de vidrio 750ml",
-    "ingredients": "Mango orgánico, chinola, fermentación natural",
+    "ingredients": "Mango sostenible, chinola, fermentación natural",
     "style": "Espumante seco",
     "alcohol": "11.5%",
     "shelfLife": "2 años",
@@ -26,11 +26,11 @@
     }
   },
   "gallery": {
-    "altBase": "Botella de Kibay Espumante 750ml, vino espumante orgánico premium"
+    "altBase": "Botella de Kibay Espumante 750ml, vino espumante sostenible premium"
   },
   "hero": {
     "eyebrow": "Colección Premium",
-    "h1": "Kibay Espumante – Vino espumante orgánico con mango y chinola",
+    "h1": "Kibay Espumante – Vino espumante sostenible con mango y chinola",
     "intro": "La experiencia completa. Nuestra botella de 750ml está pensada para la mesa, llevando la elegancia de la enología dominicana a tus reuniones."
   },
   "crafted": {
@@ -41,9 +41,9 @@
     "heading": "Fermentación y proceso del vino",
     "body": "La paciencia define nuestro proceso. La segunda fermentación ocurre de forma natural, integrando los delicados aromas del mango y la chinola en la estructura misma del vino, no como un saborizante añadido."
   },
-  "organic": {
-    "heading": "Ingredientes orgánicos y perfil natural",
-    "body": "Creemos que el gran vino comienza en el viñedo. Nuestras prácticas de cultivo orgánico aseguran que cada botella esté libre de químicos dañinos, preservando la salud de nuestro suelo y la pureza de tu copa."
+  "sustainable": {
+    "heading": "Ingredientes sostenibles y perfil natural",
+    "body": "Creemos que el gran vino comienza en el viñedo. Nuestras prácticas de cultivo sostenible aseguran que cada botella esté libre de químicos dañinos, preservando la salud de nuestro suelo y la pureza de tu copa."
   },
   "tasting": {
     "heading": "Notas de cata",
@@ -62,7 +62,7 @@
   "winery": {
     "heading": "Credibilidad de la bodega",
     "tagline": "De la misma bodega que Kibay Wine — por Ocoa Bay",
-    "imgAlt": "Bodega Ocoa Bay, viñedo dominicano de cultivo orgánico",
+    "imgAlt": "Bodega Ocoa Bay, viñedo dominicano de cultivo sostenible",
     "caption": "Viticultura sostenible en el corazón del Caribe"
   }
 }

@@ -152,7 +152,7 @@ export function unsubscribeResultPage(
 	message: string,
 ): Response {
 	const color = success ? '#16a34a' : '#dc2626';
-	const heading = success ? "You're unsubscribed" : 'Unsubscribe failed';
+	const heading = success ? 'Te has dado de baja' : 'No se pudo procesar la baja';
 	const html = `<!doctype html><html><head><meta charset="utf-8"/><title>${heading} — Kibay</title>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <style>body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#f4f4f0;margin:0;padding:0;min-height:100vh;display:flex;align-items:center;justify-content:center;}
@@ -165,7 +165,7 @@ a{color:#888;font-size:13px;display:inline-block;margin-top:24px;}</style></head
 <h1>${heading}</h1>
 <div class="email">${escapeHtml(email)}</div>
 <p>${escapeHtml(message)}</p>
-<a href="https://kibay.com.do/">Back to Kibay</a>
+<a href="https://kibay.com.do/">Volver a Kibay</a>
 </div></body></html>`;
 	return new Response(html, {
 		status: success ? 200 : 400,

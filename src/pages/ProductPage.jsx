@@ -9,8 +9,8 @@ import { mediaUrl } from '@/config/mediaCdn';
 const ProductPage = () => {
   return <>
       <Helmet>
-        <title>Our Wine - Kibay Espumante | Organic Sparkling Wine</title>
-        <meta name="description" content="Discover Kibay Espumante: premium organic sparkling wine made with mango and passion fruit. Learn about our fermentation process, tasting notes, and Dominican heritage." />
+        <title>Our Wine - Kibay Espumante | Sustainable Sparkling Wine</title>
+        <meta name="description" content="Discover Kibay Espumante: premium sustainable sparkling wine made with mango and passion fruit. Learn about our fermentation process, tasting notes, and Dominican heritage." />
       </Helmet>
       
       <Navigation />
@@ -36,10 +36,10 @@ const ProductPage = () => {
             Kibay <span className="bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">Espumante</span>
           </h1>
           <p className="text-xl sm:text-2xl text-foreground/90 mb-4">
-            Organic Sparkling Wine
+            Sustainable Sparkling Wine
           </p>
           <p className="text-lg text-foreground/70 max-w-2xl mx-auto">
-            A celebration of Caribbean flavors, crafted with organic mango and passion fruit
+            A celebration of Caribbean flavors, crafted with sustainable mango and passion fruit
           </p>
         </m.div>
       </section>
@@ -62,10 +62,10 @@ const ProductPage = () => {
               The Art of Fermentation
             </h2>
             <p className="text-lg text-foreground/80 leading-relaxed mb-6">
-              Kibay Espumante is born from a meticulous organic fermentation process that transforms premium Dominican mango and passion fruit into a sophisticated sparkling wine. Our winemakers at Ocoa Bay have perfected a technique that honors traditional methods while embracing modern innovation.
+              Kibay Espumante is born from a meticulous sustainable fermentation process that transforms premium Dominican mango and passion fruit into a sophisticated sparkling wine. Our winemakers at Ocoa Bay have perfected a technique that honors traditional methods while embracing modern innovation.
             </p>
             <p className="text-lg text-foreground/80 leading-relaxed">
-              Each batch begins with hand-selected organic fruits at peak ripeness. Through natural fermentation, we unlock complex flavor profiles that showcase the vibrant essence of the Caribbean. The result is a refreshingly elegant sparkling wine that captures the spirit of tropical paradise in every sip.
+              Each batch begins with hand-selected sustainable fruits at peak ripeness. Through natural fermentation, we unlock complex flavor profiles that showcase the vibrant essence of the Caribbean. The result is a refreshingly elegant sparkling wine that captures the spirit of tropical paradise in every sip.
             </p>
           </m.div>
         </div>
@@ -211,7 +211,7 @@ const ProductPage = () => {
         </div>
       </section>
       
-      {/* Organic Certification & Origin */}
+      {/* Sustainable Certification & Origin */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-card to-background">
         <div className="max-w-6xl mx-auto">
           <m.h2 initial={{
@@ -242,12 +242,12 @@ const ProductPage = () => {
           }}>
               <Card className="p-8 h-full hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-300">
                 <Award className="w-12 h-12 text-orange-500 mb-4" />
-                <h3 className="text-2xl font-bold mb-4 text-foreground">Certified Organic</h3>
+                <h3 className="text-2xl font-bold mb-4 text-foreground">Certified Sustainable</h3>
                 <p className="text-foreground/70 mb-4">
-                  Kibay Espumante is proudly certified organic, ensuring every ingredient meets the highest standards of purity and sustainability. We work exclusively with certified organic mango and passion fruit growers who share our commitment to environmental stewardship.
+                  Kibay Espumante is proudly certified sustainable, ensuring every ingredient meets the highest standards of purity and sustainability. We work exclusively with certified sustainable mango and passion fruit growers who share our commitment to environmental stewardship.
                 </p>
                 <p className="text-foreground/70">
-                  Our organic certification guarantees no synthetic pesticides, herbicides, or artificial additives—just pure, natural flavors from the Caribbean.
+                  Our sustainable certification guarantees no synthetic pesticides, herbicides, or artificial additives—just pure, natural flavors from the Caribbean.
                 </p>
               </Card>
             </m.div>
@@ -304,7 +304,7 @@ const ProductPage = () => {
                   </span>
                   <h3 className="text-xl font-bold mb-2 text-foreground">Fruit Selection</h3>
                   <p className="text-foreground/70">
-                    We begin with hand-selected organic mangoes and passion fruits at their peak ripeness, sourced from certified Dominican farms. Quality starts with the finest ingredients.
+                    We begin with hand-selected sustainable mangoes and passion fruits at their peak ripeness, sourced from certified Dominican farms. Quality starts with the finest ingredients.
                   </p>
                 </div>
                 

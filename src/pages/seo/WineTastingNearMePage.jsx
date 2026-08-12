@@ -25,7 +25,7 @@ const content = {
     storyHeading: 'A real tasting — not a hotel buffet',
     storyParagraphs: [
       'Most wine tastings near you in the Caribbean are hotel-bar pours of imported European bottles. Ocoa Bay is something else: a working coastal vineyard at 18° latitude, planted with vinifera grapes and tropical fruits, where Kibay\'s rosé, French Colombard, sparkling and tropical wines are made and tasted at the source.',
-      'A typical tasting runs 90 minutes — an electric-cart tour of the vines and winery, followed by guided pours of the current vintages with the people who made them. The wines are organic, fermented (never flavored sodas), and bottled within steps of where you taste them.',
+      'A typical tasting runs 90 minutes — an electric-cart tour of the vines and winery, followed by guided pours of the current vintages with the people who made them. The wines are sustainable, fermented (never flavored sodas), and bottled within steps of where you taste them.',
       'You are two hours by car from Santo Domingo and well inside reach of a day trip from anywhere on the south coast. Saturdays and Sundays only.',
     ],
     cardsHeading: 'Two ways to taste',
@@ -46,7 +46,7 @@ const content = {
         kind: 'experience',
         kindLabel: 'Complete day · ~4 hrs',
         title: 'Tasting, tour, Casa Club & 3-course menu',
-        body: 'Everything in the wine tour plus a farm-to-table organic lunch at Casa Club, pool access until 6:30 pm and a welcome toast on arrival.',
+        body: 'Everything in the wine tour plus a farm-to-table sustainable lunch at Casa Club, pool access until 6:30 pm and a welcome toast on arrival.',
         image: POOL_IMG,
         imageAlt: 'Casa Club at Ocoa Bay — pool and dining included in the complete wine experience',
         ctaLabel: 'Book the complete experience',
@@ -56,7 +56,7 @@ const content = {
     ],
     ocoaHeading: 'About Ocoa Bay',
     ocoaBody:
-      'Ocoa Bay is the working estate behind every Kibay bottle — a coastal organic vineyard in Azua growing vinifera grapes, mango and passion fruit on the same land. Reservations for tastings, tours and Casa Club go through the Ocoa Bay site; product purchases (cans and bottles) happen here on Kibay.',
+      'Ocoa Bay is the working estate behind every Kibay bottle — a coastal sustainable vineyard in Azua growing vinifera grapes, mango and passion fruit on the same land. Reservations for tastings, tours and Casa Club go through the Ocoa Bay site; product purchases (cans and bottles) happen here on Kibay.',
     ocoaCta: 'Visit ocoabay.com',
     faqHeading: 'Wine tasting at Ocoa Bay — quick answers',
     faqs: [
@@ -74,11 +74,11 @@ const content = {
       },
       {
         q: 'What\'s the difference between the wine tour and the complete experience?',
-        a: 'The wine tour (US$65/person, ~90 min) is the tasting + electric-cart vineyard tour. The complete experience (US$145/person, ~4 hours) adds the Casa Club 3-course organic menu and pool access until 6:30 pm.',
+        a: 'The wine tour (US$65/person, ~90 min) is the tasting + electric-cart vineyard tour. The complete experience (US$145/person, ~4 hours) adds the Casa Club 3-course sustainable menu and pool access until 6:30 pm.',
       },
       {
-        q: 'Are the Kibay wines organic?',
-        a: 'Yes. All Kibay wines are fermented from organically grown Ocoa Bay grapes (rosé, French Colombard) and organic mango and passion fruit (sparkling, tropical). 12% ABV.',
+        q: 'Are the Kibay wines sustainable?',
+        a: 'Yes. All Kibay wines are fermented from sustainably grown Ocoa Bay grapes (rosé, French Colombard) and sustainable mango and passion fruit (sparkling, tropical). 12% ABV.',
       },
     ],
     closingHeading: 'Pick a weekend, taste at the source',
@@ -102,7 +102,7 @@ const content = {
     storyHeading: 'Una cata de verdad — no un bufé de hotel',
     storyParagraphs: [
       'La mayoría de las catas "cerca de ti" en el Caribe son copas de bar con vinos europeos importados. Ocoa Bay es otra cosa: un viñedo costero en activo a 18° de latitud, plantado con vinifera y frutas tropicales, donde el rosé, el French Colombard, el espumante y el vino tropical de Kibay se elaboran y se prueban en el origen.',
-      'Una cata típica dura 90 minutos: recorrido en carro eléctrico por las viñas y la bodega, seguido de copas guiadas de las cosechas actuales con quienes las hicieron. Los vinos son orgánicos, fermentados (nunca refrescos con sabor), y embotellados a pocos pasos de la barra de cata.',
+      'Una cata típica dura 90 minutos: recorrido en carro eléctrico por las viñas y la bodega, seguido de copas guiadas de las cosechas actuales con quienes las hicieron. Los vinos son sostenibles, fermentados (nunca refrescos con sabor), y embotellados a pocos pasos de la barra de cata.',
       'Estás a dos horas en carro desde Santo Domingo y a una excursión de día desde casi cualquier punto de la costa sur. Sábados y domingos solamente.',
     ],
     cardsHeading: 'Dos formas de catar',
@@ -123,7 +123,7 @@ const content = {
         kind: 'experience',
         kindLabel: 'Día completo · ~4 hrs',
         title: 'Cata, recorrido, Casa Club y menú de 3 tiempos',
-        body: 'Todo lo del wine tour más almuerzo orgánico farm-to-table en Casa Club, acceso a la piscina hasta las 6:30 pm y brindis de bienvenida.',
+        body: 'Todo lo del wine tour más almuerzo sostenible farm-to-table en Casa Club, acceso a la piscina hasta las 6:30 pm y brindis de bienvenida.',
         image: POOL_IMG,
         imageAlt: 'Casa Club en Ocoa Bay — piscina y almuerzo incluidos en la experiencia completa',
         ctaLabel: 'Reserva la experiencia completa',
@@ -133,7 +133,7 @@ const content = {
     ],
     ocoaHeading: 'Sobre Ocoa Bay',
     ocoaBody:
-      'Ocoa Bay es la finca en activo detrás de cada botella de Kibay: un viñedo orgánico costero en Azua que cultiva uvas vinifera, mango y maracuyá en la misma tierra. Las reservas de catas, recorridos y Casa Club se hacen en el sitio de Ocoa Bay; las compras de productos (latas y botellas) suceden aquí en Kibay.',
+      'Ocoa Bay es la finca en activo detrás de cada botella de Kibay: un viñedo sostenible costero en Azua que cultiva uvas vinifera, mango y maracuyá en la misma tierra. Las reservas de catas, recorridos y Casa Club se hacen en el sitio de Ocoa Bay; las compras de productos (latas y botellas) suceden aquí en Kibay.',
     ocoaCta: 'Visita ocoabay.com',
     faqHeading: 'Cata en Ocoa Bay — respuestas rápidas',
     faqs: [
@@ -151,11 +151,11 @@ const content = {
       },
       {
         q: '¿Cuál es la diferencia entre el tour de vino y la experiencia completa?',
-        a: 'El tour de vino (US$65/persona, ~90 min) es la cata + recorrido en carro eléctrico. La experiencia completa (US$145/persona, ~4 horas) suma el menú orgánico de tres tiempos en Casa Club y acceso a la piscina hasta las 6:30 pm.',
+        a: 'El tour de vino (US$65/persona, ~90 min) es la cata + recorrido en carro eléctrico. La experiencia completa (US$145/persona, ~4 horas) suma el menú sostenible de tres tiempos en Casa Club y acceso a la piscina hasta las 6:30 pm.',
       },
       {
-        q: '¿Los vinos Kibay son orgánicos?',
-        a: 'Sí. Todos los vinos Kibay se fermentan a partir de uvas cultivadas orgánicamente en Ocoa Bay (rosé, French Colombard) y mango y maracuyá orgánicos (espumante, tropical). 12% ABV.',
+        q: '¿Los vinos Kibay son sostenibles?',
+        a: 'Sí. Todos los vinos Kibay se fermentan a partir de uvas cultivadas sosteniblemente en Ocoa Bay (rosé, French Colombard) y mango y maracuyá sostenibles (espumante, tropical). 12% ABV.',
       },
     ],
     closingHeading: 'Elige un fin de semana, cata en el origen',

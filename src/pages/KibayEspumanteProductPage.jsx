@@ -291,7 +291,7 @@ const KibayEspumanteProductPage = () => {
         </div>
       </section>
 
-      {/* Section 4: Organic & Natural Philosophy */}
+      {/* Section 4: Sustainable & Natural Philosophy */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-card">
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-12">
           <m.div

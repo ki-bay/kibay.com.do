@@ -1,17 +1,17 @@
 {
   "seo": {
-    "title": "Kibay Espumante – Vino espumante orgánico de mango y chinola",
-    "description": "Vino espumante dominicano orgánico fermentado con mango y chinola. Elaborado por la bodega Ocoa Bay. Refrescante, natural y único."
+    "title": "Kibay Espumante – Vino espumante sostenible de mango y chinola",
+    "description": "Vino espumante dominicano sostenible fermentado con mango y chinola. Elaborado por la bodega Ocoa Bay. Refrescante, natural y único."
   },
   "product": {
     "name": "Kibay Espumante - Lata 250ml",
-    "description": "Un espumante orgánico individual, práctico y listo para disfrutar. Crujiente, refrescante y lleno de sabores tropicales dominicanos."
+    "description": "Un espumante sostenible individual, práctico y listo para disfrutar. Crujiente, refrescante y lleno de sabores tropicales dominicanos."
   },
   "details": {
     "category": "Vino espumante",
     "origin": "República Dominicana",
     "format": "Lata de aluminio 250ml",
-    "ingredients": "Mango orgánico, chinola, fermentación natural",
+    "ingredients": "Mango sostenible, chinola, fermentación natural",
     "style": "Espumante seco",
     "alcohol": "11.5%",
     "shelfLife": "2 años",
@@ -26,12 +26,12 @@
     }
   },
   "gallery": {
-    "altBase": "Lata de Kibay Espumante 250ml, vino espumante orgánico"
+    "altBase": "Lata de Kibay Espumante 250ml, vino espumante sostenible"
   },
   "hero": {
-    "eyebrow": "Orgánico y natural",
-    "h1": "Kibay Espumante – Vino espumante orgánico con mango y chinola",
-    "intro": "Un espumante orgánico refrescante elaborado con mango y chinola dominicanos. Perfecto para cualquier ocasión."
+    "eyebrow": "Sostenible y natural",
+    "h1": "Kibay Espumante – Vino espumante sostenible con mango y chinola",
+    "intro": "Un espumante sostenible refrescante elaborado con mango y chinola dominicanos. Perfecto para cualquier ocasión."
   },
   "crafted": {
     "heading": "Elaborado en la República Dominicana",
@@ -41,9 +41,9 @@
     "heading": "Fermentación y proceso del vino",
     "body": "Empleamos métodos de fermentación tradicional para crear burbujas finas y persistentes. El proceso respeta la integridad de la fruta, garantizando un final limpio y fresco que baila en el paladar sin resultar demasiado dulce."
   },
-  "organic": {
-    "heading": "Ingredientes orgánicos y perfil natural",
-    "body": "Sin sabores artificiales. Sin aditivos sintéticos. Solo fruta orgánica pura cultivada bajo el sol del Caribe. Nuestro compromiso con el cultivo orgánico protege la tierra y ofrece una experiencia de sabor más auténtica."
+  "sustainable": {
+    "heading": "Ingredientes sostenibles y perfil natural",
+    "body": "Sin sabores artificiales. Sin aditivos sintéticos. Solo fruta sostenible pura cultivada bajo el sol del Caribe. Nuestro compromiso con el cultivo sostenible protege la tierra y ofrece una experiencia de sabor más auténtica."
   },
   "tasting": {
     "heading": "Notas de cata",
@@ -62,7 +62,7 @@
   "winery": {
     "heading": "Credibilidad de la bodega",
     "tagline": "De la misma bodega que Kibay Wine — por Ocoa Bay",
-    "imgAlt": "Bodega Ocoa Bay, viñedo dominicano de cultivo orgánico",
+    "imgAlt": "Bodega Ocoa Bay, viñedo dominicano de cultivo sostenible",
     "caption": "Viticultura sostenible en el corazón del Caribe"
   }
 }

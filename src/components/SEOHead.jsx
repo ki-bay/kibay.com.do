@@ -31,7 +31,7 @@ const SEOHead = ({
 
   const siteTitle = 'Kibay';
   const fullTitle = title ? title : 'Kibay – Espumante & Caribbean Wine Shop';
-  const metaDescription = description || 'Kibay offers modern Caribbean wines and Kibay Espumante, crafted in the Dominican Republic from organic fruits.';
+  const metaDescription = description || 'Kibay offers modern Caribbean wines and Kibay Espumante, crafted in the Dominican Republic from sustainable fruits.';
   // Default OG image flips per language. Pages that pass an explicit `image`
   // (e.g. a blog post's hero) override this.
   const defaultOgImage = currentLang === 'es' ? OG_IMAGE_ES : OG_IMAGE_EN;

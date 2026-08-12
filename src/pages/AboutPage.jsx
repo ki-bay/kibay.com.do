@@ -74,7 +74,7 @@ const AboutPage = () => {
             className="space-y-6 text-lg text-foreground/80 leading-relaxed font-light"
           >
             <p>
-              Kibay Sparkling was born from a simple yet powerful idea: to create a sparkling wine that captures the vibrant spirit of the Caribbean while meeting the demands of modern life. We saw an opportunity to honor our Dominican heritage through organic ingredients and innovative winemaking.
+              Kibay Sparkling was born from a simple yet powerful idea: to create a sparkling wine that captures the vibrant spirit of the Caribbean while meeting the demands of modern life. We saw an opportunity to honor our Dominican heritage through sustainable ingredients and innovative winemaking.
             </p>
             <p>
               The name "Kibay" reflects our commitment to authenticity and place. Every sip tells the story of sun-drenched tropical fruits, skilled craftsmanship, and a deep respect for sustainable agriculture.
@@ -142,7 +142,7 @@ const AboutPage = () => {
         </div>
       </section>
       
-      {/* Organic Production Values */}
+      {/* Sustainable Production Values */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-card">
         <div className="max-w-6xl mx-auto">
           <m.div
@@ -155,11 +155,11 @@ const AboutPage = () => {
             <div className="flex items-center justify-center gap-3 mb-6">
               <Leaf className="w-10 h-10 text-orange-500" />
               <h2 className="text-3xl sm:text-4xl font-light text-foreground">
-                Organic Commitment
+                Sustainable Commitment
               </h2>
             </div>
             <p className="text-lg text-foreground/80 max-w-3xl mx-auto font-light">
-              Organic isn't just a certification for us—it's a philosophy that guides every decision we make.
+              Sustainable isn't just a certification for us—it's a philosophy that guides every decision we make.
             </p>
           </m.div>
           
@@ -176,9 +176,9 @@ const AboutPage = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-normal mb-3 text-foreground text-center">Certified Organic</h3>
+                <h3 className="text-xl font-normal mb-3 text-foreground text-center">Certified Sustainable</h3>
                 <p className="text-foreground/70 text-center font-light">
-                  Every ingredient meets strict organic certification standards, ensuring purity from fruit to finished product.
+                  Every ingredient meets strict sustainable certification standards, ensuring purity from fruit to finished product.
                 </p>
               </Card>
             </m.div>
@@ -195,7 +195,7 @@ const AboutPage = () => {
                 </div>
                 <h3 className="text-xl font-normal mb-3 text-foreground text-center">Local Partnerships</h3>
                 <p className="text-foreground/70 text-center font-light">
-                  We work exclusively with certified organic Dominican farms, supporting local agriculture and minimizing our carbon footprint.
+                  We work exclusively with certified sustainable Dominican farms, supporting local agriculture and minimizing our carbon footprint.
                 </p>
               </Card>
             </m.div>

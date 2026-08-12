@@ -78,14 +78,14 @@ const WhitepaperPage = () => {
               </p>
             </m.section>
 
-            {/* Organic Ingredients */}
+            {/* Sustainable Ingredients */}
             <m.section {...fadeInUp}>
-              <h2 className="text-3xl font-serif text-foreground mb-6">{t('organic.heading')}</h2>
+              <h2 className="text-3xl font-serif text-foreground mb-6">{t('sustainable.heading')}</h2>
               <p className="mb-4">
-                {t('organic.p1')}
+                {t('sustainable.p1')}
               </p>
               <p>
-                {t('organic.p2')}
+                {t('sustainable.p2')}
               </p>
             </m.section>
 

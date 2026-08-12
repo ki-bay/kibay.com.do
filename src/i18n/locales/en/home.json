@@ -1,7 +1,7 @@
 {
   "seo": {
     "title": "Kibay – Espumante & Caribbean Wine Shop | Home",
-    "description": "Discover Kibay Espumante and Caribbean wines crafted from organic fruits in the Dominican Republic."
+    "description": "Discover Kibay Espumante and Caribbean wines crafted from sustainable fruits in the Dominican Republic."
   },
   "hero": {
     "badge": "New Arrival",
@@ -17,13 +17,13 @@
   },
   "origin": {
     "heading": "Our <accent>Origin</accent>",
-    "body": "Kibay Sparkling is crafted in the south of the Dominican Republic using organically sourced mango and passion fruit. Produced by an experienced local winery, it reflects a modern approach to Caribbean winemaking — grounded in fermentation, origin, and quality.",
+    "body": "Kibay Sparkling is crafted in the south of the Dominican Republic using sustainably sourced mango and passion fruit. Produced by an experienced local winery, it reflects a modern approach to Caribbean winemaking — grounded in fermentation, origin, and quality.",
     "mango": {
       "eyebrow": "Our Ingredients",
       "title": "MANGO",
       "body": "Through fermentation, mango contributes natural body, softness, and tropical depth to the wine — without artificial sweetness.",
       "cta": "Find Out More About Mango",
-      "imgAlt": "Organic mango — ingredient in Kibay Caribbean wine"
+      "imgAlt": "Sustainable mango — ingredient in Kibay Caribbean wine"
     },
     "passion": {
       "eyebrow": "Our Flavor",
@@ -41,9 +41,9 @@
     "heading": "The Kibay Difference",
     "subheading": "Kibay is for those who appreciate real wine, natural ingredients, and a modern way to enjoy the Caribbean — one sparkling moment at a time. Discover Kibay Sparkling.",
     "features": {
-      "organic": {
-        "title": "Organic Fermentation",
-        "body": "Naturally fermented with organic mango and passion fruit. No artificial sugars. No chemicals."
+      "sustainable": {
+        "title": "Sustainable Fermentation",
+        "body": "Naturally fermented with sustainable mango and passion fruit. No artificial sugars. No chemicals."
       },
       "caribbean": {
         "title": "Caribbean Heritage",
@@ -119,7 +119,7 @@
     "subheading": "Explore the unique flavors of the Dominican Republic. From our signature sparkling wine to our original still wine, Kibay brings the Caribbean terroir to your glass. Interested in distribution? Partner with us to bring Kibay to your market.",
     "sparkling": {
       "title": "Kibay Sparkling",
-      "body": "Organic sparkling wine with mango & passion fruit, naturally fermented. Fresh, modern, and unmistakably Caribbean."
+      "body": "Sustainable sparkling wine with mango & passion fruit, naturally fermented. Fresh, modern, and unmistakably Caribbean."
     },
     "wine": {
       "title": "Kibay Wine",
