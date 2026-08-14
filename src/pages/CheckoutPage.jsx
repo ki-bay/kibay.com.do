@@ -282,6 +282,11 @@ const CheckoutPage = () => {
 	const [loading, setLoading] = useState(false);
 	const [initError, setInitError] = useState(null);
 	const [shippingMethod, setShippingMethod] = useState('standard');
+	// Which physical location the customer picks up from when shippingMethod
+	// === 'pickup'. Encoded into the stored shipping_method value itself
+	// ('pickup_ocoa' | 'pickup_sd') — see computeShippingMajor in
+	// lib/shipping.js for why both stay free.
+	const [pickupLocation, setPickupLocation] = useState('ocoa');
 
 	// Coupon state.
 	// `appliedCoupon` is the validated coupon being applied to the current
@@ -630,7 +635,11 @@ const CheckoutPage = () => {
 				currency: effCurrency,
 				items_count: cartItems.length,
 				shipping_address: shippingInfo,
-				shipping_method: cartIsAllExperience ? 'pickup' : shippingMethod,
+				shipping_method: cartIsAllExperience
+					? 'pickup'
+					: shippingMethod === 'pickup'
+						? (pickupLocation === 'sd' ? 'pickup_sd' : 'pickup_ocoa')
+						: shippingMethod,
 				tax_id: shippingInfo.taxId || null,
 				payment_method: cardnetEnabled ? 'cardnet' : 'Stripe',
 				estimated_delivery_date: cartIsAllExperience
@@ -955,11 +964,40 @@ const CheckoutPage = () => {
 												</p>
 											)}
 											{shippingMethod === 'pickup' && (
-												<p className="text-xs text-foreground/60 font-light bg-emerald-500/5 border border-emerald-500/20 rounded p-3 mt-2">
-													{cartCurrency === 'USD'
-														? '📍 Pickup at Casa Club Ocoa Bay, Bahía de Ocoa. We will email you to coordinate a time.'
-														: '📍 Recoge en Casa Club Ocoa Bay, Bahía de Ocoa. Te escribiremos para coordinar la hora.'}
-												</p>
+												<div className="space-y-2 mt-2">
+													<label htmlFor="checkout-pickupLocation" className="text-sm font-light text-foreground/80">
+														{cartCurrency === 'USD' ? 'Pickup location' : 'Lugar de recogida'}
+													</label>
+													<select
+														id="checkout-pickupLocation"
+														name="pickupLocation"
+														value={pickupLocation}
+														onChange={(e) => setPickupLocation(e.target.value)}
+														disabled={step === 'payment'}
+														className="w-full bg-background/50 border border-foreground/10 rounded-lg p-3 text-foreground focus:border-mango-500 focus:outline-none font-light"
+													>
+														<option value="ocoa">
+															{cartCurrency === 'USD' ? 'Casa Club Ocoa Bay, Bahía de Ocoa' : 'Casa Club Ocoa Bay, Bahía de Ocoa'}
+														</option>
+														<option value="sd">
+															{cartCurrency === 'USD' ? 'Santo Domingo office' : 'Oficina Santo Domingo'}
+														</option>
+													</select>
+													<p className="text-xs text-foreground/60 font-light bg-emerald-500/5 border border-emerald-500/20 rounded p-3">
+														{pickupLocation === 'sd' ? (
+															<>
+																📍 Paseo de los Locutores No. 41, Oficina No. 101, Evaristo Morales, Santo Domingo.{' '}
+																{cartCurrency === 'USD'
+																	? 'We will email you to coordinate a time.'
+																	: 'Te escribiremos para coordinar la hora.'}
+															</>
+														) : cartCurrency === 'USD' ? (
+															'📍 Pickup at Casa Club Ocoa Bay, Bahía de Ocoa. We will email you to coordinate a time.'
+														) : (
+															'📍 Recoge en Casa Club Ocoa Bay, Bahía de Ocoa. Te escribiremos para coordinar la hora.'
+														)}
+													</p>
+												</div>
 											)}
 										</div>
 									)}

@@ -2,12 +2,14 @@
 // =============================================================================
 // Hourly sweep that emails the admin when any order has been stuck in
 // `awaiting_payment` for > 1 hour. That state means the customer initiated
-// checkout but no `payment_intent.succeeded` webhook ever landed — typically
+// checkout but cardnet-verify-session never confirmed a result — typically
 // caused by:
-//   - Stripe webhook delivery failing (signing secret out of sync, network)
-//   - Customer abandoned during 3DS challenge (low-risk, gets cleaned up by
-//     the cancel_stale_awaiting_payment_orders_hourly job within ~1h)
-//   - Real Stripe outage
+//   - CardNet's hosted session expiring/failing before the buyer completed
+//     payment (check the order's cardnet_response_code/message once set)
+//   - Customer abandoned during the CardNet page / 3DS challenge (low-risk,
+//     gets cleaned up by the cancel_stale_awaiting_payment_orders_hourly job
+//     within ~1h)
+//   - A CardNet-side outage or sandbox issue
 // We email so the owner can spot-check rather than discovering 24h later
 // that yesterday's three "orders" never actually paid.
 //
@@ -85,7 +87,7 @@ serve(async (req) => {
     <tr><td style="padding:20px 24px;border-bottom:1px solid #e7e5e4;">
       <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#c2410c;">⚠ Kibay alert</div>
       <h1 style="margin:4px 0 0 0;font-size:18px;font-weight:600;">${stuck.length} order${stuck.length === 1 ? '' : 's'} stuck in awaiting_payment</h1>
-      <p style="margin:6px 0 0 0;font-size:13px;color:#78716c;">These orders never received a successful Stripe payment_intent.succeeded webhook within an hour of creation. Investigate before they auto-cancel.</p>
+      <p style="margin:6px 0 0 0;font-size:13px;color:#78716c;">These orders never got a confirmed result back from CARDNET within an hour of creation. Investigate before they auto-cancel.</p>
     </td></tr>
     <tr><td style="padding:16px 24px;">
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse;font-size:13px;">
@@ -101,9 +103,9 @@ serve(async (req) => {
     <tr><td style="padding:16px 24px;border-top:1px solid #e7e5e4;font-size:12px;color:#78716c;">
       <p style="margin:0 0 8px 0;"><strong>What to check:</strong></p>
       <ol style="margin:0;padding-left:20px;">
-        <li>Stripe Dashboard → Developers → Webhooks → look for failed deliveries.</li>
-        <li>If the customer's payment_intent shows succeeded but order is still awaiting_payment, the signing secret is out of sync — rotate STRIPE_WEBHOOK_SECRET.</li>
-        <li>Otherwise the customer abandoned during 3DS; will auto-cancel within 2h.</li>
+        <li>Check the order's <code>cardnet_response_code</code> / <code>cardnet_response_message</code> in admin orders — if set, CARDNET already told us why (declined, session expired, etc.).</li>
+        <li>If those are still empty, the buyer likely never finished CARDNET's hosted page (didn't complete 3DS, or closed the tab) — will auto-cancel within 2h.</li>
+        <li>If you suspect a real CARDNET-side issue, check with Hansel/Integraciones CARDNET directly — this is not a Stripe integration.</li>
       </ol>
       <p style="margin:12px 0 0 0;"><a href="https://kibay.com.do/admin/orders" style="color:#1c1917;">→ Open admin orders</a></p>
     </td></tr>

@@ -51,6 +51,10 @@ const cn = {
 	// unset in production — real buyer email/phone flow through.
 	test3dsEmail: Deno.env.get('CARDNET_3DS_TEST_EMAIL') || '',
 	test3dsPhone: Deno.env.get('CARDNET_3DS_TEST_PHONE') || '',
+	// QA-only: Hansel's known-good AVS test value (tied to whatever test card
+	// data CARDNET's sandbox expects for AVS matching). Leave unset in
+	// production — real buyer address flows through.
+	testAvs: Deno.env.get('CARDNET_AVS_TEST_VALUE') || '',
 };
 
 const cors = {
@@ -66,9 +70,12 @@ function json(body: unknown, status = 200) {
 	});
 }
 
-// CARDNET amounts are 12-digit zero-padded minor units. Same convention for Tax.
-function pad12(n: number): string {
-	return String(Math.max(0, Math.round(n))).padStart(12, '0');
+// CARDNET amounts are minor units, no zero-padding — per Hansel Aybar
+// 2026-08-14: "100 pesos = 10000" (last 2 digits are decimals). Our
+// orders.total_amount is already stored this way, so no scaling needed,
+// just stringify. The earlier 12-digit zero-padded format was wrong.
+function amountToString(n: number): string {
+	return String(Math.max(0, Math.round(n)));
 }
 
 serve(async (req) => {
@@ -121,24 +128,19 @@ serve(async (req) => {
 	// Build the session creation payload.
 	// total_amount is stored as integer minor units (cents) in DOP for CARDNET orders.
 	// Tax in our orders schema is folded into total_amount; we send Tax='0' to CARDNET.
-	// 'TransactionId' must be unique-ish; the CARDNET docs use a numeric value. We use
-	// the order's id with non-digits stripped and capped at 12 chars.
-	const transactionId = (order.id || '').replace(/[^0-9]/g, '').slice(0, 12) || String(Date.now()).slice(-12);
-	const amount = pad12(order.total_amount); // 12-digit minor units
+	// TransactionId/OrdenId — per Hansel's known-good example request (2026-08-14)
+	// these are short plain numeric values (e.g. "14580" / "689"), not long
+	// UUID-derived strings. Short numeric digits from the order id/number.
+	const transactionId = (order.id || '').replace(/[^0-9]/g, '').slice(0, 6) || String(Date.now()).slice(-6);
+	const ordenId = (order.order_number || '').replace(/[^0-9]/g, '').slice(-6) || transactionId;
+	const amount = amountToString(order.total_amount);
 
-	// Reuse shipping address for 3DS billing (we don't collect separate billing).
-	// Country code per docs needs to be ISO 3166-1 (3-char alpha or numeric). For
-	// the QA sandbox we send 'DO' / 'DOM' / 214 — the docs are inconsistent. Use
-	// 'DOM' (alpha-3) which matches the example.
 	const ship = (order.shipping_address as Record<string, string>) || {};
 	const buyerEmail = ship.email || '';
 	const buyerMobile = (ship.phone || '').replace(/[^0-9]/g, '').slice(0, 15);
-	const billAddrLine1 = (ship.address || '').slice(0, 50);
-	const billAddrLine2 = (ship.address2 || '').slice(0, 50);
-	const billAddrCity = (ship.city || '').slice(0, 50);
-	const billAddrState = (ship.state || ship.province || '').slice(0, 3) || 'DN';
-	const billAddrCountry = 'DOM';
-	const billAddrPostCode = (ship.zipCode || ship.postalCode || '').slice(0, 16) || '10000';
+	// AVS uses the street address line; no separate billing address is collected.
+	// In QA, CARDNET_AVS_TEST_VALUE overrides with Hansel's known-good test value.
+	const billAddrLine1 = cn.testAvs || (ship.address || '').slice(0, 50);
 
 	// Final return URL — append order_id (and guest token for guest checkouts)
 	// so the return page can correlate back to the order.
@@ -166,38 +168,28 @@ serve(async (req) => {
 		ReturnUrl: returnWithOrder,
 		CancelUrl: cancelWithOrder,
 		PageLanguaje: order.currency === 'USD' ? 'ENG' : 'ESP',
-		OrdenId: order.order_number || transactionId,
+		OrdenId: ordenId,
 		TransactionId: transactionId,
-		Tax: '000000000000',
+		Tax: '0',
 		MerchantName: cn.merchantName.slice(0, 40),
 		AVS: billAddrLine1 || '',
 		Amount: amount,
 	};
 
-	// 3DS fields — required for fraud-protected transactions. Per Hansel's
-	// email mobile + email are mandatory; per the spec doc workPhone/homePhone
-	// and the full billAddr block are also marked Mandatorio. We fall back
-	// to mobile for work/home and use the shipping address as billing.
+	// 3DS fields — per Hansel Aybar 2026-08-14, only 3DS_email + 3DS_mobilePhone
+	// are actually required. Everything else (workPhone, homePhone, the full
+	// billAddr block) was a guess from an inconsistent spec PDF and has been
+	// dropped entirely — sending it was not needed and may have been part of
+	// what triggered the extra captcha/verification step on their hosted page.
 	//
 	// QA testing requires Hansel's preconfigured test 3DS account (otherwise
 	// the OTP challenge can't be dispatched). When CARDNET_3DS_TEST_EMAIL/
-	// CARDNET_3DS_TEST_PHONE are set, we override the buyer's contact info
-	// for the two 3DS fields that drive OTP routing. Other 3DS fields keep
-	// the real buyer data — that's what the issuer's risk engine reads.
+	// CARDNET_3DS_TEST_PHONE are set, we override the buyer's contact info for
+	// these two fields — that's what drives OTP routing in the sandbox.
 	const effective3dsEmail = cn.test3dsEmail || buyerEmail;
 	const effective3dsPhone = cn.test3dsPhone || buyerMobile;
 	if (effective3dsEmail) payload['3DS_email'] = effective3dsEmail;
-	if (effective3dsPhone) {
-		payload['3DS_mobilePhone'] = effective3dsPhone;
-		payload['3DS_workPhone'] = effective3dsPhone;
-		payload['3DS_homePhone'] = effective3dsPhone;
-	}
-	if (billAddrLine1) payload['3DS_billAddr_line1'] = billAddrLine1;
-	if (billAddrLine2) payload['3DS_billAddr_line2'] = billAddrLine2;
-	if (billAddrCity) payload['3DS_billAddr_city'] = billAddrCity;
-	if (billAddrState) payload['3DS_billAddr_state'] = billAddrState;
-	payload['3DS_billAddr_country'] = billAddrCountry;
-	payload['3DS_billAddr_postCode'] = billAddrPostCode;
+	if (effective3dsPhone) payload['3DS_mobilePhone'] = effective3dsPhone;
 
 	// POST to CARDNET.
 	let cardnetBody: Record<string, unknown> = {};

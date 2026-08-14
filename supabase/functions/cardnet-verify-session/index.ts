@@ -63,7 +63,9 @@ serve(async (req) => {
 	const admin = createClient(supabaseUrl, serviceKey);
 	const { data: order } = await admin
 		.from('orders')
-		.select('id, order_number, user_id, total_amount, currency, status, guest_lookup_token, cardnet_session_id, cardnet_session_key')
+		.select(
+			'id, order_number, user_id, total_amount, currency, status, guest_lookup_token, cardnet_session_id, cardnet_session_key, cardnet_response_code, cardnet_response_message',
+		)
 		.eq('id', orderId)
 		.maybeSingle();
 	if (!order) return json({ error: 'order_not_found' }, 404);
@@ -75,6 +77,24 @@ serve(async (req) => {
 	// Already paid? Short-circuit — repeat verify calls are safe.
 	if (order.status === 'paid') {
 		return json({ status: 'paid', order_id: order.id, already: true });
+	}
+
+	// Already have a definitive result (set by cardnet-callback, which reads
+	// CARDNET's own POST-back — the authoritative source)? Don't re-verify via
+	// GET /sessions/<id> — that endpoint reliably returns rspdata_not_found
+	// once CARDNET has already delivered the result via the callback, and
+	// overwriting a real response code (e.g. '05' Declined) with the resulting
+	// generic '404 Session not found' loses information. This page's own
+	// verify call is now just a fallback for the rare case the callback never
+	// fired at all.
+	if (order.status === 'failed' && order.cardnet_response_code) {
+		return json({
+			status: 'failed',
+			order_id: order.id,
+			code: order.cardnet_response_code,
+			message: order.cardnet_response_message,
+			already: true,
+		});
 	}
 
 	if (!order.cardnet_session_id || !order.cardnet_session_key) {

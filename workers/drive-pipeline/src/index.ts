@@ -44,6 +44,7 @@ interface Env extends SupabaseEnv, EmailEnv, SocialEnv {
 	BREVO_WEBHOOK_SECRET?: string;
 	// Manual trigger auth for POST /campaigns/send-next (added 2026-08-12).
 	DAILY_CAMPAIGN_CRON_TOKEN?: string;
+	TRANSACTIONAL_RELAY_TOKEN?: string;
 }
 
 // CORS allowlist for endpoints called from the browser (admin SPA).
@@ -288,6 +289,78 @@ h1{margin:0 0 12px;color:#16a34a;}
 						JSON.stringify({ ok: false, error: (e as Error).message }),
 						{ status: 500, headers: { 'content-type': 'application/json' } },
 					),
+					req,
+				);
+			}
+		}
+
+		// POST /transactional/send — relay for one-off transactional emails
+		// (order confirmations, admin new-order notices) sent by Supabase Edge
+		// Functions. Added 2026-08-14: Supabase Edge Functions run on Deno
+		// Deploy's rotating pool of egress IPs, which Brevo's IP-allowlist
+		// security silently rejects ("unrecognised IP address") — every
+		// customer order confirmation + admin notification was failing
+		// server-side with no visible error (the checkout-success page still
+		// showed "confirmation sent" since that's just static copy, not a
+		// delivery confirmation). Cloudflare Workers' egress is already
+		// Brevo-trusted (same fix already used for the marketing pipeline), so
+		// send-order-email now relays through here instead of calling Brevo
+		// directly. Auth: SUPABASE_SERVICE_ROLE_KEY bearer only — no admin-user
+		// JWT flow, this is server-to-server.
+		if (url.pathname === '/transactional/send' && req.method === 'POST') {
+			const auth = req.headers.get('authorization') || '';
+			const token = auth.replace(/^Bearer\s+/i, '');
+			// Dedicated token, not SUPABASE_SERVICE_ROLE_KEY — Supabase's
+			// auto-injected value for that env var inside Edge Functions no
+			// longer string-matches what this project's legacy service_role
+			// key shows via the Management API (confirmed live 2026-08-14,
+			// during the platform's sb_secret_* key migration), so relying on
+			// it matching across two separate platforms (Supabase + Cloudflare)
+			// was fragile. This token is minted and set on both sides directly.
+			if (!token || token !== (env.TRANSACTIONAL_RELAY_TOKEN || '')) {
+				return withCors(new Response('Unauthorized', { status: 401 }), req);
+			}
+			try {
+				const body = (await req.json()) as {
+					to?: string;
+					toName?: string;
+					subject?: string;
+					htmlContent?: string;
+					fromName?: string;
+					fromEmail?: string;
+					replyTo?: string;
+				};
+				if (!body.to || !body.subject || !body.htmlContent) {
+					return withCors(
+						new Response(JSON.stringify({ ok: false, error: 'to, subject, htmlContent required' }), {
+							status: 400,
+							headers: { 'content-type': 'application/json' },
+						}),
+						req,
+					);
+				}
+				const result = await sendBrevoEmail(env, {
+					to: [{ email: body.to, name: body.toName || undefined }],
+					subject: body.subject,
+					htmlContent: body.htmlContent,
+					fromName: body.fromName,
+					fromEmail: body.fromEmail,
+					replyTo: body.replyTo ? { email: body.replyTo } : undefined,
+					tags: ['transactional', 'order-email'],
+				});
+				return withCors(
+					new Response(JSON.stringify({ ok: true, messageId: result.messageId }), {
+						headers: { 'content-type': 'application/json' },
+					}),
+					req,
+				);
+			} catch (e) {
+				console.error('/transactional/send error:', e);
+				return withCors(
+					new Response(JSON.stringify({ ok: false, error: (e as Error).message }), {
+						status: 500,
+						headers: { 'content-type': 'application/json' },
+					}),
 					req,
 				);
 			}
@@ -1046,6 +1119,7 @@ interface InlineSendInput {
 	fromEmail?: string;
 	replyTo?: string;
 	segmentFilter?: SegmentFilter;
+	attachment?: Array<{ name: string; content: string }>; // content = base64
 }
 
 interface EmailSendBody {
@@ -1053,6 +1127,7 @@ interface EmailSendBody {
 	inline?: InlineSendInput;
 	testTo?: string;
 	recipientEmails?: string[];
+	transactional?: boolean;
 }
 
 interface CampaignRow {
@@ -1119,10 +1194,16 @@ async function loadResumableCampaignByName(env: Env, name: string): Promise<Camp
 	return rows[0] ?? null;
 }
 
+// "Already contacted" = any log row exists for this campaign+recipient, not
+// status='sent' specifically — the Brevo webhook (handleBrevoEvent) rewrites
+// that same status column to delivered/bounced/opened/etc within seconds of
+// the send, so filtering on 'sent' alone undercounts almost immediately and
+// would cause the resume logic to re-email people who were already contacted
+// (including retrying already-bounced addresses).
 async function loadSentEmailsForCampaign(env: Env, campaignId: string): Promise<Set<string>> {
 	const u = `${env.SUPABASE_URL}/rest/v1/email_logs?campaign_id=eq.${encodeURIComponent(
 		campaignId,
-	)}&status=eq.sent&select=recipient`;
+	)}&select=recipient`;
 	const r = await fetch(u, { headers: emailMarketingHeaders(env) });
 	if (!r.ok) return new Set();
 	const rows = (await r.json()) as Array<{ recipient: string }>;
@@ -1311,15 +1392,20 @@ async function handleEmailSend(env: Env, req: Request, adminEmail: string): Prom
 	// ---- Test mode: send to one address, no logs, no campaign mutation ------
 	if (body.testTo) {
 		const testEmail = body.testTo;
-		const finalHtml = await injectUnsubscribeFooter(env, htmlContent, testEmail);
+		// body.transactional=true (only valid with inline, not a saved campaign):
+		// a genuine one-off email (e.g. to a vendor/partner) — no "[TEST]" prefix,
+		// no marketing-unsubscribe footer, but still supports attachments.
+		const isTransactional = !campaign && body.transactional === true;
+		const finalHtml = isTransactional ? htmlContent : await injectUnsubscribeFooter(env, htmlContent, testEmail);
 		const result = await sendBrevoEmail(env, {
 			to: [{ email: testEmail }],
-			subject: `[TEST] ${subject}`,
+			subject: isTransactional ? subject : `[TEST] ${subject}`,
 			htmlContent: finalHtml,
 			fromName,
 			fromEmail,
 			replyTo: replyToEmail ? { email: replyToEmail } : undefined,
-			tags: campaign ? [`campaign:${campaign.id}`, 'test'] : ['inline', 'test'],
+			tags: campaign ? [`campaign:${campaign.id}`, 'test'] : isTransactional ? ['inline', 'transactional'] : ['inline', 'test'],
+			attachment: (body.inline as InlineSendInput | undefined)?.attachment,
 		});
 		return new Response(
 			JSON.stringify({

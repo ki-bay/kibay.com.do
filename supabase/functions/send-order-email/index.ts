@@ -23,13 +23,20 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.1';
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const anonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
-const brevoKey = Deno.env.get('BREVO_API_KEY');
 const fromAddress = Deno.env.get('ORDER_EMAIL_FROM') || '';
 // Calendar link signing — must match the Worker's EMAIL_LINK_SECRET so the
 // /calendar/order/:id.ics endpoint can verify the signature this email mints.
-// WORKER_BASE_URL is the public host of the drive-pipeline Worker.
+// WORKER_BASE_URL is also the relay target for actually sending the email
+// (see the /transactional/send call below — Brevo blocks Supabase Edge
+// Functions' rotating egress IPs, so we no longer call Brevo directly here).
 const emailLinkSecret = Deno.env.get('EMAIL_LINK_SECRET') || '';
 const workerBaseUrl = Deno.env.get('WORKER_BASE_URL') || '';
+// Auth for the /transactional/send relay call — a dedicated token, not
+// serviceKey. Supabase's auto-injected SUPABASE_SERVICE_ROLE_KEY no longer
+// string-matches what's set on the Cloudflare Worker (confirmed live
+// 2026-08-14, mid platform key migration), so this is minted and set
+// independently on both sides instead of depending on that match.
+const transactionalRelayToken = Deno.env.get('TRANSACTIONAL_RELAY_TOKEN') || '';
 // Optional admin notification BCC. When set, the admin receives a copy of every
 // customer 'confirmation' and 'refund' email. Default: 'info@kibay.com.do'.
 // Set to an empty string in Supabase secrets to disable.
@@ -59,10 +66,6 @@ serve(async (req) => {
 	if (req.method === 'OPTIONS') return new Response(null, { headers: cors });
 	if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
 
-	if (!brevoKey) {
-		console.error('BREVO_API_KEY not set');
-		return json({ error: 'Email provider not configured' }, 500);
-	}
 	const sender = parseFrom(fromAddress);
 	if (!sender) {
 		console.error('ORDER_EMAIL_FROM not set or invalid');
@@ -199,34 +202,36 @@ serve(async (req) => {
 		? 'Kibay Admin'
 		: `${ship.firstName || ''} ${ship.lastName || ''}`.trim() || undefined;
 
-	// BCC removed: admin gets dedicated admin_new_order / admin_refunded
-	// emails instead, so we no longer need to copy them on the customer's.
-	// Note: abandoned_cart is a customer email but intentionally NEVER BCCs
-	// admin — we don't want to spam the owner with every transient cart drop.
-	const wantsBcc =
-		false &&
-		!!adminNotifyEmail &&
-		(type === 'confirmation' || type === 'refund') &&
-		adminNotifyEmail.toLowerCase() !== String(to).toLowerCase();
-
-	const resp = await fetch('https://api.brevo.com/v3/smtp/email', {
+	// Relay through the Cloudflare Worker rather than calling Brevo directly.
+	// Supabase Edge Functions run on Deno Deploy's rotating pool of egress
+	// IPs, which Brevo's IP-allowlist security silently rejects
+	// ("unrecognised IP address") — confirmed live 2026-08-14, every order
+	// confirmation + admin notification was failing with no visible error on
+	// the customer-facing side (the success page's "confirmation sent" line
+	// is static copy, not a delivery confirmation). The Worker's egress is
+	// already Brevo-trusted (same fix used for the marketing pipeline).
+	if (!workerBaseUrl || !transactionalRelayToken) {
+		console.error('WORKER_BASE_URL or TRANSACTIONAL_RELAY_TOKEN not set — cannot relay email');
+		return json({ error: 'Email relay not configured' }, 500);
+	}
+	const resp = await fetch(`${workerBaseUrl}/transactional/send`, {
 		method: 'POST',
 		headers: {
-			'api-key': brevoKey,
+			Authorization: `Bearer ${transactionalRelayToken}`,
 			'Content-Type': 'application/json',
-			Accept: 'application/json',
 		},
 		body: JSON.stringify({
-			sender,
-			to: [{ email: to, ...(recipientName ? { name: recipientName } : {}) }],
-			...(wantsBcc ? { bcc: [{ email: adminNotifyEmail, name: 'Kibay Admin' }] } : {}),
+			to,
+			toName: recipientName,
 			subject,
 			htmlContent: html,
+			fromName: sender.name,
+			fromEmail: sender.email,
 		}),
 	});
 	if (!resp.ok) {
 		const errText = await resp.text();
-		console.error('Brevo send failed', resp.status, errText);
+		console.error('Transactional relay send failed', resp.status, errText);
 		return json({ error: 'Send failed', details: errText }, 502);
 	}
 	const sent = await resp.json();

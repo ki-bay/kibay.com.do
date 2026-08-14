@@ -41,17 +41,24 @@ export const useOrderHistory = () => {
   useEffect(() => {
     fetchOrders();
 
-    // Optional: Realtime subscription for order status updates
+    if (!user?.id) return undefined;
+
+    // Channel name must be unique per subscriber — a shared/static name (the
+    // old 'public:orders') gets reused by Supabase's client-side channel
+    // registry, so if this effect re-runs before the previous channel's
+    // cleanup finishes (e.g. `user` reference changes on token refresh),
+    // `.channel()` returns the already-subscribed instance and `.on()` on it
+    // throws "cannot add postgres_changes callbacks ... after subscribe()".
     const subscription = supabase
-      .channel('public:orders')
-      .on('postgres_changes', { 
-        event: 'UPDATE', 
-        schema: 'public', 
+      .channel(`orders-realtime-${user.id}`)
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
         table: 'orders',
-        filter: `user_id=eq.${user?.id}`
+        filter: `user_id=eq.${user.id}`
       }, (payload) => {
-        setOrders(prevOrders => 
-          prevOrders.map(order => 
+        setOrders(prevOrders =>
+          prevOrders.map(order =>
             order.id === payload.new.id ? payload.new : order
           )
         );

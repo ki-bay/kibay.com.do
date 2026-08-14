@@ -35,6 +35,7 @@ export interface SendBrevoEmailInput {
 	replyTo?: { email: string; name?: string };
 	tags?: string[];
 	headers?: Record<string, string>;
+	attachment?: Array<{ name: string; content: string }>; // content = base64
 }
 
 export interface BrevoSendResult {
@@ -71,6 +72,7 @@ export async function sendBrevoEmail(
 	if (input.replyTo) body.replyTo = input.replyTo;
 	if (input.tags && input.tags.length) body.tags = input.tags;
 	if (input.headers) body.headers = input.headers;
+	if (input.attachment && input.attachment.length) body.attachment = input.attachment;
 
 	const r = await fetch('https://api.brevo.com/v3/smtp/email', {
 		method: 'POST',
