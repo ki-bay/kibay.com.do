@@ -638,7 +638,7 @@ const CheckoutPage = () => {
 				shipping_method: cartIsAllExperience
 					? 'pickup'
 					: shippingMethod === 'pickup'
-						? (pickupLocation === 'sd' ? 'pickup_sd' : 'pickup_ocoa')
+						? (pickupLocation === 'sd' ? 'pickup_sd' : pickupLocation === 'zc' ? 'pickup_zc' : 'pickup_ocoa')
 						: shippingMethod,
 				tax_id: shippingInfo.taxId || null,
 				payment_method: cardnetEnabled ? 'cardnet' : 'Stripe',
@@ -982,11 +982,21 @@ const CheckoutPage = () => {
 														<option value="sd">
 															{cartCurrency === 'USD' ? 'Santo Domingo office' : 'Oficina Santo Domingo'}
 														</option>
+														<option value="zc">
+															{cartCurrency === 'USD' ? 'Santo Domingo, Zona Colonial' : 'Santo Domingo, Zona Colonial'}
+														</option>
 													</select>
 													<p className="text-xs text-foreground/60 font-light bg-emerald-500/5 border border-emerald-500/20 rounded p-3">
 														{pickupLocation === 'sd' ? (
 															<>
 																📍 Paseo de los Locutores No. 41, Oficina No. 101, Evaristo Morales, Santo Domingo.{' '}
+																{cartCurrency === 'USD'
+																	? 'We will email you to coordinate a time.'
+																	: 'Te escribiremos para coordinar la hora.'}
+															</>
+														) : pickupLocation === 'zc' ? (
+															<>
+																📍 Parmenio Trancoso 4, Zona Colonial, Santo Domingo.{' '}
 																{cartCurrency === 'USD'
 																	? 'We will email you to coordinate a time.'
 																	: 'Te escribiremos para coordinar la hora.'}
