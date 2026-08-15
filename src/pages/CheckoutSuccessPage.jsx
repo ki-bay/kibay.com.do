@@ -138,6 +138,11 @@ const CheckoutSuccessPage = () => {
 	const invoiceHref =
 		order?.invoice_pdf_path && publicStorageObjectUrl('blog_media', order.invoice_pdf_path);
 
+	// Only paid (or later — shipped/delivered/refunded) orders get the
+	// celebratory success page. Anything else (failed, cancelled,
+	// awaiting_payment) shows an honest "didn't go through" state instead.
+	const isPaidStatus = ['paid', 'shipped', 'delivered', 'refunded'].includes(order?.status);
+
 	return (
 		<>
 			<SEOHead
@@ -170,6 +175,37 @@ const CheckoutSuccessPage = () => {
 								<Button variant="outline" className="border-[#D4A574] text-[#D4A574]">
 									{t('success.viewOrder')}
 								</Button>
+							</Link>
+						</div>
+					) : !isPaidStatus ? (
+						// Order fetched fine, but it's NOT actually paid (failed, cancelled,
+						// still awaiting_payment, etc). Previously this page showed the full
+						// celebratory "¡Gracias por tu pedido!" checkmark regardless of
+						// order.status — the only nod to real status was a small pill, so a
+						// failed order rendered a green success page with a red "Pago
+						// fallido" pill inside it. Confirmed live 2026-08-14.
+						<div className="py-8 relative z-10">
+							<AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" aria-hidden="true" />
+							<h1 className="text-2xl md:text-3xl font-light text-stone-900 mb-2">
+								{t('cardnet.failedTitle', 'El pago no se completó')}
+							</h1>
+							<p className="text-stone-500 mb-4 font-light">
+								{t('success.orderNumber')} #{order?.order_number}
+							</p>
+							<div className="inline-flex items-center gap-2 bg-red-500/10 text-red-700 border border-red-500/30 rounded-full px-4 py-1.5 mb-6">
+								<AlertCircle className="w-4 h-4" />
+								<span className="text-sm font-medium">
+									{t(`statusLabel.${order?.status}`, order?.status || '')}
+								</span>
+							</div>
+							<p className="text-stone-500 mb-6 font-light">
+								{t('cardnet.failedBody', 'Tu banco o CARDNET rechazó la transacción. Tu carrito sigue intacto — puedes intentarlo de nuevo.')}
+							</p>
+							<Link
+								to="/checkout"
+								className="inline-block px-6 py-3 rounded-full bg-[#D4A574] text-stone-950 font-medium hover:bg-[#c29462] transition-colors"
+							>
+								{t('cardnet.backToCheckout', 'Volver al checkout')}
 							</Link>
 						</div>
 					) : (
