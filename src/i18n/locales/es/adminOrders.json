@@ -74,6 +74,23 @@
     "refund": "Reembolsar",
     "save": "Guardar"
   },
+  "statusActions": {
+    "startPacking": "Comenzar a preparar",
+    "markShipped": "Marcar enviado",
+    "markDelivered": "Marcar entregado",
+    "cancel": "Cancelar pedido",
+    "markFailed": "Marcar fallido",
+    "markDisputed": "Marcar en disputa",
+    "reopen": "Reabrir pedido",
+    "trackingRequired": "Ingresa un número de rastreo antes de marcar como enviado",
+    "confirmCancel": "¿Cancelar el pedido {{orderNumber}}? Esta acción no se puede deshacer fácilmente.",
+    "confirmMarkFailed": "¿Marcar el pedido {{orderNumber}} como fallido?",
+    "confirmDisputed": "¿Marcar el pedido {{orderNumber}} en disputa? Úsalo solo si el banco/CARDNET reportó un contracargo.",
+    "confirmReopen": "¿Reabrir el pedido {{orderNumber}} a \"esperando pago\"? Úsalo solo si hay evidencia de que el pago sí se realizó.",
+    "updated": "Estado actualizado",
+    "failed": "No se pudo actualizar el estado",
+    "trackingEmailSent": "y email de rastreo enviado"
+  },
   "pagination": {
     "summary": "Página {{page}} de {{totalPages}} · {{count}} pedido",
     "summary_plural": "Página {{page}} de {{totalPages}} · {{count}} pedidos",

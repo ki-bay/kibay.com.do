@@ -447,6 +447,10 @@ async function renderEmail(
 			? await renderReservationBlock(items, lang, String(order.id || ''), String(order.order_number || ''))
 			: '';
 
+	// Pickup block — address + one-click Google Maps link, shown on the
+	// customer confirmation when they chose a pickup location at checkout.
+	const pickupBlock = type === 'confirmation' ? renderPickupBlock(order, lang) : '';
+
 	const taglineEs = 'Vino espumoso orgánico premium de la República Dominicana. Elaborado con pasión, sostenibilidad y los mejores frutos locales.';
 	const taglineEn = 'Premium organic sparkling wine from the Dominican Republic. Crafted with passion, sustainability, and the finest local fruits.';
 	const copyrightEs = '© Kibay · Hecho en la República Dominicana';
@@ -484,6 +488,7 @@ async function renderEmail(
         <tr><td style="padding:24px 40px 0;">
           ${reservationBlock}
           ${showItems ? renderItemsTable(items, fmt, tpl as Record<string, string>, order, symbol) : ''}
+          ${pickupBlock}
           ${type === 'tracking' ? renderTrackingBlock(order, tpl as Record<string, string>) : ''}
           ${showCta ? `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 24px 0;"><tr><td align="center"><a href="https://kibay.com.do/cart" style="display:inline-block;padding:14px 32px;background:#1a1a1a;color:#ffffff;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;letter-spacing:0.3px;">${escapeHtml(ctaLabel)}</a></td></tr></table>` : ''}
           ${
@@ -606,6 +611,54 @@ function googleCalendarUrl(
 
 const RESERVATION_LOCATION =
 	'Bahía de Ocoa, Carretera Hatillo Palmar de Ocoa Km 6/12, Hatillo, Azua 71003, DO';
+
+// Pickup points offered at checkout (CheckoutPage.jsx pickupLocation select).
+// Keyed by the shipping_method value the order was persisted with — 'pickup'
+// is the legacy/default value (orders placed before the two-more-locations
+// checkout change, and winery-experience-only orders), same place as 'pickup_ocoa'.
+const PICKUP_LOCATIONS: Record<string, { es: string; en: string; address: string }> = {
+	pickup: {
+		es: 'Casa Club Ocoa Bay, Bahía de Ocoa',
+		en: 'Casa Club Ocoa Bay, Bahía de Ocoa',
+		address: RESERVATION_LOCATION,
+	},
+	pickup_ocoa: {
+		es: 'Casa Club Ocoa Bay, Bahía de Ocoa',
+		en: 'Casa Club Ocoa Bay, Bahía de Ocoa',
+		address: RESERVATION_LOCATION,
+	},
+	pickup_sd: {
+		es: 'Oficina Santo Domingo',
+		en: 'Santo Domingo office',
+		address: 'Paseo de los Locutores No. 41, Oficina No. 101, Evaristo Morales, Santo Domingo, República Dominicana',
+	},
+	pickup_zc: {
+		es: 'Santo Domingo, Zona Colonial',
+		en: 'Santo Domingo, Zona Colonial',
+		address: 'Parmenio Trancoso 4, Zona Colonial, Santo Domingo, República Dominicana',
+	},
+};
+
+function renderPickupBlock(order: Order, lang: 'es' | 'en'): string {
+	const method = String(order.shipping_method || '');
+	const loc = PICKUP_LOCATIONS[method];
+	if (!loc) return '';
+	const label = lang === 'es' ? 'Recoge en' : 'Pickup at' as const;
+	const note = lang === 'es'
+		? 'Te escribiremos para coordinar la hora.'
+		: "We'll email you to coordinate a time.";
+	const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc.address)}`;
+	const locName = lang === 'es' ? loc.es : loc.en;
+	return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 24px 0;background:#fafaf9;border-radius:10px;">
+    <tr><td style="padding:16px 18px;">
+      <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:#78716c;margin-bottom:8px;">${escapeHtml(label)}</div>
+      <div style="font-size:14px;font-weight:600;color:#1c1917;">${escapeHtml(locName)}</div>
+      <div style="font-size:13px;color:#57534e;line-height:1.5;margin-top:4px;">${escapeHtml(loc.address)}</div>
+      <div style="font-size:13px;color:#78716c;margin-top:6px;">${escapeHtml(note)}</div>
+      <a href="${mapsUrl}" style="display:inline-block;margin-top:12px;padding:10px 20px;background:#1a73e8;color:#ffffff;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;">${lang === 'es' ? 'Abrir en Google Maps' : 'Open in Google Maps'}</a>
+    </td></tr>
+  </table>`;
+}
 
 async function renderReservationBlock(
 	items: Item[],

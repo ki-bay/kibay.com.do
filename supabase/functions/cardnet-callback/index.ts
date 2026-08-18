@@ -34,6 +34,9 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.1';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+// generate-order-invoice checks this dedicated token rather than serviceKey
+// (see that function's own comment on why).
+const relayToken = Deno.env.get('TRANSACTIONAL_RELAY_TOKEN') || '';
 const siteUrl = Deno.env.get('SITE_URL') || 'https://kibay.com.do';
 
 function humanizeResponseCode(code: string): string | null {
@@ -149,6 +152,16 @@ serve(async (req) => {
 		if (updErr) {
 			console.error('cardnet-callback: order update failed', updErr);
 			return redirectTo('/checkout/cardnet/cancel');
+		}
+
+		try {
+			await fetch(`${supabaseUrl}/functions/v1/generate-order-invoice`, {
+				method: 'POST',
+				headers: { Authorization: `Bearer ${relayToken}`, 'Content-Type': 'application/json' },
+				body: JSON.stringify({ order_id: order.id }),
+			});
+		} catch (e) {
+			console.error('cardnet-callback: generate-order-invoice failed (non-fatal)', e);
 		}
 
 		try {

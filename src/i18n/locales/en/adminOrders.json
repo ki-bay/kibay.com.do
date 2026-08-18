@@ -74,6 +74,23 @@
     "refund": "Refund",
     "save": "Save"
   },
+  "statusActions": {
+    "startPacking": "Start packing",
+    "markShipped": "Mark shipped",
+    "markDelivered": "Mark delivered",
+    "cancel": "Cancel order",
+    "markFailed": "Mark failed",
+    "markDisputed": "Mark disputed",
+    "reopen": "Reopen order",
+    "trackingRequired": "Enter a tracking number before marking as shipped",
+    "confirmCancel": "Cancel order {{orderNumber}}? This can't easily be undone.",
+    "confirmMarkFailed": "Mark order {{orderNumber}} as failed?",
+    "confirmDisputed": "Mark order {{orderNumber}} as disputed? Only use this if the bank/CARDNET reported a chargeback.",
+    "confirmReopen": "Reopen order {{orderNumber}} to \"awaiting payment\"? Only use this if there's evidence the payment actually went through.",
+    "updated": "Status updated",
+    "failed": "Couldn't update status",
+    "trackingEmailSent": "and tracking email sent"
+  },
   "pagination": {
     "summary": "Page {{page}} of {{totalPages}} · {{count}} order",
     "summary_plural": "Page {{page}} of {{totalPages}} · {{count}} orders",

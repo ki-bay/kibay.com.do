@@ -42,6 +42,48 @@ const STATUS_BADGE = {
 	disputed: 'bg-red-500/15 text-red-300 border-red-500/40',
 };
 
+// Order status state machine (UI half — the actual enforcement is a Postgres
+// trigger, order_status_transitions allow-list, 20260815010000 migration).
+// Replaces the old free status <select> with named business actions, only
+// showing the ones legal from the order's current status. 'refunded' isn't
+// listed here — it's handled by the existing dedicated Refund button/flow
+// (calls refund-payment, a real API call, not a plain status PATCH).
+const STATUS_ACTIONS = {
+	awaiting_payment: [
+		{ to: 'failed', label: 'statusActions.markFailed', danger: true, confirmKey: 'statusActions.confirmMarkFailed' },
+		{ to: 'canceled', label: 'statusActions.cancel', danger: true, confirmKey: 'statusActions.confirmCancel' },
+	],
+	paid: [
+		{ to: 'processing', label: 'statusActions.startPacking' },
+		{ to: 'canceled', label: 'statusActions.cancel', danger: true, confirmKey: 'statusActions.confirmCancel' },
+		{ to: 'disputed', label: 'statusActions.markDisputed', danger: true, confirmKey: 'statusActions.confirmDisputed' },
+	],
+	processing: [
+		{ to: 'shipped', label: 'statusActions.markShipped', requiresTracking: true },
+		{ to: 'disputed', label: 'statusActions.markDisputed', danger: true, confirmKey: 'statusActions.confirmDisputed' },
+	],
+	shipped: [
+		{ to: 'delivered', label: 'statusActions.markDelivered' },
+		{ to: 'disputed', label: 'statusActions.markDisputed', danger: true, confirmKey: 'statusActions.confirmDisputed' },
+	],
+	delivered: [
+		{ to: 'disputed', label: 'statusActions.markDisputed', danger: true, confirmKey: 'statusActions.confirmDisputed' },
+	],
+	failed: [
+		{ to: 'awaiting_payment', label: 'statusActions.reopen', confirmKey: 'statusActions.confirmReopen' },
+	],
+	canceled: [
+		{ to: 'awaiting_payment', label: 'statusActions.reopen', confirmKey: 'statusActions.confirmReopen' },
+	],
+	refunded: [],
+	disputed: [],
+};
+
+// Statuses the existing Refund button (refund-payment function call, not a
+// plain status transition) should be offered from — mirrors the transition
+// allow-list's *→refunded edges.
+const REFUNDABLE_STATUSES = ['paid', 'processing', 'shipped', 'delivered', 'disputed'];
+
 const PAGE_SIZE = 25;
 
 const formatMoney = (cents, currency) => {
@@ -261,6 +303,51 @@ const AdminOrdersPage = () => {
 			toast.success(t('toast.updated'));
 		} catch (err) {
 			toast.error(err.message || t('toast.saveFailed'));
+		} finally {
+			setSavingId(null);
+		}
+	};
+
+	// Fires a guarded status transition (see STATUS_ACTIONS). This is a
+	// dedicated, immediate action — not routed through the generic "Save"
+	// button — since each transition carries its own required side effects
+	// (e.g. "mark shipped" needs a tracking number and auto-fires the
+	// tracking email). The actual legality of the transition is enforced
+	// server-side by a Postgres trigger regardless of what buttons this UI
+	// shows (order_status_transitions, 20260815010000 migration).
+	const transitionOrder = async (order, action) => {
+		if (action.requiresTracking && !order.tracking_number) {
+			toast.error(t('statusActions.trackingRequired'));
+			return;
+		}
+		if (action.confirmKey && !window.confirm(t(action.confirmKey, { orderNumber: order.order_number }))) {
+			return;
+		}
+		setSavingId(order.id);
+		try {
+			const patch = { status: action.to };
+			if (action.to === 'shipped') {
+				patch.tracking_number = order.tracking_number;
+				patch.shipping_method = order.shipping_method || null;
+			}
+			const { error: e } = await supabase.from('orders').update(patch).eq('id', order.id);
+			if (e) throw e;
+			updateField(order.id, 'status', action.to);
+
+			let message = t('statusActions.updated');
+			if (action.to === 'shipped') {
+				try {
+					const { error: emailErr } = await supabase.functions.invoke('send-order-email', {
+						body: { order_id: order.id, type: 'tracking' },
+					});
+					if (!emailErr) message = `${message} ${t('statusActions.trackingEmailSent')}`;
+				} catch {
+					// Non-fatal — the status change itself already succeeded.
+				}
+			}
+			toast.success(message);
+		} catch (err) {
+			toast.error(err.message || t('statusActions.failed'));
 		} finally {
 			setSavingId(null);
 		}
@@ -695,23 +782,33 @@ const AdminOrdersPage = () => {
 															{t('details.fulfillment')}
 														</h3>
 														<div className="grid gap-3 md:grid-cols-4">
-															<div>
+															<div className="md:col-span-4">
 																<label className="text-xs text-foreground/50 block mb-1">
 																	{t('details.statusLabel')}
 																</label>
-																<select
-																	value={o.status || ''}
-																	onChange={(e) =>
-																		updateField(o.id, 'status', e.target.value)
-																	}
-																	className="w-full h-10 rounded-md bg-background border border-foreground/10 text-foreground px-3 text-sm"
-																>
-																	{ALLOWED_STATUSES.map((s) => (
-																		<option key={s} value={s}>
-																			{t(`status.${s}`, s)}
-																		</option>
+																<div className="flex items-center gap-2 flex-wrap">
+																	<StatusBadge status={o.status} t={t} createdAt={o.created_at} />
+																	{(STATUS_ACTIONS[o.status] || []).map((action) => (
+																		<Button
+																			key={action.to}
+																			type="button"
+																			size="sm"
+																			variant="outline"
+																			disabled={savingId === o.id}
+																			className={
+																				action.danger
+																					? 'border-red-500/40 text-red-300 hover:bg-red-500/10'
+																					: 'border-mango-500/40 text-mango-300 hover:bg-mango-500/10'
+																			}
+																			onClick={() => transitionOrder(o, action)}
+																		>
+																			{savingId === o.id ? (
+																				<Loader2 className="w-3.5 h-3.5 animate-spin" />
+																			) : null}
+																			{t(action.label)}
+																		</Button>
 																	))}
-																</select>
+																</div>
 															</div>
 															<div>
 																<label className="text-xs text-foreground/50 block mb-1">
@@ -797,7 +894,7 @@ const AdminOrdersPage = () => {
 																	{t('actions.sendTracking')}
 																</Button>
 															)}
-															{o.status === 'paid' && (
+															{REFUNDABLE_STATUSES.includes(o.status) && (
 																<Button
 																	type="button"
 																	variant="outline"
