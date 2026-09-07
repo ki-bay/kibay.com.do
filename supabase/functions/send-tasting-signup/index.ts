@@ -4,15 +4,24 @@
 // We persist the signup, email a confirmation to the submitter, and notify
 // info@kibay.com.do with the details (reply-to set to the submitter).
 //
+// Emails are relayed through the Cloudflare Worker (/transactional/send)
+// rather than calling Brevo's REST API directly. Supabase Edge Functions run
+// on Deno Deploy's rotating pool of egress IPs, and Brevo's IP-allowlist
+// security intermittently rejects unrecognised ones ("first submission
+// fails, retry succeeds" — confirmed live 2026-09-07). This is the same
+// fix already applied to send-order-email; see that function's comments
+// for the full history. The Worker's egress is already Brevo-trusted.
+//
 // Required Edge Function secrets:
-//   BREVO_API_KEY               xkeysib-... (already configured, shared with
-//                                send-contact-email / send-order-email)
+//   WORKER_BASE_URL             Cloudflare Worker base URL (relay target)
+//   TRANSACTIONAL_RELAY_TOKEN   shared secret, also set on the Worker
 //   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY   (platform-injected)
 //   TASTING_NOTIFY_TO           default 'info@kibay.com.do'
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 
-const brevoKey = Deno.env.get('BREVO_API_KEY') || '';
+const workerBaseUrl = Deno.env.get('WORKER_BASE_URL') || '';
+const relayToken = Deno.env.get('TRANSACTIONAL_RELAY_TOKEN') || '';
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const notifyTo = Deno.env.get('TASTING_NOTIFY_TO') || 'info@kibay.com.do';
@@ -54,27 +63,28 @@ async function sendBrevo(input: {
 	html: string;
 	text: string;
 }) {
-	const resp = await fetch('https://api.brevo.com/v3/smtp/email', {
+	const resp = await fetch(`${workerBaseUrl}/transactional/send`, {
 		method: 'POST',
-		headers: { 'api-key': brevoKey, 'Content-Type': 'application/json', Accept: 'application/json' },
+		headers: { Authorization: `Bearer ${relayToken}`, 'Content-Type': 'application/json' },
 		body: JSON.stringify({
-			sender: { name: 'Kibay', email: fromAddr },
-			to: [input.to],
-			...(input.replyTo ? { replyTo: input.replyTo } : {}),
+			to: input.to.email,
+			toName: input.to.name,
+			fromName: 'Kibay',
+			fromEmail: fromAddr,
+			replyTo: input.replyTo?.email,
 			subject: input.subject,
 			htmlContent: input.html,
-			textContent: input.text,
 		}),
 	});
 	const body = await resp.json().catch(() => ({}));
-	if (!resp.ok) throw new Error(`Brevo send failed: ${resp.status} ${JSON.stringify(body)}`);
+	if (!resp.ok || body?.ok === false) throw new Error(`Relay send failed: ${resp.status} ${JSON.stringify(body)}`);
 	return body as { messageId?: string };
 }
 
 serve(async (req) => {
 	if (req.method === 'OPTIONS') return new Response(null, { headers: cors });
 	if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
-	if (!brevoKey) return json({ error: 'BREVO_API_KEY not set' }, 503);
+	if (!workerBaseUrl || !relayToken) return json({ error: 'Email relay not configured' }, 503);
 
 	let body: Body;
 	try {
