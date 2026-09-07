@@ -1179,6 +1179,7 @@ const DAILY_CAMPAIGN_ORDER = [
 	'B2B Online retailers — Comisión + activos listos',
 	'B2B Duty-Free — Travel retail premium',
 	'Individual — Experiencia en la bodega Ocoa Bay',
+	'B2B Bares — Copa por copa en Santo Domingo',
 ];
 
 // 'draft' = not started yet; 'sending' = a previous day's run got partway
