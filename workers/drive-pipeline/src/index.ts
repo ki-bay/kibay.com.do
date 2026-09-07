@@ -1182,6 +1182,7 @@ const DAILY_CAMPAIGN_ORDER = [
 	'B2B Bares — Copa por copa en Santo Domingo',
 	'B2B Regalo Corporativo y Membresías Exclusivas',
 	'B2B Cruceros y Tiendas Gourmet',
+	'B2B Boca Chica y Juan Dolio — Expansión costera',
 ];
 
 // 'draft' = not started yet; 'sending' = a previous day's run got partway
