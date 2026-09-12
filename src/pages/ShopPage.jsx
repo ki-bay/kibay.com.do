@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { m } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation, Trans } from 'react-i18next';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
@@ -11,6 +11,19 @@ import { mediaUrl } from '@/config/mediaCdn';
 
 const ShopPage = () => {
   const { t } = useTranslation('shop');
+  const [searchParams] = useSearchParams();
+
+  // Captures ?coupon=CODE from a QR code (e.g. the winery gate handout) and
+  // holds it in localStorage until checkout, where it's auto-applied — see
+  // the auto-apply effect in CheckoutPage.jsx. Landing on /shop is the
+  // natural entry point for that flow; checkout itself is reached later,
+  // after browsing, so the code has to persist across that navigation.
+  useEffect(() => {
+    const coupon = searchParams.get('coupon');
+    if (coupon) {
+      localStorage.setItem('kibay_pending_coupon', coupon.trim().toUpperCase());
+    }
+  }, [searchParams]);
 
   return (
     <>

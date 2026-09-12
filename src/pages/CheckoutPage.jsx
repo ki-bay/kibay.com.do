@@ -407,8 +407,10 @@ const CheckoutPage = () => {
 		setStep('shipping');
 	}, [pendingOrderId]);
 
-	const handleApplyCoupon = async () => {
-		const code = couponInput.trim().toUpperCase();
+	// Shared by the manual "Apply" button and the auto-apply-from-QR-code
+	// flow below — both just need to validate a code against the current
+	// cart and set the same state.
+	const applyCouponCode = useCallback(async (code) => {
 		if (!code) {
 			setCouponError('Enter a coupon code.');
 			return;
@@ -443,7 +445,26 @@ const CheckoutPage = () => {
 		} finally {
 			setCouponValidating(false);
 		}
-	};
+	}, [subtotalCents, cartCurrency]);
+
+	const handleApplyCoupon = () => applyCouponCode(couponInput.trim().toUpperCase());
+
+	// Auto-apply a coupon carried in the URL (e.g. the winery gate QR code
+	// links to /shop?coupon=SALIDA10). ShopPage stores it in localStorage on
+	// landing since the code needs to survive the shop -> cart -> checkout
+	// navigation; this consumes it once, on the first checkout render where
+	// the cart has real items to validate against.
+	const autoCouponTriedRef = useRef(false);
+	useEffect(() => {
+		if (autoCouponTriedRef.current) return;
+		if (appliedCoupon || cartItems.length === 0) return;
+		const pending = localStorage.getItem('kibay_pending_coupon');
+		if (!pending) return;
+		autoCouponTriedRef.current = true;
+		localStorage.removeItem('kibay_pending_coupon');
+		setCouponInput(pending);
+		applyCouponCode(pending);
+	}, [cartItems.length, appliedCoupon, applyCouponCode]);
 
 	const handleRemoveCoupon = () => {
 		setAppliedCoupon(null);
