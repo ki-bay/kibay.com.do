@@ -47,6 +47,32 @@ export async function isFileProcessed(env: SupabaseEnv, fileId: string): Promise
 	return rows.length > 0;
 }
 
+// Bulk version of isFileProcessed — one round-trip instead of one per
+// candidate group. Used to walk the Drive scan order in-memory rather than
+// hitting Postgrest once per group before finding the first unprocessed one.
+//
+// 'images_ready' is a special case: runPipeline records it as a claim marker
+// right before handing a group off to /pipeline/finish (a separate
+// invocation — see index.ts). If that invocation gets killed before it can
+// update the row to 'approved'/'failed' (confirmed live: happens
+// occasionally even for a normal-sized single image), the group would
+// otherwise be stuck skipped forever with no error and nothing to retry.
+// So a stale 'images_ready' claim (older than STALE_CLAIM_MINUTES — long
+// enough that it's not still legitimately in flight) is treated as
+// abandoned and excluded from the skip set, letting the next run retry it.
+const STALE_CLAIM_MINUTES = 10;
+
+export async function loadProcessedFileIds(env: SupabaseEnv): Promise<Set<string>> {
+	const cutoff = new Date(Date.now() - STALE_CLAIM_MINUTES * 60 * 1000).toISOString();
+	const url =
+		`${env.SUPABASE_URL}/rest/v1/processed_drive_files?select=file_id` +
+		`&or=(status.neq.images_ready,processed_at.gte.${encodeURIComponent(cutoff)})`;
+	const r = await fetch(url, { headers: authHeaders(env) });
+	if (!r.ok) throw new Error(`processed_drive_files bulk fetch failed: ${r.status} ${await r.text()}`);
+	const rows = (await r.json()) as Array<{ file_id: string }>;
+	return new Set(rows.map((row) => row.file_id));
+}
+
 export async function insertBlogPost(
 	env: SupabaseEnv,
 	post: Record<string, unknown>,
@@ -107,9 +133,12 @@ export async function recentPublishedHeroes(
 	const since = new Date(Date.now() - withinDays * 24 * 60 * 60 * 1000).toISOString();
 	const url =
 		`${env.SUPABASE_URL}/rest/v1/blog_posts` +
-		`?published=eq.true&published_at=gte.${encodeURIComponent(since)}` +
+		// blog_posts has no published_at column (only the `published` boolean) —
+		// created_at is the closest proxy, and accurate for auto-drafted posts
+		// since AUTO_PUBLISH publishes them immediately on creation.
+		`?published=eq.true&created_at=gte.${encodeURIComponent(since)}` +
 		`&featured_image_url=not.is.null` +
-		`&select=title,featured_image_url&order=published_at.desc&limit=${limit}`;
+		`&select=title,featured_image_url&order=created_at.desc&limit=${limit}`;
 	const r = await fetch(url, { headers: authHeaders(env) });
 	if (!r.ok) {
 		console.error(`recentPublishedHeroes failed: ${r.status}`);

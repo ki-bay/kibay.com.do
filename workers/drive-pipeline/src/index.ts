@@ -1,7 +1,7 @@
-import { listImageGroups, downloadDriveFile, ImageGroup } from './drive';
+import { listGroupStubs, loadGroupImages, downloadDriveFile, ImageGroup } from './drive';
 import { generateBlogFromImage, ImageInput, checkVisualSimilarity, RecentHero } from './anthropic';
 import {
-	isFileProcessed,
+	loadProcessedFileIds,
 	uploadImage,
 	insertBlogPost,
 	triggerBlogTranslation,
@@ -45,6 +45,10 @@ interface Env extends SupabaseEnv, EmailEnv, SocialEnv {
 	// Manual trigger auth for POST /campaigns/send-next (added 2026-08-12).
 	DAILY_CAMPAIGN_CRON_TOKEN?: string;
 	TRANSACTIONAL_RELAY_TOKEN?: string;
+	// Self-service-binding used by runPipeline to hand off to /pipeline/finish
+	// as a fresh invocation — see the wrangler.toml comment for why a plain
+	// fetch(WORKER_BASE_URL) doesn't work here (Cloudflare error 1042).
+	SELF: Fetcher;
 }
 
 // CORS allowlist for endpoints called from the browser (admin SPA).
@@ -622,15 +626,36 @@ h1{margin:0 0 12px;color:#16a34a;}
 		// Manual cron trigger, protected by a token derived from the service role key.
 		if (url.pathname === '/run' && req.method === 'POST') {
 			const token = url.searchParams.get('token');
-			const expected = env.SUPABASE_SERVICE_ROLE_KEY.slice(0, 24);
-			if (token !== expected) return new Response('forbidden', { status: 403 });
+			if (token !== pipelineToken(env)) return new Response('forbidden', { status: 403 });
 			ctx.waitUntil(runPipeline(env));
+			return new Response('queued', { status: 202 });
+		}
+
+		// Internal self-call target — runPipeline hands off the slow half of
+		// the job here (Claude generation, translation, publish, cross-post)
+		// once images are uploaded and the similarity check has passed, so
+		// that work runs in a fresh invocation with its own execution budget
+		// instead of sharing one with the Drive scan + image handling.
+		if (url.pathname === '/pipeline/finish' && req.method === 'POST') {
+			const token = url.searchParams.get('token');
+			if (token !== pipelineToken(env)) return new Response('forbidden', { status: 403 });
+			let body: FinishGroupInput;
+			try {
+				body = (await req.json()) as FinishGroupInput;
+			} catch {
+				return new Response('invalid JSON', { status: 400 });
+			}
+			ctx.waitUntil(finishGroupAndPublish(env, body));
 			return new Response('queued', { status: 202 });
 		}
 
 		return new Response('not found', { status: 404 });
 	},
 };
+
+function pipelineToken(env: Env): string {
+	return env.SUPABASE_SERVICE_ROLE_KEY.slice(0, 24);
+}
 
 async function runPipeline(env: Env): Promise<void> {
 	let sa: ServiceAccount;
@@ -641,18 +666,64 @@ async function runPipeline(env: Env): Promise<void> {
 		return;
 	}
 
-	const groups = await listImageGroups(sa, env.GOOGLE_DRIVE_FOLDER_ID);
-	console.log(`pipeline: scanning ${groups.length} groups (${groups.reduce((a, g) => a + g.images.length, 0)} images total)`);
+	// listGroupStubs only lists folder/file metadata — it does NOT fetch each
+	// subfolder's images (that used to happen eagerly for every group here,
+	// which was fine while the Drive folder held a couple dozen groups but
+	// became the pipeline's actual bottleneck once the backlog grew past
+	// ~150: one Drive API round-trip per subfolder, sequential, before any
+	// real work even started, reliably blowing the invocation's time budget.
+	// Since only ONE group is ever processed per run anyway, images are now
+	// loaded lazily via loadGroupImages() for just that one group below.
+	//
+	// This whole scan/dedup step is wrapped defensively (it wasn't
+	// originally): an error here happens before the per-group try/catch
+	// exists, so previously it would fail with zero trace anywhere — no DB
+	// row, no guaranteed log line — exactly the kind of silent failure this
+	// file's other fixes were meant to eliminate. Persisting to a sentinel
+	// row makes it diagnosable via SQL even when `wrangler tail` itself is
+	// unavailable (observed happening live during testing).
+	let stubs, processedIds: Set<string>;
+	try {
+		stubs = await listGroupStubs(sa, env.GOOGLE_DRIVE_FOLDER_ID);
+		processedIds = await loadProcessedFileIds(env);
+	} catch (e) {
+		const msg = (e as Error).message || String(e);
+		console.error('pipeline: scan/dedup step failed:', e);
+		try {
+			await recordProcessed(env, {
+				file_id: '__runPipeline_scan_error__',
+				drive_modified_time: new Date().toISOString(),
+				blog_post_id: null,
+				status: `scan_failed: ${msg}`.slice(0, 500),
+			});
+		} catch {
+			/* swallow — this is best-effort diagnostics, not the main flow */
+		}
+		return;
+	}
+	console.log(`pipeline: scanning ${stubs.length} groups (${processedIds.size} already processed)`);
 
 	// ONE blog post per cron run. We iterate the groups in Drive order, skip
 	// anything already processed (incl. failed), and stop after the first
 	// unprocessed group — success or failure. If today's pick errors out,
 	// the next cron picks the next group; we never spam multiple drafts in
 	// a single run.
-	for (const g of groups) {
+	for (const stub of stubs) {
+		if (processedIds.has(stub.key)) continue;
+		// Declared outside the try (not `const g = await ...` inside it) so the
+		// catch block below can still identify which group failed even if
+		// loadGroupImages itself is what threw, before g would otherwise exist.
+		let g: ImageGroup | null = null;
 		try {
-			if (await isFileProcessed(env, g.key)) continue;
+			g = await loadGroupImages(sa, stub);
+			if (!g) continue; // empty folder — try the next candidate
 			console.log(`pipeline: processing group ${g.name} (${g.key}, ${g.images.length} images)`);
+			// TEMP TIMING INSTRUMENTATION (2026-09-07) — the runtime kills this
+			// invocation somewhere without ever reaching a catchable exception,
+			// so there's no error to log. These checkpoints exist to find which
+			// step is actually slow; remove once the real bottleneck is fixed.
+			const t0 = Date.now();
+			const elapsed = () => `${Date.now() - t0}ms`;
 
 			// Download + upload every image in the group.
 			const uploaded: Array<{ url: string; mime: string; bytes: ArrayBuffer; driveId: string; name: string }> = [];
@@ -663,6 +734,7 @@ async function runPipeline(env: Env): Promise<void> {
 				const url = await uploadImage(env, path, bytes, contentType);
 				uploaded.push({ url, mime: contentType, bytes, driveId: img.id, name: img.name });
 			}
+			console.log(`pipeline: TIMING images downloaded+uploaded @ ${elapsed()}`);
 
 			const llmImages: ImageInput[] = uploaded.map((u) => ({ bytes: u.bytes, mimeType: u.mime }));
 
@@ -712,105 +784,54 @@ async function runPipeline(env: Env): Promise<void> {
 				// no post.
 				console.error('pipeline: similarity check threw, proceeding anyway:', simErr);
 			}
+			console.log(`pipeline: TIMING similarity check done @ ${elapsed()}`);
 
-			const post = await generateBlogFromImage(
-				env.ANTHROPIC_API_KEY,
-				env.ANTHROPIC_MODEL,
-				llmImages,
-				g.name,
-			);
-
-			// Substitute {{IMAGE_N}} placeholders in body_html with <figure> blocks.
-			const bodyEn = substitutePlaceholders(post.en.body_html, uploaded.map((u) => u.url), post.alt_text);
-			const bodyEs = substitutePlaceholders(post.es.body_html, uploaded.map((u) => u.url), post.alt_text);
-
-			const slug = makeUniqueSlug(post.slug, g.key);
-			const heroUrl = uploaded[0].url;
-			const galleryUrls = uploaded.map((u) => u.url);
-
-			// Spanish is PRIMARY (site audience: DR + Latin America).
-			const blogRow = {
-				title: post.es.title,
-				slug,
-				description: post.es.seo_description,
-				content: bodyEs,
-				featured_image_url: heroUrl,
-				alt_text: post.alt_text,
-				seo_title: post.es.title,
-				seo_description: post.es.seo_description,
-				seo_keywords: post.tags.join(', '),
-				reading_time: post.reading_time_min,
-				published: false,
-				source: 'drive_auto',
-				auto_draft_meta: {
-					drive_group_key: g.key,
-					drive_group_name: g.name,
-					drive_is_multi_image: g.isMultiImage,
-					drive_modified_time: g.latestModified,
-					gallery_urls: galleryUrls,
-					es_extras: {
-						faqs: post.es.faqs,
-						data_callout: post.es.data_callout,
-						pull_quote: post.es.pull_quote,
-					},
-					en: { ...post.en, body_html: bodyEn },
-					social: {
-						facebook: post.caption_facebook,
-						instagram: post.caption_instagram,
-						linkedin: post.caption_linkedin,
-					},
-					tags: post.tags,
-					model: env.ANTHROPIC_MODEL,
+			// Everything from here on (the Claude vision generation call, plus
+			// translation, publish, and 3x social cross-post) got measured at
+			// reliably blowing the invocation's waitUntil budget on its own —
+			// confirmed live: two separate test runs both died silently right
+			// after this point, no thrown/catchable error, just a runtime kill.
+			// So it's handed off to a FRESH invocation via a self-HTTP call to
+			// /pipeline/finish, which gets its own full budget. Mark this file
+			// as claimed first so the next scan (if this dispatch itself fails)
+			// doesn't re-pick the same group.
+			await recordProcessed(env, {
+				file_id: g.key,
+				drive_modified_time: g.latestModified,
+				blog_post_id: null,
+				status: 'images_ready',
+			});
+			// env.SELF (service binding), not global fetch() — see wrangler.toml
+			// comment: a worker calling its own public URL hits Cloudflare
+			// error 1042 (loop prevention). The URL below is only used for its
+			// path/query by the binding's internal routing; no real network
+			// hop to WORKER_BASE_URL happens.
+			const dispatch = await env.SELF.fetch(
+				`${env.WORKER_BASE_URL}/pipeline/finish?token=${encodeURIComponent(pipelineToken(env))}`,
+				{
+					method: 'POST',
+					headers: { 'content-type': 'application/json' },
+					body: JSON.stringify({
+						groupKey: g.key,
+						groupName: g.name,
+						isMultiImage: g.isMultiImage,
+						latestModified: g.latestModified,
+						images: uploaded.map((u) => ({ url: u.url, mime: u.mime })),
+					}),
 				},
-			};
-
-			const inserted = await insertBlogPost(env, blogRow);
-
-			// Translate the post to English so /blog renders correctly for EN
-			// visitors as soon as it ships. Awaited but tolerant — failure
-			// leaves translation_status='failed' for later retry.
-			await triggerBlogTranslation(env, inserted.id);
-
-			// AUTO_PUBLISH=true → skip the human-in-the-loop email and ship
-			// straight to the blog + social. A cross-post results email still
-			// fires at the end of runCrossPost so the operator can see what
-			// happened. The /approve and /reject routes stay live in case
-			// AUTO_PUBLISH is flipped back to "false" later.
-			if ((env.AUTO_PUBLISH || '').toLowerCase() === 'true') {
-				await recordProcessed(env, {
-					file_id: g.key,
-					drive_modified_time: g.latestModified,
-					blog_post_id: inserted.id,
-					status: 'approved',
-				});
-				await setPostPublished(env, inserted.id, true);
-				await runCrossPost(env, inserted.id);
-				console.log(`pipeline: auto-published ${inserted.id} (slug=${slug})`);
-			} else {
-				await recordProcessed(env, {
-					file_id: g.key,
-					drive_modified_time: g.latestModified,
-					blog_post_id: inserted.id,
-					status: 'draft_pending',
-				});
-				await sendReviewEmail(env, {
-					postId: inserted.id,
-					titleEn: post.en.title,
-					titleEs: post.es.title,
-					slug,
-					imageUrl: heroUrl,
-					galleryUrls,
-					bodyExcerptEn: firstSentenceFromHtml(bodyEn),
-					bodyExcerptEs: firstSentenceFromHtml(bodyEs),
-					driveFilename: g.name,
-				});
+			);
+			console.log(
+				`pipeline: TIMING dispatched to /pipeline/finish @ ${elapsed()} (status ${dispatch.status})`,
+			);
+			if (!dispatch.ok) {
+				throw new Error(`/pipeline/finish dispatch failed: ${dispatch.status} ${await dispatch.text()}`);
 			}
 		} catch (e) {
-			console.error(`pipeline: failed for group ${g.key} (${g.name}):`, e);
+			console.error(`pipeline: failed for group ${stub.key} (${stub.name}):`, e);
 			try {
 				await recordProcessed(env, {
-					file_id: g.key,
-					drive_modified_time: g.latestModified,
+					file_id: stub.key,
+					drive_modified_time: g?.latestModified || new Date().toISOString(),
 					blog_post_id: null,
 					status: 'failed',
 				});
@@ -824,6 +845,160 @@ async function runPipeline(env: Env): Promise<void> {
 		return;
 	}
 	console.log('pipeline: no unprocessed groups remaining in Drive folder — cron is a no-op');
+}
+
+interface FinishGroupInput {
+	groupKey: string;
+	groupName: string;
+	isMultiImage: boolean;
+	latestModified: string;
+	images: Array<{ url: string; mime: string }>;
+}
+
+// The slow half of the pipeline, split out of runPipeline (see the comment
+// at the /pipeline/finish dispatch site for why): Claude vision generation,
+// translation, publish, and social cross-post. Runs in its own invocation
+// with its own execution budget, triggered via a self-HTTP call rather than
+// sharing one invocation with the Drive scan + image upload step.
+async function finishGroupAndPublish(env: Env, input: FinishGroupInput): Promise<void> {
+	const { groupKey, groupName, isMultiImage, latestModified, images } = input;
+	try {
+		// Images are already uploaded to Supabase storage by the caller —
+		// re-fetch bytes from there (fast, same-ish region) rather than
+		// re-hitting Google Drive.
+		const allFetched = await Promise.all(
+			images.map(async (img) => {
+				const r = await fetch(img.url);
+				if (!r.ok) throw new Error(`re-fetch of uploaded image failed: ${r.status} ${img.url}`);
+				return { url: img.url, mime: img.mime, bytes: await r.arrayBuffer() };
+			}),
+		);
+
+		// Anthropic caps base64-encoded images at 10MB, which base64's ~4/3
+		// inflation puts at ~7.5MB of raw bytes. Confirmed live: two
+		// consecutive groups (12-13MB source photos) failed with exactly this
+		// 400 before this guard existed. Drop oversized images from a
+		// multi-image group rather than failing the whole post over one
+		// photo; if every image in the group is oversized, fail clearly
+		// (a normal, catchable error — not a silent timeout) so the group is
+		// still recorded as processed and the next run moves on.
+		const MAX_RAW_BYTES = 7 * 1024 * 1024;
+		const fetched = allFetched.filter((f) => f.bytes.byteLength <= MAX_RAW_BYTES);
+		if (allFetched.length !== fetched.length) {
+			console.warn(
+				`pipeline/finish: dropped ${allFetched.length - fetched.length}/${allFetched.length} oversized image(s) from group ${groupKey} (>${MAX_RAW_BYTES} bytes)`,
+			);
+		}
+		if (fetched.length === 0) {
+			throw new Error(`all ${allFetched.length} image(s) in group exceed the ${MAX_RAW_BYTES}-byte size limit`);
+		}
+
+		const llmImages: ImageInput[] = fetched.map((u) => ({ bytes: u.bytes, mimeType: u.mime }));
+
+		const post = await generateBlogFromImage(env.ANTHROPIC_API_KEY, env.ANTHROPIC_MODEL, llmImages, groupName);
+
+		// Substitute {{IMAGE_N}} placeholders in body_html with <figure> blocks.
+		const imageUrls = fetched.map((u) => u.url);
+		const bodyEn = substitutePlaceholders(post.en.body_html, imageUrls, post.alt_text);
+		const bodyEs = substitutePlaceholders(post.es.body_html, imageUrls, post.alt_text);
+
+		const slug = makeUniqueSlug(post.slug, groupKey);
+		const heroUrl = imageUrls[0];
+		const galleryUrls = imageUrls;
+
+		// Spanish is PRIMARY (site audience: DR + Latin America).
+		const blogRow = {
+			title: post.es.title,
+			slug,
+			description: post.es.seo_description,
+			content: bodyEs,
+			featured_image_url: heroUrl,
+			alt_text: post.alt_text,
+			seo_title: post.es.title,
+			seo_description: post.es.seo_description,
+			seo_keywords: post.tags.join(', '),
+			reading_time: post.reading_time_min,
+			published: false,
+			source: 'drive_auto',
+			auto_draft_meta: {
+				drive_group_key: groupKey,
+				drive_group_name: groupName,
+				drive_is_multi_image: isMultiImage,
+				drive_modified_time: latestModified,
+				gallery_urls: galleryUrls,
+				es_extras: {
+					faqs: post.es.faqs,
+					data_callout: post.es.data_callout,
+					pull_quote: post.es.pull_quote,
+				},
+				en: { ...post.en, body_html: bodyEn },
+				social: {
+					facebook: post.caption_facebook,
+					instagram: post.caption_instagram,
+					linkedin: post.caption_linkedin,
+				},
+				tags: post.tags,
+				model: env.ANTHROPIC_MODEL,
+			},
+		};
+
+		const inserted = await insertBlogPost(env, blogRow);
+
+		// Translate the post to English so /blog renders correctly for EN
+		// visitors as soon as it ships. Awaited but tolerant — failure
+		// leaves translation_status='failed' for later retry.
+		await triggerBlogTranslation(env, inserted.id);
+
+		// AUTO_PUBLISH=true → skip the human-in-the-loop email and ship
+		// straight to the blog + social. A cross-post results email still
+		// fires at the end of runCrossPost so the operator can see what
+		// happened. The /approve and /reject routes stay live in case
+		// AUTO_PUBLISH is flipped back to "false" later.
+		if ((env.AUTO_PUBLISH || '').toLowerCase() === 'true') {
+			await recordProcessed(env, {
+				file_id: groupKey,
+				drive_modified_time: latestModified,
+				blog_post_id: inserted.id,
+				status: 'approved',
+			});
+			await setPostPublished(env, inserted.id, true);
+			await runCrossPost(env, inserted.id);
+			console.log(`pipeline: auto-published ${inserted.id} (slug=${slug})`);
+		} else {
+			await recordProcessed(env, {
+				file_id: groupKey,
+				drive_modified_time: latestModified,
+				blog_post_id: inserted.id,
+				status: 'draft_pending',
+			});
+			await sendReviewEmail(env, {
+				postId: inserted.id,
+				titleEn: post.en.title,
+				titleEs: post.es.title,
+				slug,
+				imageUrl: heroUrl,
+				galleryUrls,
+				bodyExcerptEn: firstSentenceFromHtml(bodyEn),
+				bodyExcerptEs: firstSentenceFromHtml(bodyEs),
+				driveFilename: groupName,
+			});
+		}
+	} catch (e) {
+		console.error(`pipeline/finish: failed for group ${groupKey} (${groupName}):`, e);
+		try {
+			// merge-duplicates upsert (recordProcessed's Prefer header) — this
+			// overwrites the 'images_ready' placeholder runPipeline recorded
+			// before dispatching here, rather than inserting a second row.
+			await recordProcessed(env, {
+				file_id: groupKey,
+				drive_modified_time: latestModified,
+				blog_post_id: null,
+				status: 'failed',
+			});
+		} catch {
+			/* swallow */
+		}
+	}
 }
 
 function substitutePlaceholders(html: string, urls: string[], altBase: string): string {

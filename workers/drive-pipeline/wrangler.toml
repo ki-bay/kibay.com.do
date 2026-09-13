@@ -18,6 +18,17 @@ crons = ["0 19 */3 * *"]
 # POST /campaigns/send-next (Bearer DAILY_CAMPAIGN_CRON_TOKEN) once a day
 # instead, until either a slot frees up or the account upgrades.
 
+# Self-binding so runPipeline can hand off to /pipeline/finish as a genuinely
+# fresh invocation (its own execution budget) without going through the
+# public internet. A plain fetch(WORKER_BASE_URL + ...) from inside the
+# worker hits Cloudflare error 1042 (a worker can't fetch its own
+# workers.dev/proxied URL over the network — loop prevention); a service
+# binding is the supported way to have a worker invoke itself or another
+# worker directly.
+[[services]]
+binding = "SELF"
+service = "kibay-drive-pipeline"
+
 [vars]
 SUPABASE_URL = "https://bsnxwajuqkatrmgoqcnu.supabase.co"
 SUPABASE_STORAGE_BUCKET = "blog_media"
