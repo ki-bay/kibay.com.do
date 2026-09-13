@@ -22,7 +22,7 @@ const SITE_URL = process.env.VITE_SITE_URL || 'https://kibay.com.do';
 // value proving control of the domain. Bing/Yandex/Seznam/Naver all honor
 // api.indexnow.org, so one ping here reaches DuckDuckGo's results too (it
 // sources organic results from Bing).
-const INDEXNOW_KEY = '1b5d3a2defd3db4fffda1d3761feb61d';
+const INDEXNOW_KEY = 'aedbdac8063c40ed33dbffe8fb94032a';
 const SUPABASE_URL =
 	process.env.VITE_SUPABASE_URL ||
 	process.env.NEXT_PUBLIC_SUPABASE_URL ||
