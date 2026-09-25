@@ -132,3 +132,34 @@ export async function downloadDriveFile(
 		contentType: r.headers.get('content-type') || 'application/octet-stream',
 	};
 }
+
+// Returns a web-sized JPEG of a Drive image instead of the multi-megabyte
+// original. The Drive folder holds camera originals (median ~18MB, up to
+// ~39MB); 133 of 163 exceeded Anthropic's ~7.5MB-raw vision limit, and the
+// blog was publishing those raw files as-is. Drive serves a resized rendition
+// through the file's thumbnailLink (size is the trailing "=sNNN"); requesting
+// =s2048 returns a ~1MB JPEG in ~1s with no image library and no CPU cost.
+export async function downloadDriveImageResized(
+	sa: ServiceAccount,
+	fileId: string,
+	maxDim = 2048,
+): Promise<{ bytes: ArrayBuffer; contentType: string }> {
+	const token = await getGoogleAccessToken(sa, DRIVE_SCOPES);
+	const metaUrl = `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(
+		fileId,
+	)}?fields=thumbnailLink,size,mimeType&supportsAllDrives=true`;
+	const mr = await fetch(metaUrl, { headers: { Authorization: `Bearer ${token}` } });
+	if (!mr.ok) throw new Error(`Drive metadata failed: ${mr.status} ${await mr.text()}`);
+	const meta = (await mr.json()) as { thumbnailLink?: string; size?: string };
+
+	if (meta.thumbnailLink) {
+		const r = await fetch(meta.thumbnailLink.replace(/=s\d+$/, `=s${maxDim}`));
+		const ct = r.headers.get('content-type') || '';
+		if (r.ok && ct.startsWith('image/')) return { bytes: await r.arrayBuffer(), contentType: ct };
+	}
+
+	// No rendition available: the original is only usable if it is small.
+	const size = Number(meta.size || 0);
+	if (size > 0 && size <= 7 * 1024 * 1024) return downloadDriveFile(sa, fileId);
+	throw new Error(`no resized rendition available and original is too large (${size} bytes)`);
+}

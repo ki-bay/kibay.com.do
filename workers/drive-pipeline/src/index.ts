@@ -1,7 +1,8 @@
-import { listGroupStubs, loadGroupImages, downloadDriveFile, ImageGroup } from './drive';
+import { listGroupStubs, loadGroupImages, downloadDriveImageResized, ImageGroup } from './drive';
 import { generateBlogFromImage, ImageInput, checkVisualSimilarity, RecentHero } from './anthropic';
 import {
 	loadProcessedFileIds,
+	expireStaleClaims,
 	uploadImage,
 	insertBlogPost,
 	triggerBlogTranslation,
@@ -87,6 +88,7 @@ export default {
 			ctx.waitUntil(runDailyCampaignAutoSend(env));
 			return;
 		}
+		ctx.waitUntil(heartbeat(env, 'cron_fired', event.cron));
 		ctx.waitUntil(runPipeline(env));
 	},
 
@@ -627,8 +629,21 @@ h1{margin:0 0 12px;color:#16a34a;}
 		if (url.pathname === '/run' && req.method === 'POST') {
 			const token = url.searchParams.get('token');
 			if (token !== pipelineToken(env)) return new Response('forbidden', { status: 403 });
+			const hbResult = await heartbeat(env, 'run_endpoint_hit');
+			// ?wait=1 runs the pipeline as part of THIS request and reports the
+			// outcome, instead of a fire-and-forget background task (which the
+			// runtime cuts off ~30s after the response and never reports on).
+			if (url.searchParams.get('wait') === '1') {
+				const started = Date.now();
+				try {
+					await runPipeline(env);
+					return Response.json({ ok: true, ms: Date.now() - started });
+				} catch (e) {
+					return Response.json({ ok: false, error: String(e), ms: Date.now() - started }, { status: 500 });
+				}
+			}
 			ctx.waitUntil(runPipeline(env));
-			return new Response('queued', { status: 202 });
+			return new Response(`queued ${hbResult}`, { status: 202 });
 		}
 
 		// Internal self-call target — runPipeline hands off the slow half of
@@ -657,7 +672,38 @@ function pipelineToken(env: Env): string {
 	return env.SUPABASE_SERVICE_ROLE_KEY.slice(0, 24);
 }
 
+// TEMP DIAGNOSTICS (2026-09-25): SQL-visible breadcrumbs. `wrangler tail` was
+// unreliable and runs were leaving no trace at all, so each stage upserts one
+// sentinel row in processed_drive_files (file_id is the PK, so each label
+// keeps a single, always-latest row). Real Drive ids never start with "__hb_".
+// Remove once the silent-run problem is understood.
+async function heartbeat(env: Env, label: string, detail = ''): Promise<string> {
+	try {
+		const r = await fetch(`${env.SUPABASE_URL}/rest/v1/processed_drive_files`, {
+			method: 'POST',
+			headers: {
+				apikey: env.SUPABASE_SERVICE_ROLE_KEY,
+				Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+				'Content-Type': 'application/json',
+				Prefer: 'resolution=merge-duplicates',
+			},
+			body: JSON.stringify({
+				file_id: `__hb_${label}__`,
+				drive_modified_time: new Date().toISOString(),
+				blog_post_id: null,
+				status: `${new Date().toISOString()} ${detail}`.trim().slice(0, 300),
+			}),
+		});
+		const body = r.ok ? '' : ` ${(await r.text()).slice(0, 160)}`;
+		return `hb:${r.status}${body}`;
+	} catch (e) {
+		console.error('heartbeat failed:', label, e);
+		return `hb:threw ${String(e).slice(0, 160)}`;
+	}
+}
+
 async function runPipeline(env: Env): Promise<void> {
+	await heartbeat(env, 'pipeline_start');
 	let sa: ServiceAccount;
 	try {
 		sa = JSON.parse(env.GOOGLE_SERVICE_ACCOUNT_JSON);
@@ -685,6 +731,7 @@ async function runPipeline(env: Env): Promise<void> {
 	let stubs, processedIds: Set<string>;
 	try {
 		stubs = await listGroupStubs(sa, env.GOOGLE_DRIVE_FOLDER_ID);
+		await expireStaleClaims(env);
 		processedIds = await loadProcessedFileIds(env);
 	} catch (e) {
 		const msg = (e as Error).message || String(e);
@@ -702,6 +749,7 @@ async function runPipeline(env: Env): Promise<void> {
 		return;
 	}
 	console.log(`pipeline: scanning ${stubs.length} groups (${processedIds.size} already processed)`);
+	await heartbeat(env, 'scan_done', `stubs=${stubs.length} processed=${processedIds.size}`);
 
 	// ONE blog post per cron run. We iterate the groups in Drive order, skip
 	// anything already processed (incl. failed), and stop after the first
@@ -728,8 +776,8 @@ async function runPipeline(env: Env): Promise<void> {
 			// Download + upload every image in the group.
 			const uploaded: Array<{ url: string; mime: string; bytes: ArrayBuffer; driveId: string; name: string }> = [];
 			for (const img of g.images) {
-				const { bytes, contentType } = await downloadDriveFile(sa, img.id);
-				const ext = (img.name.match(/\.([a-z0-9]+)$/i)?.[1] || 'jpg').toLowerCase();
+				const { bytes, contentType } = await downloadDriveImageResized(sa, img.id);
+				const ext = contentType.includes('png') ? 'png' : 'jpg';
 				const path = `auto/${g.key}/${img.id}.${ext}`;
 				const url = await uploadImage(env, path, bytes, contentType);
 				uploaded.push({ url, mime: contentType, bytes, driveId: img.id, name: img.name });
@@ -786,46 +834,28 @@ async function runPipeline(env: Env): Promise<void> {
 			}
 			console.log(`pipeline: TIMING similarity check done @ ${elapsed()}`);
 
-			// Everything from here on (the Claude vision generation call, plus
-			// translation, publish, and 3x social cross-post) got measured at
-			// reliably blowing the invocation's waitUntil budget on its own —
-			// confirmed live: two separate test runs both died silently right
-			// after this point, no thrown/catchable error, just a runtime kill.
-			// So it's handed off to a FRESH invocation via a self-HTTP call to
-			// /pipeline/finish, which gets its own full budget. Mark this file
-			// as claimed first so the next scan (if this dispatch itself fails)
-			// doesn't re-pick the same group.
+			// Claim the group, then run the slow half (Claude generation, translation,
+			// publish, cross-post) INLINE. An earlier attempt handed this to a
+			// separate /pipeline/finish invocation, but that runs as a background
+			// task after an HTTP response, which the runtime caps at ~30s — the
+			// job was killed silently mid-flight. Inside the cron handler the same
+			// work ran for 50s+ without trouble (June's posts), so it stays here.
+			// finishGroupAndPublish records 'approved' / 'failed' itself.
 			await recordProcessed(env, {
 				file_id: g.key,
 				drive_modified_time: g.latestModified,
 				blog_post_id: null,
 				status: 'images_ready',
 			});
-			// env.SELF (service binding), not global fetch() — see wrangler.toml
-			// comment: a worker calling its own public URL hits Cloudflare
-			// error 1042 (loop prevention). The URL below is only used for its
-			// path/query by the binding's internal routing; no real network
-			// hop to WORKER_BASE_URL happens.
-			const dispatch = await env.SELF.fetch(
-				`${env.WORKER_BASE_URL}/pipeline/finish?token=${encodeURIComponent(pipelineToken(env))}`,
-				{
-					method: 'POST',
-					headers: { 'content-type': 'application/json' },
-					body: JSON.stringify({
-						groupKey: g.key,
-						groupName: g.name,
-						isMultiImage: g.isMultiImage,
-						latestModified: g.latestModified,
-						images: uploaded.map((u) => ({ url: u.url, mime: u.mime })),
-					}),
-				},
-			);
-			console.log(
-				`pipeline: TIMING dispatched to /pipeline/finish @ ${elapsed()} (status ${dispatch.status})`,
-			);
-			if (!dispatch.ok) {
-				throw new Error(`/pipeline/finish dispatch failed: ${dispatch.status} ${await dispatch.text()}`);
-			}
+			await finishGroupAndPublish(env, {
+				groupKey: g.key,
+				groupName: g.name,
+				isMultiImage: g.isMultiImage,
+				latestModified: g.latestModified,
+				images: uploaded.map((u) => ({ url: u.url, mime: u.mime })),
+			});
+			console.log(`pipeline: TIMING finished group @ ${elapsed()}`);
+			await heartbeat(env, 'run_end', `group=${g.name} ${elapsed()}`);
 		} catch (e) {
 			console.error(`pipeline: failed for group ${stub.key} (${stub.name}):`, e);
 			try {
@@ -845,6 +875,7 @@ async function runPipeline(env: Env): Promise<void> {
 		return;
 	}
 	console.log('pipeline: no unprocessed groups remaining in Drive folder — cron is a no-op');
+	await heartbeat(env, 'no_candidates');
 }
 
 interface FinishGroupInput {

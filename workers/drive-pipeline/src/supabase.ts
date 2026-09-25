@@ -50,27 +50,32 @@ export async function isFileProcessed(env: SupabaseEnv, fileId: string): Promise
 // Bulk version of isFileProcessed — one round-trip instead of one per
 // candidate group. Used to walk the Drive scan order in-memory rather than
 // hitting Postgrest once per group before finding the first unprocessed one.
-//
-// 'images_ready' is a special case: runPipeline records it as a claim marker
-// right before handing a group off to /pipeline/finish (a separate
-// invocation — see index.ts). If that invocation gets killed before it can
-// update the row to 'approved'/'failed' (confirmed live: happens
-// occasionally even for a normal-sized single image), the group would
-// otherwise be stuck skipped forever with no error and nothing to retry.
-// So a stale 'images_ready' claim (older than STALE_CLAIM_MINUTES — long
-// enough that it's not still legitimately in flight) is treated as
-// abandoned and excluded from the skip set, letting the next run retry it.
-const STALE_CLAIM_MINUTES = 10;
-
 export async function loadProcessedFileIds(env: SupabaseEnv): Promise<Set<string>> {
-	const cutoff = new Date(Date.now() - STALE_CLAIM_MINUTES * 60 * 1000).toISOString();
-	const url =
-		`${env.SUPABASE_URL}/rest/v1/processed_drive_files?select=file_id` +
-		`&or=(status.neq.images_ready,processed_at.gte.${encodeURIComponent(cutoff)})`;
+	const url = `${env.SUPABASE_URL}/rest/v1/processed_drive_files?select=file_id`;
 	const r = await fetch(url, { headers: authHeaders(env) });
 	if (!r.ok) throw new Error(`processed_drive_files bulk fetch failed: ${r.status} ${await r.text()}`);
 	const rows = (await r.json()) as Array<{ file_id: string }>;
 	return new Set(rows.map((row) => row.file_id));
+}
+
+// A run claims a group ('images_ready') before the heavy generate/publish
+// work. If that work is killed by the runtime it leaves the claim behind with
+// no error anywhere. The earlier fix retried stale claims, but the same doomed
+// group is first in line every time, so it was re-picked on every run and cron
+// tick forever, blocking the whole queue (this is what silently stalled the
+// blog from Sept 7). Stale claims are now closed out as 'failed_stale' so the
+// queue always moves on.
+export async function expireStaleClaims(env: SupabaseEnv, olderThanMinutes = 15): Promise<void> {
+	const cutoff = new Date(Date.now() - olderThanMinutes * 60 * 1000).toISOString();
+	const url =
+		`${env.SUPABASE_URL}/rest/v1/processed_drive_files` +
+		`?status=eq.images_ready&processed_at=lt.${encodeURIComponent(cutoff)}`;
+	const r = await fetch(url, {
+		method: 'PATCH',
+		headers: { ...authHeaders(env), 'Content-Type': 'application/json' },
+		body: JSON.stringify({ status: 'failed_stale' }),
+	});
+	if (!r.ok) console.error(`expireStaleClaims failed: ${r.status} ${await r.text()}`);
 }
 
 export async function insertBlogPost(
@@ -164,7 +169,7 @@ export async function recordProcessed(
 			'Content-Type': 'application/json',
 			Prefer: 'resolution=merge-duplicates',
 		},
-		body: JSON.stringify(row),
+		body: JSON.stringify({ ...row, processed_at: new Date().toISOString() }),
 	});
 	if (!r.ok)
 		throw new Error(`processed_drive_files insert failed: ${r.status} ${await r.text()}`);
